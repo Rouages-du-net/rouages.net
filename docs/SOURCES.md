@@ -67,3 +67,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 
 - [Histoire d'internet](sources/internet.md)
 - [Histoire de l'informatique](sources/informatique.md)
+- [Histoire de l'IA](sources/ia.md)

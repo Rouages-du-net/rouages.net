@@ -61,15 +61,17 @@ Toutes les entrées sont sourcées : voir le dossier [`sources/internet.md`](sou
 
 ## Intelligence artificielle
 
+Toutes les entrées sont sourcées : voir le dossier [`sources/ia.md`](sources/ia.md).
+
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| Frank Rosenblatt | États-Unis | 1958 | Perceptron | ⬜ |
-| Shun-ichi Amari | Japon | 1967– | Apprentissage par gradient, réseaux de neurones | ⬜ |
-| Kunihiko Fukushima | Japon | 1979–1980 | Neocognitron, ancêtre des réseaux convolutifs | ⬜ |
-| Karen Spärck Jones | Royaume-Uni | 1972 | IDF, base des moteurs de recherche | ⬜ |
-| Fei-Fei Li | États-Unis | 2009 | ImageNet | ⬜ |
-| Joy Buolamwini & Timnit Gebru | États-Unis | 2018 | *Gender Shades* : biais de la reconnaissance faciale | ⬜ |
-| Annotateur·ices de données | Kenya, Philippines, Venezuela… | 2010s– | Le travail humain invisible derrière l'IA | ⬜ |
+| Frank Rosenblatt | Cornell Aeronautical Laboratory, Buffalo, États-Unis | 1957–1958 | Le perceptron, premier modèle de réseau de neurones qui apprend à partir d'exemples | 🟨 |
+| Shun-ichi Amari | Japon (Kyushu, Tokyo, RIKEN) | 1967– | Théorie de l'apprentissage des réseaux de neurones par gradient stochastique ; réseau associatif précurseur de celui de Hopfield | 🟨 |
+| Kunihiko Fukushima | NHK, Tokyo, Japon | 1979–1980 | Le néocognitron, inspiré du cortex visuel, précurseur des réseaux convolutifs | 🟨 |
+| Karen Spärck Jones | Université de Cambridge, Royaume-Uni | 1972 | La pondération des mots par leur rareté (appelée ensuite IDF), au cœur du classement des moteurs de recherche | 🟨 |
+| Fei-Fei Li | Princeton (puis Stanford), États-Unis | 2009 | ImageNet, base d'images annotées qui a servi de banc d'essai au tournant de l'apprentissage profond | 🟨 |
+| Joy Buolamwini & Timnit Gebru | MIT Media Lab et Microsoft Research, États-Unis | 2018 | *Gender Shades* : les systèmes de classification du genre par le visage se trompent jusqu'à 34,7 % du temps pour les femmes à peau foncée, contre 0,8 % pour les hommes à peau claire | 🟨 |
+| Annotateur·ices et modérateur·ices de données | Kenya, Philippines, Venezuela… | Fin des années 2000 – aujourd'hui | Le « travail du clic » : étiqueter, vérifier et modérer les données sans lesquelles l'IA ne fonctionne pas, souvent mal payé | 🟨 |
 
 ## Dark net et anonymat
 
