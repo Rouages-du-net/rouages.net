@@ -70,3 +70,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Histoire de l'IA](sources/ia.md)
 - [Dark net et anonymat](sources/dark-net.md)
 - [Savoirs et libre accès](sources/savoirs.md)
+- [Module « De l'Entrée à la page » (faits techniques)](sources/entree-a-la-page.md)
