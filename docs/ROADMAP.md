@@ -13,7 +13,9 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## Phase 1 — Module phare : « De l'Entrée à la page »
 
-- [ ] Scénario pas-à-pas (DNS, TCP/QUIC, TLS, routage BGP, câbles, CDN, serveur, rendu)
+- [x] Scénario pas-à-pas (brouillon) : [`scenarios/entree-a-la-page.md`](scenarios/entree-a-la-page.md)
+- [ ] Vérification et sourçage des faits techniques du scénario
+- [ ] Relecture du scénario (technique et grand public)
 - [ ] Animation interactive de la trace, avec curseur de niveau
 - [ ] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
 - [ ] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
