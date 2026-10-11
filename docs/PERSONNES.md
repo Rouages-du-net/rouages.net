@@ -10,35 +10,37 @@ Légende statut : ⬜ à sourcer · 🟨 sourcé, à rédiger · ✅ publié
 
 ## Informatique
 
+Toutes les entrées sont sourcées : voir le dossier [`sources/informatique.md`](sources/informatique.md).
+
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| Al-Khwârizmî | Bagdad | IXᵉ s. | Son nom a donné « algorithme » | ⬜ |
-| Pingala | Inde | ~IIIᵉ s. av. J.-C. | Système proche du binaire pour la métrique poétique | ⬜ |
-| Ada Lovelace | Royaume-Uni | 1843 | Notes sur la machine analytique, premier programme publié | ⬜ |
-| Les « computers » humaines | Monde | XIXᵉ–XXᵉ s. | Le calcul était un métier, souvent féminin | ⬜ |
-| Joan Clarke | Royaume-Uni | 1940s | Cryptanalyse à Bletchley Park | ⬜ |
-| Alan Turing | Royaume-Uni | 1936–1954 | Machine universelle ; persécuté pour son homosexualité | ⬜ |
-| ENIAC Six (McNulty, Jennings, Snyder, Wescoff, Bilas, Lichterman) | États-Unis | 1945 | Premières programmeuses de l'ENIAC, longtemps effacées | ⬜ |
-| Kateryna Iouchtchenko | URSS (Ukraine) | 1955 | Langage « Adresse », adressage indirect (pointeurs) | ⬜ |
-| Grace Hopper | États-Unis | 1952–1959 | Compilateur, COBOL | ⬜ |
-| Setun (Nikolaï Broussentsov) | URSS | 1958 | Ordinateur ternaire | ⬜ |
-| TIFRAC | Inde | 1960 | Premier ordinateur conçu en Inde | ⬜ |
-| Clementina, Cecilia Berdichevsky, Manuel Sadosky | Argentine | 1961 | Début de l'informatique argentine | ⬜ |
-| Stephanie « Steve » Shirley | Royaume-Uni | 1962 | Entreprise de programmeuses à domicile | ⬜ |
-| Katherine Johnson, Dorothy Vaughan, Mary Jackson | États-Unis | 1950s–60s | Calcul et FORTRAN à la NASA, ségrégation | ⬜ |
-| Annie Easley | États-Unis | 1955–1989 | Programmation à la NASA (Centaur) | ⬜ |
-| Mary Kenneth Keller | États-Unis | 1965 | Un des premiers doctorats en informatique aux États-Unis | ⬜ |
-| Margaret Hamilton | États-Unis | 1969 | Logiciel de vol d'Apollo, « génie logiciel » | ⬜ |
-| OGAS (Viktor Glouchkov) | URSS | 1960s | Projet de réseau national de planification | ⬜ |
-| Cybersyn (Stafford Beer, gouv. Allende) | Chili | 1971–1973 | Pilotage de l'économie par réseau télex | ⬜ |
-| Jerry Lawson | États-Unis | 1976 | Cartouche de jeu vidéo interchangeable (Fairchild Channel F) | ⬜ |
-| Lynn Conway | États-Unis | 1978–1980 | Révolution VLSI ; femme trans | ⬜ |
-| Wang Xuan | Chine | 1970s–80s | Composition laser des caractères chinois | ⬜ |
-| Ken Sakamura (TRON) | Japon | 1984 | Système d'exploitation temps réel omniprésent | ⬜ |
-| Sophie Wilson | Royaume-Uni | 1985 | Jeu d'instructions ARM ; femme trans | ⬜ |
-| Mark Dean | États-Unis | 1981 | Co-conception de l'IBM PC (bus ISA) | ⬜ |
-| Politique informatique (Cobra) | Brésil | 1970s–80s | Réserve de marché, industrie nationale | ⬜ |
-| Travailleuses de l'électronique | Asie du Sud-Est, Mexique | 1970s– | Assemblage des puces, conditions de travail | ⬜ |
+| Al-Khwârizmî | Bagdad (Maison de la sagesse) | IXᵉ s. (v. 780 – v. 850) | Son traité sur le calcul indien, latinisé « Algoritmi », a donné « algorithme » ; son *al-jabr* a donné « algèbre » | 🟨 |
+| Pingala | Inde | Vers le IIᵉ s. av. J.-C. (datation incertaine) | Énumère les combinaisons de syllabes brèves et longues par des procédés qui préfigurent la numération binaire | 🟨 |
+| Ada Lovelace | Londres, Royaume-Uni | 1843 | Ses notes sur la machine analytique de Babbage contiennent le premier algorithme publié destiné à une machine (Note G) | 🟨 |
+| Les « computers » humaines | Europe, Amérique du Nord | XVIIIᵉ – milieu du XXᵉ s. | Calculer était un métier, qui s'est féminisé à partir des années 1880, souvent parce que les femmes étaient moins payées | 🟨 |
+| Joan Clarke | Bletchley Park, Royaume-Uni | 1940–1945 | Cryptanalyste à la Hut 8 (Enigma navale), cheffe adjointe en 1944 ; classée « linguiste » pour pouvoir être mieux payée | 🟨 |
+| Alan Turing | Royaume-Uni | 1936–1954 | La machine universelle (1936) ; rôle central contre Enigma, après les travaux polonais ; condamné pour homosexualité en 1952 | 🟨 |
+| Les programmeuses de l'ENIAC (McNulty, Jennings Bartik, Snyder Holberton, Wescoff, Bilas, Lichterman) | Moore School, Philadelphie, États-Unis | 1945–1946 | Premières programmeuses de l'ENIAC, longtemps effacées de l'histoire | 🟨 |
+| Kateryna Iouchtchenko | Kyiv, RSS d'Ukraine (URSS) | 1955–1958 | Langage « Adresse », avec un adressage indirect analogue aux pointeurs | 🟨 |
+| Grace Hopper | États-Unis (UNIVAC) | 1952–1959 | Pionnière des compilateurs (A-0) et de FLOW-MATIC, qui a fortement inspiré COBOL ; conseillère du comité COBOL | 🟨 |
+| Setun (Nikolaï Broussentsov) | Université d'État de Moscou, URSS | 1958 (série 1962–1965) | Seul ordinateur ternaire produit en série (50 machines) | 🟨 |
+| TIFRAC | TIFR, Bombay, Inde | 1960 (mis en service) | Premier ordinateur électronique conçu et construit en Inde | 🟨 |
+| Clementina, Cecilia Berdichevsky, Manuel Sadosky | Université de Buenos Aires, Argentine | 1960–1966 | Premier ordinateur scientifique du pays et Instituto de Cálculo, dispersé après la « Nuit des longs bâtons » (1966) | 🟨 |
+| Stephanie « Steve » Shirley | Royaume-Uni | 1962 | Fonde une société de logiciels où travaillent surtout des femmes, à domicile ; signe « Steve » pour contourner le sexisme | 🟨 |
+| Mary Kenneth Keller | Université du Wisconsin–Madison, États-Unis | 1965 | L'une des deux premières personnes docteures en informatique aux États-Unis (le même jour qu'Irving Tang), et la première femme | 🟨 |
+| Katherine Johnson, Dorothy Vaughan, Mary Jackson | NACA/NASA Langley, Virginie, États-Unis | 1943–1986 | Calculatrices de l'unité ségréguée West Area Computing ; Vaughan programmeuse FORTRAN, Johnson trajectoires, Jackson ingénieure | 🟨 |
+| Annie Easley | NASA Lewis (Glenn), Cleveland, États-Unis | 1955–1989 | Calculatrice devenue programmeuse : logiciels pour l'étage Centaur, l'énergie et les batteries | 🟨 |
+| Margaret Hamilton | MIT, États-Unis | 1965–années 1970 | Dirige l'équipe du logiciel de vol embarqué d'Apollo ; contribue à faire reconnaître le « génie logiciel » | 🟨 |
+| OGAS (Viktor Glouchkov) | Institut de cybernétique, Kiev, URSS | 1962–1970 | Projet de réseau national de centres de calcul pour la planification, jamais réalisé | 🟨 |
+| Cybersyn (Stafford Beer, gouv. Allende) | Santiago, Chili | 1971–1973 | Suivi en temps quasi réel des entreprises nationalisées par réseau télex | 🟨 |
+| Wang Xuan (et Chen Kunqiu) | Université de Pékin, Chine | 1975–années 1980 | Photocomposition laser des caractères chinois, grâce à la compression des polices | 🟨 |
+| Jerry Lawson | Fairchild, États-Unis | 1976 | Dirige l'équipe de la Channel F, première console à cartouches ROM et à microprocesseur | 🟨 |
+| Lynn Conway | Xerox PARC et MIT, États-Unis | 1978–1980 | Co-conçoit avec Carver Mead la méthode de conception VLSI des puces ; femme trans, renvoyée d'IBM en 1968 | 🟨 |
+| Ken Sakamura (TRON) | Université de Tokyo, Japon | 1984 | Projet TRON ; sa branche ITRON devient un standard de fait de l'informatique embarquée | 🟨 |
+| Sophie Wilson | Acorn, Cambridge, Royaume-Uni | 1983–1985 | Conçoit le jeu d'instructions du processeur ARM, avec Steve Furber ; femme trans | 🟨 |
+| Mark Dean | IBM, États-Unis | 1981 | Co-invente avec Dennis Moeller le bus d'extension du PC (appelé plus tard ISA) | 🟨 |
+| Réserve de marché informatique (Cobra) | Brésil | 1972–1992 | Politique réservant les mini- et micro-ordinateurs aux entreprises brésiliennes | 🟨 |
+| Ouvrières de l'électronique | Asie de l'Est et du Sud-Est, Mexique, réserve navajo de Shiprock | À partir de 1963 | Assemblage des puces délocalisé vers une main-d'œuvre surtout féminine et mal payée | 🟨 |
 
 ## Internet
 
@@ -93,9 +95,12 @@ Toutes les entrées sont sourcées : voir le dossier [`sources/internet.md`](sou
 
 ## Mythes à traiter avec rigueur
 
-- **Le « premier bug »** (papillon de nuit, 1947) : le mot « bug » existait déjà.
-- **Hedy Lamarr** : brevet réel sur le saut de fréquence (1942), mais le lien
-  direct avec le Wi-Fi est souvent exagéré.
+- **Le « premier bug »** (papillon de nuit, Harvard Mark II, 9 septembre 1947) :
+  le mot « bug » existait déjà (Edison, 1878) et Grace Hopper n'a pas trouvé
+  l'insecte ; sourcé dans [`sources/informatique.md`](sources/informatique.md). 🟨
+- **Hedy Lamarr et le Wi-Fi** : brevet réel sur le saut de fréquence (1942,
+  avec George Antheil), mais pas de filiation démontrée avec le Wi-Fi ou le
+  Bluetooth ; sourcé dans [`sources/informatique.md`](sources/informatique.md). 🟨
 - **« Internet a été créé pour résister à une attaque nucléaire »** : faux
   pour ARPANET, l'idée vient de l'étude de Paul Baran (RAND) ; sourcé dans
   [`sources/internet.md`](sources/internet.md). 🟨
