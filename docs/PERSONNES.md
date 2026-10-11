@@ -88,16 +88,20 @@ qui contient aussi des repères pour le module (deep web / dark web, mythe des
 
 ## Savoirs et libre accès
 
+Toutes les entrées sont sourcées : voir le dossier [`sources/savoirs.md`](sources/savoirs.md),
+qui contient aussi des repères pour le module (économie de l'édition
+scientifique, Plan S, accès ouvert en France, LibGen, Anna's Archive).
+
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| **Alexandra Elbakyan** | Kazakhstan | 2011– | Crée Sci-Hub ; accès à des dizaines de millions d'articles | ⬜ |
-| Michael Hart | États-Unis | 1971 | Projet Gutenberg, la première bibliothèque numérique | ⬜ |
-| Paul Ginsparg | États-Unis | 1991 | arXiv, prépublications ouvertes | ⬜ |
-| Brewster Kahle | États-Unis | 1996 | Internet Archive | ⬜ |
-| Initiative de Budapest | Hongrie | 2002 | Acte fondateur du libre accès | ⬜ |
-| HAL (CCSD) | France | 2001 | Archive ouverte de la recherche française | ⬜ |
-| Aaron Swartz | États-Unis | 2008–2013 | *Guerilla Open Access Manifesto*, affaire JSTOR | ⬜ |
-| Wikipédia et *Women in Red* | Monde | 2001 / 2015 | Encyclopédie libre ; combler le manque de biographies de femmes | ⬜ |
+| **Alexandra Elbakyan** | Kazakhstan | 2011– | Crée Sci-Hub, qui donnait accès en 2017 à 85 % des articles scientifiques payants ; condamnée aux États-Unis, bloquée en France depuis 2019, en procès en Inde | 🟨 |
+| Michael Hart | États-Unis | 1971 | Projet Gutenberg, l'une des toutes premières bibliothèques numériques | 🟨 |
+| Paul Ginsparg (et Joanne Cohn, précurseure) | Los Alamos, puis Cornell, États-Unis | 1991 | arXiv, serveur de prépublications ouvertes | 🟨 |
+| Brewster Kahle | États-Unis | 1996 | Internet Archive (Wayback Machine en 2001) ; perd en 2023-2024 le procès sur le prêt de livres numérisés | 🟨 |
+| Initiative de Budapest (BOAI) | Hongrie | Décembre 2001 – février 2002 | Premier texte qui définit l'accès ouvert | 🟨 |
+| HAL (CCSD) | France | 2001 | Archive ouverte de la recherche française ; droit de dépôt garanti par la loi de 2016 | 🟨 |
+| Aaron Swartz | États-Unis | 2008–2013 | *Guerilla Open Access Manifesto* (2008), poursuites pour le téléchargement d'articles de JSTOR, mort en 2013 | 🟨 |
+| Wikipédia et *Women in Red* | Monde | 2001 / 2015 | Encyclopédie libre ; projet pour combler le manque de biographies de femmes (20 % sur Wikipédia EN fin 2024) | 🟨 |
 
 ## Mythes à traiter avec rigueur
 

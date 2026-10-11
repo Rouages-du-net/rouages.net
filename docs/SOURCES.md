@@ -69,3 +69,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Histoire de l'informatique](sources/informatique.md)
 - [Histoire de l'IA](sources/ia.md)
 - [Dark net et anonymat](sources/dark-net.md)
+- [Savoirs et libre accès](sources/savoirs.md)
