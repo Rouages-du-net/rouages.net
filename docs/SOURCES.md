@@ -59,3 +59,10 @@ Sci-Hub), la date de vérification est aussi affichée **en haut** de la page.
 Pour les sources web, conserver aussi un lien d'archive (Internet Archive /
 archive.today) dans le code source de la page, pour pouvoir le substituer si
 le lien d'origine disparaît.
+
+## Dossiers de sources
+
+Les recherches détaillées (faits vérifiés, sources, archives, labels
+Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
+
+- [Histoire d'internet](sources/internet.md)

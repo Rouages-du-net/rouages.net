@@ -42,18 +42,20 @@ Légende statut : ⬜ à sourcer · 🟨 sourcé, à rédiger · ✅ publié
 
 ## Internet
 
+Toutes les entrées sont sourcées : voir le dossier [`sources/internet.md`](sources/internet.md).
+
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| CYCLADES (Louis Pouzin) | France | 1971–1973 | Le datagramme, repris par TCP/IP | ⬜ |
-| Minitel | France | 1982 | Réseau grand public avant le web | ⬜ |
-| Elizabeth « Jake » Feinler | États-Unis | 1970s–80s | Annuaire d'ARPANET, noms d'hôtes, WHOIS : ancêtre du DNS | ⬜ |
-| Vint Cerf & Bob Kahn | États-Unis | 1974 | TCP/IP | ⬜ |
-| Radia Perlman | États-Unis | 1985 | Spanning Tree Protocol | ⬜ |
-| Kilnam Chun (SDN) | Corée du Sud | 1982 | Un des tout premiers réseaux IP hors des États-Unis | ⬜ |
-| Tim Berners-Lee & Nicola Pellow | CERN | 1989–1991 | Le Web ; Pellow écrit le navigateur en mode ligne | ⬜ |
-| Nii Quaynor | Ghana | 1990s | Pionnier d'internet en Afrique, AFRINIC | ⬜ |
-| M-Pesa | Kenya | 2007 | Paiement mobile de masse | ⬜ |
-| Câbles sous-marins | Monde | 1858– | Du télégraphe à la fibre : la géographie du pouvoir | ⬜ |
+| CYCLADES (Louis Pouzin) | France (IRIA) | 1971 (lancement) – 1973 (1ʳᵉ démonstration) | Le datagramme : un réseau minimal où les ordinateurs hôtes assurent la fiabilité, principe repris par TCP/IP | 🟨 |
+| Minitel (Télétel) | France | 1980–1983 (tests dès 1980, ouverture au public en 1983) | Un service en ligne grand public à l'échelle d'un pays, dix ans avant le web | 🟨 |
+| Elizabeth « Jake » Feinler | États-Unis (SRI) | 1972–1989 | Dirige le Network Information Center d'ARPANET : annuaire, table des noms d'hôtes, WHOIS, ce qui précède le DNS | 🟨 |
+| Vint Cerf & Bob Kahn | États-Unis | 1974 (présenté dès 1973) | TCP, le protocole pour interconnecter des réseaux différents (scindé plus tard en TCP et IP) | 🟨 |
+| Radia Perlman | États-Unis (DEC) | 1985 | Algorithme de l'arbre couvrant (*Spanning Tree*), qui permet d'étendre Ethernet sans boucles | 🟨 |
+| Kilnam Chon (SDN) | Corée du Sud | 1982 | SDN, premier réseau TCP/IP d'Asie, l'un des tout premiers hors des États-Unis et d'Europe | 🟨 |
+| Tim Berners-Lee & Nicola Pellow | CERN | 1989–1991 | Le Web ; Pellow, étudiante en stage, écrit le navigateur en mode ligne, le premier utilisable sur tout terminal | 🟨 |
+| Nii Quaynor | Ghana | 1993–1995, puis années 2000 | Pionnier d'internet en Afrique : premières connexions du Ghana, président fondateur du conseil d'AFRINIC | 🟨 |
+| M-Pesa | Kenya | 2007 | Transfert d'argent par téléphone mobile à grande échelle | 🟨 |
+| Câbles sous-marins | Monde | 1858– | Du télégraphe (1858) à la fibre (1988) : l'infrastructure physique d'internet et sa géographie du pouvoir | 🟨 |
 
 ## Intelligence artificielle
 
@@ -94,4 +96,6 @@ Légende statut : ⬜ à sourcer · 🟨 sourcé, à rédiger · ✅ publié
 - **Le « premier bug »** (papillon de nuit, 1947) : le mot « bug » existait déjà.
 - **Hedy Lamarr** : brevet réel sur le saut de fréquence (1942), mais le lien
   direct avec le Wi-Fi est souvent exagéré.
-- **« Internet a été créé pour résister à une attaque nucléaire »** : à nuancer.
+- **« Internet a été créé pour résister à une attaque nucléaire »** : faux
+  pour ARPANET, l'idée vient de l'étude de Paul Baran (RAND) ; sourcé dans
+  [`sources/internet.md`](sources/internet.md). 🟨

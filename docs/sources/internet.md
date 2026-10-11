@@ -176,7 +176,157 @@ nucléaire vient d'une étude distincte de Paul Baran (RAND, 1960-1964).
 
 ---
 
-<!-- SECTION-PERSONNES-CERN -->
+## Elizabeth « Jake » Feinler
+
+**Tableau corrigé** — Où : États-Unis (SRI) · Quand : 1972–1989 · Pourquoi :
+dirige le Network Information Center (NIC) d'ARPANET : annuaire, table des
+noms d'hôtes (HOSTS.TXT), WHOIS, ce qui précède le DNS.
+
+**Faits clés**
+- Dirige le NIC d'ARPANET puis du Defense Data Network ; son équipe crée le
+  premier serveur WHOIS [1] ; *principal investigator* de 1973 à 1991 selon le
+  Computer History Museum [3].
+- Son groupe gère le registre des noms d'hôtes d'internet de 1972 à 1989 [1].
+- Co-autrice des RFC 952 (spécification de la table des hôtes) et 954
+  (WHOIS), 1985 [4][5] ; WHOIS au NIC est déjà décrit en 1982 (RFC 812) [6].
+- Le DNS (RFC 882, 1983) naît parce que la table HOSTS.TXT tenue par le NIC
+  arrive « near the limit of manageability » [7].
+- Les domaines .gov, .edu, .com, .mil, .org sont définis dans la RFC 920
+  (Postel & Reynolds, 1984) [8] ; l'Internet Hall of Fame attribue le schéma
+  à « she and her group » [1].
+- Internet Hall of Fame 2012 [1] ; histoire orale avec l'historienne Janet
+  Abbate en 2002 [2].
+
+**Sources**
+1. Internet Hall of Fame, « Elizabeth Feinler » — https://www.internethalloffame.org/inductee/elizabeth-feinler/ — S — en — archive : aucune
+2. J. Abbate (entretien), « Oral-History: Elizabeth "Jake" Feinler », IEEE History Center / ETHW, 2002 — https://ethw.org/Oral-History:Elizabeth_%22Jake%22_Feinler — P (histoire orale) — en — archive : http://web.archive.org/web/20250831092108/https://ethw.org/Oral-History:Elizabeth_%22Jake%22_Feinler
+3. Computer History Museum, « Elizabeth "Jake" Feinler » — https://computerhistory.org/profile/jake-feinler/ — S — en — archive : http://web.archive.org/web/20260513105949/https://computerhistory.org/profile/jake-feinler/
+4. K. Harrenstien, M. Stahl, E. Feinler, RFC 952, « DoD Internet Host Table Specification », 1985 — https://www.rfc-editor.org/rfc/rfc952 — P — en — archive : http://web.archive.org/web/20261009064148/https://www.rfc-editor.org/rfc/rfc952.txt
+5. K. Harrenstien, M. Stahl, E. Feinler, RFC 954, « NICNAME/WHOIS », 1985 — https://www.rfc-editor.org/rfc/rfc954 — P — en — archive : http://web.archive.org/web/20260507020732/https://www.rfc-editor.org/rfc/rfc954
+6. K. Harrenstien, V. White, RFC 812, « NICNAME/WHOIS », 1982 — https://www.rfc-editor.org/rfc/rfc812 — P — en — archive : non interrogée
+7. P. Mockapetris, RFC 882, « Domain Names – Concepts and Facilities », 1983 — https://www.rfc-editor.org/rfc/rfc882.txt — P — en — archive : http://web.archive.org/web/20260916011335/https://www.rfc-editor.org/rfc/rfc882.txt
+8. J. Postel, J. Reynolds, RFC 920, « Domain Requirements », 1984 — https://www.rfc-editor.org/rfc/rfc920 — P — en — archive : http://web.archive.org/web/20260430111536/https://www.rfc-editor.org/rfc/rfc920
+
+**Wikipédia** — FR : https://fr.wikipedia.org/wiki/Elizabeth_J._Feinler (pas de label, ~10 réf., courte) · EN : https://en.wikipedia.org/wiki/Elizabeth_J._Feinler (pas de label, ~33 réf.). **Recommandé : EN** ; article FR à enrichir.
+
+**Points d'attention**
+- Elle n'a pas « inventé le DNS » (Mockapetris) ni « créé .com » seule :
+  écrire « son équipe a contribué au schéma des domaines .com, .edu… ».
+- Fin : 1989 (son départ du SRI) ou 1991 (fin du contrat selon le CHM).
+- À lire : E. Feinler, « The Network Information Center and its Archives »,
+  *IEEE Annals of the History of Computing*, 2010 (DOI 10.1109/MAHC.2010.54).
+
+---
+
+## Radia Perlman
+
+**Tableau corrigé** — Où : États-Unis (Digital Equipment Corporation) ·
+Quand : 1985 (travail présenté à l'IEEE 802 dès 1984) · Pourquoi : algorithme
+de l'arbre couvrant (*Spanning Tree*), qui permet d'étendre Ethernet sans
+boucles.
+
+**Faits clés**
+- « An Algorithm for Distributed Computation of a Spanning Tree in an Extended
+  LAN », SIGCOMM '85, p. 44-53 ; *ACM SIGCOMM CCR* 15(4), 1985 [2].
+- L'algorithme a permis de passer d'un Ethernet à fil unique à de grands
+  réseaux ; elle conçoit aussi IS-IS, puis TRILL [1].
+- TRILL est normalisé dans la RFC 6325 (2011), dont elle est première
+  autrice [3].
+- Internet Hall of Fame 2014 [1].
+- Elle refuse le surnom de « mère d'internet » : personne n'a inventé internet
+  seul, et le titre met en avant le genre [4].
+
+**Sources**
+1. Internet Hall of Fame, « Radia Perlman » — https://www.internethalloffame.org/inductee/radia-perlman/ — S — en — archive : http://web.archive.org/web/20260829214414/https://www.internethalloffame.org/inductee/radia-perlman/
+2. R. Perlman, « An Algorithm for Distributed Computation of a Spanning Tree in an Extended LAN », SIGCOMM '85, DOI 10.1145/319056.319004 — copie PDF : https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf — P — en — archive : http://web.archive.org/web/20250328115152/https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf
+3. R. Perlman *et al.*, RFC 6325, « Routing Bridges (RBridges): Base Protocol Specification », 2011 — https://www.rfc-editor.org/rfc/rfc6325 — P — en — archive : http://web.archive.org/web/20251116163247/https://www.rfc-editor.org/rfc/rfc6325
+4. Intel Free Press (repris par Silicon Valley Watcher), « Intel's Radia Perlman: Don't Call Her "Mother Of The Internet" », 21/04/2011 — https://www.siliconvalleywatcher.com/intels-radia-perlman-dont-call-her-mother-of-the-internet/ — Pr (entretien) — en — archive : aucune
+
+**Wikipédia** — FR : https://fr.wikipedia.org/wiki/Radia_Perlman (pas de label, ~13 réf.) · EN : https://en.wikipedia.org/wiki/Radia_Perlman (pas de label, ~39 réf.). **Recommandé : EN.**
+
+**Points d'attention**
+- Ne pas l'appeler « mère d'internet », sauf pour dire qu'elle le refuse.
+- L'anecdote du poème « Algorhyme » servant de résumé à l'article n'est pas
+  confirmée par le PDF de 1985 : ne pas la reprendre ainsi.
+- La norme IEEE 802.1D qui en découle n'est pas encore sourcée.
+
+---
+
+## Kilnam Chon (SDN)
+
+**Tableau corrigé** — Nom : **Kilnam Chon** (et non « Chun ») · Où : Corée du
+Sud · Quand : mai 1982 · Pourquoi : SDN, premier réseau TCP/IP d'Asie, l'un
+des tout premiers hors des États-Unis et d'Europe.
+
+**Faits clés**
+- Équipe réseau formée en 1979 au KIET sous sa direction ; projet nommé
+  « Software » puis « System Development Network » [1][2].
+- L'équipe développe ses propres routeurs TCP/IP ; liaison KIET (Gumi) –
+  Université nationale de Séoul en mai 1982, à 1,2 kbit/s : « the birth of
+  the TCP/IP network in Korea » [1][3].
+- Le Royaume-Uni et la Norvège utilisaient déjà TCP/IP ; SDN est « the first
+  network to use the protocol outside of the U.S. and Europe » [2].
+- Vers 1985, une vingtaine d'universités et laboratoires reliés ; liaisons
+  avec les États-Unis par UUCP/X.25, première ligne IP Corée–États-Unis en
+  1990 [1][2] ; domaine .kr en 1986 [3].
+- Internet Hall of Fame 2012 ; fonde APNG (1991), APAN, APTLD [4].
+
+**Sources**
+1. K. Chon, H. J. Park, J. H. Hur, K. Kang, « A History of Computer Networking and the Internet in Korea », *IEEE Communications Magazine* 51(2), 2013, p. 10-15, DOI 10.1109/MCOM.2013.6461175 — via la page ComSoc (fichier 2013-feb.pdf) : https://comsoc.org/about/committees/standing-committees/communications-history/communications-history/history-articles — P/R — en — archive : http://web.archive.org/web/20251123222047/https://www.comsoc.org/about/committees/standing-committees/communications-history/communications-history/history-articles
+2. Internet Hall of Fame, « Asian Internet Traces Roots To Kilnam Chon », 26/06/2012 — https://www.internethalloffame.org/2012/06/26/asian-internet-traces-roots-kilnam-chon/ — S — en — archive : http://web.archive.org/web/20260613100443/https://www.internethalloffame.org/2012/06/26/asian-internet-traces-roots-kilnam-chon/
+3. R. Mitchell, « KRSeries: The man who introduced the Internet to Asia », APNIC Blog, 20/02/2019 — https://blog.apnic.net/2019/02/20/krseries-the-man-who-introduced-the-internet-to-asia/ — S (registre régional) — en — archive : http://web.archive.org/web/20260417085108/https://blog.apnic.net/2019/02/20/krseries-the-man-who-introduced-the-internet-to-asia/
+4. Internet Hall of Fame, « Kilnam Chon » — https://www.internethalloffame.org/inductee/kilnam-chon/ — S — en — archive : non obtenue
+
+**Wikipédia** — FR : https://fr.wikipedia.org/wiki/Kilnam_Chon (pas de label, ~19 réf.) · EN : https://en.wikipedia.org/wiki/Kilnam_Chon (pas de label, ~29 réf.). **Recommandé : EN.**
+
+**Points d'attention**
+- **Ne pas écrire « 2ᵉ pays au monde »** : le Royaume-Uni et la Norvège
+  étaient avant ; Chon lui-même écrit « one of the first countries » [1].
+- SDN était un réseau TCP/IP **national**, sans connexion IP à internet avant
+  1990 : ne pas écrire « la Corée était connectée à internet en 1982 ».
+
+---
+
+## Tim Berners-Lee & Nicola Pellow (CERN)
+
+**Tableau corrigé** — Où : CERN · Quand : 1989–1991 · Pourquoi : le Web
+(proposition en 1989, premier serveur et navigateur fin 1990) ; Nicola
+Pellow, étudiante en stage, écrit le navigateur en mode ligne (1990–91).
+
+**Faits clés**
+- « Information Management: A Proposal », mars 1989 ; le nom « World Wide
+  Web » n'apparaît qu'en 1990, la proposition parle de « Mesh » [1].
+- 12 novembre 1990 : « WorldWideWeb: Proposal for a HyperText Project », de
+  Berners-Lee et Robert Cailliau [2][5].
+- Fin 1990 : premier serveur et premier navigateur-éditeur sur le NeXT de
+  Berners-Lee ; premier site : info.cern.ch [5][6].
+- Nicola Pellow, étudiante à Leicester Polytechnic, arrive en novembre 1990 et
+  écrit le navigateur en mode ligne, utilisable sur n'importe quel terminal :
+  disponible au CERN en mars 1991, en FTP public en janvier 1992 [3][4][5][7].
+- 30 avril 1993 : le CERN place dans le domaine public le navigateur en mode
+  ligne, le serveur et la bibliothèque de code [6][8].
+
+**Sources**
+1. T. Berners-Lee, « Information Management: A Proposal », CERN, 1989/1990 — https://www.w3.org/History/1989/proposal.html — P — en — archive : http://web.archive.org/web/20261008213053/https://www.w3.org/History/1989/proposal.html
+2. T. Berners-Lee & R. Cailliau, « WorldWideWeb: Proposal for a HyperText Project », 12/11/1990 — https://www.w3.org/Proposal.html — P — en — archive : http://web.archive.org/web/20260913142332/https://www.w3.org/Proposal.html
+3. Projet WWW (CERN), page « Nicola Pellow », 1992 — https://www.w3.org/History/19921103-hypertext/hypertext/WWW/People/Pellow.html — P — en — archive : http://web.archive.org/web/20260214175202/https://www.w3.org/History/19921103-hypertext/hypertext/WWW/People/Pellow.html
+4. Projet WWW (CERN), « WWW people », vers 1992 — https://info.cern.ch/hypertext/WWW/People.html — P — en — archive : http://web.archive.org/web/20260921115032/http://info.cern.ch/hypertext/WWW/People.html
+5. W3C, « A Little History of the World Wide Web » — https://www.w3.org/History.html — S — en — archive : http://web.archive.org/web/20261008011510/https://www.w3.org/History.html
+6. CERN, « A short history of the Web » — https://home.cern/science/computing/the-birth-of-the-web/short-history-web/ — S — en — archive : http://web.archive.org/web/20260926004335/https://home.cern/science/computing/the-birth-of-the-web/short-history-web/
+7. CERN, « Web history » (Web@30) — https://web30.web.cern.ch/web-history.html — S — en — archive : http://web.archive.org/web/20260910063134/https://web30.web.cern.ch/web-history.html
+8. T. Smith & F. Flückiger, « Licensing the Web », CERN — https://home.cern/science/computing/the-birth-of-the-web/licensing-web/ — S — en — archive : aucune
+- Pour une démo : CERN, « Line Mode Browser 2013 » (le navigateur de Pellow, rejouable en ligne) — https://line-mode.cern.ch/
+
+**Wikipédia** — FR : https://fr.wikipedia.org/wiki/Tim_Berners-Lee · https://fr.wikipedia.org/wiki/Nicola_Pellow (courte) ; « Line Mode Browser » **absent en FR**. EN : https://en.wikipedia.org/wiki/Line_Mode_Browser (~68 réf., le plus détaillé) · https://en.wikipedia.org/wiki/Nicola_Pellow. Aucun label. **Recommandé : FR « Tim Berners-Lee » pour le Web, EN « Line Mode Browser » pour Pellow** ; article FR à créer.
+
+**Points d'attention**
+- Pellow n'a pas écrit « le premier navigateur » (WorldWideWeb, de
+  Berners-Lee) mais le premier navigateur **multiplateforme**.
+- Cailliau est co-auteur de la proposition de 1990, pas de celle de 1989.
+- Le domaine public de 1993 concerne le **logiciel** du CERN, pas « le Web »
+  lui-même.
+- L'annotation « Vague but exciting » de Mike Sendall sur la proposition de
+  1989 n'est pas encore vérifiée.
 
 ---
 
@@ -327,3 +477,6 @@ géographie du pouvoir.
 - Pilote M-Pesa de 2005 ; communiqué officiel de Safaricom 2025.
 - Seconde source indépendante pour « plus de 99 % » et pour les 75 % des
   fournisseurs de contenu et de cloud.
+- Article de Feinler dans les *IEEE Annals* (2010) ; norme IEEE 802.1D ;
+  anecdote « Vague but exciting » ; document CERN de 1993 sur le domaine
+  public (cds.cern.ch inaccessible).
