@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+
+const sections = [
+  {
+    titre: 'Comment ça marche',
+    modules: [
+      ["De l'Entrée à la page", 'Ce qui se passe quand on tape une adresse : DNS, TLS, BGP, câbles, serveurs.'],
+      ["L'ordinateur", "Du transistor au programme, pas à pas."],
+      ["L'IA", "Tokens, embeddings, attention : le vrai mécanisme."],
+      ['La matérialité', 'Câbles sous-marins, datacenters, énergie, métaux.'],
+    ],
+  },
+  {
+    titre: 'Qui décide',
+    modules: [
+      ['Gouvernance technique', 'IETF, W3C, ICANN, RIR : qui écrit les règles du réseau ?'],
+      ['États & régulation', 'RGPD, DSA, AI Act, censure et coupures.'],
+      ['Entreprises & économie', 'Opérateurs, plateformes, publicité, monopoles.'],
+    ],
+  },
+  {
+    titre: 'Histoires',
+    modules: [
+      ["L'informatique", "Une histoire mondiale, avec celles et ceux qu'on a oubliés."],
+      ["Internet", "De CYCLADES et ARPANET au web et au Minitel."],
+      ["L'IA", "Du perceptron aux grands modèles de langage."],
+    ],
+  },
+];
+---
+<Base>
+  <h1>Les rouages du net</h1>
+  <p>
+    Internet, l'informatique et l'intelligence artificielle expliqués de manière
+    animée et didactique, <strong>sans masquer la vraie technologie</strong>.
+  </p>
+  <p class="tag">Site en construction.</p>
+
+  {sections.map((s) => (
+    <section>
+      <h2>{s.titre}</h2>
+      <div class="grid">
+        {s.modules.map(([nom, desc]) => (
+          <article class="card">
+            <h3>{nom}</h3>
+            <p>{desc}</p>
+            <span class="tag">Bientôt</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>

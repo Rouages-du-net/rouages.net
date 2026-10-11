@@ -1,0 +1,34 @@
+# Les rouages du net — configuration Apache (cPanel)
+
+Options -Indexes
+ErrorDocument 404 /404.html
+
+# HTTPS obligatoire
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Ne pas exposer l'état de synchronisation du déploiement FTP
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
+
+# Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml
+</IfModule>
+
+# Cache : fichiers versionnés d'Astro = 1 an, HTML = toujours revalider
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#^/_astro/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
