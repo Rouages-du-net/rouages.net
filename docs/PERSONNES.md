@@ -75,12 +75,16 @@ Toutes les entrées sont sourcées : voir le dossier [`sources/ia.md`](sources/i
 
 ## Dark net et anonymat
 
+Toutes les entrées sont sourcées : voir le dossier [`sources/dark-net.md`](sources/dark-net.md),
+qui contient aussi des repères pour le module (deep web / dark web, mythe des
+« 90 % », utilisateurs de Tor, légalité en France…).
+
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| Paul Syverson, David Goldschlag, Michael Reed | États-Unis (NRL) | 1995– | Invention du routage en oignon | ⬜ |
-| Roger Dingledine & Nick Mathewson | États-Unis | 2002– | Tor, puis le Tor Project | ⬜ |
-| Ian Clarke | Irlande / Royaume-Uni | 2000 | Freenet | ⬜ |
-| SecureDrop (Aaron Swartz, Kevin Poulsen…) | États-Unis | 2013– | Boîte aux lettres sécurisée pour lanceur·ses d'alerte | ⬜ |
+| Paul Syverson, David Goldschlag, Michael Reed | Naval Research Laboratory, États-Unis | 1995–2000 | Invention du routage en oignon, inspiré des *mix-nets* de David Chaum (1981) | 🟨 |
+| Roger Dingledine & Nick Mathewson | États-Unis | 2002– | Tor (avec Syverson), logiciel libre, puis l'association Tor Project (2006) | 🟨 |
+| Ian Clarke | Université d'Édimbourg, Royaume-Uni (originaire d'Irlande) | 1999–2000 | Freenet (aujourd'hui Hyphanet), réseau de publication anonyme et décentralisé | 🟨 |
+| SecureDrop (Aaron Swartz, Kevin Poulsen, James Dolan) | États-Unis | 2011–2013 | Boîte aux lettres sécurisée pour lanceur·ses d'alerte, reprise par la Freedom of the Press Foundation | 🟨 |
 
 ## Savoirs et libre accès
 
