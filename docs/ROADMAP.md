@@ -7,7 +7,8 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Vision, liste des personnes, choix techniques
 - [x] Squelette du site (Astro, statique) déployable sur cPanel
 - [ ] Charte graphique : palette, typographie, style d'illustration des « rouages »
-- [ ] Composants de base : bloc à niveaux 🟢🟡🔴, encart source/date, terme de glossaire
+- [x] Charte des sources et composant d'encart sources/date
+- [ ] Composants de base : bloc à niveaux 🟢🟡🔴, terme de glossaire
 - [ ] Déploiement automatique vers cPanel (FTP) configuré
 
 ## Phase 1 — Module phare : « De l'Entrée à la page »
@@ -44,7 +45,8 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## En parallèle — Jeux et idées reçues
 
-- [x] Terminus : prototype jouable (`ls`, `cd`, `pwd`, `cat`, `mv`, `ls -a`, Tab, historique)
+- [x] Terminus : lien vers l'original du MIT
+- [x] Terminus : prototype français jouable (`ls`, `cd`, `pwd`, `cat`, `mv`, `ls -a`, Tab, historique)
 - [ ] Terminus : plus de lieux et de commandes (`mkdir`, `rm`, `cp`, `grep`, `chmod`, tubes `|`)
 - [ ] Terminus : sauvegarde de la progression dans le navigateur
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »

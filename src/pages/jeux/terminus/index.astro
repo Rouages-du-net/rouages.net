@@ -1,12 +1,13 @@
 ---
 import Base from '../../../layouts/Base.astro';
+import Sources from '../../../components/Sources.astro';
 ---
 <Base
   title="Terminus"
   description="Un jeu d'aventure pour apprendre les commandes Linux, directement dans le navigateur."
 >
   <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
-  <h1>Terminus</h1>
+  <h1>Terminus <small class="tag">en français · prototype</small></h1>
   <p>
     Un jeu d'aventure où l'on se déplace avec de <strong>vraies commandes Linux</strong>.
     Chaque lieu est un dossier, chaque objet un fichier. Commence par taper <code>ls</code>.
@@ -23,8 +24,22 @@ import Base from '../../../layouts/Base.astro';
   <p class="tag">
     Astuces : <kbd>Tab</kbd> complète les noms, <kbd>↑</kbd> rappelle les commandes.
     Inspiré de
-    <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>&nbsp;(MIT), réécrit en français pour Les rouages du net.
+    <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>&nbsp;(MIT,
+    en anglais), réécrit en français pour Les rouages du net.
   </p>
+
+  <Sources
+    verifie="2026-10-11"
+    sources={[
+      {
+        titre: 'Terminus, le jeu original',
+        url: 'https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html',
+        type: 'site',
+        auteur: 'MIT',
+        langue: 'en',
+      },
+    ]}
+  />
 </Base>
 
 <style>

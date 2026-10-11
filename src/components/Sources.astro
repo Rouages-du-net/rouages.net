@@ -1,0 +1,72 @@
+---
+// Encart « Sources » affiché en bas des pages. Voir docs/SOURCES.md.
+
+type TypeSource = 'primaire' | 'recherche' | 'presse' | 'wikipedia' | 'site';
+
+export interface Source {
+  titre: string;
+  url: string;
+  type: TypeSource;
+  auteur?: string;
+  annee?: string | number;
+  langue?: string; // code langue si ce n'est pas le français, ex. 'en'
+  archive?: string; // lien d'archive, utilisé si le lien d'origine est mort
+}
+
+interface Props {
+  sources: Source[];
+  verifie: string; // date ISO de dernière vérification, ex. '2026-10-11'
+}
+
+const { sources, verifie } = Astro.props;
+
+const LIBELLES: Record<TypeSource, string> = {
+  primaire: 'Source primaire',
+  recherche: 'Recherche',
+  presse: 'Presse',
+  wikipedia: 'Wikipédia',
+  site: 'Site',
+};
+const LANGUES: Record<string, string> = { en: 'en anglais', es: 'en espagnol', de: 'en allemand', ru: 'en russe' };
+
+const date = new Date(verifie).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<aside class="sources" aria-labelledby="titre-sources">
+  <h2 id="titre-sources">Sources</h2>
+  <ul>
+    {sources.map((s) => (
+      <li>
+        <span class="type">{LIBELLES[s.type]}</span>
+        {s.auteur && <>{s.auteur}, </>}
+        <a href={s.url}>{s.titre}</a>
+        {s.annee && <>, {s.annee}</>}
+        {s.langue && s.langue !== 'fr' && <> <em>({LANGUES[s.langue] ?? s.langue})</em></>}
+        {s.archive && <> · <a href={s.archive}>archive</a></>}
+      </li>
+    ))}
+  </ul>
+  <p class="verifie">Dernière vérification : <time datetime={verifie}>{date}</time></p>
+</aside>
+
+<style>
+  .sources {
+    margin-top: 3rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+  }
+  h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+  ul { margin: 0; padding-left: 1.2rem; }
+  li { margin: 0.25rem 0; }
+  .type {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    padding: 0 0.3em;
+    margin-right: 0.4em;
+  }
+  .verifie { color: var(--muted); margin: 0.75rem 0 0; }
+</style>

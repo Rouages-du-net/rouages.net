@@ -20,8 +20,10 @@ et qui a décidé qu'elle tourne ainsi.
    les femmes, les personnes racisées, LGBTQ+ et les travailleurs invisibles.
 4. **Matériel et politique.** Internet a des câbles, des datacenters, une
    consommation d'énergie, des lois et des rapports de force. On montre tout.
-5. **Sourcé et daté.** Chaque page cite ses sources et affiche sa date de
-   dernière vérification.
+5. **Tout est sourcé et daté.** Chaque fait renvoie à une source, chaque
+   page affiche sa date de dernière vérification. Wikipédia sert de renvoi
+   « pour aller plus loin » quand l'article est bien fait. Voir
+   [`SOURCES.md`](SOURCES.md).
 6. **Accessible à tous.** Équivalent texte de chaque animation, respect de
    `prefers-reduced-motion`, contraste AA, navigation au clavier.
 7. **Sobre et libre.** Site statique, léger, sans pistage, hébergeable
@@ -123,7 +125,7 @@ Apprendre en jouant, avec de **vrais** outils et de vraies commandes.
 
 | Jeu | Ce qu'on apprend | État |
 |---|---|---|
-| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins | Prototype jouable sur `/jeux/terminus/` |
+| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins | Lien vers l'original du MIT (en anglais) + prototype français sur `/jeux/terminus/` |
 | *Le routeur* (idée) | Router des paquets dans un réseau qui tombe en panne | — |
 | *Casse le code* (idée) | Du chiffre de César au chiffrement moderne | — |
 | *Le paquet perdu* (idée) | Retrouver un paquet avec `ping`, `traceroute`, `dig` | — |

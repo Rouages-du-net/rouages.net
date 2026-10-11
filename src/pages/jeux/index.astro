@@ -3,9 +3,16 @@ import Base from '../../layouts/Base.astro';
 
 const jeux = [
   {
-    nom: 'Terminus',
+    nom: 'Terminus (MIT)',
+    lien: 'https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html',
+    desc: "Le jeu original : une aventure où l'on se déplace avec de vraies commandes Linux (ls, cd, cat, mv…).",
+    note: 'En anglais · site externe',
+  },
+  {
+    nom: 'Terminus en français',
     lien: '/jeux/terminus/',
-    desc: "Une aventure où l'on se déplace avec de vraies commandes Linux : ls, cd, cat, mv…",
+    desc: 'Notre version française, plus courte, inspirée du jeu du MIT.',
+    note: 'Prototype',
   },
 ];
 ---
@@ -17,6 +24,7 @@ const jeux = [
       <article class="card">
         <h3><a href={j.lien}>{j.nom}</a></h3>
         <p>{j.desc}</p>
+        <span class="tag">{j.note}</span>
       </article>
     ))}
   </div>

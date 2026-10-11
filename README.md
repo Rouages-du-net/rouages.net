@@ -7,6 +7,7 @@ Internet, l'informatique et l'IA expliqués de manière animée et didactique,
 - [Vision](docs/VISION.md) — principes et modules
 - [Feuille de route](docs/ROADMAP.md)
 - [Personnes et projets à mettre en avant](docs/PERSONNES.md)
+- [Charte des sources](docs/SOURCES.md)
 - [Choix techniques et déploiement cPanel](docs/STACK.md)
 
 ## Démarrer

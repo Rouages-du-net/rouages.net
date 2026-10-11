@@ -2,7 +2,9 @@
 
 Liste de départ pour les frises historiques, pour garantir un **équilibre
 mondial** et la visibilité des **femmes et minorités**. Chaque entrée devra
-être sourcée avant publication (colonne *Statut*).
+être sourcée avant publication (colonne *Statut*), selon la
+[charte des sources](SOURCES.md) ; noter aussi l'article Wikipédia de
+référence quand il est de bonne qualité.
 
 Légende statut : ⬜ à sourcer · 🟨 sourcé, à rédiger · ✅ publié
 
