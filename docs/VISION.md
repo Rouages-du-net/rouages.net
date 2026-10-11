@@ -100,7 +100,39 @@ Chaque histoire est une frise interactive filtrable (région, thème, personnes)
 Voir [`PERSONNES.md`](PERSONNES.md) pour la liste de départ des figures et
 projets à mettre en avant.
 
-### 4. Transversal
+### 4. Idées reçues (debunking)
+
+Une rubrique « Vrai ou faux ? » : chaque fiche part d'une idée reçue, dit ce
+qui est vrai, ce qui est faux, et renvoie vers le module qui explique le
+mécanisme. Le ton est bienveillant : on ne se moque pas de celles et ceux qui
+y croient. Pistes de départ :
+
+- « La navigation privée me rend anonyme. »
+- « Le dark net, c'est 90 % d'internet » (confusion avec le *deep web*).
+- « Internet a été créé pour résister à une attaque nucléaire. »
+- « Le cloud, c'est dématérialisé. »
+- « L'IA comprend ce qu'elle dit » / « L'IA n'est qu'un perroquet. »
+- « Supprimer un fichier l'efface vraiment. »
+- « Le Wi-Fi, c'est Hedy Lamarr » ; « le premier bug était un papillon de nuit. »
+- « Je n'ai rien à cacher. »
+- « Les mails pèsent plus lourd que la vidéo en streaming. »
+
+### 5. Jeux
+
+Apprendre en jouant, avec de **vrais** outils et de vraies commandes.
+
+| Jeu | Ce qu'on apprend | État |
+|---|---|---|
+| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins | Prototype jouable sur `/jeux/terminus/` |
+| *Le routeur* (idée) | Router des paquets dans un réseau qui tombe en panne | — |
+| *Casse le code* (idée) | Du chiffre de César au chiffrement moderne | — |
+| *Le paquet perdu* (idée) | Retrouver un paquet avec `ping`, `traceroute`, `dig` | — |
+| *Entraîne ton neurone* (idée) | Régler les poids d'un perceptron à la main | — |
+
+Terminus s'inspire du jeu du même nom créé au MIT, mais il est réécrit en
+français avec son propre univers et son propre code.
+
+### 6. Transversal
 
 - **Glossaire vivant** : chaque terme technique est cliquable partout sur le site.
 - **Fil conducteur** : une même requête (ou un personnage) suit le visiteur de

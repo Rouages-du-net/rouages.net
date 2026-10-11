@@ -1,0 +1,117 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base
+  title="Terminus"
+  description="Un jeu d'aventure pour apprendre les commandes Linux, directement dans le navigateur."
+>
+  <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
+  <h1>Terminus</h1>
+  <p>
+    Un jeu d'aventure où l'on se déplace avec de <strong>vraies commandes Linux</strong>.
+    Chaque lieu est un dossier, chaque objet un fichier. Commence par taper <code>ls</code>.
+  </p>
+
+  <div class="terminal" id="terminal">
+    <div id="sortie" role="log" aria-live="polite"></div>
+    <form id="formulaire" autocomplete="off">
+      <label for="saisie" class="invite" id="invite"></label>
+      <input id="saisie" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" />
+    </form>
+  </div>
+
+  <p class="tag">
+    Astuces : <kbd>Tab</kbd> complète les noms, <kbd>↑</kbd> rappelle les commandes.
+    Inspiré de
+    <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>&nbsp;(MIT), réécrit en français pour Les rouages du net.
+  </p>
+</Base>
+
+<style>
+  .terminal {
+    background: #0f1410;
+    color: #c9f5c9;
+    font: 0.95rem/1.5 ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    min-height: 24rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    cursor: text;
+  }
+  #sortie :global(pre) { margin: 0 0 0.5rem; white-space: pre-wrap; word-break: break-word; font: inherit; }
+  #sortie :global(.cmd) { color: #8fd18f; }
+  form { display: flex; gap: 0.5ch; }
+  .invite { color: #f0b46a; white-space: nowrap; }
+  input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    outline: none;
+    caret-color: #c9f5c9;
+  }
+  kbd { border: 1px solid var(--border); border-radius: 0.25rem; padding: 0 0.3em; font-size: 0.85em; }
+</style>
+
+<script>
+  import { Shell } from '../../../scripts/terminus/shell';
+
+  const shell = new Shell();
+  const terminal = document.getElementById('terminal')!;
+  const sortie = document.getElementById('sortie')!;
+  const form = document.getElementById('formulaire') as HTMLFormElement;
+  const saisie = document.getElementById('saisie') as HTMLInputElement;
+  const invite = document.getElementById('invite')!;
+  const historique: string[] = [];
+  let position = 0;
+
+  const majInvite = () => {
+    invite.textContent = `vous@rouages:${shell.cwd.replace(/^\/Accueil/, '~')}$`;
+  };
+
+  const afficher = (texte: string, classe?: string) => {
+    if (!texte) return;
+    const pre = document.createElement('pre');
+    pre.textContent = texte;
+    if (classe) pre.className = classe;
+    sortie.appendChild(pre);
+  };
+
+  afficher(shell.executer('cat bienvenue.txt') ?? '');
+  majInvite();
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ligne = saisie.value;
+    afficher(`${invite.textContent} ${ligne}`, 'cmd');
+    if (ligne.trim()) historique.push(ligne);
+    position = historique.length;
+    const resultat = shell.executer(ligne);
+    if (resultat === null) sortie.replaceChildren();
+    else afficher(resultat);
+    saisie.value = '';
+    majInvite();
+    terminal.scrollTop = terminal.scrollHeight;
+  });
+
+  saisie.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      saisie.value = shell.completer(saisie.value);
+    } else if (e.key === 'ArrowUp' && position > 0) {
+      e.preventDefault();
+      saisie.value = historique[--position];
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      position = Math.min(position + 1, historique.length);
+      saisie.value = historique[position] ?? '';
+    }
+  });
+
+  terminal.addEventListener('click', () => {
+    if (!window.getSelection()?.toString()) saisie.focus();
+  });
+</script>

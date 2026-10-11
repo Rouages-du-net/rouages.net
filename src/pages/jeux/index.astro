@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const jeux = [
+  {
+    nom: 'Terminus',
+    lien: '/jeux/terminus/',
+    desc: "Une aventure où l'on se déplace avec de vraies commandes Linux : ls, cd, cat, mv…",
+  },
+];
+---
+<Base title="Jeux" description="Apprendre l'informatique en jouant.">
+  <h1>Jeux</h1>
+  <p>Apprendre en jouant, avec de vrais outils.</p>
+  <div class="grid">
+    {jeux.map((j) => (
+      <article class="card">
+        <h3><a href={j.lien}>{j.nom}</a></h3>
+        <p>{j.desc}</p>
+      </article>
+    ))}
+  </div>
+</Base>

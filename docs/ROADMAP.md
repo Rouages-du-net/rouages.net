@@ -42,6 +42,13 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [ ] Mini-modèle de prédiction du mot suivant dans le navigateur
 - [ ] Attention, entraînement, limites, coûts humains et matériels
 
+## En parallèle — Jeux et idées reçues
+
+- [x] Terminus : prototype jouable (`ls`, `cd`, `pwd`, `cat`, `mv`, `ls -a`, Tab, historique)
+- [ ] Terminus : plus de lieux et de commandes (`mkdir`, `rm`, `cp`, `grep`, `chmod`, tubes `|`)
+- [ ] Terminus : sauvegarde de la progression dans le navigateur
+- [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
+
 ## Ensuite
 
 - Matérialité (câbles, datacenters, énergie)

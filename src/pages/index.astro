@@ -29,6 +29,18 @@ const sections = [
       ["L'IA", "Du perceptron aux grands modèles de langage."],
     ],
   },
+  {
+    titre: 'Idées reçues',
+    modules: [
+      ['Vrai ou faux ?', "« Le mode navigation privée me rend anonyme », « l'IA comprend ce qu'elle dit », « le dark net, c'est 90 % d'internet »… On vérifie."],
+    ],
+  },
+  {
+    titre: 'Jeux',
+    modules: [
+      ['Terminus', "Une aventure où l'on se déplace avec de vraies commandes Linux.", '/jeux/terminus/'],
+    ],
+  },
 ];
 ---
 <Base>
@@ -43,11 +55,11 @@ const sections = [
     <section>
       <h2>{s.titre}</h2>
       <div class="grid">
-        {s.modules.map(([nom, desc]) => (
+        {s.modules.map(([nom, desc, lien]) => (
           <article class="card">
-            <h3>{nom}</h3>
+            <h3>{lien ? <a href={lien}>{nom}</a> : nom}</h3>
             <p>{desc}</p>
-            <span class="tag">Bientôt</span>
+            <span class="tag">{lien ? 'Jouable (prototype)' : 'Bientôt'}</span>
           </article>
         ))}
       </div>
