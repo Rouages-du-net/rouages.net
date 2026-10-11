@@ -54,6 +54,8 @@ minimal où les ordinateurs hôtes assurent la fiabilité, principe repris par T
 - Ne pas dire que TCP/IP est une « copie » de CYCLADES : influence réelle, via
   l'INWG et les échanges de personnes ; le NPL et ARPANET comptent aussi.
 - Date de fin : 1976, 1978 ou 1979 selon les sources ; retenir 1979 [5].
+- L'article de Cerf & Kahn (1974) cite CYCLADES pour sa stratégie de
+  « fenêtre », pas explicitement pour le datagramme : ne pas surinterpréter [7].
 
 ---
 
@@ -87,6 +89,8 @@ un service en ligne grand public à l'échelle d'un pays, dix ans avant le web.
   (le réseau X.25).
 - Le Minitel n'est pas « un internet » : système centralisé et national, pas
   un réseau de réseaux.
+- Éviter « premier service télématique » : le Prestel britannique ouvre en
+  1979 [1].
 - Date de la panne de Transpac de juin 1985 divergente (18 ou 24 juin) : ne
   pas la citer sans vérification.
 
