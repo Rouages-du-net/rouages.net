@@ -40,6 +40,43 @@ et qui a décidé qu'elle tourne ainsi.
 | **La matérialité** | Câbles sous-marins, datacenters, énergie, eau, métaux, déchets | Carte animée des câbles ; calculateur d'empreinte |
 | **Sécurité & vie privée** | Chiffrement, mots de passe, pistage | Le cadenas HTTPS expliqué par le mélange de couleurs ; une enchère publicitaire en 100 ms |
 | **Les algorithmes du quotidien** | Recherche, recommandation, fil d'actualité | Un PageRank à manipuler |
+| **Le dark net** | Ce que c'est, comment ça marche, qui l'utilise et pourquoi | Un paquet qui traverse trois relais Tor, couche de chiffrement par couche |
+
+#### Le dark net, sans fantasme
+
+On ne fait pas comme si ça n'existait pas : on l'explique.
+
+- **Démêler les termes** : *deep web* (tout ce qui n'est pas indexé : votre
+  messagerie, votre banque) ≠ *dark web* (services accessibles seulement par
+  un réseau d'anonymat).
+- **Comment ça marche** : le routage en oignon de Tor (né au laboratoire de
+  recherche de la marine américaine, puis développé par le Tor Project),
+  les adresses `.onion`, les services cachés ; aussi I2P et Freenet.
+- **Qui l'utilise** : journalistes et lanceur·ses d'alerte (SecureDrop),
+  dissident·es sous censure, médias (BBC, *New York Times*) et réseaux sociaux
+  qui ont leur version `.onion` ; et aussi des marchés illégaux (Silk Road).
+- **Limites et débats** : ce que Tor protège et ce qu'il ne protège pas,
+  comment des services ont été démantelés, anonymat vs enquête.
+- **Ligne éditoriale** : on explique le mécanisme et les enjeux, pas comment
+  acheter quoi que ce soit ; on rappelle le cadre légal (utiliser Tor est
+  légal en France).
+
+### Savoirs : à qui appartient la connaissance ?
+
+Un module qui élargit d'internet aux savoirs en général.
+
+| Thème | Contenu |
+|---|---|
+| **L'économie de l'édition scientifique** | La recherche publique, relue gratuitement, revendue aux bibliothèques ; marges des grands éditeurs ; abonnements |
+| **Le libre accès** | arXiv, l'Initiative de Budapest (2002), HAL en France, Plan S, la loi pour une République numérique (2016) |
+| **Sci-Hub** | Créé en 2011 par **Alexandra Elbakyan** (Kazakhstan) ; comment il fonctionne, son impact mesuré, les procès (Elsevier aux États-Unis, blocage ordonné en France en 2019, procédure en Inde) |
+| **Les bibliothèques de l'ombre** | LibGen, Anna's Archive ; le débat légalité / légitimité |
+| **Les communs de la connaissance** | Wikipédia (et ses biais : le projet *Women in Red*), Projet Gutenberg, Internet Archive, OpenStreetMap |
+| **Aaron Swartz** | Le *Guerilla Open Access Manifesto*, l'affaire JSTOR, sa mort en 2013 |
+
+Ligne éditoriale : présenter les arguments de toutes les parties (chercheur·ses,
+bibliothèques, éditeurs, tribunaux), dire clairement ce qui est légal ou non
+et où, sans ni diaboliser ni faire de prosélytisme.
 
 ### 2. Qui décide
 

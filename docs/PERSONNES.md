@@ -65,6 +65,28 @@ Légende statut : ⬜ à sourcer · 🟨 sourcé, à rédiger · ✅ publié
 | Joy Buolamwini & Timnit Gebru | États-Unis | 2018 | *Gender Shades* : biais de la reconnaissance faciale | ⬜ |
 | Annotateur·ices de données | Kenya, Philippines, Venezuela… | 2010s– | Le travail humain invisible derrière l'IA | ⬜ |
 
+## Dark net et anonymat
+
+| Qui / quoi | Où | Quand | Pourquoi | Statut |
+|---|---|---|---|---|
+| Paul Syverson, David Goldschlag, Michael Reed | États-Unis (NRL) | 1995– | Invention du routage en oignon | ⬜ |
+| Roger Dingledine & Nick Mathewson | États-Unis | 2002– | Tor, puis le Tor Project | ⬜ |
+| Ian Clarke | Irlande / Royaume-Uni | 2000 | Freenet | ⬜ |
+| SecureDrop (Aaron Swartz, Kevin Poulsen…) | États-Unis | 2013– | Boîte aux lettres sécurisée pour lanceur·ses d'alerte | ⬜ |
+
+## Savoirs et libre accès
+
+| Qui / quoi | Où | Quand | Pourquoi | Statut |
+|---|---|---|---|---|
+| **Alexandra Elbakyan** | Kazakhstan | 2011– | Crée Sci-Hub ; accès à des dizaines de millions d'articles | ⬜ |
+| Michael Hart | États-Unis | 1971 | Projet Gutenberg, la première bibliothèque numérique | ⬜ |
+| Paul Ginsparg | États-Unis | 1991 | arXiv, prépublications ouvertes | ⬜ |
+| Brewster Kahle | États-Unis | 1996 | Internet Archive | ⬜ |
+| Initiative de Budapest | Hongrie | 2002 | Acte fondateur du libre accès | ⬜ |
+| HAL (CCSD) | France | 2001 | Archive ouverte de la recherche française | ⬜ |
+| Aaron Swartz | États-Unis | 2008–2013 | *Guerilla Open Access Manifesto*, affaire JSTOR | ⬜ |
+| Wikipédia et *Women in Red* | Monde | 2001 / 2015 | Encyclopédie libre ; combler le manque de biographies de femmes | ⬜ |
+
 ## Mythes à traiter avec rigueur
 
 - **Le « premier bug »** (papillon de nuit, 1947) : le mot « bug » existait déjà.

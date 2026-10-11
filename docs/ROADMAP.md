@@ -47,5 +47,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - Matérialité (câbles, datacenters, énergie)
 - Sécurité & vie privée
 - Algorithmes du quotidien
+- Le dark net : routage en oignon, `.onion`, usages et limites
+- Savoirs : édition scientifique, libre accès, Sci-Hub et Alexandra Elbakyan, communs de la connaissance
 - Économie du net
 - Version anglaise
