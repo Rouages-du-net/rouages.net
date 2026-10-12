@@ -9,7 +9,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Charte graphique : palette, typographie, style d'illustration des « rouages » ([`CHARTE.md`](CHARTE.md))
 - [x] Charte des sources et composant d'encart sources/date
 - [x] Composants de base : bloc à niveaux 🟢🟡🔴 (`Niveaux`, `SelecteurNiveau`), terme de glossaire (`Terme`), étape (`Etape`)
-- [ ] Déploiement automatique vers cPanel (FTP) configuré
+- [x] Déploiement automatique vers cPanel (FTP) configuré
 
 ## Phase 1 — Module phare : « De l'Entrée à la page »
 
