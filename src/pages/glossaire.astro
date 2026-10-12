@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { GLOSSAIRE } from '../data/glossaire';
+
+const entrees = Object.entries(GLOSSAIRE).sort(([, a], [, b]) =>
+  a.terme.localeCompare(b.terme, 'fr', { sensitivity: 'base' }),
+);
+---
+<Base title="Glossaire" description="Les mots d'internet, expliqués simplement.">
+  <h1>Glossaire</h1>
+  <p>Les mots d'internet, expliqués simplement. Partout sur le site, les termes soulignés en pointillé renvoient ici.</p>
+
+  <dl class="glossaire">
+    {entrees.map(([id, e]) => (
+      <div id={id} class="entree">
+        <dt>{e.terme}</dt>
+        <dd>
+          {e.definition}
+          {e.voirAussi && (
+            <span class="voir">
+              Voir aussi :{' '}
+              {e.voirAussi.map((v, i) => (
+                <>{i > 0 && ', '}<a href={`#${v}`}>{GLOSSAIRE[v].terme}</a></>
+              ))}
+            </span>
+          )}
+        </dd>
+      </div>
+    ))}
+  </dl>
+</Base>
+
+<style>
+  .glossaire { margin: 2rem 0; }
+  .entree { padding: 0.75rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 1rem; }
+  .entree:target { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  dt { font-weight: 700; }
+  dd { margin: 0.25rem 0 0; }
+  .voir { display: block; color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+</style>

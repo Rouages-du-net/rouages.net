@@ -23,7 +23,10 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
   </head>
   <body>
     <header class="site">
-      <div class="wrap"><a href="/">⚙️ Les rouages du net</a></div>
+      <div class="wrap entete">
+        <a href="/">⚙️ Les rouages du net</a>
+        <nav aria-label="Navigation principale"><a href="/glossaire/">Glossaire</a> <a href="/jeux/">Jeux</a></nav>
+      </div>
     </header>
     <main class="wrap">
       <slot />

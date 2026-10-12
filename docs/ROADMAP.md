@@ -8,7 +8,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Squelette du site (Astro, statique) déployable sur cPanel
 - [ ] Charte graphique : palette, typographie, style d'illustration des « rouages »
 - [x] Charte des sources et composant d'encart sources/date
-- [ ] Composants de base : bloc à niveaux 🟢🟡🔴, terme de glossaire
+- [x] Composants de base : bloc à niveaux 🟢🟡🔴 (`Niveaux`, `SelecteurNiveau`), terme de glossaire (`Terme`), étape (`Etape`)
 - [ ] Déploiement automatique vers cPanel (FTP) configuré
 
 ## Phase 1 — Module phare : « De l'Entrée à la page »
@@ -16,10 +16,11 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Scénario pas-à-pas (brouillon) : [`scenarios/entree-a-la-page.md`](scenarios/entree-a-la-page.md)
 - [x] Vérification et sourçage des faits techniques du scénario
 - [ ] Relecture du scénario (technique et grand public)
-- [ ] Animation interactive de la trace, avec curseur de niveau
-- [ ] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
-- [ ] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
-- [ ] Glossaire : 30 premiers termes
+- [x] Page du module avec frise des étapes et curseur de niveau : `/modules/entree-a-la-page/`
+- [ ] Animations des scènes (aujourd'hui décrites en texte)
+- [x] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
+- [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
+- [x] Glossaire : 34 premiers termes, page `/glossaire/`
 - [ ] Relecture technique et relecture « grand public »
 - [ ] **Lancement public**
 

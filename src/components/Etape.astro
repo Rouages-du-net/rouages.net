@@ -1,0 +1,117 @@
+---
+// Une étape du module « De l'Entrée à la page ».
+// Slots : decouverte, curieux, ingenieur (texte à trois niveaux),
+// scene (description de l'animation à venir), decide, histoire, verifie,
+// mythes. Les encarts absents ne sont pas affichés.
+import Niveaux from './Niveaux.astro';
+
+interface Props {
+  numero: number;
+  titre: string;
+  ancre: string;
+  duree?: string; // ordre de grandeur indicatif, ex. « ~20 ms »
+}
+
+const { numero, titre, ancre, duree } = Astro.props;
+const s = Astro.slots;
+const encarts = [
+  { slot: 'decide', titre: 'Qui décide ?' },
+  { slot: 'histoire', titre: "Un peu d'histoire" },
+  { slot: 'verifie', titre: 'Vérifie toi-même' },
+].filter((e) => s.has(e.slot));
+const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
+---
+<section class="etape" id={ancre} aria-labelledby={`titre-${ancre}`} data-etape={numero}>
+  <header>
+    <span class="numero" aria-hidden="true">{numero}</span>
+    <h2 id={`titre-${ancre}`}><span class="visuellement-cache">Étape {numero} : </span>{titre}</h2>
+    {duree && <span class="duree" title="Ordre de grandeur indicatif">⏱ {duree}</span>}
+  </header>
+
+  {s.has('scene') && (
+    <figure class="scene">
+      <slot name="scene" />
+      <figcaption>Animation à venir</figcaption>
+    </figure>
+  )}
+
+  <Niveaux>
+    <slot name="decouverte" slot="decouverte" />
+    <slot name="curieux" slot="curieux" />
+    <slot name="ingenieur" slot="ingenieur" />
+  </Niveaux>
+
+  {encarts.length > 0 && (
+    <div class="encarts">
+      {encarts.map((e, i) => (
+        <aside class={`encart encart-${e.slot}`}>
+          <h3>{e.titre}</h3>
+          <Fragment set:html={rendus[i]} />
+        </aside>
+      ))}
+    </div>
+  )}
+
+  {s.has('mythes') && (
+    <aside class="mythes">
+      <h3>Idées reçues</h3>
+      <slot name="mythes" />
+    </aside>
+  )}
+</section>
+
+<style>
+  .etape {
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 5rem;
+  }
+  header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  h2 { margin: 0; font-size: 1.5rem; }
+  .numero {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+  }
+  .duree { color: var(--muted); font-size: 0.9rem; }
+  .scene {
+    margin: 1.25rem 0;
+    padding: 1.25rem;
+    border: 2px dashed var(--border);
+    border-radius: 0.75rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .scene :global(p) { margin: 0; }
+  figcaption { font-size: 0.8rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .encarts {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    margin-top: 1.25rem;
+  }
+  .encart, .mythes {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1rem 1.1rem;
+    font-size: 0.95rem;
+  }
+  .encart h3, .mythes h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .encart :global(p), .mythes :global(p) { margin: 0 0 0.5rem; }
+  .encart :global(ul), .mythes :global(ul) { margin: 0; padding-left: 1.1rem; }
+  .encart-verifie :global(code) { white-space: nowrap; }
+  .mythes { margin-top: 1rem; border-left: 4px solid var(--accent); }
+  .visuellement-cache {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>

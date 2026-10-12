@@ -1,0 +1,69 @@
+---
+// Bloc à trois niveaux de lecture. Chaque niveau est un slot nommé :
+//   <Niveaux>
+//     <p slot="decouverte">…</p>
+//     <p slot="curieux">…</p>
+//     <p slot="ingenieur">…</p>
+//   </Niveaux>
+// Seul le niveau choisi par <SelecteurNiveau> est affiché ; un bouton
+// permet de voir les trois niveaux du bloc. Sans JavaScript, tout est visible.
+const niveaux = [
+  { n: 1, slot: 'decouverte', label: '🟢 Découverte' },
+  { n: 2, slot: 'curieux', label: '🟡 Curieux' },
+  { n: 3, slot: 'ingenieur', label: '🔴 Ingénieur' },
+].filter((niv) => Astro.slots.has(niv.slot));
+
+const rendus = await Promise.all(niveaux.map((niv) => Astro.slots.render(niv.slot)));
+---
+<div class="niveaux">
+  {niveaux.map((niv, i) => (
+    <section class={`niv niv-${niv.n}`}>
+      <p class="etiquette">{niv.label}</p>
+      <Fragment set:html={rendus[i]} />
+    </section>
+  ))}
+  <button type="button" class="tout-voir" hidden aria-expanded="false">Voir les trois niveaux</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.niveaux .tout-voir').forEach((b) => {
+    b.hidden = false;
+    b.addEventListener('click', () => {
+      const bloc = b.closest('.niveaux')!;
+      const ouvert = bloc.classList.toggle('ouvert');
+      b.setAttribute('aria-expanded', String(ouvert));
+      b.textContent = ouvert ? 'Revenir à mon niveau' : 'Voir les trois niveaux';
+    });
+  });
+</script>
+
+<style>
+  .niv { margin: 0 0 1rem; }
+  .niv :global(p:last-child) { margin-bottom: 0; }
+  .etiquette {
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .niv-3 { font-size: 0.95rem; }
+  .niv-3 :global(code) { font-size: 0.9em; }
+  .tout-voir {
+    font: inherit;
+    font-size: 0.85rem;
+    background: none;
+    border: none;
+    color: var(--accent);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Filtrage selon le niveau global, sauf si le bloc est ouvert. */
+  :global(html[data-niveau='1']) .niveaux:not(.ouvert) .niv:not(.niv-1),
+  :global(html[data-niveau='2']) .niveaux:not(.ouvert) .niv:not(.niv-2),
+  :global(html[data-niveau='3']) .niveaux:not(.ouvert) .niv:not(.niv-3) {
+    display: none;
+  }
+  :global(html[data-niveau]) .niveaux:not(.ouvert) .etiquette { display: none; }
+</style>

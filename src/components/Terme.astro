@@ -1,0 +1,56 @@
+---
+// Terme du glossaire, cliquable partout : <Terme id="dns">DNS</Terme>.
+// Le lien mène à la page Glossaire ; la définition s'affiche au survol
+// ou au focus clavier. Un id inconnu fait échouer la construction du site.
+import { entree } from '../data/glossaire';
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const e = entree(id);
+const idBulle = `def-${id}-${Math.random().toString(36).slice(2, 8)}`;
+---
+<span class="terme"><a href={`/glossaire/#${id}`} aria-describedby={idBulle}><slot>{e.terme}</slot></a><span class="bulle" role="tooltip" id={idBulle}><strong>{e.terme}</strong> — {e.definition}</span></span>
+
+<style>
+  .terme { position: relative; }
+  .terme a {
+    color: inherit;
+    text-decoration: underline dotted var(--accent);
+    text-underline-offset: 0.2em;
+  }
+  .bulle {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 10;
+    width: min(20rem, 80vw);
+    margin-top: 0.25rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.15);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-weight: normal;
+  }
+  .terme:hover .bulle,
+  .terme:focus-within .bulle {
+    display: block;
+  }
+  /* Sur petit écran, la bulle s'affiche en bas de l'écran, sans déborder. */
+  @media (max-width: 40rem) {
+    .bulle {
+      position: fixed;
+      left: 1rem;
+      right: 1rem;
+      top: auto;
+      bottom: 1rem;
+      width: auto;
+    }
+  }
+</style>

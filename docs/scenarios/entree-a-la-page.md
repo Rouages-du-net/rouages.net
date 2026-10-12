@@ -17,11 +17,10 @@ lecture, avec la vraie technologie à portée de clic.
 celle du site, hébergée sur un serveur cPanel. Le visiteur peut vérifier
 chaque étape sur son propre ordinateur (encarts « Vérifie toi-même »).
 
-> ⚠️ **Domaine à confirmer.** Au 11 octobre 2026, `rouages.net` sert un site
-> tiers sans rapport avec le projet (WordPress, DNS chez Cloudflare). Le
-> scénario écrit `rouages.net` par commodité ; tous les exemples (DNS,
-> certificat, `curl`, `traceroute`) devront être refaits sur le domaine
-> réellement utilisé, une fois le site en ligne.
+> ℹ️ **Domaine.** `rouages.net` appartient au projet. Au 11 octobre 2026, il
+> sert encore l'ancien site WordPress, en cours de migration ailleurs. Les
+> exemples réels (DNS, certificat, `curl`, `traceroute`) seront relevés une
+> fois le nouveau site en ligne.
 
 ## Objectifs pédagogiques
 
