@@ -1,20 +1,52 @@
+/* Charte graphique : voir docs/CHARTE.md. Toutes les couleurs passent par
+   ces variables ; les composants n'écrivent jamais de couleur en dur. */
 :root {
+  /* Interface */
   --bg: #fbf8f3;
-  --fg: #1d1b18;
-  --muted: #6b645a;
-  --accent: #b5541c;
   --card: #ffffff;
   --border: #e6dfd3;
+  --fg: #1d1b18;
+  --muted: #665f55;
+  --accent: #a84a14;
+  --accent-2: #1b6670;
+
+  /* Schémas et animations */
+  --ill-client: #1b6670;
+  --ill-reseau: #5f5a52;
+  --ill-serveur: #7a5c12;
+  --ill-paquet: #a84a14;
+  --ill-secret-a: #6b3fa0;
+  --ill-secret-b: #2f7a3a;
+  --ill-commun: #d9a300;
+
+  /* Terminal (jeux) : sombre dans les deux thèmes */
+  --terminal-bg: #0f1410;
+  --terminal-fg: #c9f5c9;
+  --terminal-invite: #f0b46a;
+
+  /* Typographie */
+  --police: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --police-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Menlo, Consolas, monospace;
+
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #15140f;
+    --card: #1f1d17;
+    --border: #34302a;
     --fg: #ece7de;
     --muted: #a39b8e;
     --accent: #e8874a;
-    --card: #1f1d17;
-    --border: #34302a;
+    --accent-2: #5fbcc6;
+
+    --ill-client: #5fbcc6;
+    --ill-reseau: #a39b8e;
+    --ill-serveur: #d6b25a;
+    --ill-paquet: #e8874a;
+    --ill-secret-a: #b48ce6;
+    --ill-secret-b: #7cc98a;
+    --ill-commun: #e3b934;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -25,17 +57,30 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 1.0625rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  font: 1.0625rem/1.6 var(--police);
 }
+h1, h2, h3 { line-height: 1.25; font-weight: 700; }
+code, kbd, pre { font-family: var(--police-mono); }
 a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
 header.site { border-bottom: 1px solid var(--border); padding: 1rem 0; }
 header.site a { color: var(--fg); text-decoration: none; font-weight: 700; }
 .entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .entete nav { display: flex; gap: 1rem; }
 .entete nav a { font-weight: 500; color: var(--muted); }
+.logo { display: inline-flex; align-items: center; gap: 0.5rem; }
+.logo svg { width: 1.6rem; height: 1.6rem; color: var(--accent); }
 footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2rem 0; color: var(--muted); font-size: .9rem; }
 .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: 1.25rem; }
 .card h3 { margin-top: 0; }
 .tag { display: inline-block; font-size: .8rem; color: var(--muted); }
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

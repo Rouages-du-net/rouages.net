@@ -8,6 +8,7 @@ Internet, l'informatique et l'IA expliqués de manière animée et didactique,
 - [Feuille de route](docs/ROADMAP.md)
 - [Personnes et projets à mettre en avant](docs/PERSONNES.md)
 - [Charte des sources](docs/SOURCES.md)
+- [Charte graphique](docs/CHARTE.md)
 - [Choix techniques et déploiement cPanel](docs/STACK.md)
 
 ## Démarrer

@@ -1,7 +1,8 @@
 ---
 // Une étape du module « De l'Entrée à la page ».
 // Slots : decouverte, curieux, ingenieur (texte à trois niveaux),
-// scene (description de l'animation à venir), decide, histoire, verifie,
+// animation (scène interactive) ou, à défaut, scene (description de
+// l'animation à venir), decide, histoire, verifie,
 // mythes. Les encarts absents ne sont pas affichés.
 import Niveaux from './Niveaux.astro';
 
@@ -28,7 +29,11 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
     {duree && <span class="duree" title="Ordre de grandeur indicatif">⏱ {duree}</span>}
   </header>
 
-  {s.has('scene') && (
+  {s.has('animation') ? (
+    <div class="animation">
+      <slot name="animation" />
+    </div>
+  ) : s.has('scene') && (
     <figure class="scene">
       <slot name="scene" />
       <figcaption>Animation à venir</figcaption>
@@ -107,11 +112,4 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
   .encart :global(ul), .mythes :global(ul) { margin: 0; padding-left: 1.1rem; }
   .encart-verifie :global(code) { white-space: nowrap; }
   .mythes { margin-top: 1rem; border-left: 4px solid var(--accent); }
-  .visuellement-cache {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
 </style>

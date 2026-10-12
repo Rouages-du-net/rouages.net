@@ -1,0 +1,28 @@
+---
+// Rouage décoratif (logo, séparateurs). Couleur : currentColor.
+// `tourne` l'anime lentement, sauf si l'utilisateur refuse les animations.
+import { traceRouage } from '../lib/rouage';
+
+interface Props {
+  dents?: number;
+  tourne?: boolean;
+  class?: string;
+  titre?: string; // si absent, le rouage est purement décoratif
+}
+
+const { dents = 8, tourne = false, class: classe, titre } = Astro.props;
+---
+<svg
+  viewBox="-11 -11 22 22"
+  class:list={['rouage', classe, { tourne }]}
+  role={titre ? 'img' : undefined}
+  aria-hidden={titre ? undefined : 'true'}
+  aria-label={titre}
+>
+  <path d={traceRouage(dents)} fill="currentColor" fill-rule="evenodd" />
+</svg>
+
+<style>
+  .tourne { animation: rotation 12s linear infinite; }
+  @keyframes rotation { to { transform: rotate(360deg); } }
+</style>

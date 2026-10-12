@@ -6,10 +6,10 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] Vision, liste des personnes, choix techniques
 - [x] Squelette du site (Astro, statique) déployable sur cPanel
-- [ ] Charte graphique : palette, typographie, style d'illustration des « rouages »
+- [x] Charte graphique : palette, typographie, style d'illustration des « rouages » ([`CHARTE.md`](CHARTE.md))
 - [x] Charte des sources et composant d'encart sources/date
 - [x] Composants de base : bloc à niveaux 🟢🟡🔴 (`Niveaux`, `SelecteurNiveau`), terme de glossaire (`Terme`), étape (`Etape`)
-- [ ] Déploiement automatique vers cPanel (FTP) configuré
+- [x] Déploiement automatique vers cPanel (FTP) configuré
 
 ## Phase 1 — Module phare : « De l'Entrée à la page »
 
@@ -17,7 +17,8 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Vérification et sourçage des faits techniques du scénario
 - [ ] Relecture du scénario (technique et grand public)
 - [x] Page du module avec frise des étapes et curseur de niveau : `/modules/entree-a-la-page/`
-- [ ] Animations des scènes (aujourd'hui décrites en texte)
+- [x] Animation « Les pots de peinture » (étape 4, échange de clés)
+- [ ] Animations des autres scènes (aujourd'hui décrites en texte) : voyage des paquets, DNS…
 - [x] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
 - [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
 - [x] Glossaire : 34 premiers termes, page `/glossaire/`

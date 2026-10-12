@@ -1,5 +1,8 @@
 ---
+import '@fontsource-variable/atkinson-hyperlegible-next';
+import '@fontsource-variable/atkinson-hyperlegible-mono';
 import '../styles/global.css';
+import Rouage from '../components/Rouage.astro';
 
 interface Props {
   title?: string;
@@ -24,7 +27,7 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
   <body>
     <header class="site">
       <div class="wrap entete">
-        <a href="/">⚙️ Les rouages du net</a>
+        <a href="/" class="logo"><Rouage />Les rouages du net</a>
         <nav aria-label="Navigation principale"><a href="/glossaire/">Glossaire</a> <a href="/jeux/">Jeux</a></nav>
       </div>
     </header>
