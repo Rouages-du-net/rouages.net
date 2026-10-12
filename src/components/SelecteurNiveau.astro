@@ -1,0 +1,76 @@
+---
+// Curseur global de niveau de lecture : 🟢 découverte, 🟡 curieux, 🔴 ingénieur.
+// Il pose data-niveau sur <html> ; les blocs <Niveaux> n'affichent alors que
+// le niveau choisi. Sans JavaScript, tous les niveaux restent visibles.
+const niveaux = [
+  { n: '1', label: '🟢 Découverte' },
+  { n: '2', label: '🟡 Curieux' },
+  { n: '3', label: '🔴 Ingénieur' },
+];
+---
+<fieldset class="selecteur-niveau" hidden>
+  <legend>Niveau de lecture</legend>
+  {niveaux.map(({ n, label }) => (
+    <label>
+      <input type="radio" name="niveau" value={n} checked={n === '1'} />
+      <span>{label}</span>
+    </label>
+  ))}
+</fieldset>
+
+<script>
+  const CLE = 'rouages-niveau';
+  let niveau = '1';
+  try {
+    niveau = localStorage.getItem(CLE) ?? '1';
+  } catch {}
+
+  const appliquer = (n: string) => {
+    document.documentElement.dataset.niveau = n;
+    document.querySelectorAll<HTMLInputElement>('.selecteur-niveau input').forEach((i) => {
+      i.checked = i.value === n;
+    });
+  };
+
+  document.querySelectorAll<HTMLFieldSetElement>('.selecteur-niveau').forEach((f) => {
+    f.hidden = false;
+    f.addEventListener('change', (e) => {
+      const n = (e.target as HTMLInputElement).value;
+      appliquer(n);
+      try {
+        localStorage.setItem(CLE, n);
+      } catch {}
+    });
+  });
+  appliquer(niveau);
+</script>
+
+<style>
+  .selecteur-niveau {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem;
+    margin: 0;
+    background: var(--card);
+  }
+  legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  label { cursor: pointer; }
+  input { position: absolute; opacity: 0; }
+  span {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  input:checked + span { background: var(--accent); color: var(--bg); }
+  input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>

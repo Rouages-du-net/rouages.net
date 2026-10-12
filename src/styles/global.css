@@ -31,6 +31,9 @@ a { color: var(--accent); }
 .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
 header.site { border-bottom: 1px solid var(--border); padding: 1rem 0; }
 header.site a { color: var(--fg); text-decoration: none; font-weight: 700; }
+.entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.entete nav { display: flex; gap: 1rem; }
+.entete nav a { font-weight: 500; color: var(--muted); }
 footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2rem 0; color: var(--muted); font-size: .9rem; }
 .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: 1.25rem; }

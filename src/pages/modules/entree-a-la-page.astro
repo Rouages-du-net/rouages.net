@@ -1,0 +1,464 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+
+const etapes = [
+  { ancre: 'avant', court: 'Avant' },
+  { ancre: 'nom', court: 'Le nom' },
+  { ancre: 'box', court: 'La box' },
+  { ancre: 'liaison', court: 'La liaison' },
+  { ancre: 'cadenas', court: 'Le cadenas' },
+  { ancre: 'voyage', court: 'Le voyage' },
+  { ancre: 'serveur', court: 'Le serveur' },
+  { ancre: 'retour', court: 'Le retour' },
+  { ancre: 'affichage', court: "L'affichage" },
+];
+---
+<Base
+  title="De l'Entrée à la page"
+  description="Ce qui se passe, étape par étape, entre l'appui sur Entrée et l'affichage d'une page web."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>De l'Entrée à la page</h1>
+  <p class="chapo">
+    Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. En une seconde
+    environ, des dizaines de machines, d'organisations et de règles entrent en jeu.
+    Suivons cette page, celle que tu lis, depuis ton clavier jusqu'à l'écran.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <p class="tag">Choisis ton niveau : tu peux en changer à tout moment.</p>
+  </div>
+
+  <nav class="frise" aria-label="Étapes du parcours">
+    <ol>
+      {etapes.map((e, i) => (
+        <li><a href={`#${e.ancre}`}><span class="pastille">{i}</span><span class="court">{e.court}</span></a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Avant même d'appuyer sur Entrée" ancre="avant">
+    <p slot="scene">Les lettres apparaissent une à une ; une bulle hésite : « recherche ou adresse ? »</p>
+    <p slot="decouverte">
+      Pendant que tu tapes, le navigateur devine déjà où tu vas. Il regarde aussi s'il
+      n'a pas gardé une copie récente de la page.
+    </p>
+    <p slot="curieux">
+      La barre d'adresse sert aussi de barre de recherche. Comme <code>rouages.net</code>
+      ressemble à un <Terme id="nom-de-domaine">nom de domaine</Terme>, le navigateur décide d'y
+      aller au lieu de lancer une recherche. Les navigateurs récents essaient d'abord
+      <code>https://</code> et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
+      site impose HTTPS.
+    </p>
+    <p slot="ingenieur">
+      Analyse de l'URL (schéma, hôte, chemin). Si le domaine figure dans la liste HSTS
+      préchargée, ou a déjà envoyé un en-tête <code>Strict-Transport-Security</code>
+      (RFC 6797), le navigateur force HTTPS sans jamais tenter HTTP. Certains navigateurs
+      résolvent le nom, ouvrent une connexion, voire préaffichent la page avant l'appui
+      sur Entrée (prédiction, <i>prerender</i>).
+    </p>
+    <p slot="mythes">
+      <strong>« Le navigateur, c'est internet. »</strong> Non : le web n'est qu'un des
+      services d'internet. Le courriel lu dans un logiciel de messagerie ou les jeux en
+      ligne passent par internet sans passer par le web.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~1 à 100 ms">
+    <p slot="scene">Une question rebondit : serveur racine → registre de <code>.net</code> → serveurs du domaine, sur une carte du monde.</p>
+    <div slot="decouverte">
+      <p>
+        Les ordinateurs ne connaissent pas les noms, seulement des numéros : les
+        <Terme id="adresse-ip">adresses IP</Terme>. Le <Terme id="dns">DNS</Terme>, c'est l'annuaire
+        d'internet. Mais aucun annuaire ne contient tout : on demande de proche en proche,
+        comme on demanderait son chemin.
+      </p>
+    </div>
+    <div slot="curieux">
+      <p>
+        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>), puis demande
+        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton fournisseur d'accès.
+        S'il ne connaît pas la réponse, le résolveur interroge dans l'ordre :
+      </p>
+      <ol>
+        <li>un <Terme id="serveur-racine">serveur racine</Terme> : « voici qui gère <code>.net</code> » ;</li>
+        <li>le registre de <code>.net</code> : « voici les serveurs DNS de ce domaine » ;</li>
+        <li>les serveurs du domaine : « <code>rouages.net</code>, c'est telle adresse ».</li>
+      </ol>
+      <p>
+        Chaque réponse est gardée en mémoire un certain temps (le <Terme id="ttl">TTL</Terme>). En
+        pratique, le résolveur connaît presque toujours déjà les serveurs de <code>.net</code> et
+        ne repasse que rarement par la racine.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Requêtes <code>A</code>, <code>AAAA</code> et <code>HTTPS</code> (RFC 9460), en UDP ou TCP
+      sur le port 53, ou chiffrées : DNS over TLS (port 853), DNS over HTTPS. Résolution
+      itérative par le résolveur ; avec la minimisation de la question (RFC 9156), la racine
+      ne voit que <code>net.</code>. 13 identités racine (<code>a</code> à
+      <code>m.root-servers.net</code>), 12 organisations, plus de 2 000 instances en
+      <i>anycast</i>. DNSSEC authentifie les réponses (signature) mais ne les chiffre pas.
+    </p>
+    <div slot="decide">
+      <p>
+        L'IANA (fonction assurée par une filiale de l'<Terme id="icann">ICANN</Terme>) pour la racine ;
+        Verisign, sous contrat avec l'ICANN, pour <code>.net</code> ; le bureau d'enregistrement ;
+        l'hébergeur ou le service DNS du domaine ; ton fournisseur d'accès.
+      </p>
+      <p>
+        En France, les blocages de sites passent surtout par les résolveurs des fournisseurs
+        d'accès, sur décision d'un juge, de l'administration ou de
+        l'<Terme id="arcom">Arcom</Terme>. L'<Terme id="arcep">Arcep</Terme>, elle, ne bloque rien.
+      </p>
+    </div>
+    <p slot="histoire">
+      Avant le DNS, une seule liste de noms était tenue à la main par l'équipe
+      d'<strong>Elizabeth Feinler</strong>. Le DNS (Paul Mockapetris, 1983) est né parce
+      qu'elle devenait ingérable.
+    </p>
+    <p slot="verifie">
+      <code>dig rouages.net</code> ou <code>dig +trace rouages.net</code> (Linux, macOS) ;
+      <code>nslookup rouages.net</code> (Windows).
+    </p>
+    <ul slot="mythes">
+      <li><strong>« Changer de DNS rend anonyme. »</strong> Non : ton fournisseur d'accès voit toujours l'adresse contactée, et souvent le nom du site.</li>
+      <li><strong>« Un site bloqué a disparu. »</strong> Non : il existe toujours, certains résolveurs refusent seulement de donner son adresse.</li>
+    </ul>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Ta box et ton réseau local" ancre="box" duree="~1 à 10 ms">
+    <p slot="scene">La maison, ses appareils, et la box qui réécrit l'adresse de l'enveloppe avant de la faire sortir.</p>
+    <p slot="decouverte">
+      Ton ordinateur ne parle pas directement à internet : il passe par ta
+      <Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
+    </p>
+    <p slot="curieux">
+      Chez toi, chaque appareil a une adresse privée (souvent <code>192.168.x.x</code>). Vu de
+      l'extérieur, toute la maison partage une adresse IPv4 publique, et de plus en plus
+      souvent la partage même avec d'autres abonnés : c'est le <Terme id="nat">NAT</Terme>. Avec
+      <Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonnés en France, chaque
+      appareil peut avoir sa propre adresse publique.
+    </p>
+    <p slot="ingenieur">
+      DHCP (attribution d'adresse), ARP ou NDP (trouver l'adresse matérielle de la box),
+      trames Ethernet ou Wi-Fi (IEEE 802.11), NAT avec traduction de ports ; partage
+      d'adresse par l'opérateur (CGNAT, souvent dans <code>100.64.0.0/10</code>, RFC 6598),
+      sur mobile comme, de plus en plus, sur le fixe.
+    </p>
+    <p slot="decide">L'IEEE (normes Wi-Fi et Ethernet) ; ton fournisseur d'accès ; l'Arcep, qui régule les opérateurs.</p>
+    <p slot="histoire">
+      <strong>Radia Perlman</strong> a inventé en 1985 l'algorithme de l'arbre couvrant, qui
+      permet de relier de nombreux réseaux Ethernet sans que les messages tournent en rond.
+    </p>
+    <p slot="verifie">
+      <code>ip addr</code> ou <code>ipconfig</code> (adresse privée), puis un site « quelle est
+      mon IP » (adresse publique). En IPv4 elles diffèrent ; en IPv6, ce peut être la même.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Ouvrir la liaison" ancre="liaison" duree="~10 à 100 ms">
+    <p slot="scene">Trois flèches qui se croisent ; puis des paquets numérotés qui arrivent dans le désordre et que TCP remet en ordre.</p>
+    <p slot="decouverte">
+      Avant de parler, on se dit bonjour : l'ordinateur et le serveur vérifient qu'ils
+      s'entendent avant d'échanger la page.
+    </p>
+    <p slot="curieux">
+      Internet transporte des <Terme id="paquet">paquets</Terme> indépendants, qui peuvent se perdre
+      ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il numérote, accuse
+      réception, renvoie ce qui manque. Il commence par une poignée de main en trois temps.
+      Quand le serveur le propose, les navigateurs utilisent <Terme id="quic">QUIC</Terme> (HTTP/3),
+      qui économise un aller-retour. Ce site, servi par Apache, utilise TCP et HTTP/2.
+    </p>
+    <p slot="ingenieur">
+      TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
+      numéros de séquence, contrôle de congestion. QUIC (RFC 9000) : transport chiffré sur
+      <Terme id="udp">UDP</Terme> qui fusionne l'ouverture de connexion et la poignée de main TLS ;
+      HTTP/3 est annoncé par l'en-tête <code>Alt-Svc</code> ou l'enregistrement DNS
+      <code>HTTPS</code>.
+    </p>
+    <p slot="decide">
+      L'<Terme id="ietf">IETF</Terme>, qui travaille par « consensus approximatif » et publie les
+      <Terme id="rfc">RFC</Terme>.
+    </p>
+    <p slot="histoire">
+      Le datagramme de <strong>Louis Pouzin</strong> (réseau CYCLADES, 1973), puis TCP de
+      <strong>Vint Cerf et Bob Kahn</strong> (1974), dont l'article cite CYCLADES.
+    </p>
+    <p slot="verifie">
+      Outils de développement → onglet Réseau → clic droit sur l'en-tête du tableau pour
+      afficher la colonne « Protocole » (<code>h2</code>, <code>h3</code>…).
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Le cadenas" ancre="cadenas" duree="~10 à 100 ms">
+    <div slot="scene">
+      <p>Les pots de peinture : une couleur commune, chacun ajoute sa couleur secrète, on échange les mélanges, et chacun obtient la même couleur finale sans l'avoir envoyée. Le visiteur choisit ses couleurs.</p>
+    </div>
+    <p slot="decouverte">
+      Avant d'envoyer quoi que ce soit, on s'assure de parler au <strong>bon</strong> serveur et
+      on brouille la conversation pour que personne en chemin ne puisse la lire.
+    </p>
+    <p slot="curieux">
+      Les deux machines fabriquent d'abord ensemble une clé secrète, sans jamais l'envoyer
+      sur le réseau (<Terme id="diffie-hellman">Diffie-Hellman</Terme>). Puis le serveur présente,
+      déjà chiffré, son <Terme id="certificat">certificat</Terme>, qui garantit qu'il a le droit de
+      parler au nom de <code>rouages.net</code>. Le certificat garantit le nom du site, pas
+      l'honnêteté de son propriétaire.
+    </p>
+    <p slot="ingenieur">
+      <Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
+      le SNI, part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
+      <code>Certificate</code>, <code>CertificateVerify</code>, <code>Finished</code>. Échange de
+      clés souvent X25519, de plus en plus hybride post-quantique (X25519MLKEM768).
+      Certificats journalisés (<i>Certificate Transparency</i>, RFC 6962), consultables sur
+      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de 90 jours.
+    </p>
+    <p slot="decide">
+      Les autorités de certification ; les navigateurs, qui choisissent quelles autorités
+      croire ; le CA/Browser Forum ; l'IETF pour le protocole.
+    </p>
+    <p slot="histoire">
+      Whitfield Diffie et Martin Hellman publient en 1976 l'échange de clés ; Ralph Merkle
+      avait eu indépendamment une idée voisine.
+    </p>
+    <p slot="verifie">
+      Clic sur l'icône à gauche de l'adresse (un cadenas, ou une icône de réglages dans
+      Chrome) → certificat : qui l'a émis, jusqu'à quand.
+    </p>
+    <ul slot="mythes">
+      <li><strong>« Cadenas = site sûr. »</strong> Non : un site d'hameçonnage peut avoir un cadenas.</li>
+      <li><strong>« HTTPS cache tout. »</strong> Non : le nom du site reste souvent visible, et ton fournisseur d'accès voit à quel serveur tu te connectes.</li>
+    </ul>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Le voyage des paquets" ancre="voyage" duree="~5 à 150 ms">
+    <p slot="scene">Une carte zoomable, de ta box au datacenter ; on coupe un lien et les paquets prennent une autre route ; si le serveur est lointain, la carte bascule sur les câbles sous-marins.</p>
+    <p slot="decouverte">
+      Tes paquets sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
+      passe de centre de tri en centre de tri. Personne ne connaît tout le chemin : chaque
+      routeur sait seulement où envoyer ensuite.
+    </p>
+    <p slot="curieux">
+      Depuis ta box, les paquets entrent chez ton fournisseur d'accès, puis passent d'un réseau
+      à l'autre, soit dans des <Terme id="point-echange">points d'échange</Terme> (France-IX à Paris,
+      Marseille, Lyon…), soit par des liaisons directes. Si le serveur est sur un autre
+      continent, ils empruntent un <Terme id="cable-sous-marin">câble sous-marin</Terme>. Chaque
+      réseau annonce aux autres les adresses qu'il sait atteindre : c'est
+      <Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble.
+    </p>
+    <p slot="ingenieur">
+      Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
+      routeur, avec un message ICMP <i>Time Exceeded</i> à zéro (ce qu'exploite
+      <code>traceroute</code>). Systèmes autonomes et BGP-4 (RFC 4271), <i>peering</i> et transit.
+      La RPKI vérifie l'origine d'une annonce, pas tout le chemin. Adresses distribuées par
+      l'IANA à cinq registres régionaux (RIPE NCC, AFRINIC, APNIC, ARIN, LACNIC).
+    </p>
+    <p slot="decide">
+      Les opérateurs (accords d'échange) ; les registres régionaux (adresses) ; la neutralité
+      du net (règlement européen 2015/2120, contrôlé en France par l'Arcep) ; les États
+      (coupures, censure).
+    </p>
+    <p slot="histoire">
+      Les câbles sous-marins depuis 1858 ; <strong>Kilnam Chon</strong> et le premier réseau
+      TCP/IP d'Asie (1982) ; <strong>Nii Quaynor</strong> et la connexion du Ghana (1993-1995).
+    </p>
+    <p slot="verifie"><code>traceroute rouages.net</code> (<code>tracert</code> sous Windows).</p>
+    <ul slot="mythes">
+      <li><strong>« Internet passe par satellite. »</strong> Non : l'immense majorité du trafic intercontinental passe par câble.</li>
+      <li><strong>« Le cloud est dématérialisé. »</strong> Non : ce sont des serveurs bien réels, dans des bâtiments, reliés par des câbles.</li>
+    </ul>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Le serveur répond" ancre="serveur" duree="~1 à 50 ms">
+    <p slot="scene">Une salle de serveurs, un casier par site ; Apache ouvre le bon casier et en sort index.html.</p>
+    <p slot="decouverte">
+      Le <Terme id="serveur">serveur</Terme> est un ordinateur allumé en permanence dans un
+      datacenter. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
+    </p>
+    <p slot="curieux">
+      Le navigateur envoie une requête <Terme id="http">HTTP</Terme> : « donne-moi la page d'accueil
+      de <code>rouages.net</code> ». Chez l'<Terme id="hebergeur">hébergeur</Terme>, un même serveur
+      héberge de nombreux sites : il regarde le nom demandé pour savoir lequel servir. Le
+      logiciel Apache applique les règles du site (forcer HTTPS, compresser), trouve
+      <code>index.html</code> et le renvoie avec le <Terme id="code-http">code</Terme> 200 : « tout va
+      bien ». Ce site est statique : la page a été fabriquée à l'avance.
+    </p>
+    <p slot="ingenieur">
+      En HTTP/2, pas de ligne <code>GET / HTTP/1.1</code> mais des pseudo-en-têtes
+      <code>:method</code>, <code>:path</code>, <code>:scheme</code>, <code>:authority</code>. Hôtes
+      virtuels Apache choisis selon le SNI et l'hôte demandé. Réponse <code>200</code> avec
+      <code>content-type</code>, <code>content-encoding: gzip</code>, <code>cache-control</code>.
+    </p>
+    <p slot="decide">
+      L'hébergeur ; le droit (RGPD, statut d'hébergeur) ; le WHATWG, qui rédige
+      <Terme id="html">HTML</Terme> ; l'IETF pour HTTP.
+    </p>
+    <p slot="histoire">
+      Le premier serveur web tourne au CERN fin 1990 (<strong>Tim Berners-Lee</strong>) ;
+      <strong>Nicola Pellow</strong> écrit le premier navigateur utilisable sur n'importe quel
+      terminal. <a href="/une-page-qui-n-existe-pas">Essaie une page qui n'existe pas</a> : erreur 404.
+    </p>
+    <p slot="verifie">
+      <code>curl -I https://rouages.net</code> affiche les en-têtes de la réponse (parfois
+      <code>server: nginx</code> : beaucoup d'hébergeurs placent nginx devant Apache).
+    </p>
+  </Etape>
+
+  <!-- Étape 7 -->
+  <Etape numero={7} titre="Le retour, et tout ce qui manque encore" ancre="retour" duree="~10 à 500 ms">
+    <p slot="scene">Un compteur de requêtes : quelques-unes pour ce site, toutes vers son propre serveur ; des dizaines de domaines tiers pour un site d'information type.</p>
+    <p slot="decouverte">
+      La page arrive… mais ce n'est qu'un plan. Pour la dessiner, le navigateur doit aller
+      chercher le reste : styles, images, scripts.
+    </p>
+    <p slot="curieux">
+      En lisant le HTML, le navigateur découvre d'autres fichiers à demander
+      (<Terme id="css">CSS</Terme>, images, polices, scripts), sur la même connexion, en parallèle.
+      Ce qu'il a déjà en cache n'est pas redemandé. Sur beaucoup de sites, ces fichiers
+      viennent aussi d'autres serveurs : publicité, statistiques, réseaux sociaux. Ce site
+      n'en utilise aucun.
+    </p>
+    <p slot="ingenieur">
+      Multiplexage HTTP/2 ; fichiers versionnés <code>/_astro/…</code> mis en cache un an
+      (<code>immutable</code>) ; ressources qui bloquent le rendu ; requêtes tierces.
+    </p>
+    <p slot="decide">
+      L'éditeur du site (quels services tiers il intègre) ; la directive ePrivacy et le RGPD
+      (consentement aux <Terme id="cookie">cookies</Terme>), contrôlés par la CNIL ; les navigateurs,
+      qui bloquent ou cloisonnent plus ou moins les cookies tiers.
+    </p>
+    <p slot="verifie">Outils de développement → onglet Réseau : nombre de requêtes et domaines contactés.</p>
+  </Etape>
+
+  <!-- Étape 8 -->
+  <Etape numero={8} titre="L'affichage" ancre="affichage" duree="~10 à 200 ms">
+    <p slot="scene">La page se construit en fil de fer, puis se colore, puis s'anime.</p>
+    <p slot="decouverte">
+      Le navigateur assemble les pièces comme un puzzle : il lit le plan, applique le style,
+      place chaque élément, puis peint l'écran.
+    </p>
+    <p slot="curieux">
+      Le HTML devient un arbre d'éléments (le <Terme id="dom">DOM</Terme>), le CSS dit à quoi chacun
+      ressemble, le navigateur calcule la place de chaque bloc, puis dessine les pixels. Les
+      scripts peuvent ensuite modifier la page.
+    </p>
+    <p slot="ingenieur">
+      HTML → DOM ; CSS → CSSOM ; arbre de rendu ; <i>layout</i> ; <i>paint</i> ; composition
+      (souvent sur la carte graphique). Mesures : First Contentful Paint, Largest Contentful
+      Paint (Google recommande un LCP de 2,5 s au plus).
+    </p>
+  </Etape>
+
+  <section class="pannes" aria-labelledby="titre-pannes">
+    <h2 id="titre-pannes">Et si ça ne marche pas ?</h2>
+    <p>Chaque message d'erreur correspond à une étape que tu connais maintenant.</p>
+    <table>
+      <thead><tr><th scope="col">Message</th><th scope="col">Étape en cause</th></tr></thead>
+      <tbody>
+        <tr><td>« Ce site est inaccessible », <code>DNS_PROBE_FINISHED_NXDOMAIN</code></td><td><a href="#nom">1 — Le nom</a></td></tr>
+        <tr><td>Pas de Wi-Fi, pas d'internet</td><td><a href="#box">2 — La box</a></td></tr>
+        <tr><td>« La connexion a expiré »</td><td><a href="#liaison">3 — La liaison</a> ou <a href="#voyage">5 — Le voyage</a></td></tr>
+        <tr><td>« Votre connexion n'est pas privée »</td><td><a href="#cadenas">4 — Le cadenas</a></td></tr>
+        <tr><td>Erreur 404</td><td><a href="#serveur">6 — Le serveur ne trouve pas la page</a></td></tr>
+        <tr><td>Erreur 500</td><td><a href="#serveur">6 — Erreur interne du serveur</a></td></tr>
+        <tr><td>Erreur 503</td><td><a href="#serveur">6 — Service indisponible (surcharge ou maintenance)</a></td></tr>
+      </tbody>
+    </table>
+    <p class="tag">Les durées indiquées sont des ordres de grandeur, qui varient selon ta connexion et la distance du serveur.</p>
+  </section>
+
+  <Sources
+    verifie="2026-10-11"
+    sources={[
+      { auteur: 'RFC Editor', titre: 'RFC 8446 — TLS 1.3', url: 'https://www.rfc-editor.org/rfc/rfc8446', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9293 — TCP', url: 'https://www.rfc-editor.org/rfc/rfc9293', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9000 — QUIC', url: 'https://www.rfc-editor.org/rfc/rfc9000', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 4271 — BGP-4', url: 'https://www.rfc-editor.org/rfc/rfc4271', type: 'primaire', langue: 'en' },
+      { titre: 'Root Server Technical Operations', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
+    ]}
+  />
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1.5rem 0; }
+  .reglages .tag { margin: 0; }
+  .frise {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    margin: 0 -1rem;
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+  }
+  .frise ol { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+  .frise a {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+  .frise a[aria-current='step'] { background: var(--accent); color: var(--bg); }
+  .pastille {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    font-size: 0.8rem;
+  }
+  @media (max-width: 40rem) {
+    .court { display: none; }
+    .frise a[aria-current='step'] .court { display: inline; }
+  }
+  .pannes { padding-top: 2rem; border-top: 1px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td code { overflow-wrap: anywhere; }
+</style>
+
+<script>
+  // Met en surbrillance, dans la frise, l'étape en cours de lecture.
+  const frise = document.querySelector<HTMLElement>('.frise');
+  const liens = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('.frise a').forEach((a) => {
+    liens.set(a.hash.slice(1), a);
+  });
+  const marquer = (id: string) => {
+    liens.forEach((a, cle) => {
+      if (cle === id) {
+        a.setAttribute('aria-current', 'step');
+        frise?.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' });
+      } else {
+        a.removeAttribute('aria-current');
+      }
+    });
+  };
+  const observateur = new IntersectionObserver(
+    (entrees) => {
+      entrees.filter((e) => e.isIntersecting).forEach((e) => marquer(e.target.id));
+    },
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  document.querySelectorAll('.etape').forEach((s) => observateur.observe(s));
+</script>
