@@ -44,9 +44,9 @@ import Sources from '../../../components/Sources.astro';
 
 <style>
   .terminal {
-    background: #0f1410;
-    color: #c9f5c9;
-    font: 0.95rem/1.5 ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    background: var(--terminal-bg);
+    color: var(--terminal-fg);
+    font: 0.95rem/1.5 var(--police-mono);
     border-radius: 0.75rem;
     padding: 1rem;
     min-height: 24rem;
@@ -55,9 +55,9 @@ import Sources from '../../../components/Sources.astro';
     cursor: text;
   }
   #sortie :global(pre) { margin: 0 0 0.5rem; white-space: pre-wrap; word-break: break-word; font: inherit; }
-  #sortie :global(.cmd) { color: #8fd18f; }
+  #sortie :global(.cmd) { color: color-mix(in oklab, var(--terminal-fg) 75%, var(--terminal-bg)); }
   form { display: flex; gap: 0.5ch; }
-  .invite { color: #f0b46a; white-space: nowrap; }
+  .invite { color: var(--terminal-invite); white-space: nowrap; }
   input {
     flex: 1;
     min-width: 0;
@@ -66,7 +66,7 @@ import Sources from '../../../components/Sources.astro';
     color: inherit;
     font: inherit;
     outline: none;
-    caret-color: #c9f5c9;
+    caret-color: var(--terminal-fg);
   }
   kbd { border: 1px solid var(--border); border-radius: 0.25rem; padding: 0 0.3em; font-size: 0.85em; }
 </style>

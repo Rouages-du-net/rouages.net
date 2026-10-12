@@ -1,0 +1,382 @@
+---
+// Animation « Les pots de peinture » : l'échange de clés Diffie-Hellman
+// expliqué par des mélanges de couleurs (étape 4 du module « De l'Entrée
+// à la page »).
+//
+// Chaque pot est un ensemble de pigments ; sa couleur est la moyenne des
+// pigments dans l'espace OKLab. Ainsi « commun + A » puis « + B » donne
+// exactement la même couleur que « commun + B » puis « + A », comme le vrai
+// Diffie-Hellman donne le même secret aux deux parties. L'espion, qui n'a
+// que les deux mélanges, compte la couleur commune deux fois : il obtient
+// une autre teinte.
+//
+// Sans JavaScript, la liste ordonnée des étapes (texte) reste lisible.
+
+// Petit exemple numérique pour le niveau 🔴, calculé à la construction.
+const p = 23;
+const g = 5;
+const a = 6;
+const b = 15;
+const puissanceMod = (base: number, exp: number, mod: number) => {
+  let r = 1;
+  for (let i = 0; i < exp; i++) r = (r * base) % mod;
+  return r;
+};
+const A = puissanceMod(g, a, p);
+const B = puissanceMod(g, b, p);
+const sNav = puissanceMod(B, a, p);
+const sSrv = puissanceMod(A, b, p);
+if (sNav !== sSrv) throw new Error('Exemple Diffie-Hellman incohérent');
+
+const choix = [
+  { id: 'secret-a', nom: 'violet' },
+  { id: 'secret-b', nom: 'vert' },
+  { id: 'client', nom: 'sarcelle' },
+  { id: 'paquet', nom: 'cuivre' },
+  { id: 'serveur', nom: 'bronze' },
+];
+
+const etapes = [
+  "Ton navigateur et le serveur se mettent d'accord sur une couleur commune. Elle passe sur le réseau : l'espion la voit.",
+  "Chacun choisit une couleur secrète, qu'il garde pour lui. Elle ne voyagera jamais.",
+  'Chacun mélange la couleur commune avec sa couleur secrète.',
+  "Ils s'échangent leurs mélanges sur le réseau. L'espion les voit passer.",
+  'Chacun ajoute sa couleur secrète au mélange reçu : les deux obtiennent la même couleur finale, qui servira de clé.',
+  "L'espion, lui, n'a que la couleur commune et les deux mélanges. En les combinant, il n'obtient pas la bonne teinte : il lui manque un secret.",
+];
+---
+<div class="pots" data-pots>
+  <ol class="texte-etapes">
+    {etapes.map((t) => <li>{t}</li>)}
+  </ol>
+
+  <div class="scene" hidden>
+    <div class="colonnes">
+      <section class="colonne nav" aria-labelledby="pots-nav">
+        <h4 id="pots-nav">Ton navigateur</h4>
+        <div class="choix" data-choix="nav" data-des="2">
+          <p class="legende">Ta couleur secrète :</p>
+          <div class="pastilles" role="radiogroup" aria-label="Couleur secrète du navigateur">
+            {choix.map((c, i) => (
+              <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-couleur={c.id} style={`--c: var(--ill-${c.id})`} aria-label={c.nom} />
+            ))}
+          </div>
+        </div>
+        <div class="pot" data-pot="nav-secret" data-des="2"><span></span><p>Secret</p></div>
+        <div class="pot" data-pot="nav-melange" data-des="3"><span></span><p>Commun + secret</p></div>
+        <div class="pot final" data-pot="nav-final" data-des="5"><span></span><p>Couleur finale</p></div>
+      </section>
+
+      <section class="colonne reseau" aria-labelledby="pots-reseau">
+        <h4 id="pots-reseau">Le réseau <small>(et l'espion 👀)</small></h4>
+        <div class="pot" data-pot="commun" data-des="1"><span></span><p>Couleur commune</p></div>
+        <div class="pot echange" data-pot="vu-nav" data-des="4"><span></span><p>→ mélange du navigateur</p></div>
+        <div class="pot echange" data-pot="vu-srv" data-des="4"><span></span><p>← mélange du serveur</p></div>
+        <div class="comparaison">
+          <div class="pot espion" data-pot="espion" data-des="6"><span></span><p>Essai de l'espion</p></div>
+          <div class="pot" data-pot="reference" data-des="6"><span></span><p>Vraie couleur finale</p></div>
+        </div>
+      </section>
+
+      <section class="colonne srv" aria-labelledby="pots-srv">
+        <h4 id="pots-srv">Le serveur</h4>
+        <div class="choix" data-choix="srv" data-des="2">
+          <p class="legende">Sa couleur secrète :</p>
+          <div class="pastilles" role="radiogroup" aria-label="Couleur secrète du serveur">
+            {choix.map((c, i) => (
+              <button type="button" role="radio" aria-checked={i === 1 ? 'true' : 'false'} data-couleur={c.id} style={`--c: var(--ill-${c.id})`} aria-label={c.nom} />
+            ))}
+          </div>
+        </div>
+        <div class="pot" data-pot="srv-secret" data-des="2"><span></span><p>Secret</p></div>
+        <div class="pot" data-pot="srv-melange" data-des="3"><span></span><p>Commun + secret</p></div>
+        <div class="pot final" data-pot="srv-final" data-des="5"><span></span><p>Couleur finale</p></div>
+      </section>
+    </div>
+
+    <p class="legende-etape" aria-live="polite"></p>
+    <p class="verdict" aria-live="polite"></p>
+
+    <div class="commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+
+  <details class="en-vrai">
+    <summary>Et en vrai, avec des nombres ?</summary>
+    <p>
+      Les « couleurs » sont des nombres, et le « mélange » est un calcul facile dans un
+      sens, mais très difficile à défaire. Exemple minuscule (les vrais nombres ont des
+      centaines de chiffres) : nombres publics <var>p</var> = {p} et <var>g</var> = {g}.
+    </p>
+    <ul>
+      <li>Secret du navigateur <var>a</var> = {a} ; il envoie <var>g</var><sup><var>a</var></sup> mod {p} = <strong>{A}</strong>.</li>
+      <li>Secret du serveur <var>b</var> = {b} ; il envoie <var>g</var><sup><var>b</var></sup> mod {p} = <strong>{B}</strong>.</li>
+      <li>Le navigateur calcule {B}<sup>{a}</sup> mod {p} = <strong>{sNav}</strong> ; le serveur calcule {A}<sup>{b}</sup> mod {p} = <strong>{sSrv}</strong>. Même secret.</li>
+    </ul>
+    <p>
+      L'espion voit {p}, {g}, {A} et {B}, mais pour retrouver <var>a</var> ou <var>b</var> il
+      devrait résoudre un « logarithme discret », hors de portée avec de grands nombres.
+      Aujourd'hui, TLS utilise surtout la même idée sur des courbes elliptiques (X25519).
+    </p>
+  </details>
+
+  <aside class="nuances">
+    <p>
+      <strong>Deux nuances.</strong> En vrai, la difficulté à « démélanger » est
+      mathématique, pas une question de peinture. Et ce mélange seul ne dit
+      pas{' '}<em>avec qui</em> on parle : un imposteur pourrait jouer le rôle du serveur. C'est
+      pour cela que le serveur présente aussi un <strong>certificat</strong>.
+    </p>
+  </aside>
+</div>
+
+<script>
+  // --- Conversions sRGB ↔ OKLab (Björn Ottosson, 2020) ---
+  type Lab = [number, number, number];
+  const versLineaire = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  const versGamma = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+
+  function hexVersLab(hex: string): Lab {
+    const h = hex.trim().replace('#', '');
+    const [r, g, b] = [0, 2, 4].map((i) => versLineaire(parseInt(h.slice(i, i + 2), 16) / 255));
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [
+      0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+      1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+      0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    ];
+  }
+
+  function labVersHex([L, A, B]: Lab): string {
+    const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3;
+    const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
+    const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
+    const rgb = [
+      4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+      -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+      -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+    ];
+    return (
+      '#' +
+      rgb
+        .map((c) => Math.round(Math.min(1, Math.max(0, versGamma(c))) * 255).toString(16).padStart(2, '0'))
+        .join('')
+    );
+  }
+
+  /** Couleur d'un pot = moyenne de ses pigments en OKLab. */
+  function melanger(pigments: string[]): string {
+    // Tri : l'ordre des additions ne doit pas changer l'arrondi final.
+    const labs = [...pigments].sort().map(hexVersLab);
+    const moy = [0, 1, 2].map((i) => labs.reduce((t, c) => t + c[i], 0) / labs.length) as Lab;
+    return labVersHex(moy);
+  }
+
+  const lireVariable = (nom: string) => getComputedStyle(document.documentElement).getPropertyValue(nom).trim();
+
+  document.querySelectorAll<HTMLElement>('[data-pots]').forEach((racine) => {
+    const scene = racine.querySelector<HTMLElement>('.scene')!;
+    const texte = racine.querySelector<HTMLOListElement>('.texte-etapes')!;
+    const etapes = [...texte.querySelectorAll('li')].map((li) => li.textContent ?? '');
+    const legende = racine.querySelector<HTMLElement>('.legende-etape')!;
+    const verdict = racine.querySelector<HTMLElement>('.verdict')!;
+    const compteur = racine.querySelector<HTMLElement>('.compteur')!;
+    const precedent = racine.querySelector<HTMLButtonElement>('[data-action="precedent"]')!;
+    const suivant = racine.querySelector<HTMLButtonElement>('[data-action="suivant"]')!;
+
+    // Avec JavaScript : la scène interactive remplace la liste de texte,
+    // qui reste disponible pour les lecteurs d'écran via la légende.
+    scene.hidden = false;
+    texte.hidden = true;
+
+    let etape = 1;
+    const secrets = { nav: 'secret-a', srv: 'secret-b' };
+
+    const pot = (nom: string, couleur: string) => {
+      const el = racine.querySelector<HTMLElement>(`[data-pot="${nom}"] span`)!;
+      el.style.background = couleur;
+      el.dataset.couleur = couleur;
+    };
+
+    function dessiner() {
+      const commun = lireVariable('--ill-commun');
+      const sa = lireVariable(`--ill-${secrets.nav}`);
+      const sb = lireVariable(`--ill-${secrets.srv}`);
+      const melA = melanger([commun, sa]);
+      const melB = melanger([commun, sb]);
+      const finNav = melanger([commun, sb, sa]);
+      const finSrv = melanger([commun, sa, sb]);
+      const espion = melanger([commun, sa, commun, sb]);
+
+      pot('commun', commun);
+      pot('nav-secret', sa);
+      pot('srv-secret', sb);
+      pot('nav-melange', melA);
+      pot('srv-melange', melB);
+      pot('vu-nav', melA);
+      pot('vu-srv', melB);
+      pot('nav-final', finNav);
+      pot('srv-final', finSrv);
+      pot('espion', espion);
+      pot('reference', finNav);
+
+      racine.querySelectorAll<HTMLElement>('[data-des]').forEach((el) => {
+        el.classList.toggle('visible', etape >= Number(el.dataset.des));
+      });
+      // Les secrets ne se choisissent qu'à l'étape 2.
+      racine.querySelectorAll<HTMLButtonElement>('.pastilles button').forEach((bt) => {
+        bt.disabled = etape !== 2;
+      });
+
+      legende.textContent = `Étape ${etape} sur ${etapes.length} : ${etapes[etape - 1]}`;
+      verdict.textContent =
+        etape === 5
+          ? finNav === finSrv
+            ? '✔ Les deux couleurs finales sont identiques.'
+            : ''
+          : etape === 6
+            ? "✘ La couleur de l'espion est différente de la couleur finale."
+            : '';
+      compteur.textContent = `${etape} / ${etapes.length}`;
+      precedent.disabled = etape === 1;
+      suivant.disabled = etape === etapes.length;
+    }
+
+    racine.querySelectorAll<HTMLElement>('[data-choix]').forEach((groupe) => {
+      const qui = groupe.dataset.choix as 'nav' | 'srv';
+      const boutons = [...groupe.querySelectorAll<HTMLButtonElement>('button')];
+      const choisir = (bt: HTMLButtonElement) => {
+        boutons.forEach((b) => b.setAttribute('aria-checked', String(b === bt)));
+        secrets[qui] = bt.dataset.couleur!;
+        dessiner();
+      };
+      boutons.forEach((bt, i) => {
+        bt.addEventListener('click', () => choisir(bt));
+        // Flèches gauche/droite dans le groupe, comme des boutons radio.
+        bt.addEventListener('keydown', (e) => {
+          const pas = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (!pas) return;
+          e.preventDefault();
+          const cible = boutons[(i + pas + boutons.length) % boutons.length];
+          cible.focus();
+          choisir(cible);
+        });
+      });
+    });
+
+    precedent.addEventListener('click', () => {
+      etape = Math.max(1, etape - 1);
+      dessiner();
+    });
+    suivant.addEventListener('click', () => {
+      etape = Math.min(etapes.length, etape + 1);
+      dessiner();
+    });
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', () => {
+      etape = 1;
+      dessiner();
+    });
+    // Le thème (clair/sombre) change les couleurs : on redessine.
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', dessiner);
+
+    dessiner();
+  });
+</script>
+
+<style>
+  .pots { margin: 1rem 0; }
+  .colonnes {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    gap: 0.75rem;
+  }
+  .colonne {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: center;
+    text-align: center;
+  }
+  .colonne.nav { border-top: 4px solid var(--ill-client); }
+  .colonne.reseau { border-top: 4px solid var(--ill-reseau); background: transparent; border-style: dashed; }
+  .colonne.srv { border-top: 4px solid var(--ill-serveur); }
+  h4 { margin: 0; font-size: 0.95rem; }
+  h4 small { font-weight: normal; color: var(--muted); }
+  .legende { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .pastilles { display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center; }
+  .pastilles button {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--c);
+    cursor: pointer;
+    padding: 0;
+  }
+  .pastilles button[aria-checked='true'] { outline: 3px solid var(--fg); outline-offset: 2px; }
+  .pastilles button:disabled { cursor: default; opacity: 0.55; }
+  .pastilles button:disabled[aria-checked='true'] { opacity: 1; }
+  .pot {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.4rem);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s;
+  }
+  .pot.visible, .choix.visible { opacity: 1; visibility: visible; transform: none; }
+  .choix { opacity: 0.35; }
+  .pot span {
+    display: block;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin: 0 auto;
+    border-radius: 0.4rem 0.4rem 1.1rem 1.1rem;
+    border: 2px solid var(--fg);
+    border-top-width: 5px;
+  }
+  .pot p { margin: 0.25rem 0 0; font-size: 0.8rem; }
+  .pot.final span { width: 4rem; height: 4rem; }
+  .pot.espion span { border-style: dashed; }
+  .comparaison { display: flex; gap: 0.75rem; justify-content: center; }
+  .legende-etape { margin: 1rem 0 0.25rem; font-weight: 600; min-height: 3em; }
+  .verdict { margin: 0; min-height: 1.6em; color: var(--accent-2); font-weight: 600; }
+  .commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+  .commandes button {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .commandes button[data-action='suivant'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .commandes button:disabled { opacity: 0.45; cursor: default; }
+  .compteur { color: var(--muted); font-size: 0.9rem; }
+  .en-vrai, .nuances {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  .en-vrai summary { cursor: pointer; font-weight: 600; }
+  .nuances p { margin: 0; }
+
+  @media (max-width: 40rem) {
+    .colonnes { grid-template-columns: 1fr 1fr; }
+    .colonne.reseau { grid-column: 1 / -1; grid-row: 2; }
+    .pot span { width: 2.75rem; height: 2.75rem; }
+  }
+</style>

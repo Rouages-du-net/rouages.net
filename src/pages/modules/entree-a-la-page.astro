@@ -4,6 +4,7 @@ import Etape from '../../components/Etape.astro';
 import Terme from '../../components/Terme.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
 import Sources from '../../components/Sources.astro';
+import PotsDePeinture from '../../components/animations/PotsDePeinture.astro';
 
 const etapes = [
   { ancre: 'avant', court: 'Avant' },
@@ -201,9 +202,7 @@ const etapes = [
 
   <!-- Étape 4 -->
   <Etape numero={4} titre="Le cadenas" ancre="cadenas" duree="~10 à 100 ms">
-    <div slot="scene">
-      <p>Les pots de peinture : une couleur commune, chacun ajoute sa couleur secrète, on échange les mélanges, et chacun obtient la même couleur finale sans l'avoir envoyée. Le visiteur choisit ses couleurs.</p>
-    </div>
+    <PotsDePeinture slot="animation" />
     <p slot="decouverte">
       Avant d'envoyer quoi que ce soit, on s'assure de parler au <strong>bon</strong> serveur et
       on brouille la conversation pour que personne en chemin ne puisse la lire.
