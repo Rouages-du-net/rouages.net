@@ -634,3 +634,18 @@ répond aujourd'hui**, pas le futur site Astro.
 - Libellés exacts des messages d'erreur (« Ce site est inaccessible »,
   « La connexion a expiré ») : varient selon le navigateur et la version ; non
   vérifiés.
+
+## Inspirations des animations
+
+- **Les pots de peinture** (étape 4) : analogie classique de l'échange de clés
+  Diffie-Hellman, que nous n'avons pas inventée. Sources vérifiées le
+  12 octobre 2026 :
+  1. A. J. Han Vinck (université de Duisburg-Essen), schéma original,
+     *Introduction to public key cryptography*, p. 16 ; version SVG par
+     Flugaal, domaine public — https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg
+     — S — en (le document de Vinck lui-même n'a pas été retrouvé en ligne).
+  2. Art of the Problem, « Diffie-Hellman Key Exchange », vidéo YouTube —
+     https://www.youtube.com/watch?v=3QnD2c4Xovk — S — en (titre et auteur
+     vérifiés via l'API oEmbed de YouTube).
+  - L'origine première de l'analogie n'est pas établie : ne pas l'attribuer à
+    une seule personne.

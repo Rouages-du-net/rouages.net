@@ -5,6 +5,8 @@ import Terme from '../../components/Terme.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
 import Sources from '../../components/Sources.astro';
 import PotsDePeinture from '../../components/animations/PotsDePeinture.astro';
+import QuestionDns from '../../components/animations/QuestionDns.astro';
+import VoyagePaquets from '../../components/animations/VoyagePaquets.astro';
 
 const etapes = [
   { ancre: 'avant', court: 'Avant' },
@@ -73,11 +75,11 @@ const etapes = [
 
   <!-- Étape 1 -->
   <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~1 à 100 ms">
-    <p slot="scene">Une question rebondit : serveur racine → registre de <code>.net</code> → serveurs du domaine, sur une carte du monde.</p>
+    <QuestionDns slot="animation" />
     <div slot="decouverte">
       <p>
         Les ordinateurs ne connaissent pas les noms, seulement des numéros : les
-        <Terme id="adresse-ip">adresses IP</Terme>. Le <Terme id="dns">DNS</Terme>, c'est l'annuaire
+        {' '}<Terme id="adresse-ip">adresses IP</Terme>. Le <Terme id="dns">DNS</Terme>, c'est l'annuaire
         d'internet. Mais aucun annuaire ne contient tout : on demande de proche en proche,
         comme on demanderait son chemin.
       </p>
@@ -139,13 +141,13 @@ const etapes = [
     <p slot="scene">La maison, ses appareils, et la box qui réécrit l'adresse de l'enveloppe avant de la faire sortir.</p>
     <p slot="decouverte">
       Ton ordinateur ne parle pas directement à internet : il passe par ta
-      <Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
+      {' '}<Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
     </p>
     <p slot="curieux">
       Chez toi, chaque appareil a une adresse privée (souvent <code>192.168.x.x</code>). Vu de
       l'extérieur, toute la maison partage une adresse IPv4 publique, et de plus en plus
       souvent la partage même avec d'autres abonnés : c'est le <Terme id="nat">NAT</Terme>. Avec
-      <Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonnés en France, chaque
+      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonnés en France, chaque
       appareil peut avoir sa propre adresse publique.
     </p>
     <p slot="ingenieur">
@@ -182,13 +184,13 @@ const etapes = [
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
       numéros de séquence, contrôle de congestion. QUIC (RFC 9000) : transport chiffré sur
-      <Terme id="udp">UDP</Terme> qui fusionne l'ouverture de connexion et la poignée de main TLS ;
+      {' '}<Terme id="udp">UDP</Terme> qui fusionne l'ouverture de connexion et la poignée de main TLS ;
       HTTP/3 est annoncé par l'en-tête <code>Alt-Svc</code> ou l'enregistrement DNS
       <code>HTTPS</code>.
     </p>
     <p slot="decide">
       L'<Terme id="ietf">IETF</Terme>, qui travaille par « consensus approximatif » et publie les
-      <Terme id="rfc">RFC</Terme>.
+      {' '}<Terme id="rfc">RFC</Terme>.
     </p>
     <p slot="histoire">
       Le datagramme de <strong>Louis Pouzin</strong> (réseau CYCLADES, 1973), puis TCP de
@@ -215,7 +217,7 @@ const etapes = [
       l'honnêteté de son propriétaire.
     </p>
     <p slot="ingenieur">
-      <Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
+      {' '}<Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
       le SNI, part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
       <code>Certificate</code>, <code>CertificateVerify</code>, <code>Finished</code>. Échange de
       clés souvent X25519, de plus en plus hybride post-quantique (X25519MLKEM768).
@@ -242,7 +244,7 @@ const etapes = [
 
   <!-- Étape 5 -->
   <Etape numero={5} titre="Le voyage des paquets" ancre="voyage" duree="~5 à 150 ms">
-    <p slot="scene">Une carte zoomable, de ta box au datacenter ; on coupe un lien et les paquets prennent une autre route ; si le serveur est lointain, la carte bascule sur les câbles sous-marins.</p>
+    <VoyagePaquets slot="animation" />
     <p slot="decouverte">
       Tes paquets sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
       passe de centre de tri en centre de tri. Personne ne connaît tout le chemin : chaque
@@ -254,7 +256,7 @@ const etapes = [
       Marseille, Lyon…), soit par des liaisons directes. Si le serveur est sur un autre
       continent, ils empruntent un <Terme id="cable-sous-marin">câble sous-marin</Terme>. Chaque
       réseau annonce aux autres les adresses qu'il sait atteindre : c'est
-      <Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble.
+      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble.
     </p>
     <p slot="ingenieur">
       Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
@@ -302,7 +304,7 @@ const etapes = [
     </p>
     <p slot="decide">
       L'hébergeur ; le droit (RGPD, statut d'hébergeur) ; le WHATWG, qui rédige
-      <Terme id="html">HTML</Terme> ; l'IETF pour HTTP.
+      {' '}<Terme id="html">HTML</Terme> ; l'IETF pour HTTP.
     </p>
     <p slot="histoire">
       Le premier serveur web tourne au CERN fin 1990 (<strong>Tim Berners-Lee</strong>) ;
@@ -386,6 +388,8 @@ const etapes = [
       { auteur: 'RFC Editor', titre: 'RFC 9000 — QUIC', url: 'https://www.rfc-editor.org/rfc/rfc9000', type: 'primaire', langue: 'en' },
       { auteur: 'RFC Editor', titre: 'RFC 4271 — BGP-4', url: 'https://www.rfc-editor.org/rfc/rfc4271', type: 'primaire', langue: 'en' },
       { titre: 'Root Server Technical Operations', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'A. J. Han Vinck (schéma original), Wikimedia Commons', titre: "Diffie-Hellman Key Exchange (l'analogie des pots de peinture)", url: 'https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg', type: 'site', langue: 'en' },
+      { auteur: 'Art of the Problem', titre: 'Diffie-Hellman Key Exchange (vidéo)', url: 'https://www.youtube.com/watch?v=3QnD2c4Xovk', type: 'site', langue: 'en' },
     ]}
   />
 </Base>
