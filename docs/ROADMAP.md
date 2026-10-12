@@ -18,7 +18,10 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [ ] Relecture du scénario (technique et grand public)
 - [x] Page du module avec frise des étapes et curseur de niveau : `/modules/entree-a-la-page/`
 - [x] Animation « Les pots de peinture » (étape 4, échange de clés)
-- [ ] Animations des autres scènes (aujourd'hui décrites en texte) : voyage des paquets, DNS…
+- [x] Animation « La question qui rebondit » (étape 1, DNS : trois situations)
+- [x] Animation « Le voyage des paquets » (étape 5 : routes de secours, coupures, TTL et traceroute)
+- [ ] Animations des autres scènes : barre d'adresse, box et NAT, poignée de main TCP, serveur, compteur de requêtes, affichage
+- [ ] Variante « serveur lointain » du voyage des paquets, par câble sous-marin
 - [x] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
 - [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
 - [x] Glossaire : 34 premiers termes, page `/glossaire/`

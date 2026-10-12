@@ -1,0 +1,277 @@
+---
+// Animation « La question qui rebondit » : résolution DNS de rouages.net
+// (étape 1 du module « De l'Entrée à la page »).
+//
+// Trois scénarios : mémoire vide (on passe par la racine), cas courant (le
+// résolveur connaît déjà les serveurs de .net), et réponse déjà en mémoire.
+// Sans JavaScript, le déroulé du premier scénario reste lisible en texte.
+
+interface Message {
+  de: string;
+  a: string;
+  texte: string;
+  note?: string;
+}
+
+// Adresse réservée à la documentation (RFC 5737), pas l'adresse réelle.
+const IP = '203.0.113.42';
+
+const scenarios: Record<string, { nom: string; messages: Message[] }> = {
+  vide: {
+    nom: 'Mémoire vide',
+    messages: [
+      { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »", note: 'Ton navigateur demande au résolveur de ton fournisseur d’accès.' },
+      { de: 'res', a: 'racine', texte: '« Qui gère .net ? »', note: 'Le résolveur ne demande à la racine que ce dont elle a besoin : elle ne voit que « net. ».' },
+      { de: 'racine', a: 'res', texte: '« Voici les serveurs de .net. »', note: 'La racine ne connaît pas rouages.net : elle indique seulement à qui demander ensuite.' },
+      { de: 'res', a: 'tld', texte: '« Qui gère rouages.net ? »' },
+      { de: 'tld', a: 'res', texte: '« Voici les serveurs DNS de rouages.net. »', note: 'Le registre de .net (Verisign) sait quels serveurs font autorité pour le domaine.' },
+      { de: 'res', a: 'dom', texte: "« Quelle est l'adresse de rouages.net ? »" },
+      { de: 'dom', a: 'res', texte: `« ${IP}, valable une heure. »`, note: 'La réponse porte une durée de vie (TTL) : le résolveur la garde en mémoire.' },
+      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Ton navigateur peut maintenant contacter le serveur. Tout cela a pris de quelques millisecondes à une centaine.' },
+    ],
+  },
+  courant: {
+    nom: 'Cas courant',
+    messages: [
+      { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »" },
+      { de: 'res', a: 'tld', texte: '« Qui gère rouages.net ? »', note: 'Le résolveur connaît déjà les serveurs de .net (il les garde deux jours) : pas besoin de la racine.' },
+      { de: 'tld', a: 'res', texte: '« Voici les serveurs DNS de rouages.net. »' },
+      { de: 'res', a: 'dom', texte: "« Quelle est l'adresse de rouages.net ? »" },
+      { de: 'dom', a: 'res', texte: `« ${IP}, valable une heure. »` },
+      { de: 'res', a: 'nav', texte: `« ${IP} »` },
+    ],
+  },
+  memoire: {
+    nom: 'Déjà en mémoire',
+    messages: [
+      { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »" },
+      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Quelqu’un a déjà demandé il y a moins d’une heure : le résolveur répond aussitôt, de mémoire.' },
+    ],
+  },
+};
+
+const noeuds = [
+  { id: 'nav', nom: 'Ton navigateur', sous: 'ton appareil', x: 90, y: 150, role: 'client' },
+  { id: 'res', nom: 'Résolveur DNS', sous: 'chez ton fournisseur', x: 330, y: 150, role: 'reseau' },
+  { id: 'racine', nom: 'Serveur racine', sous: '13 identités, 2 000+ lieux', x: 610, y: 50, role: 'serveur' },
+  { id: 'tld', nom: 'Registre de .net', sous: 'Verisign', x: 610, y: 150, role: 'serveur' },
+  { id: 'dom', nom: 'Serveurs du domaine', sous: "chez l'hébergeur", x: 610, y: 250, role: 'serveur' },
+];
+---
+<div class="dns" data-dns data-scenarios={JSON.stringify(scenarios)} data-noeuds={JSON.stringify(noeuds)}>
+  <ol class="texte-etapes">
+    {scenarios.vide.messages.map((m) => (
+      <li>
+        <strong>{noeuds.find((n) => n.id === m.de)!.nom} → {noeuds.find((n) => n.id === m.a)!.nom}</strong> : {m.texte}
+        {m.note && <> {m.note}</>}
+      </li>
+    ))}
+  </ol>
+
+  <div class="scene" hidden>
+    <fieldset class="scenarios">
+      <legend>Situation</legend>
+      {Object.entries(scenarios).map(([id, s], i) => (
+        <label><input type="radio" name="dns-scenario" value={id} checked={i === 0} /> {s.nom}</label>
+      ))}
+    </fieldset>
+
+    <div class="cadre">
+      <svg viewBox="0 0 720 300" role="img" aria-labelledby="dns-titre">
+        <title id="dns-titre">Schéma : ton navigateur, le résolveur DNS, et les trois niveaux de serveurs DNS (racine, .net, domaine).</title>
+        <defs>
+          <marker id="dns-fleche" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--ill-paquet)" />
+          </marker>
+        </defs>
+        <g class="liens">
+          {noeuds.slice(2).map((n) => (
+            <line x1="330" y1="150" x2={n.x} y2={n.y} />
+          ))}
+          <line x1="90" y1="150" x2="330" y2="150" />
+        </g>
+        <line class="fleche" x1="0" y1="0" x2="0" y2="0" marker-end="url(#dns-fleche)" />
+        {noeuds.map((n) => (
+          <g class={`noeud ${n.role}`} data-noeud={n.id} transform={`translate(${n.x} ${n.y})`}>
+            <rect x="-80" y="-30" width="160" height="60" rx="10" />
+            <text y="-4" class="nom">{n.nom}</text>
+            <text y="16" class="sous">{n.sous}</text>
+          </g>
+        ))}
+        <g class="question" transform="translate(90 120)">
+          <circle r="11" />
+          <text y="5">?</text>
+        </g>
+      </svg>
+    </div>
+
+    <p class="message" aria-live="polite"></p>
+    <p class="note"></p>
+
+    <div class="commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="tout">▶▶ Tout jouer</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { deplacer, bord, mouvementReduit } from '../../lib/anim';
+
+  interface Message { de: string; a: string; texte: string; note?: string }
+  interface Noeud { id: string; nom: string; x: number; y: number }
+
+  document.querySelectorAll<HTMLElement>('[data-dns]').forEach((racine) => {
+    const scenarios: Record<string, { nom: string; messages: Message[] }> = JSON.parse(racine.dataset.scenarios!);
+    const noeuds: Noeud[] = JSON.parse(racine.dataset.noeuds!);
+    const pos = (id: string) => noeuds.find((n) => n.id === id)!;
+    // Le « ? » circule juste au-dessus des nœuds, pour ne pas masquer leur nom.
+    const ancre = (id: string) => ({ x: pos(id).x, y: pos(id).y - 30 });
+
+    const scene = racine.querySelector<HTMLElement>('.scene')!;
+    racine.querySelector<HTMLElement>('.texte-etapes')!.hidden = true;
+    scene.hidden = false;
+
+    const question = racine.querySelector<SVGGElement>('.question')!;
+    const fleche = racine.querySelector<SVGLineElement>('.fleche')!;
+    const message = racine.querySelector<HTMLElement>('.message')!;
+    const note = racine.querySelector<HTMLElement>('.note')!;
+    const compteur = racine.querySelector<HTMLElement>('.compteur')!;
+    const precedent = racine.querySelector<HTMLButtonElement>('[data-action="precedent"]')!;
+    const suivant = racine.querySelector<HTMLButtonElement>('[data-action="suivant"]')!;
+    const tout = racine.querySelector<HTMLButtonElement>('[data-action="tout"]')!;
+
+    let scenario = 'vide';
+    let etape = 0; // nombre de messages déjà envoyés
+    let occupe = false;
+
+    const messages = () => scenarios[scenario].messages;
+
+    function poserFleche(m: Message | null) {
+      if (!m) {
+        fleche.style.visibility = 'hidden';
+        return;
+      }
+      const a = pos(m.de);
+      const b = pos(m.a);
+      const p1 = bord(a, b, 84, 34);
+      const p2 = bord(b, a, 84, 34);
+      fleche.setAttribute('x1', String(p1.x));
+      fleche.setAttribute('y1', String(p1.y));
+      fleche.setAttribute('x2', String(p2.x));
+      fleche.setAttribute('y2', String(p2.y));
+      fleche.style.visibility = 'visible';
+    }
+
+    function majTexte() {
+      const ms = messages();
+      const m = etape > 0 ? ms[etape - 1] : null;
+      racine.querySelectorAll<SVGGElement>('[data-noeud]').forEach((g) => {
+        const id = g.dataset.noeud!;
+        g.classList.toggle('actif', !!m && (m.de === id || m.a === id));
+        // Les serveurs non sollicités dans ce scénario sont estompés.
+        g.classList.toggle('inutile', !ms.some((x) => x.de === id || x.a === id));
+      });
+      message.textContent = m
+        ? `${etape}/${ms.length} — ${pos(m.de).nom} → ${pos(m.a).nom} : ${m.texte}`
+        : 'Appuie sur « Suivant » pour envoyer la question.';
+      note.textContent = m?.note ?? '';
+      compteur.textContent = `${etape} / ${ms.length}`;
+      precedent.disabled = etape === 0 || occupe;
+      suivant.disabled = etape === ms.length || occupe;
+      tout.disabled = etape === ms.length || occupe;
+    }
+
+    async function avancer() {
+      const ms = messages();
+      if (etape >= ms.length) return;
+      const m = ms[etape];
+      etape++;
+      occupe = true;
+      poserFleche(m);
+      majTexte();
+      await deplacer(question, ancre(m.de), ancre(m.a), 700);
+      occupe = false;
+      majTexte();
+    }
+
+    function allerA(n: number) {
+      etape = n;
+      const m = etape > 0 ? messages()[etape - 1] : null;
+      const ici = ancre(m ? m.a : 'nav');
+      question.setAttribute('transform', `translate(${ici.x} ${ici.y})`);
+      poserFleche(m);
+      majTexte();
+    }
+
+    suivant.addEventListener('click', avancer);
+    precedent.addEventListener('click', () => allerA(Math.max(0, etape - 1)));
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', () => allerA(0));
+    tout.addEventListener('click', async () => {
+      while (etape < messages().length) {
+        await avancer();
+        if (!mouvementReduit()) await new Promise((r) => setTimeout(r, 350));
+      }
+    });
+    racine.querySelectorAll<HTMLInputElement>('.scenarios input').forEach((r) =>
+      r.addEventListener('change', () => {
+        scenario = r.value;
+        allerA(0);
+      }),
+    );
+
+    allerA(0);
+  });
+</script>
+
+<style>
+  .dns { margin: 1rem 0; }
+  .scenarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    border: none;
+    padding: 0;
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  .scenarios legend { font-weight: 600; margin-bottom: 0.25rem; }
+  .cadre {
+    overflow-x: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+  }
+  svg { display: block; width: 100%; min-width: 34rem; height: auto; }
+  .liens line { stroke: var(--border); stroke-width: 2; stroke-dasharray: 4 6; }
+  .fleche { stroke: var(--ill-paquet); stroke-width: 2.5; stroke-linecap: round; }
+  .noeud rect { fill: var(--card); stroke: var(--ill-reseau); stroke-width: 2; }
+  .noeud.client rect { stroke: var(--ill-client); }
+  .noeud.serveur rect { stroke: var(--ill-serveur); }
+  .noeud.actif rect { stroke-width: 4; }
+  .noeud.inutile { opacity: 0.35; }
+  .noeud text { text-anchor: middle; fill: var(--fg); font-family: var(--police); }
+  .noeud .nom { font-size: 15px; font-weight: 700; }
+  .noeud .sous { font-size: 12px; fill: var(--muted); }
+  .question circle { fill: var(--ill-paquet); }
+  .question text { fill: var(--bg); font-size: 14px; font-weight: 700; text-anchor: middle; font-family: var(--police); }
+  .message { margin: 0.75rem 0 0.25rem; font-weight: 600; min-height: 3em; }
+  .note { margin: 0; color: var(--muted); min-height: 3em; font-size: 0.95rem; }
+  .commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+  .commandes button {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .commandes button[data-action='suivant'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .commandes button:disabled { opacity: 0.45; cursor: default; }
+  .compteur { color: var(--muted); font-size: 0.9rem; }
+</style>
