@@ -84,3 +84,34 @@ footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2r
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* Briques communes des animations (voir src/lib/pasapas.ts). */
+.anim { margin: 1rem 0; }
+.anim-cadre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+.anim-cadre-defile { overflow-x: auto; }
+.anim-legende { margin: 0.75rem 0 0.25rem; font-weight: 600; min-height: 3em; }
+.anim-note { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.anim-commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+.anim-commandes button, .anim-bouton {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--fg);
+  cursor: pointer;
+}
+.anim-commandes .principal, .anim-commandes [data-action='suivant'], .anim-bouton.principal {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.anim-commandes button:disabled, .anim-bouton:disabled { opacity: 0.45; cursor: default; }
+.anim-compteur { color: var(--muted); font-size: 0.9rem; }
+.anim-apparait { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }

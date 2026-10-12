@@ -649,3 +649,25 @@ répond aujourd'hui**, pas le futur site Astro.
      vérifiés via l'API oEmbed de YouTube).
   - L'origine première de l'analogie n'est pas établie : ne pas l'attribuer à
     une seule personne.
+
+## Chiffres de l'animation « Combien de requêtes ? » (étape 7)
+
+Vérifiés le 12 octobre 2026 :
+
+1. HTTP Archive, *Web Almanac 2024*, chapitre « Page Weight » : « The median
+   page makes 71 requests on desktop and 66 on mobile » (pages d'accueil et
+   pages internes, données d'octobre 2024) —
+   https://almanac.httparchive.org/en/2024/page-weight — P — en.
+2. HTTP Archive, *Web Almanac 2024*, chapitre « Third Parties » : 92 % des
+   pages ont au moins un tiers ; médiane de 27 tiers parmi le premier million
+   de sites (66 parmi les mille premiers) —
+   https://almanac.httparchive.org/en/2024/third-parties — P — en.
+
+La mesure de « cette page » est faite en direct dans le navigateur du
+visiteur (API Performance : entrées `navigation` et `resource`).
+
+## Adresses utilisées dans les animations
+
+Uniquement des plages privées (RFC 1918 : `192.168.0.0/16`), réservées à la
+documentation (RFC 5737 : `203.0.113.0/24`, `198.51.100.0/24` ; RFC 3849 :
+`2001:db8::/32`) ou des domaines réservés (RFC 2606 : `.example`).

@@ -7,6 +7,12 @@ import Sources from '../../components/Sources.astro';
 import PotsDePeinture from '../../components/animations/PotsDePeinture.astro';
 import QuestionDns from '../../components/animations/QuestionDns.astro';
 import VoyagePaquets from '../../components/animations/VoyagePaquets.astro';
+import BarreAdresse from '../../components/animations/BarreAdresse.astro';
+import BoxNat from '../../components/animations/BoxNat.astro';
+import PoigneeTcp from '../../components/animations/PoigneeTcp.astro';
+import ServeurCasiers from '../../components/animations/ServeurCasiers.astro';
+import CompteurRequetes from '../../components/animations/CompteurRequetes.astro';
+import Affichage from '../../components/animations/Affichage.astro';
 
 const etapes = [
   { ancre: 'avant', court: 'Avant' },
@@ -47,7 +53,7 @@ const etapes = [
 
   <!-- Étape 0 -->
   <Etape numero={0} titre="Avant même d'appuyer sur Entrée" ancre="avant">
-    <p slot="scene">Les lettres apparaissent une à une ; une bulle hésite : « recherche ou adresse ? »</p>
+    <BarreAdresse slot="animation" />
     <p slot="decouverte">
       Pendant que tu tapes, le navigateur devine déjà où tu vas. Il regarde aussi s'il
       n'a pas gardé une copie récente de la page.
@@ -138,7 +144,7 @@ const etapes = [
 
   <!-- Étape 2 -->
   <Etape numero={2} titre="Ta box et ton réseau local" ancre="box" duree="~1 à 10 ms">
-    <p slot="scene">La maison, ses appareils, et la box qui réécrit l'adresse de l'enveloppe avant de la faire sortir.</p>
+    <BoxNat slot="animation" />
     <p slot="decouverte">
       Ton ordinateur ne parle pas directement à internet : il passe par ta
       {' '}<Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
@@ -169,7 +175,7 @@ const etapes = [
 
   <!-- Étape 3 -->
   <Etape numero={3} titre="Ouvrir la liaison" ancre="liaison" duree="~10 à 100 ms">
-    <p slot="scene">Trois flèches qui se croisent ; puis des paquets numérotés qui arrivent dans le désordre et que TCP remet en ordre.</p>
+    <PoigneeTcp slot="animation" />
     <p slot="decouverte">
       Avant de parler, on se dit bonjour : l'ordinateur et le serveur vérifient qu'ils
       s'entendent avant d'échanger la page.
@@ -283,7 +289,7 @@ const etapes = [
 
   <!-- Étape 6 -->
   <Etape numero={6} titre="Le serveur répond" ancre="serveur" duree="~1 à 50 ms">
-    <p slot="scene">Une salle de serveurs, un casier par site ; Apache ouvre le bon casier et en sort index.html.</p>
+    <ServeurCasiers slot="animation" />
     <p slot="decouverte">
       Le <Terme id="serveur">serveur</Terme> est un ordinateur allumé en permanence dans un
       datacenter. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
@@ -319,7 +325,7 @@ const etapes = [
 
   <!-- Étape 7 -->
   <Etape numero={7} titre="Le retour, et tout ce qui manque encore" ancre="retour" duree="~10 à 500 ms">
-    <p slot="scene">Un compteur de requêtes : quelques-unes pour ce site, toutes vers son propre serveur ; des dizaines de domaines tiers pour un site d'information type.</p>
+    <CompteurRequetes slot="animation" />
     <p slot="decouverte">
       La page arrive… mais ce n'est qu'un plan. Pour la dessiner, le navigateur doit aller
       chercher le reste : styles, images, scripts.
@@ -345,7 +351,7 @@ const etapes = [
 
   <!-- Étape 8 -->
   <Etape numero={8} titre="L'affichage" ancre="affichage" duree="~10 à 200 ms">
-    <p slot="scene">La page se construit en fil de fer, puis se colore, puis s'anime.</p>
+    <Affichage slot="animation" />
     <p slot="decouverte">
       Le navigateur assemble les pièces comme un puzzle : il lit le plan, applique le style,
       place chaque élément, puis peint l'écran.
@@ -389,6 +395,8 @@ const etapes = [
       { auteur: 'RFC Editor', titre: 'RFC 4271 — BGP-4', url: 'https://www.rfc-editor.org/rfc/rfc4271', type: 'primaire', langue: 'en' },
       { titre: 'Root Server Technical Operations', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
       { auteur: 'A. J. Han Vinck (schéma original), Wikimedia Commons', titre: "Diffie-Hellman Key Exchange (l'analogie des pots de peinture)", url: 'https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg', type: 'site', langue: 'en' },
+      { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Page Weight (nombre médian de requêtes)', url: 'https://almanac.httparchive.org/en/2024/page-weight', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Third Parties (services tiers)', url: 'https://almanac.httparchive.org/en/2024/third-parties', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'Art of the Problem', titre: 'Diffie-Hellman Key Exchange (vidéo)', url: 'https://www.youtube.com/watch?v=3QnD2c4Xovk', type: 'site', langue: 'en' },
     ]}
   />

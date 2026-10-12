@@ -1,0 +1,191 @@
+---
+// Animation « Bonjour, puis remettre en ordre » (étape 3) : poignée de main
+// TCP en trois temps, puis livraison de morceaux arrivés dans le désordre,
+// avec une perte et une retransmission.
+// Simplification assumée : TCP numérote en réalité des octets, pas des
+// morceaux ; les numéros de séquence de la poignée de main sont réalistes.
+const morceaux = ['Voi', 'ci la ', 'page ', 'de rou', 'ages.', 'net'];
+---
+<div class="anim tcp" data-tcp data-morceaux={JSON.stringify(morceaux)}>
+  <div class="anim-repli">
+    <ol>
+      <li>Navigateur → serveur : SYN (« bonjour, je commence à compter à 1000 »).</li>
+      <li>Serveur → navigateur : SYN-ACK (« bonjour, moi à 5000 ; j'attends ton 1001 »).</li>
+      <li>Navigateur → serveur : ACK (« bien reçu »). La connexion est ouverte.</li>
+      <li>Le serveur envoie la page en 6 morceaux ; ils arrivent dans le désordre et le n° 4 se perd.</li>
+      <li>Le navigateur range les morceaux et répète « j'ai tout jusqu'au 3, j'attends le 4 ».</li>
+      <li>Le serveur renvoie le n° 4 ; la page est complète et dans l'ordre.</li>
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre echanges">
+      <div class="entetes"><span>Ton navigateur</span><span>Serveur</span></div>
+      <ol class="messages" aria-label="Messages échangés"></ol>
+    </div>
+
+    <div class="anim-cadre reception">
+      <p class="titre">Mémoire de réception du navigateur</p>
+      <ol class="cases">
+        {morceaux.map((_, i) => <li data-case={i + 1}><span class="num">{i + 1}</span><span class="contenu"></span></li>)}
+      </ol>
+      <p class="texte-recu" aria-live="polite"></p>
+    </div>
+
+    <p class="anim-legende" aria-live="polite"></p>
+    <p class="anim-note">Simplification : TCP numérote en réalité chaque octet, pas des morceaux.</p>
+    <div class="anim-commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="anim-compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../lib/pasapas';
+
+  type Sens = 'aller' | 'retour';
+  interface Msg { sens: Sens; texte: string; detail: string; perdu?: boolean }
+
+  document.querySelectorAll<HTMLElement>('[data-tcp]').forEach((racine) => {
+    activerScene(racine);
+    const morceaux: string[] = JSON.parse(racine.dataset.morceaux!);
+    const liste = racine.querySelector<HTMLOListElement>('.messages')!;
+    const texteRecu = racine.querySelector<HTMLElement>('.texte-recu')!;
+
+    // Ordre d'arrivée des morceaux à l'étape 4 : 2 et 3 inversés, 4 perdu.
+    const arrivee = [1, 3, 2, 5, 6];
+
+    const etapes: { msgs: Msg[]; recus: number[]; legende: string }[] = [
+      {
+        msgs: [{ sens: 'aller', texte: 'SYN', detail: 'seq = 1000' }],
+        recus: [],
+        legende: "Le navigateur dit bonjour (SYN) et annonce qu'il commencera à compter ses octets à partir de 1000.",
+      },
+      {
+        msgs: [{ sens: 'retour', texte: 'SYN-ACK', detail: 'seq = 5000, ack = 1001' }],
+        recus: [],
+        legende: 'Le serveur répond bonjour (SYN), annonce son propre point de départ (5000) et accuse réception (ACK) : « j’attends ton 1001 ».',
+      },
+      {
+        msgs: [{ sens: 'aller', texte: 'ACK', detail: 'seq = 1001, ack = 5001' }],
+        recus: [],
+        legende: 'Le navigateur accuse réception à son tour. La connexion est ouverte : un aller-retour et demi.',
+      },
+      {
+        msgs: [
+          ...arrivee.map((n) => ({ sens: 'retour' as Sens, texte: `Morceau ${n}`, detail: `« ${morceaux[n - 1].trim() || morceaux[n - 1]} »` })),
+          { sens: 'retour', texte: 'Morceau 4', detail: 'perdu en route', perdu: true },
+        ],
+        recus: arrivee,
+        legende: 'Le serveur envoie la page en 6 morceaux. Ils arrivent dans le désordre (3 avant 2) et le morceau 4 se perd en route.',
+      },
+      {
+        msgs: [{ sens: 'aller', texte: 'ACK', detail: "« j'ai tout jusqu'au 3, j'attends le 4 » (répété)" }],
+        recus: arrivee,
+        legende: 'Le navigateur range 1, 2 et 3 dans l’ordre, met 5 et 6 de côté, et répète au serveur qu’il attend le morceau 4.',
+      },
+      {
+        msgs: [
+          { sens: 'retour', texte: 'Morceau 4', detail: '« de rou » (renvoyé)' },
+          { sens: 'aller', texte: 'ACK', detail: "« j'ai tout jusqu'au 6 »" },
+        ],
+        recus: [...arrivee, 4],
+        legende: 'Le serveur renvoie le morceau 4. Tout est là, dans l’ordre : le navigateur peut lire la page.',
+      },
+    ];
+
+    function ajouter(m: Msg) {
+      const li = document.createElement('li');
+      li.className = `msg ${m.sens}${m.perdu ? ' perdu' : ''}`;
+      const fleche = document.createElement('span');
+      fleche.className = 'fleche';
+      fleche.setAttribute('aria-hidden', 'true');
+      const t = document.createElement('strong');
+      t.textContent = m.texte;
+      const d = document.createElement('span');
+      d.className = 'detail';
+      d.textContent = m.detail;
+      const lu = document.createElement('span');
+      lu.className = 'visuellement-cache';
+      lu.textContent = m.sens === 'aller' ? 'Navigateur vers serveur : ' : 'Serveur vers navigateur : ';
+      li.append(lu, t, ' ', d, fleche);
+      liste.append(li);
+    }
+
+    function rendre(etape: number): string {
+      liste.replaceChildren();
+      etapes.slice(0, etape).forEach((e) => e.msgs.forEach(ajouter));
+      const recus = new Set(etapes[etape - 1].recus);
+      racine.querySelectorAll<HTMLLIElement>('[data-case]').forEach((li) => {
+        const n = Number(li.dataset.case);
+        const ok = recus.has(n);
+        li.classList.toggle('rempli', ok);
+        li.querySelector('.contenu')!.textContent = ok ? morceaux[n - 1] : '';
+        // Rangé mais pas encore lisible : un trou le précède.
+        let trou = false;
+        for (let k = 1; k < n; k++) if (!recus.has(k)) trou = true;
+        li.classList.toggle('en-attente', ok && trou);
+      });
+      let lisible = '';
+      for (let k = 1; k <= morceaux.length && recus.has(k); k++) lisible += morceaux[k - 1];
+      texteRecu.textContent = recus.size ? `Lisible pour l'instant : « ${lisible || '…'} »` : '';
+      return etapes[etape - 1].legende;
+    }
+
+    pasAPas(racine, () => etapes.length, rendre).aller(1);
+  });
+</script>
+
+<style>
+  .echanges { padding-bottom: 0.5rem; }
+  .entetes { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+  .entetes span:first-child { color: var(--ill-client); }
+  .entetes span:last-child { color: var(--ill-serveur); }
+  .messages { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.35rem; }
+  .messages :global(.msg) {
+    position: relative;
+    padding: 0.25rem 0.5rem 0.9rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .messages :global(.detail) { font-family: var(--police-mono); color: var(--muted); font-size: 0.8rem; }
+  .messages :global(.fleche) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.3rem;
+    height: 2px;
+    background: var(--ill-paquet);
+  }
+  .messages :global(.fleche::after) {
+    content: '';
+    position: absolute;
+    top: -5px;
+    border: 6px solid transparent;
+  }
+  .messages :global(.aller .fleche::after) { right: -2px; border-left-color: var(--ill-paquet); border-right: none; }
+  .messages :global(.retour .fleche::after) { left: -2px; border-right-color: var(--ill-paquet); border-left: none; }
+  .messages :global(.perdu) { opacity: 0.6; }
+  .messages :global(.perdu .fleche) { right: 50%; background: repeating-linear-gradient(90deg, var(--ill-paquet) 0 6px, transparent 6px 10px); }
+  .messages :global(.perdu .fleche::after) { display: none; }
+  .messages :global(.perdu strong::after) { content: ' ✕'; color: var(--accent); }
+  .reception { margin-top: 0.75rem; }
+  .titre { margin: 0 0 0.5rem; font-weight: 600; font-size: 0.9rem; }
+  .cases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.35rem; }
+  .cases li {
+    border: 2px dashed var(--border);
+    border-radius: 0.4rem;
+    min-height: 3.2rem;
+    padding: 0.2rem;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  .cases li.rempli { border-style: solid; border-color: var(--ill-client); }
+  .cases li.en-attente { border-color: var(--ill-serveur); }
+  .num { display: block; color: var(--muted); font-size: 0.75rem; }
+  .contenu { font-family: var(--police-mono); white-space: pre; }
+  .texte-recu { margin: 0.5rem 0 0; font-family: var(--police-mono); font-size: 0.9rem; white-space: pre-wrap; }
+</style>

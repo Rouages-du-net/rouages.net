@@ -1,0 +1,146 @@
+---
+// Animation « Recherche ou adresse ? » (étape 0) : on tape dans une fausse
+// barre d'adresse et l'on voit, en direct, comment un navigateur interprète
+// la saisie, puis comment il découpe l'adresse (schéma, hôte, chemin).
+// Règle volontairement simplifiée : chaque navigateur a la sienne.
+const exemples = ['rouages.net', 'rouages.net/glossaire/', 'chat qui dort', 'http://example.com', 'localhost:4321'];
+---
+<div class="anim barre" data-barre>
+  <div class="anim-repli">
+    <p>
+      Quand tu tapes <code>rouages.net</code>, le navigateur reconnaît un nom de domaine
+      (pas d'espace, un point, une extension) et va à <code>https://rouages.net/</code>.
+      Quand tu tapes <code>chat qui dort</code>, il y a des espaces : il lance une recherche.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <label class="champ">
+      <span class="visuellement-cache">Saisie dans la barre d'adresse</span>
+      <span class="cadenas" aria-hidden="true">⌕</span>
+      <input type="text" value="rouages.net" spellcheck="false" autocapitalize="off" autocomplete="off" />
+    </label>
+    <p class="exemples">
+      Essaie :
+      {exemples.map((e) => <button type="button" class="anim-bouton" data-exemple={e}>{e}</button>)}
+    </p>
+
+    <div class="anim-cadre verdict" aria-live="polite">
+      <p class="decision"></p>
+      <dl class="parties"></dl>
+      <p class="anim-note explication"></p>
+    </div>
+    <p class="anim-note">Règle simplifiée : chaque navigateur a ses propres heuristiques (et ton moteur de recherche par défaut).</p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  // Une suite de « mots » séparés par des points, la dernière partie en lettres
+  // (une extension), éventuellement un port et un chemin.
+  const RE_DOMAINE = /^(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?(?:[/?#].*)?$/i;
+  const RE_LOCAL = /^localhost(?::\d+)?(?:[/?#].*)?$/i;
+
+  document.querySelectorAll<HTMLElement>('[data-barre]').forEach((racine) => {
+    activerScene(racine);
+    const champ = racine.querySelector<HTMLInputElement>('input')!;
+    const decision = racine.querySelector<HTMLElement>('.decision')!;
+    const parties = racine.querySelector<HTMLElement>('.parties')!;
+    const explication = racine.querySelector<HTMLElement>('.explication')!;
+
+    const ligne = (dt: string, dd: string) => {
+      const t = document.createElement('dt');
+      t.textContent = dt;
+      const d = document.createElement('dd');
+      d.textContent = dd;
+      parties.append(t, d);
+    };
+
+    function analyser() {
+      const saisie = champ.value.trim();
+      parties.replaceChildren();
+      if (!saisie) {
+        decision.textContent = 'Tape quelque chose…';
+        explication.textContent = '';
+        return;
+      }
+      const aSchema = /^[a-z][a-z0-9+.-]*:\/\//i.test(saisie);
+      const ressembleAdresse = aSchema || (!/\s/.test(saisie) && (RE_DOMAINE.test(saisie) || RE_LOCAL.test(saisie)));
+
+      if (!ressembleAdresse) {
+        decision.textContent = '🔎 Recherche';
+        const url = new URL('https://moteur-de-recherche.example/search');
+        url.searchParams.set('q', saisie);
+        ligne('Envoyé à', 'ton moteur de recherche par défaut');
+        ligne('Adresse demandée', url.href);
+        explication.textContent = /\s/.test(saisie)
+          ? 'Il y a des espaces : ce ne peut pas être un nom de domaine.'
+          : "Pas d'extension reconnue (.net, .fr…) : le navigateur préfère chercher.";
+        return;
+      }
+
+      // Sans schéma, les navigateurs récents essaient d'abord HTTPS.
+      const local = RE_LOCAL.test(saisie);
+      const avecSchema = aSchema ? saisie : `${local ? 'http' : 'https'}://${saisie}`;
+      let url: URL;
+      try {
+        url = new URL(avecSchema);
+      } catch {
+        decision.textContent = '🔎 Recherche';
+        explication.textContent = "Adresse invalide : le navigateur lance une recherche.";
+        return;
+      }
+      decision.textContent = '🌐 Adresse';
+      ligne('Schéma', `${url.protocol.replace(':', '')}${aSchema ? '' : ' (ajouté par le navigateur)'}`);
+      ligne('Hôte', url.hostname + (url.port ? ` (port ${url.port})` : ''));
+      ligne('Chemin', url.pathname + url.search + url.hash);
+      ligne('Adresse complète', url.href);
+      explication.textContent =
+        url.protocol === 'http:' && !local
+          ? "Tu as demandé HTTP, sans chiffrement : le navigateur peut afficher « Non sécurisé », ou passer en HTTPS si le site l'impose (HSTS)."
+          : local
+            ? '« localhost », c’est ta propre machine : pratique pour développer un site.'
+            : "Prochaine étape : trouver l'adresse IP de « " + url.hostname + ' » grâce au DNS.';
+    }
+
+    champ.addEventListener('input', analyser);
+    racine.querySelectorAll<HTMLButtonElement>('[data-exemple]').forEach((b) =>
+      b.addEventListener('click', () => {
+        champ.value = b.dataset.exemple!;
+        analyser();
+        champ.focus();
+      }),
+    );
+    analyser();
+  });
+</script>
+
+<style>
+  .champ {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card);
+    border: 2px solid var(--ill-client);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+  }
+  .cadenas { color: var(--muted); }
+  .champ input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--fg);
+    font: 1.05rem var(--police-mono);
+    outline: none;
+  }
+  .champ:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .exemples { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.9rem; margin: 0.75rem 0; }
+  .exemples .anim-bouton { font-family: var(--police-mono); font-size: 0.8rem; padding: 0.25rem 0.6rem; }
+  .decision { margin: 0 0 0.5rem; font-size: 1.15rem; font-weight: 700; }
+  .parties { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .parties :global(dt) { color: var(--muted); }
+  .parties :global(dd) { margin: 0; font-family: var(--police-mono); overflow-wrap: anywhere; }
+</style>
