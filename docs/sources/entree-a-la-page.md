@@ -671,3 +671,20 @@ visiteur (API Performance : entrées `navigation` et `resource`).
 Uniquement des plages privées (RFC 1918 : `192.168.0.0/16`), réservées à la
 documentation (RFC 5737 : `203.0.113.0/24`, `198.51.100.0/24` ; RFC 3849 :
 `2001:db8::/32`) ou des domaines réservés (RFC 2606 : `.example`).
+
+## Variante « serveur lointain » (étape 5)
+
+Délai minimal affiché : distance orthodromique Paris – New York (≈ 5 837 km,
+calculée par la formule de haversine) divisée par la vitesse de la lumière
+dans une fibre standard, c / n_g. Vérifié le 13 octobre 2026 :
+
+1. Vitesse de la lumière dans le vide : 299 792 458 m/s, valeur exacte par
+   définition du mètre (Système international d'unités, BIPM).
+2. M. Antesberger *et al.*, « Distribution of Telecom Entangled Photons
+   through a 7.7 km Antiresonant Hollow-Core Fiber », arXiv:2308.01337, 2023
+   (*Optica Quantum* 2, 2024) : « At 1550 nm […] in SMF28 fiber
+   n_SMF28 ≈ 1.47 » — https://arxiv.org/abs/2308.01337 — R — en.
+
+Résultat : environ 204 000 km/s dans la fibre, soit au moins 29 ms à l'aller
+et 57 ms pour l'aller-retour. Les vrais câbles suivent des tracés plus longs
+que la ligne droite : le délai réel est supérieur.

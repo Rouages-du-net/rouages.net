@@ -7,6 +7,20 @@
 // qu'exploite traceroute). On peut couper des liens : la route se
 // recalcule, comme le font les routeurs avec BGP et les protocoles internes.
 // Le réseau est un exemple simplifié : les noms de villes sont illustratifs.
+//
+// Variante « serveur lointain » : le serveur est à New York ; le paquet
+// traverse l'Atlantique par l'un de deux câbles sous-marins. Délai minimal
+// calculé à la construction : distance orthodromique Paris – New York
+// (≈ 5 837 km) divisée par la vitesse de la lumière dans une fibre standard,
+// c / 1,47 (indice de groupe de la fibre SMF-28 : Antesberger et al., 2023,
+// voir docs/sources/entree-a-la-page.md). Les vrais câbles sont plus longs.
+
+const C_VIDE = 299792.458; // km/s, valeur exacte (définition du mètre, SI)
+const INDICE_FIBRE = 1.47;
+const DISTANCE_PARIS_NY = 5837; // km, en ligne droite sur le globe
+const allerMs = Math.round((DISTANCE_PARIS_NY / (C_VIDE / INDICE_FIBRE)) * 1000);
+const retourMs = Math.round(((2 * DISTANCE_PARIS_NY) / (C_VIDE / INDICE_FIBRE)) * 1000);
+const vitesseFibre = Math.round(C_VIDE / INDICE_FIBRE / 1000) * 1000;
 
 const noeuds = [
   { id: 'box', nom: 'Ta box', sous: 'chez toi', x: 70, y: 170, role: 'client' },
@@ -16,8 +30,14 @@ const noeuds = [
   // décrémente pas le TTL et n'apparaît pas comme un saut de traceroute.
   { id: 'ixp', nom: "Point d'échange", sous: 'Paris', x: 400, y: 85, role: 'reseau', commutateur: true },
   { id: 'transit', nom: 'Opérateur de transit', sous: 'liaison payante', x: 400, y: 255, role: 'reseau' },
-  { id: 'heb', nom: 'Hébergeur', sous: 'routeur du datacenter', x: 565, y: 170, role: 'reseau' },
-  { id: 'srv', nom: 'Serveur', sous: 'rouages.net', x: 720, y: 170, role: 'serveur' },
+  { id: 'heb', nom: 'Hébergeur', sous: 'routeur du datacenter', x: 565, y: 170, role: 'reseau', mode: 'fr' },
+  { id: 'srv', nom: 'Serveur', sous: 'rouages.net', x: 720, y: 170, role: 'serveur', mode: 'fr' },
+  // Variante lointaine. Un câble n'est pas un routeur : la lumière le
+  // traverse (amplifiée en chemin) sans que le TTL change.
+  { id: 'ca', nom: 'Câble sous-marin', sous: 'Atlantique, route A', x: 565, y: 85, role: 'cable', mode: 'ny', transparent: 'pas un routeur, TTL inchangé' },
+  { id: 'cb', nom: 'Câble sous-marin', sous: 'Atlantique, route B', x: 565, y: 255, role: 'cable', mode: 'ny', transparent: 'pas un routeur, TTL inchangé' },
+  { id: 'nyr', nom: 'Routeur', sous: 'New York', x: 720, y: 110, role: 'reseau', mode: 'ny' },
+  { id: 'srvny', nom: 'Serveur', sous: 'à New York', x: 720, y: 235, role: 'serveur', mode: 'ny' },
 ];
 
 const liens: [string, string][] = [
@@ -30,6 +50,11 @@ const liens: [string, string][] = [
   ['ixp', 'heb'],
   ['transit', 'heb'],
   ['heb', 'srv'],
+  ['ixp', 'ca'],
+  ['transit', 'cb'],
+  ['ca', 'nyr'],
+  ['cb', 'nyr'],
+  ['nyr', 'srvny'],
 ];
 
 const nom = (id: string) => {
@@ -38,7 +63,7 @@ const nom = (id: string) => {
 };
 const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
 ---
-<div class="voyage" data-voyage data-noeuds={JSON.stringify(noeuds)} data-liens={JSON.stringify(liens)}>
+<div class="voyage" data-voyage data-noeuds={JSON.stringify(noeuds)} data-liens={JSON.stringify(liens)} data-delai={JSON.stringify({ allerMs, retourMs, vitesseFibre })}>
   <div class="texte-etapes">
     <p>
       Sans coupure, le paquet quitte ton ordinateur avec un TTL de 64, passe par ta
@@ -49,9 +74,20 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       Lyon – Paris est coupé, les routeurs trouvent une autre route, par exemple par
       Marseille et un opérateur de transit.
     </p>
+    <p>
+      Si le serveur est à New York, le paquet traverse l'Atlantique par un câble
+      sous-marin. Même à la vitesse de la lumière dans la fibre (environ
+      {vitesseFibre.toLocaleString('fr-FR')} km/s), les quelque 5 800 km en ligne droite
+      demandent au moins {allerMs} ms à l'aller et {retourMs} ms pour l'aller-retour.
+    </p>
   </div>
 
   <div class="scene" hidden>
+    <fieldset class="destination">
+      <legend>Où est le serveur ?</legend>
+      <label><input type="radio" name="voyage-dest" value="fr" checked /> En France</label>
+      <label><input type="radio" name="voyage-dest" value="ny" /> À New York (de l'autre côté de l'Atlantique)</label>
+    </fieldset>
     <div class="cadre">
       <svg viewBox="0 0 790 330" role="img" aria-labelledby="voyage-titre">
         <title id="voyage-titre">Réseau simplifié entre ta box et le serveur, avec plusieurs routes possibles.</title>
@@ -60,7 +96,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
             const na = noeuds.find((n) => n.id === a)!;
             const nb = noeuds.find((n) => n.id === b)!;
             return (
-              <g class="lien" data-lien={i}>
+              <g class="lien" data-lien={i} data-mode={[na, nb].find((n) => 'mode' in n)?.mode}>
                 <line class="trait" x1={na.x} y1={na.y} x2={nb.x} y2={nb.y} />
                 <line class="zone" x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}>
                   <title>Couper ou rétablir : {etiquetteLien([a, b])}</title>
@@ -71,7 +107,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
           })}
         </g>
         {noeuds.map((n) => (
-          <g class={`noeud ${n.role}`} data-noeud={n.id} transform={`translate(${n.x} ${n.y})`}>
+          <g class={`noeud ${n.role}`} data-noeud={n.id} data-mode={n.mode} transform={`translate(${n.x} ${n.y})`}>
             <rect x="-66" y="-27" width="132" height="54" rx="10" />
             <text y="-3" class="nom">{n.nom}</text>
             <text y="15" class="sous">{n.sous}</text>
@@ -95,7 +131,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       <summary>Couper un lien (ou clique sur un trait du schéma)</summary>
       <ul>
         {liens.map((l, i) => (
-          <li>
+          <li data-mode={noeuds.find((n) => (n.id === l[0] || n.id === l[1]) && 'mode' in n)?.mode}>
             <label><input type="checkbox" data-lien-case={i} /> {etiquetteLien(l)}</label>
           </li>
         ))}
@@ -112,7 +148,10 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
 <script>
   import { deplacer, mouvementReduit } from '../../lib/anim';
 
-  interface Noeud { id: string; nom: string; sous: string; x: number; y: number; commutateur?: boolean }
+  interface Noeud {
+    id: string; nom: string; sous: string; x: number; y: number;
+    commutateur?: boolean; transparent?: string; mode?: 'fr' | 'ny';
+  }
 
   document.querySelectorAll<HTMLElement>('[data-voyage]').forEach((racine) => {
     const noeuds: Noeud[] = JSON.parse(racine.dataset.noeuds!);
@@ -131,13 +170,28 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
     const sauts = racine.querySelector<HTMLOListElement>('.sauts')!;
     const envoyer = racine.querySelector<HTMLButtonElement>('[data-action="envoyer"]')!;
     const coupes = new Set<number>();
+    const delai: { allerMs: number; retourMs: number; vitesseFibre: number } = JSON.parse(racine.dataset.delai!);
     let enCours = false;
+    let dest: 'fr' | 'ny' = 'fr';
+    const cible = () => (dest === 'fr' ? 'srv' : 'srvny');
+    const present = (id: string) => {
+      const m = pos(id).mode;
+      return !m || m === dest;
+    };
+
+    function appliquerMode() {
+      racine.querySelectorAll<SVGElement | HTMLElement>('[data-mode]').forEach((el) => {
+        const absent = el.dataset.mode !== dest;
+        if (el instanceof HTMLElement) el.hidden = absent;
+        else el.style.display = absent ? 'none' : '';
+      });
+    }
 
     /** Plus court chemin (en nombre de sauts) par parcours en largeur. */
     function chemin(): string[] | null {
       const voisins = new Map<string, string[]>();
       liens.forEach(([a, b], i) => {
-        if (coupes.has(i)) return;
+        if (coupes.has(i) || !present(a) || !present(b)) return;
         voisins.set(a, [...(voisins.get(a) ?? []), b]);
         voisins.set(b, [...(voisins.get(b) ?? []), a]);
       });
@@ -145,7 +199,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       const file = ['box'];
       while (file.length) {
         const n = file.shift()!;
-        if (n === 'srv') break;
+        if (n === cible()) break;
         for (const v of voisins.get(n) ?? []) {
           if (!prec.has(v)) {
             prec.set(v, n);
@@ -153,8 +207,8 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
           }
         }
       }
-      if (!prec.has('srv')) return null;
-      const res = ['srv'];
+      if (!prec.has(cible())) return null;
+      const res = [cible()];
       while (res[0] !== 'box') res.unshift(prec.get(res[0])!);
       return res;
     }
@@ -204,24 +258,33 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       for (let i = 1; i < c.length; i++) {
         await deplacer(paquet, ancre(c[i - 1]), ancre(c[i]), 650);
         // Chaque routeur traversé décrémente le TTL ; ni le commutateur du
-        // point d'échange ni le serveur de destination ne le font.
+        // point d'échange, ni un câble, ni le serveur de destination.
         const n = pos(c[i]);
-        if (c[i] !== 'srv' && !n.commutateur) ttl--;
+        const arrive = c[i] === cible();
+        if (!arrive && !n.commutateur && !n.transparent) ttl--;
         ttlTexte.textContent = `TTL ${ttl}`;
         const li = document.createElement('li');
-        if (n.commutateur) {
+        if (n.commutateur || n.transparent) {
           // Invisible pour traceroute : on l'indique à part, sans numéro.
           li.className = 'hors-saut';
-          li.textContent = `(${nom(c[i])} : grand commutateur, ne compte pas comme un saut, TTL inchangé)`;
+          li.textContent = n.commutateur
+            ? `(${nom(c[i])} : grand commutateur, ne compte pas comme un saut, TTL inchangé)`
+            : `(${nom(c[i])} : ${n.transparent})`;
         } else {
           li.value = ++numero;
-          li.textContent = c[i] === 'srv' ? `${nom(c[i])} : arrivé avec un TTL de ${ttl} !` : `${nom(c[i])} — TTL ramené à ${ttl}`;
+          li.textContent = arrive ? `${nom(c[i])} : arrivé avec un TTL de ${ttl} !` : `${nom(c[i])} — TTL ramené à ${ttl}`;
         }
         sauts.append(li);
         if (!mouvementReduit()) await new Promise((r) => setTimeout(r, 200));
       }
       enCours = false;
       dessiner();
+      if (dest === 'ny') {
+        route.textContent =
+          `Traversée de l'Atlantique : environ 5 800 km en ligne droite. Même à la vitesse de la lumière dans la fibre ` +
+          `(environ ${delai.vitesseFibre.toLocaleString('fr-FR')} km/s), il faut au moins ${delai.allerMs} ms pour l'aller ` +
+          `et ${delai.retourMs} ms pour l'aller-retour. Les vrais câbles, plus longs que la ligne droite, en ajoutent encore.`;
+      }
     }
 
     racine.querySelectorAll<SVGGElement>('.lien').forEach((g) => {
@@ -231,6 +294,17 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       cb.addEventListener('change', () => basculer(Number(cb.dataset.lienCase)));
     });
     envoyer.addEventListener('click', envoyerPaquet);
+    racine.querySelectorAll<HTMLInputElement>('input[name="voyage-dest"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        if (enCours) return;
+        dest = r.value as 'fr' | 'ny';
+        coupes.clear();
+        sauts.replaceChildren();
+        paquet.setAttribute('visibility', 'hidden');
+        appliquerMode();
+        dessiner();
+      }),
+    );
     racine.querySelector('[data-action="retablir"]')!.addEventListener('click', () => {
       if (enCours) return;
       coupes.clear();
@@ -238,6 +312,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       dessiner();
     });
 
+    appliquerMode();
     dessiner();
   });
 </script>
@@ -260,6 +335,9 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
   .noeud rect { fill: var(--card); stroke: var(--ill-reseau); stroke-width: 2; }
   .noeud.client rect { stroke: var(--ill-client); stroke-width: 3; }
   .noeud.serveur rect { stroke: var(--ill-serveur); stroke-width: 3; }
+  .noeud.cable rect { stroke: var(--ill-paquet); stroke-dasharray: 3 4; }
+  .destination { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: none; padding: 0; margin: 0 0 0.5rem; font-size: 0.9rem; }
+  .destination legend { font-weight: 600; margin-bottom: 0.25rem; }
   .noeud text { text-anchor: middle; fill: var(--fg); font-family: var(--police); pointer-events: none; }
   .noeud .nom { font-size: 13px; font-weight: 700; }
   .noeud .sous { font-size: 11.5px; fill: var(--muted); }
