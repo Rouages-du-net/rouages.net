@@ -1,0 +1,114 @@
+---
+// Animation « Le tempo du processeur » (étape 5 du module « Comment marche
+// un ordinateur ») : une horloge très lente (au plus 2 tics par seconde, pour
+// ne pas faire clignoter l'écran) et un calcul : combien de temps faudrait-il
+// pour compter autant de tics qu'un processeur en une seconde ?
+interface Props {
+  ghz: number; // fréquence d'exemple, sourcée par la page
+}
+const { ghz } = Astro.props;
+const annees = Math.round((ghz * 1e9) / (3600 * 24 * 365.25));
+---
+<div class="anim horloge" data-horloge data-ghz={ghz}>
+  <div class="anim-repli">
+    <p>
+      Un processeur à {String(ghz).replace('.', ',')} GHz bat {ghz} milliards de tics par
+      seconde. Si tu comptais un tic par seconde, sans jamais t'arrêter, il te faudrait environ
+      {annees} ans pour compter ce qu'il fait en une seule seconde.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre ligne">
+      <div class="metronome" data-metronome aria-hidden="true"></div>
+      <div>
+        <p class="compte"><strong data-tics>0</strong> tics</p>
+        <div class="anim-commandes">
+          <button type="button" class="principal" data-action="demarrer">▶ Démarrer</button>
+          <label class="vitesse">Tempo
+            <select data-tempo>
+              <option value="1000">1 tic par seconde</option>
+              <option value="500">2 tics par seconde</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-horloge]').forEach((racine) => {
+    activerScene(racine);
+    const ghz = Number(racine.dataset.ghz);
+    const metronome = racine.querySelector<HTMLElement>('[data-metronome]')!;
+    const tics = racine.querySelector<HTMLElement>('[data-tics]')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="demarrer"]')!;
+    const tempo = racine.querySelector<HTMLSelectElement>('[data-tempo]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let n = 0;
+    let minuterie: number | undefined;
+    // On s'arrête tout seul : jamais de boucle infinie.
+    const MAX = 20;
+
+    const annees = (ghz * 1e9) / (3600 * 24 * 365.25);
+    const fmtGhz = ghz.toLocaleString('fr-FR');
+    const stop = () => {
+      clearInterval(minuterie);
+      minuterie = undefined;
+      bouton.textContent = '▶ Démarrer';
+    };
+    const tic = () => {
+      n++;
+      tics.textContent = String(n);
+      metronome.classList.toggle('droite');
+      if (n >= MAX) {
+        stop();
+        legende.textContent = `${n} tics en ${Math.round((n * Number(tempo.value)) / 1000)} secondes. Un processeur à ${fmtGhz} GHz en fait ${fmtGhz} milliards par seconde : à ton rythme d'un tic par seconde, il te faudrait environ ${Math.round(annees)} ans, sans dormir, pour compter une seule de ses secondes.`;
+      }
+    };
+    bouton.addEventListener('click', () => {
+      if (minuterie !== undefined) return stop();
+      if (n >= MAX) n = 0;
+      bouton.textContent = '❚❚ Pause';
+      legende.textContent = 'À chaque tic, tous les circuits du processeur avancent d’un pas en même temps.';
+      minuterie = window.setInterval(tic, Number(tempo.value));
+    });
+    tempo.addEventListener('change', () => {
+      if (minuterie !== undefined) {
+        clearInterval(minuterie);
+        minuterie = window.setInterval(tic, Number(tempo.value));
+      }
+    });
+    legende.textContent = `Un processeur actuel bat plusieurs milliards de tics par seconde. Démarre l'horloge, à un rythme humain.`;
+  });
+</script>
+
+<style>
+  .ligne { display: flex; align-items: center; gap: 1.5rem; }
+  .metronome {
+    width: 4px;
+    height: 5rem;
+    background: var(--ill-paquet);
+    border-radius: 2px;
+    transform-origin: bottom center;
+    transform: rotate(-20deg);
+    transition: transform 0.25s ease-in-out;
+    margin: 0 1.5rem;
+  }
+  .metronome.droite { transform: rotate(20deg); }
+  .compte { margin: 0 0 0.5rem; font-size: 1.1rem; }
+  .compte strong { font-family: var(--police-mono); font-size: 2rem; }
+  .vitesse { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; }
+  .vitesse select {
+    font: inherit;
+    padding: 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+    background: var(--bg);
+    color: var(--fg);
+  }
+</style>

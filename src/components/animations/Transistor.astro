@@ -1,0 +1,125 @@
+---
+// Animation « Le transistor, un interrupteur sans doigt » (étape 1 du module
+// « Comment marche un ordinateur ») : un transistor MOS schématisé dont on
+// commande la grille ; puis une échelle du nombre de transistors par puce.
+// Les chiffres de l'échelle sont fournis par la page (sourcés).
+
+interface Echelon {
+  nom: string;
+  annee: number;
+  transistors: number;
+  texte: string;
+}
+interface Props {
+  echelle: Echelon[];
+}
+const { echelle } = Astro.props;
+const fmt = (n: number) => n.toLocaleString('fr-FR');
+---
+<div class="anim transistor" data-transistor data-echelle={JSON.stringify(echelle)}>
+  <div class="anim-repli">
+    <p>
+      Un transistor MOS a trois bornes : la source, le drain et la grille. Sans tension sur la
+      grille, le courant ne passe pas entre la source et le drain (0). Avec une tension, un
+      canal s'ouvre et le courant passe (1).
+    </p>
+    <ul>
+      {echelle.map((e) => <li>{e.nom} ({e.annee}) : {fmt(e.transistors)} transistors. {e.texte}</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre schema">
+      <svg viewBox="0 0 360 200" role="img" aria-labelledby="transistor-titre">
+        <title id="transistor-titre">Transistor MOS : source, grille et drain sur du silicium.</title>
+        <rect x="20" y="110" width="320" height="70" rx="8" class="silicium" />
+        <text x="180" y="168" class="etiq">silicium</text>
+        <rect x="40" y="95" width="70" height="30" rx="4" class="borne" />
+        <text x="75" y="88" class="etiq">source</text>
+        <rect x="250" y="95" width="70" height="30" rx="4" class="borne" />
+        <text x="285" y="88" class="etiq">drain</text>
+        <rect x="120" y="98" width="120" height="8" class="oxyde" />
+        <rect x="120" y="70" width="120" height="28" rx="4" class="grille" />
+        <text x="180" y="62" class="etiq">grille</text>
+        <rect x="110" y="112" width="140" height="12" class="canal" />
+        <g class="electrons">
+          {[0, 1, 2, 3, 4].map((i) => <circle cx={110 + i * 30} cy="118" r="4" style={`animation-delay: ${i * -0.4}s`} />)}
+        </g>
+      </svg>
+      <div class="commande">
+        <button type="button" class="anim-bouton principal" data-grille aria-pressed="false">Mettre une tension sur la grille</button>
+        <p class="etat" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="anim-cadre echelle">
+      <h4>Combien de transistors dans une puce ?</h4>
+      <ol>
+        {echelle.map((e) => (
+          <li>
+            <span class="nom">{e.nom} <small>({e.annee})</small></span>
+            <span class="barre" style={`--l: ${Math.max(2, (Math.log10(e.transistors) / 12) * 100)}%`}></span>
+            <span class="nombre">{fmt(e.transistors)}</span>
+            <span class="texte">{e.texte}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="anim-note">Les barres suivent une échelle logarithmique : à l'échelle normale, celle du 4004 serait 90 millions de fois plus courte que la dernière, donc invisible.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-transistor]').forEach((racine) => {
+    activerScene(racine);
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-grille]')!;
+    const etat = racine.querySelector<HTMLElement>('.etat')!;
+    const maj = () => {
+      const on = bouton.getAttribute('aria-pressed') === 'true';
+      racine.classList.toggle('passant', on);
+      bouton.textContent = on ? 'Couper la tension de la grille' : 'Mettre une tension sur la grille';
+      etat.textContent = on
+        ? 'Tension sur la grille : un canal s’ouvre sous l’oxyde, le courant passe de la source au drain. C’est un 1.'
+        : 'Pas de tension sur la grille : pas de canal, le courant ne passe pas. C’est un 0.';
+    };
+    bouton.addEventListener('click', () => {
+      bouton.setAttribute('aria-pressed', bouton.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .schema { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(12rem, 1fr); gap: 1rem; align-items: center; }
+  svg { width: 100%; height: auto; }
+  .silicium { fill: color-mix(in oklab, var(--ill-reseau) 18%, transparent); stroke: var(--ill-reseau); }
+  .borne { fill: var(--ill-serveur); }
+  .oxyde { fill: var(--border); }
+  .grille { fill: var(--card); stroke: var(--ill-client); stroke-width: 3; }
+  .etiq { fill: var(--fg); font: 13px var(--police); text-anchor: middle; }
+  .canal { fill: transparent; transition: fill 0.3s; }
+  .electrons circle { fill: var(--ill-paquet); opacity: 0; }
+  .passant .canal { fill: color-mix(in oklab, var(--ill-paquet) 35%, transparent); }
+  .passant .grille { fill: var(--ill-client); }
+  .passant .electrons circle { opacity: 1; animation: passe 2s linear 3; }
+  /* Trois passages suffisent à montrer le courant (jamais de boucle infinie). */
+  @keyframes passe { from { transform: translateX(0); } to { transform: translateX(150px); } }
+  @media (prefers-reduced-motion: reduce) { .passant .electrons circle { animation: none; } }
+  .etat { margin: 0.5rem 0 0; font-weight: 600; }
+  .echelle { margin-top: 0.75rem; }
+  .echelle h4 { margin: 0 0 0.5rem; }
+  .echelle ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .echelle li { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr auto; gap: 0.2rem 0.75rem; align-items: center; }
+  .nom { font-weight: 600; font-size: 0.9rem; }
+  .barre { height: 0.8rem; width: var(--l); background: var(--ill-paquet); border-radius: 999px; }
+  .nombre { font-family: var(--police-mono); font-size: 0.85rem; text-align: right; }
+  .texte { grid-column: 1 / -1; font-size: 0.85rem; color: var(--muted); }
+  @media (max-width: 40rem) {
+    .schema { grid-template-columns: 1fr; }
+    .echelle li { grid-template-columns: 1fr auto; }
+    .barre { grid-column: 1 / -1; }
+  }
+</style>

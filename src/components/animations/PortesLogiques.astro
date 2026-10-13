@@ -1,0 +1,202 @@
+---
+// Animation « Portes logiques » (étape 2 du module « Comment marche un
+// ordinateur ») : deux interrupteurs A et B, une porte au choix, une lampe,
+// et la table de vérité où la ligne en cours est surlignée. Mode défi :
+// retrouver la porte qui produit une table donnée.
+const portes = [
+  { id: 'et', nom: 'ET', aide: 'allumée si A et B sont tous les deux allumés' },
+  { id: 'ou', nom: 'OU', aide: 'allumée si au moins un des deux est allumé' },
+  { id: 'non', nom: 'NON (de A)', aide: "le contraire de A (B n'est pas utilisé)" },
+  { id: 'oux', nom: 'OU exclusif', aide: "allumée si un seul des deux est allumé, pas les deux" },
+  { id: 'nonet', nom: 'NON-ET', aide: "le contraire de ET : avec elle seule, on peut construire toutes les autres" },
+];
+---
+<div class="anim portes" data-portes data-liste={JSON.stringify(portes)}>
+  <div class="anim-repli">
+    <table>
+      <caption>Tables de vérité (1 = allumé, 0 = éteint)</caption>
+      <thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">ET</th><th scope="col">OU</th><th scope="col">OU exclusif</th><th scope="col">NON-ET</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="choix-portes" role="radiogroup" aria-label="Choix de la porte">
+      {portes.map((p, i) => (
+        <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-porte={p.id} class="anim-bouton">{p.nom}</button>
+      ))}
+    </div>
+
+    <div class="anim-cadre circuit">
+      <div class="entrees">
+        <button type="button" class="inter" data-entree="a" aria-pressed="false">A <span>0</span></button>
+        <button type="button" class="inter" data-entree="b" aria-pressed="false">B <span>0</span></button>
+      </div>
+      <div class="porte" aria-hidden="true"><span data-nom-porte>ET</span></div>
+      <div class="lampe" data-lampe role="img" aria-label="Lampe éteinte">💡</div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+
+    <table class="verite">
+      <caption>Table de vérité de la porte choisie</caption>
+      <thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">Sortie</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <details class="defi anim-cadre">
+      <summary>Défi : quelle porte donne cette table ?</summary>
+      <p>Sortie attendue pour A B = 00, 01, 10, 11 : <strong data-cible></strong></p>
+      <div class="reponses"></div>
+      <p class="anim-note" data-resultat aria-live="polite"></p>
+      <button type="button" class="anim-bouton" data-action="autre">Un autre défi ↺</button>
+    </details>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  const FONCTIONS: Record<string, (a: number, b: number) => number> = {
+    et: (a, b) => a & b,
+    ou: (a, b) => a | b,
+    non: (a) => 1 - a,
+    oux: (a, b) => a ^ b,
+    nonet: (a, b) => 1 - (a & b),
+  };
+  const LIGNES: [number, number][] = [[0, 0], [0, 1], [1, 0], [1, 1]];
+
+  document.querySelectorAll<HTMLElement>('[data-portes]').forEach((racine) => {
+    activerScene(racine);
+    const portes: { id: string; nom: string; aide: string }[] = JSON.parse(racine.dataset.liste!);
+    let porte = 'et';
+    const entree = { a: 0, b: 0 };
+    const lampe = racine.querySelector<HTMLElement>('[data-lampe]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const tbody = racine.querySelector<HTMLTableSectionElement>('.verite tbody')!;
+
+    function afficher() {
+      const f = FONCTIONS[porte];
+      const s = f(entree.a, entree.b);
+      const p = portes.find((x) => x.id === porte)!;
+      racine.querySelector('[data-nom-porte]')!.textContent = p.nom;
+      lampe.classList.toggle('allumee', s === 1);
+      lampe.setAttribute('aria-label', s ? 'Lampe allumée' : 'Lampe éteinte');
+      racine.querySelectorAll<HTMLButtonElement>('[data-entree]').forEach((b) => {
+        const v = entree[b.dataset.entree as 'a' | 'b'];
+        b.setAttribute('aria-pressed', String(v === 1));
+        b.querySelector('span')!.textContent = String(v);
+        b.classList.toggle('inutile', porte === 'non' && b.dataset.entree === 'b');
+      });
+      racine.querySelectorAll<HTMLButtonElement>('[data-porte]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.porte === porte)));
+      legende.textContent = `Porte ${p.nom} : ${p.aide}. Avec A = ${entree.a} et B = ${entree.b}, la lampe est ${s ? 'allumée' : 'éteinte'}.`;
+      tbody.replaceChildren(
+        ...LIGNES.map(([a, b]) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${a}</td><td>${b}</td><td>${f(a, b)}</td>`;
+          if (a === entree.a && b === entree.b) tr.className = 'courante';
+          return tr;
+        }),
+      );
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-entree]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const k = b.dataset.entree as 'a' | 'b';
+        entree[k] = 1 - entree[k];
+        afficher();
+      }),
+    );
+    racine.querySelectorAll<HTMLButtonElement>('[data-porte]').forEach((b) =>
+      b.addEventListener('click', () => {
+        porte = b.dataset.porte!;
+        afficher();
+      }),
+    );
+
+    // Défi : une porte tirée au hasard, différente de la précédente.
+    const cible = racine.querySelector<HTMLElement>('[data-cible]')!;
+    const reponses = racine.querySelector<HTMLElement>('.reponses')!;
+    const resultat = racine.querySelector<HTMLElement>('[data-resultat]')!;
+    let secret = '';
+    function nouveauDefi() {
+      const autres = portes.filter((p) => p.id !== secret);
+      secret = autres[Math.floor(Math.random() * autres.length)].id;
+      cible.textContent = LIGNES.map(([a, b]) => FONCTIONS[secret](a, b)).join(' ');
+      resultat.textContent = '';
+      reponses.replaceChildren(
+        ...portes.map((p) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'anim-bouton';
+          b.textContent = p.nom;
+          b.addEventListener('click', () => {
+            resultat.textContent =
+              p.id === secret
+                ? `Bravo : c'est bien la porte ${p.nom}.`
+                : `Pas tout à fait : la porte ${p.nom} donne ${LIGNES.map(([x, y]) => FONCTIONS[p.id](x, y)).join(' ')}.`;
+          });
+          return b;
+        }),
+      );
+    }
+    racine.querySelector('[data-action="autre"]')!.addEventListener('click', nouveauDefi);
+
+    nouveauDefi();
+    afficher();
+  });
+</script>
+
+<style>
+  .choix-portes, .reponses { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .choix-portes [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .circuit { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; }
+  .entrees { display: grid; gap: 0.5rem; }
+  .inter {
+    font: inherit;
+    font-weight: 700;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .inter span { font-family: var(--police-mono); margin-left: 0.3rem; }
+  .inter[aria-pressed='true'] { background: var(--ill-client); border-color: var(--ill-client); color: var(--bg); }
+  .inter.inutile { opacity: 0.4; }
+  .porte {
+    position: relative;
+    justify-self: center;
+    min-width: 8rem;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+    border: 3px solid var(--ill-reseau);
+    border-radius: 0.5rem 2rem 2rem 0.5rem;
+  }
+  .porte::before, .porte::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 1rem;
+    border-top: 3px solid var(--ill-reseau);
+  }
+  .porte::before { right: 100%; }
+  .porte::after { left: 100%; }
+  .lampe { font-size: 2.2rem; filter: grayscale(1); opacity: 0.4; transition: opacity 0.2s, filter 0.2s; }
+  .lampe.allumee { filter: none; opacity: 1; text-shadow: 0 0 1rem var(--ill-commun); }
+  .verite { border-collapse: collapse; margin-top: 0.5rem; font-family: var(--police-mono); }
+  .verite caption { text-align: left; font-family: var(--police); font-size: 0.85rem; color: var(--muted); }
+  .verite th, .verite :global(td) { padding: 0.2rem 0.8rem; border-bottom: 1px solid var(--border); text-align: center; }
+  .verite :global(tr.courante) { background: color-mix(in oklab, var(--ill-client) 20%, transparent); font-weight: 700; }
+  .defi { margin-top: 0.75rem; }
+  .defi summary { cursor: pointer; font-weight: 600; }
+  [data-cible] { font-family: var(--police-mono); letter-spacing: 0.2em; }
+  .anim-repli table { border-collapse: collapse; }
+  .anim-repli th, .anim-repli td { padding: 0.2rem 0.6rem; border-bottom: 1px solid var(--border); text-align: center; }
+</style>

@@ -1,0 +1,266 @@
+---
+// Animation « Mini-processeur » (module « Comment marche un ordinateur »,
+// étapes 5 et 6) : 16 cases de mémoire, un accumulateur, un compteur de
+// programme, 7 instructions. On avance phase par phase (chercher, décoder,
+// exécuter), instruction par instruction, ou au rythme d'une horloge
+// réglable. La mémoire est modifiable : on peut écrire son propre programme.
+import { OPS, PROGRAMMES } from '../../lib/miniproc';
+---
+<div class="anim proc" data-proc>
+  <div class="anim-repli">
+    <p>
+      Programme « 2 + 3 » : la case 0 contient « CHARGE 14 » (l'accumulateur reçoit 2), la
+      case 1 « AJOUTE 15 » (il vaut alors 5), la case 2 « RANGE 13 » (le résultat 5 est rangé
+      dans la case 13), la case 3 « STOP ». Pour chaque instruction, le processeur la cherche
+      en mémoire, la décode, puis l'exécute.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="barre">
+      <label>Programme
+        <select data-programme>
+          {Object.entries(PROGRAMMES).map(([id, p]) => <option value={id}>{p.nom}</option>)}
+        </select>
+      </label>
+      <p class="anim-note description"></p>
+    </div>
+
+    <div class="grille">
+      <section class="anim-cadre cpu" aria-label="Processeur">
+        <h4>Processeur</h4>
+        <div class="phases" aria-hidden="true">
+          <span data-phase="chercher">Chercher</span>
+          <span data-phase="decoder">Décoder</span>
+          <span data-phase="executer">Exécuter</span>
+        </div>
+        <dl class="registres">
+          <dt>Compteur de programme</dt><dd data-reg="cp"></dd>
+          <dt>Registre d'instruction</dt><dd data-reg="ri"></dd>
+          <dt>Accumulateur</dt><dd data-reg="acc"></dd>
+          <dt>Cycles</dt><dd data-reg="cycles"></dd>
+        </dl>
+        <details class="jeu">
+          <summary>Les 7 instructions</summary>
+          <ul>
+            {OPS.map((o) => <li><code>{o.code.toString(2).padStart(4, '0')}</code> {o.nom} : {o.aide}</li>)}
+          </ul>
+        </details>
+      </section>
+
+      <section class="anim-cadre memoire" aria-label="Mémoire">
+        <h4>Mémoire <small>(modifiable)</small></h4>
+        <table>
+          <thead><tr><th scope="col">Case</th><th scope="col">Bits</th><th scope="col">Valeur</th><th scope="col">Lue comme instruction</th></tr></thead>
+          <tbody>
+            {Array.from({ length: 16 }, (_, i) => (
+              <tr data-case={i}>
+                <th scope="row">{i}</th>
+                <td class="bits"></td>
+                <td><input type="number" min="0" max="255" inputmode="numeric" aria-label={`Valeur de la case ${i}`} /></td>
+                <td class="sens"></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <p class="anim-legende" aria-live="polite"></p>
+
+    <div class="anim-commandes">
+      <button type="button" data-action="phase">Phase suivante ▶</button>
+      <button type="button" data-action="instruction">Instruction suivante ▶▶</button>
+      <button type="button" data-action="lancer" class="principal">▶ Lancer l'horloge</button>
+      <button type="button" data-action="reinitialiser">↺ Réinitialiser</button>
+      <label class="vitesse">Horloge
+        <input type="range" min="1" max="12" value="3" data-vitesse aria-describedby="vitesse-valeur" />
+        <span id="vitesse-valeur" data-vitesse-valeur></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+  import { PROGRAMMES, binaire, desassembler, etatInitial, pas, decoder, nomOp, type Etat } from '../../lib/miniproc';
+
+  // Garde-fou : une boucle sans fin s'arrête d'elle-même au bout de ce nombre de phases.
+  const MAX_PHASES = 600;
+
+  document.querySelectorAll<HTMLElement>('[data-proc]').forEach((racine) => {
+    activerScene(racine);
+    const choix = racine.querySelector<HTMLSelectElement>('[data-programme]')!;
+    const description = racine.querySelector<HTMLElement>('.description')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const lancer = racine.querySelector<HTMLButtonElement>('[data-action="lancer"]')!;
+    const vitesse = racine.querySelector<HTMLInputElement>('[data-vitesse]')!;
+    const vitesseValeur = racine.querySelector<HTMLElement>('[data-vitesse-valeur]')!;
+    const lignes = [...racine.querySelectorAll<HTMLTableRowElement>('tr[data-case]')];
+    let etat: Etat = etatInitial(PROGRAMMES.addition.memoire);
+    let memoireDepart = [...PROGRAMMES.addition.memoire];
+    let minuterie: number | undefined;
+    let phasesDepuisLancement = 0;
+
+    const reg = (nom: string, texte: string) => {
+      racine.querySelector<HTMLElement>(`[data-reg="${nom}"]`)!.textContent = texte;
+    };
+
+    function afficher() {
+      reg('cp', `${etat.cp} (${binaire(etat.cp, 4)})`);
+      const { code, adresse } = decoder(etat.ri);
+      reg('ri', etat.phase === 'chercher' && etat.cycles === 0 ? '—' : `${binaire(etat.ri)} = ${code <= 6 ? `${nomOp(code)} ${adresse}` : '???'}`);
+      reg('acc', `${etat.acc} (${binaire(etat.acc)})`);
+      reg('cycles', String(etat.cycles));
+      racine.querySelectorAll<HTMLElement>('[data-phase]').forEach((p) =>
+        p.classList.toggle('active', !etat.arrete && p.dataset.phase === etat.phase),
+      );
+      lignes.forEach((tr, i) => {
+        const v = etat.memoire[i];
+        tr.querySelector('.bits')!.textContent = binaire(v);
+        const champ = tr.querySelector('input')!;
+        if (document.activeElement !== champ) champ.value = String(v);
+        tr.querySelector('.sens')!.textContent = desassembler(v);
+        tr.classList.toggle('cp', i === etat.cp && !etat.arrete);
+        tr.classList.toggle('lue', etat.lues.includes(i));
+        tr.classList.toggle('ecrite', etat.ecrites.includes(i));
+      });
+      legende.textContent = etat.journal;
+      racine.querySelectorAll<HTMLButtonElement>('[data-action="phase"], [data-action="instruction"]').forEach((b) => {
+        b.disabled = etat.arrete;
+      });
+      lancer.disabled = etat.arrete && minuterie === undefined;
+    }
+
+    function arreterHorloge() {
+      if (minuterie !== undefined) clearInterval(minuterie);
+      minuterie = undefined;
+      lancer.textContent = '▶ Lancer l’horloge';
+    }
+
+    function unePhase() {
+      etat = pas(etat);
+      phasesDepuisLancement++;
+      if (etat.arrete) arreterHorloge();
+      if (minuterie !== undefined && phasesDepuisLancement >= MAX_PHASES) {
+        arreterHorloge();
+        etat = { ...etat, journal: `Arrêt automatique après ${MAX_PHASES} phases : ce programme tourne peut-être en boucle sans fin.` };
+      }
+      afficher();
+    }
+
+    function charger(memoire: number[]) {
+      arreterHorloge();
+      memoireDepart = [...memoire];
+      etat = etatInitial(memoire);
+      afficher();
+    }
+
+    function majVitesse() {
+      const n = Number(vitesse.value);
+      vitesseValeur.textContent = `${n} ${n > 1 ? 'tics' : 'tic'} par seconde`;
+      if (minuterie !== undefined) {
+        clearInterval(minuterie);
+        minuterie = window.setInterval(unePhase, 1000 / n);
+      }
+    }
+
+    racine.querySelector('[data-action="phase"]')!.addEventListener('click', () => {
+      phasesDepuisLancement = 0;
+      unePhase();
+    });
+    racine.querySelector('[data-action="instruction"]')!.addEventListener('click', () => {
+      phasesDepuisLancement = 0;
+      do unePhase();
+      while (!etat.arrete && etat.phase !== 'chercher');
+    });
+    lancer.addEventListener('click', () => {
+      if (minuterie !== undefined) return arreterHorloge();
+      phasesDepuisLancement = 0;
+      lancer.textContent = '❚❚ Pause';
+      minuterie = window.setInterval(unePhase, 1000 / Number(vitesse.value));
+    });
+    racine.querySelector('[data-action="reinitialiser"]')!.addEventListener('click', () => charger(memoireDepart));
+    choix.addEventListener('change', () => {
+      description.textContent = PROGRAMMES[choix.value].description;
+      charger(PROGRAMMES[choix.value].memoire);
+    });
+    vitesse.addEventListener('input', majVitesse);
+
+    // Modifier une case : la mémoire de départ change aussi (« Réinitialiser » la garde).
+    lignes.forEach((tr, i) => {
+      tr.querySelector('input')!.addEventListener('change', (ev) => {
+        const champ = ev.target as HTMLInputElement;
+        const v = Math.max(0, Math.min(255, Math.round(Number(champ.value) || 0)));
+        champ.value = String(v);
+        etat = { ...etat, memoire: etat.memoire.map((x, j) => (j === i ? v : x)), journal: `Case ${i} modifiée : ${v} (${binaire(v)}), lue comme « ${desassembler(v)} ».` };
+        memoireDepart[i] = v;
+        afficher();
+      });
+    });
+
+    description.textContent = PROGRAMMES.addition.description;
+    majVitesse();
+    afficher();
+  });
+</script>
+
+<style>
+  .barre { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-bottom: 0.75rem; }
+  .barre label, .vitesse { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+  .barre .description { flex: 1 1 16rem; }
+  select {
+    font: inherit;
+    padding: 0.3rem 0.4rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .grille { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(18rem, 1.6fr); gap: 0.75rem; align-items: start; }
+  h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  h4 small { font-weight: normal; color: var(--muted); }
+  .cpu { border-top: 4px solid var(--ill-client); }
+  .memoire { border-top: 4px solid var(--ill-serveur); overflow-x: auto; }
+  .phases { display: flex; gap: 0.25rem; margin-bottom: 0.6rem; }
+  .phases span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .phases span.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
+  .registres { display: grid; grid-template-columns: 1fr; gap: 0.1rem; margin: 0; font-size: 0.85rem; }
+  .registres dt { color: var(--muted); margin-top: 0.35rem; }
+  .registres dd { margin: 0; font-family: var(--police-mono); font-size: 0.95rem; overflow-wrap: anywhere; }
+  .jeu { margin-top: 0.75rem; font-size: 0.85rem; }
+  .jeu summary { cursor: pointer; font-weight: 600; }
+  .jeu ul { padding-left: 1rem; margin: 0.4rem 0 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  th, td { padding: 0.15rem 0.35rem; border-bottom: 1px solid var(--border); text-align: left; }
+  thead th { color: var(--muted); font-weight: 600; }
+  tbody th { font-family: var(--police-mono); color: var(--muted); }
+  .bits { font-family: var(--police-mono); letter-spacing: 0.05em; }
+  td input {
+    width: 4.2rem;
+    font: inherit;
+    font-family: var(--police-mono);
+    padding: 0.1rem 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .sens { font-family: var(--police-mono); white-space: nowrap; }
+  tr.cp { outline: 2px solid var(--ill-client); outline-offset: -2px; }
+  tr.cp th::before { content: '▶ '; color: var(--ill-client); }
+  tr.lue { background: color-mix(in oklab, var(--ill-client) 15%, transparent); }
+  tr.ecrite { background: color-mix(in oklab, var(--ill-paquet) 22%, transparent); }
+  .vitesse input { width: 7rem; }
+  @media (max-width: 40rem) {
+    .grille { grid-template-columns: 1fr; }
+  }
+</style>

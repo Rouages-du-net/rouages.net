@@ -1,0 +1,147 @@
+---
+// Animation « L'additionneur 4 bits » (étape 3 du module « Comment marche un
+// ordinateur ») : deux nombres de 4 bits (2 et 3 par défaut), quatre
+// additionneurs complets en chaîne ; la retenue se propage de droite à
+// gauche, colonne par colonne. Dépassement au-delà de 15 expliqué.
+const colonnes = [3, 2, 1, 0]; // indice du bit, affiché de gauche (poids fort) à droite
+---
+<div class="anim additionneur" data-additionneur>
+  <div class="anim-repli">
+    <p>
+      2 + 3 en binaire : 0010 + 0011. Colonne de droite : 0 + 1 = 1, pas de retenue. Deuxième
+      colonne : 1 + 1 = 10 en binaire, on écrit 0 et on retient 1. Troisième colonne : 0 + 0 + la
+      retenue 1 = 1. Résultat : 0101, soit 5. Chaque colonne est un « additionneur complet »
+      fabriqué avec des portes OU exclusif, ET et OU.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre anim-cadre-defile">
+      <table class="pose">
+        <tbody>
+          <tr class="retenues"><th scope="row">Retenues</th>{colonnes.map((i) => <td data-retenue={i}></td>)}<td class="vide"></td></tr>
+          <tr><th scope="row">A</th>{colonnes.map((i) => <td><button type="button" class="bit" data-nombre="a" data-i={i} aria-pressed="false" aria-label={`Bit ${i} de A`}>0</button></td>)}<td class="dec" data-dec="a"></td></tr>
+          <tr><th scope="row">+ B</th>{colonnes.map((i) => <td><button type="button" class="bit" data-nombre="b" data-i={i} aria-pressed="false" aria-label={`Bit ${i} de B`}>0</button></td>)}<td class="dec" data-dec="b"></td></tr>
+          <tr class="somme"><th scope="row">= Somme</th>{colonnes.map((i) => <td data-somme={i}></td>)}<td class="dec" data-dec="s"></td></tr>
+          <tr class="poids"><th scope="row">Vaut</th>{colonnes.map((i) => <td>{2 ** i}</td>)}<td class="vide"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+    <div class="anim-commandes">
+      <button type="button" class="principal" data-action="calculer">Calculer colonne par colonne ▶</button>
+      <button type="button" data-action="exemple" data-a="2" data-b="3">2 + 3</button>
+      <button type="button" data-action="exemple" data-a="7" data-b="5">7 + 5</button>
+      <button type="button" data-action="exemple" data-a="15" data-b="1">15 + 1</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-additionneur]').forEach((racine) => {
+    activerScene(racine);
+    const val = { a: 2, b: 3 };
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="calculer"]')!;
+    const cell = (sel: string) => racine.querySelector<HTMLElement>(sel)!;
+    let enCours = false;
+
+    function poserBits() {
+      racine.querySelectorAll<HTMLButtonElement>('.bit').forEach((b) => {
+        const v = (val[b.dataset.nombre as 'a' | 'b'] >> Number(b.dataset.i)) & 1;
+        b.textContent = String(v);
+        b.setAttribute('aria-pressed', String(v === 1));
+      });
+      cell('[data-dec="a"]').textContent = `= ${val.a}`;
+      cell('[data-dec="b"]').textContent = `= ${val.b}`;
+    }
+
+    function effacerResultat() {
+      for (let i = 0; i < 4; i++) {
+        cell(`[data-somme="${i}"]`).textContent = '';
+        cell(`[data-retenue="${i}"]`).textContent = '';
+        cell(`[data-somme="${i}"]`).classList.remove('active');
+      }
+      cell('[data-dec="s"]').textContent = '';
+      legende.textContent = 'Choisis deux nombres (clique sur les bits), puis lance le calcul.';
+    }
+
+    async function calculer() {
+      if (enCours) return;
+      enCours = true;
+      bouton.disabled = true;
+      effacerResultat();
+      let retenue = 0;
+      for (let i = 0; i < 4; i++) {
+        const a = (val.a >> i) & 1;
+        const b = (val.b >> i) & 1;
+        const total = a + b + retenue;
+        const s = total & 1;
+        const sortante = total >> 1;
+        const td = cell(`[data-somme="${i}"]`);
+        td.textContent = String(s);
+        td.classList.add('active');
+        legende.textContent = `Colonne ${2 ** i} : ${a} + ${b}${retenue ? ' + retenue 1' : ''} = ${total} (en binaire ${total.toString(2)}) : on écrit ${s}${sortante ? ' et on retient 1' : ''}.`;
+        if (sortante && i < 3) cell(`[data-retenue="${i + 1}"]`).textContent = '1';
+        retenue = sortante;
+        await pause(900);
+        td.classList.remove('active');
+      }
+      const somme = val.a + val.b;
+      cell('[data-dec="s"]').textContent = `= ${somme & 15}`;
+      legende.textContent =
+        retenue
+          ? `Dépassement : ${val.a} + ${val.b} = ${somme}, mais 4 bits ne vont que jusqu'à 15. La dernière retenue « tombe » : il reste ${somme & 15}. C'est pour cela que les processeurs travaillent sur 32 ou 64 bits.`
+          : `Résultat : ${somme}. Chaque colonne est un additionneur complet (deux OU exclusif, deux ET, un OU) ; la retenue passe de l'un au suivant.`;
+      enCours = false;
+      bouton.disabled = false;
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('.bit').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (enCours) return;
+        const n = b.dataset.nombre as 'a' | 'b';
+        val[n] ^= 1 << Number(b.dataset.i);
+        poserBits();
+        effacerResultat();
+      }),
+    );
+    racine.querySelectorAll<HTMLButtonElement>('[data-action="exemple"]').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (enCours) return;
+        val.a = Number(b.dataset.a);
+        val.b = Number(b.dataset.b);
+        poserBits();
+        calculer();
+      }),
+    );
+    bouton.addEventListener('click', calculer);
+    poserBits();
+    effacerResultat();
+  });
+</script>
+
+<style>
+  .pose { border-collapse: collapse; margin: 0 auto; font-family: var(--police-mono); }
+  .pose th { text-align: right; padding-right: 0.75rem; font-family: var(--police); font-weight: 600; font-size: 0.85rem; color: var(--muted); }
+  .pose td { width: 3rem; height: 2.6rem; text-align: center; font-size: 1.2rem; }
+  .retenues td { color: var(--ill-paquet); font-size: 0.95rem; height: 1.6rem; }
+  .somme td { border-top: 2px solid var(--fg); font-weight: 700; }
+  .somme td.active { background: color-mix(in oklab, var(--ill-paquet) 25%, transparent); }
+  .poids td { font-size: 0.75rem; color: var(--muted); height: 1.4rem; }
+  .dec { width: auto !important; padding-left: 0.75rem; font-size: 1rem !important; color: var(--muted); text-align: left !important; white-space: nowrap; }
+  .bit {
+    width: 2.3rem;
+    height: 2.3rem;
+    font: inherit;
+    font-weight: 700;
+    border-radius: 0.4rem;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .bit[aria-pressed='true'] { background: var(--ill-client); border-color: var(--ill-client); color: var(--bg); }
+</style>
