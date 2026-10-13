@@ -1,0 +1,73 @@
+---
+// Frise de navigation d'un module : une pastille par étape, collée en haut
+// de l'écran, qui suit la lecture (étape courante en surbrillance).
+interface Props {
+  etapes: { ancre: string; court: string }[];
+}
+const { etapes } = Astro.props;
+---
+<nav class="frise" aria-label="Étapes du parcours">
+  <ol>
+    {etapes.map((e, i) => (
+      <li><a href={`#${e.ancre}`}><span class="pastille">{i}</span><span class="court">{e.court}</span></a></li>
+    ))}
+  </ol>
+</nav>
+
+<script>
+  const frise = document.querySelector<HTMLElement>('.frise');
+  const liens = new Map<string, HTMLAnchorElement>();
+  document.querySelectorAll<HTMLAnchorElement>('.frise a').forEach((a) => liens.set(a.hash.slice(1), a));
+  const marquer = (id: string) => {
+    liens.forEach((a, cle) => {
+      if (cle === id) {
+        a.setAttribute('aria-current', 'step');
+        frise?.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' });
+      } else a.removeAttribute('aria-current');
+    });
+  };
+  const observateur = new IntersectionObserver(
+    (entrees) => entrees.filter((e) => e.isIntersecting).forEach((e) => marquer(e.target.id)),
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  document.querySelectorAll('.etape').forEach((s) => observateur.observe(s));
+</script>
+
+<style>
+  .frise {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    margin: 0 -1rem;
+    padding: 0.5rem 1rem;
+    overflow-x: auto;
+  }
+  ol { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+  a[aria-current='step'] { background: var(--accent); color: var(--bg); }
+  .pastille {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    font-size: 0.8rem;
+  }
+  @media (max-width: 40rem) {
+    .court { display: none; }
+    a[aria-current='step'] .court { display: inline; }
+  }
+</style>

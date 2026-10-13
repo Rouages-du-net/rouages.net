@@ -1,0 +1,390 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import Octet from '../../components/animations/Octet.astro';
+import Transistor from '../../components/animations/Transistor.astro';
+import PortesLogiques from '../../components/animations/PortesLogiques.astro';
+import Additionneur from '../../components/animations/Additionneur.astro';
+import Memoire from '../../components/animations/Memoire.astro';
+import Horloge from '../../components/animations/Horloge.astro';
+import MiniProcesseur from '../../components/animations/MiniProcesseur.astro';
+import Traduction from '../../components/animations/Traduction.astro';
+
+// Chiffres sourcés : voir docs/sources/ordinateur.md.
+const echelle = [
+  { nom: 'Intel 4004', annee: 1971, transistors: 2300, texte: 'Souvent présenté comme le premier microprocesseur.' },
+  { nom: 'ARM1', annee: 1985, transistors: 24800, texte: 'Le premier processeur ARM, conçu chez Acorn (Sophie Wilson, Steve Furber).' },
+  { nom: 'Apple M3 Max', annee: 2023, transistors: 92_000_000_000, texte: "Processeur d'ordinateur portable." },
+  { nom: 'Nvidia Blackwell', annee: 2024, transistors: 208_000_000_000, texte: "Processeur graphique conçu pour l'intelligence artificielle." },
+];
+
+const etapes = [
+  { ancre: 'binaire', court: 'Le binaire' },
+  { ancre: 'transistor', court: 'Le transistor' },
+  { ancre: 'portes', court: 'Les portes' },
+  { ancre: 'calcul', court: 'Le calcul' },
+  { ancre: 'memoire', court: 'La mémoire' },
+  { ancre: 'horloge', court: "L'horloge" },
+  { ancre: 'processeur', court: 'Le processeur' },
+  { ancre: 'langages', court: 'Les langages' },
+];
+---
+<Base
+  title="Comment marche un ordinateur"
+  description="Du transistor au programme : construis, étage par étage, un ordinateur qui calcule 2 + 3."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>Comment marche un ordinateur</h1>
+  <p class="chapo">
+    Un ordinateur n'a rien de magique : c'est un empilement de mécanismes simples. Suivons un
+    même calcul, <code>2 + 3</code>, depuis de minuscules interrupteurs jusqu'au programme. À
+    chaque étage, c'est toi qui construis la pièce.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <p class="tag">Choisis ton niveau : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Tout est nombre" ancre="binaire">
+    <Octet slot="animation" />
+    <p slot="decouverte">
+      Un ordinateur ne connaît que deux états : allumé ou éteint, que l'on note 1 et 0. Avec
+      assez de 0 et de 1, on peut tout écrire : des nombres, des lettres, des couleurs, des
+      sons, et même des programmes.
+    </p>
+    <p slot="curieux">
+      Un <Terme id="bit">bit</Terme> vaut 0 ou 1 ; un <Terme id="octet">octet</Terme> regroupe 8 bits, soit
+      256 valeurs (de 0 à 255). Chaque bit compte double de son voisin de droite : 1, 2, 4, 8…
+      jusqu'à 128. Une lettre est un nombre (65 pour « A »), une couleur est trois nombres
+      (rouge, vert, bleu).
+    </p>
+    <p slot="ingenieur">
+      Le texte est codé avec Unicode, en général sous la forme UTF-8 : de 1 à 4 octets par
+      caractère, les 128 premiers étant ceux de l'ASCII. Les nombres négatifs utilisent le
+      complément à deux ; les nombres à virgule, la norme IEEE 754. Comme 0,1 ne s'écrit pas
+      exactement en binaire (de même que 1/3 en décimal), JavaScript calcule
+      <code>0.1 + 0.2</code> = <code>0.30000000000000004</code>. En octobre 2026, environ 99 % des
+      sites web utilisent UTF-8 (selon W3Techs).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1703, Leibniz publie son <em>Explication de l'arithmétique binaire</em>, où il
+        rapproche son système des hexagrammes chinois du <em>Yi Jing</em> (il avait trouvé le
+        binaire avant de les connaître). Le mot <em>bit</em> est proposé vers 1947 par John
+        Tukey ; <em>byte</em> (l'octet) naît chez IBM en 1956 (Werner Buchholz). UTF-8 est
+        imaginé en 1992 par Ken Thompson et Rob Pike.
+      </p>
+      <p>
+        Le binaire est un choix, pas une fatalité : en URSS, l'ordinateur <strong>Setun</strong>
+        (1958) comptait en ternaire, avec trois états.
+      </p>
+    </div>
+    <p slot="decide">
+      Le consortium Unicode donne un numéro à chaque caractère de toutes les écritures du
+      monde : la version 18.0 (septembre 2026) en compte 172 808, emojis compris. L'IEEE fixe la
+      norme des nombres à virgule (IEEE 754, dont le principal architecte est William Kahan).
+    </p>
+    <p slot="verifie">Tape ton prénom dans l'animation : les lettres accentuées prennent plus d'octets que les autres.</p>
+    <p slot="mythes">
+      <strong>« L'ordinateur pense en 0 et en 1. »</strong> Il ne « pense » pas : 0 et 1 sont
+      notre façon de décrire deux niveaux de tension électrique.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le transistor, un interrupteur sans doigt" ancre="transistor">
+    <Transistor slot="animation" echelle={echelle} />
+    <p slot="decouverte">
+      Un <Terme id="transistor">transistor</Terme> est un interrupteur sans pièce mobile, que l'on commande avec de
+      l'électricité au lieu d'un doigt. Une puce récente en contient des dizaines de
+      milliards, gravés dans du silicium.
+    </p>
+    <p slot="curieux">
+      Presque toutes les puces utilisent des transistors MOS : une tension sur la
+      <em>grille</em> ouvre un canal dans le silicium, et le courant passe entre la
+      <em>source</em> et le <em>drain</em>, comme un robinet. En 1965, Gordon Moore observe que
+      le nombre de composants par puce double à peu près chaque année ; en 1975, il corrige :
+      tous les deux ans. Ce n'est pas une loi de la nature, mais un objectif que toute
+      l'industrie s'est efforcée de tenir.
+    </p>
+    <p slot="ingenieur">
+      Logique CMOS : chaque porte associe des transistors N et P. Les noms de procédés
+      (« 3 nm ») ne mesurent plus rien de réel depuis le milieu des années 1990 : ce sont des
+      noms de génération ; Intel l'a reconnu en 2021 en rebaptisant les siens.
+    </p>
+    <div slot="histoire">
+      <p>
+        Décembre 1947, aux Bell Labs : John Bardeen et Walter Brattain font fonctionner le
+        premier transistor ; William Shockley imagine en janvier 1948 le transistor à
+        jonction. En 1948, près de Paris, Herbert Mataré et Heinrich Welker inventent de leur
+        côté le « transistron ». En 1959, <strong>Mohamed Atalla et Dawon Kahng</strong>
+        réalisent le premier transistor MOS qui fonctionne.
+      </p>
+      <p>
+        Jack Kilby (1958) et Robert Noyce (1959) sont les co-inventeurs du circuit intégré,
+        grâce au procédé planaire de Jean Hoerni. Et derrière les puces, il y a aussi les
+        mains des <strong>ouvrières de l'électronique</strong>, d'Asie, du Mexique et de la
+        réserve navajo de Shiprock.
+      </p>
+    </div>
+    <p slot="decide">
+      Les fondeurs : la taïwanaise TSMC réalisait au 2ᵉ trimestre 2026 environ 72 % du chiffre
+      d'affaires des dix plus grands. ASML (Pays-Bas) est la seule entreprise à construire les
+      machines de lithographie EUV. Depuis octobre 2022, les États-Unis restreignent
+      l'exportation vers la Chine de puces avancées et de machines pour les fabriquer ; les
+      Pays-Bas ont suivi en 2023.
+    </p>
+    <ul slot="mythes">
+      <li><strong>« Une puce en 3 nm a des transistors de 3 nm. »</strong> Non : c'est un nom de génération, aucune pièce ne mesure 3 nanomètres.</li>
+      <li><strong>« La loi de Moore dit que la puissance double tous les 18 mois. »</strong> Non : elle parle du nombre de composants, et Moore n'a jamais dit 18 mois.</li>
+    </ul>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Les portes logiques" ancre="portes">
+    <PortesLogiques slot="animation" />
+    <p slot="decouverte">
+      En reliant quelques transistors, on fabrique des <Terme id="porte-logique">« portes »</Terme> qui répondent à des questions
+      simples : « les deux sont allumés ? » (ET), « au moins un des deux ? » (OU), « le
+      contraire ? » (NON).
+    </p>
+    <p slot="curieux">
+      Chaque porte a sa table de vérité, qui donne la sortie pour toutes les entrées
+      possibles. Le OU exclusif s'allume quand une seule entrée est allumée : on s'en servira
+      pour additionner. Et avec la seule porte NON-ET, on peut construire toutes les autres.
+    </p>
+    <p slot="ingenieur">
+      Une porte NON-ET en CMOS compte 4 transistors (deux N en série, deux P en parallèle).
+      Toute fonction logique se réécrit avec des NON-ET, ou avec des NON-OU.
+    </p>
+    <p slot="histoire">
+      En 1854, George Boole invente un calcul où <em>vrai</em> et <em>faux</em> se combinent
+      comme dans une équation. Dans les années 1930, trois ingénieurs découvrent chacun de leur
+      côté que les circuits à interrupteurs obéissent à ce calcul : <strong>Akira
+      Nakashima</strong> au Japon (avec Masao Hanzawa, à partir de 1935-1936), Claude Shannon
+      aux États-Unis (1937-1938) et <strong>Victor Chestakov</strong> en URSS (publié en 1941).
+      C'est le travail de Shannon, écrit en anglais, qui s'est diffusé dans le monde entier.
+    </p>
+    <p slot="verifie">Fais le défi de l'animation : retrouve la porte à partir de sa table de vérité.</p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Calculer : l'additionneur" ancre="calcul">
+    <Additionneur slot="animation" />
+    <p slot="decouverte">
+      Avec des portes, on peut additionner. C'est l'addition posée de l'école, avec des
+      retenues, mais en binaire : 1 + 1 = 10 (« on écrit 0, on retient 1 »).
+    </p>
+    <p slot="curieux">
+      Un additionneur complet additionne deux bits et une retenue ; il est fait de deux OU
+      exclusif, deux ET et un OU. En mettant quatre additionneurs en chaîne, la retenue de l'un
+      entrant dans le suivant, on additionne deux nombres de 4 bits.
+    </p>
+    <p slot="ingenieur">
+      La retenue qui se propage d'étage en étage prend du temps : les processeurs utilisent des
+      additionneurs « à anticipation de retenue ». L'additionneur fait partie de l'unité
+      arithmétique et logique (UAL), qui sait aussi soustraire, comparer et combiner des bits.
+    </p>
+    <p slot="mythes">
+      <strong>« L'ordinateur ne se trompe jamais en calcul. »</strong> Il calcule sur un
+      nombre fixe de bits : au-delà, il y a dépassement. Essaie 15 + 1 sur 4 bits.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Se souvenir : la mémoire" ancre="memoire">
+    <Memoire slot="animation" />
+    <p slot="decouverte">
+      Un ordinateur doit se souvenir de ses données et de son programme. Deux portes qui se
+      tiennent l'une l'autre peuvent garder un 0 ou un 1 tant qu'il y a du courant.
+    </p>
+    <p slot="curieux">
+      C'est une bascule. On en range plusieurs côte à côte pour former des <Terme id="registre-processeur">registres</Terme>. La
+      <Terme id="memoire-vive">mémoire vive</Terme> (RAM) est un immense tableau de cases numérotées : pour lire ou écrire, on
+      donne le numéro de la case, son adresse. La RAM est rapide mais s'efface quand on
+      éteint ; le stockage (SSD, disque dur) est plus lent mais garde les données.
+    </p>
+    <p slot="ingenieur">
+      La RAM des ordinateurs actuels est de la DRAM : un transistor et un minuscule
+      condensateur par bit, qu'il faut recharger des milliers de fois par seconde. Les caches,
+      plus rapides, utilisent de la SRAM (des bascules de 6 transistors).
+    </p>
+    <p slot="histoire">
+      La bascule a été brevetée en 1918 par William Eccles et Frank Jordan, avec des tubes
+      électroniques. La cellule de DRAM à un seul transistor a été imaginée en 1966 chez IBM
+      par Robert Dennard.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="L'horloge" ancre="horloge">
+    <Horloge slot="animation" ghz={3} />
+    <p slot="decouverte">
+      Une <Terme id="horloge">horloge</Terme> donne le tempo, comme un métronome : à chaque « tic », tous les circuits
+      avancent d'un pas. Un processeur récent bat plusieurs milliards de tics par seconde.
+    </p>
+    <p slot="curieux">
+      La fréquence se mesure en hertz : 1 hertz, c'est un tic par seconde ; 1 gigahertz, un
+      milliard. Le 4004 de 1971 battait à 740 000 hertz ; un processeur de bureau récent, entre
+      3 et 6 milliards. Mais depuis le milieu des années 2000, la fréquence n'augmente presque
+      plus : au-delà, les puces chauffent trop. On multiplie plutôt les cœurs de calcul.
+    </p>
+    <p slot="ingenieur">
+      La fréquence maximale dépend du chemin le plus lent entre deux bascules : le signal doit
+      avoir traversé toutes les portes avant le tic suivant. Les processeurs découpent donc
+      chaque instruction en étapes (pipeline) et ajustent leur fréquence selon la charge et la
+      température.
+    </p>
+    <p slot="verifie">
+      Sous Linux, <code>lscpu</code> affiche la fréquence et le nombre de cœurs ; sous Windows et
+      macOS, les informations système.
+    </p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Le processeur : chercher, décoder, exécuter" ancre="processeur">
+    <MiniProcesseur slot="animation" />
+    <p slot="decouverte">
+      Le <Terme id="processeur">processeur</Terme> lit une instruction en mémoire, comprend ce qu'elle demande, l'exécute, puis
+      passe à la suivante. Encore, et encore, des milliards de fois par seconde.
+    </p>
+    <p slot="curieux">
+      Le compteur de programme indique la case où se trouve la prochaine instruction. Le
+      programme et les données sont rangés dans la même mémoire (architecture dite « de von
+      Neumann ») : une case peut être lue comme
+      une instruction ou comme un nombre (regarde la dernière colonne de l'animation). Les
+      sauts permettent de répéter (boucles) ou de choisir (conditions).
+    </p>
+    <p slot="ingenieur">
+      Ce mini-processeur a 7 instructions sur 4 bits et 16 adresses. Un vrai jeu
+      d'instructions (x86, ARM, RISC-V) en compte des dizaines à des centaines, avec de
+      nombreux registres, une pile, des interruptions ; et les processeurs exécutent plusieurs
+      instructions à la fois.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1945, John von Neumann signe un rapport qui décrit un ordinateur gardant programme et
+        données dans la même mémoire. Ces idées sont nées au sein de l'équipe de l'ENIAC
+        (J. Presper Eckert, John Mauchly et d'autres) : d'où le nom d'architecture « dite » de von
+        Neumann. Le 21 juin 1948, à Manchester, la petite machine « Baby » exécute un programme
+        rangé dans sa mémoire électronique ; quelques semaines plus tôt, l'ENIAC transformé, sur
+        des plans d'<strong>Adele Goldstine</strong> notamment, avait exécuté un programme de ce
+        nouveau style, une simulation menée avec <strong>Klára von Neumann</strong>.
+      </p>
+      <p>
+        L'Intel 4004 (1971), souvent présenté comme le premier microprocesseur, est le
+        travail d'une équipe : Ted Hoff et Stanley Mazor, <strong>Federico Faggin</strong>,
+        venu d'Italie, qui conçoit la puce, et <strong>Masatoshi Shima</strong>, ingénieur de
+        l'entreprise japonaise Busicom.
+      </p>
+      <p>
+        <strong>Kateryna Iouchtchenko</strong>, en Ukraine soviétique, invente dans les années
+        1950 un langage où une case peut contenir l'adresse d'une autre case.
+        <strong>Sophie Wilson</strong> conçoit en 1983-1985 le jeu d'instructions du processeur
+        ARM, avec Steve Furber.
+      </p>
+    </div>
+    <p slot="decide">
+      Chaque famille de processeurs a son jeu d'instructions : x86 descend de l'Intel 8086
+      (1978) ; ARM a été conçu au Royaume-Uni ; RISC-V, né à Berkeley en 2010, est un jeu
+      d'instructions <strong>ouvert</strong>, que chacun peut utiliser sans licence, géré depuis
+      2020 par une association basée en Suisse.
+    </p>
+    <p slot="verifie">Modifie une case de la mémoire et relance : écris ton propre programme !</p>
+  </Etape>
+
+  <!-- Étape 7 -->
+  <Etape numero={7} titre="Du langage humain aux instructions" ancre="langages">
+    <Traduction slot="animation" />
+    <p slot="decouverte">
+      Personne n'écrit directement des 0 et des 1 : on écrit dans des langages plus proches du
+      nôtre, puis un programme les traduit en instructions pour le processeur.
+    </p>
+    <p slot="curieux">
+      Au plus près de la machine, le langage d'assemblage donne un nom à chaque instruction.
+      Plus haut, les langages comme Python ou C sont traduits par un <Terme id="compilateur">compilateur</Terme> (avant
+      l'exécution) ou un interpréteur (pendant). Et au-dessus de tout cela, le système
+      d'exploitation (Windows, Linux, macOS…) partage le processeur et la mémoire entre les
+      programmes ; pour parler à chaque appareil, il s'appuie sur un pilote.
+    </p>
+    <p slot="ingenieur">
+      Un compilateur analyse le texte, le transforme en représentation intermédiaire,
+      l'optimise (il calculerait ici <code>2 + 3</code> à l'avance), puis produit le code
+      machine du processeur visé.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1947, à Londres, <strong>Kathleen Britten (Booth)</strong> et Andrew Booth proposent
+        une « notation contractée » pour écrire les ordres de leur machine ; en 1949, à
+        Cambridge, les <em>initial orders</em> de David Wheeler traduisent automatiquement des
+        abréviations en binaire pour l'EDSAC. Ces deux travaux annoncent les langages
+        d'assemblage : l'idée a plusieurs mères et pères.
+      </p>
+      <p>
+        Konrad Zuse imagine le Plankalkül entre 1942 et 1945 (publié en entier en 1972).
+        <strong>Grace Hopper</strong> écrit en 1952 l'un des premiers compilateurs ; en Ukraine
+        soviétique, <strong>Kateryna Iouchtchenko</strong> et Volodymyr Koroliouk créent le
+        langage Adresse ; en 1957, IBM lance FORTRAN, conçu par l'équipe de John Backus, dont
+        <strong>Lois Haibt</strong>. Et dès 1843, <strong>Ada Lovelace</strong> avait publié un
+        algorithme destiné à une machine.
+      </p>
+    </div>
+  </Etape>
+
+  <section class="final" aria-labelledby="titre-final">
+    <h2 id="titre-final">Et ton ordinateur à toi ?</h2>
+    <p>Chaque ligne d'une fiche technique correspond à une étape que tu connais maintenant.</p>
+    <table>
+      <thead><tr><th scope="col">Sur la fiche</th><th scope="col">Ce que c'est</th></tr></thead>
+      <tbody>
+        <tr><td>Processeur 8 cœurs, 3,5 GHz</td><td><a href="#horloge">5 — L'horloge</a> et <a href="#processeur">6 — Le processeur</a> : 8 processeurs dans une puce, 3,5 milliards de tics par seconde.</td></tr>
+        <tr><td>16 Go de mémoire vive</td><td><a href="#memoire">4 — La mémoire</a> : environ 16 milliards de cases d'un octet.</td></tr>
+        <tr><td>SSD de 512 Go</td><td><a href="#memoire">4 — La mémoire</a> : le stockage, qui garde les données une fois éteint.</td></tr>
+        <tr><td>Gravure « 3 nm »</td><td><a href="#transistor">1 — Le transistor</a> : un nom de génération, pas une vraie mesure.</td></tr>
+        <tr><td>Architecture x86 ou ARM</td><td><a href="#processeur">6 — Le processeur</a> : la liste des instructions qu'il comprend.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <Sources
+    verifie="2026-10-13"
+    sources={[
+      { auteur: 'Computer History Museum', titre: 'The Silicon Engine — chronologie des semi-conducteurs', url: 'https://www.computerhistory.org/siliconengine/', type: 'site', langue: 'en' },
+      { auteur: 'Fondation Nobel', titre: 'Prix Nobel de physique 1956 (transistor)', url: 'https://www.nobelprize.org/prizes/physics/1956/summary/', type: 'primaire', langue: 'en' },
+      { auteur: 'Fondation Nobel', titre: 'Prix Nobel de physique 2000 (circuit intégré)', url: 'https://www.nobelprize.org/prizes/physics/2000/summary/', type: 'primaire', langue: 'en' },
+      { auteur: 'T. Haigh, M. Priestley, C. Rope', titre: 'Reconsidering the Stored-Program Concept (IEEE Annals of the History of Computing)', url: 'https://tomandmaria.com/Tom/Writing/ReconsideringTheStoredProgramConcept.pdf', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'Unicode Consortium', titre: 'Unicode 18.0', url: 'https://www.unicode.org/versions/latest/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Gordon E. Moore', titre: 'Cramming more components onto integrated circuits (Electronics)', url: 'https://download.intel.com/newsroom/2023/manufacturing/moores-law-electronics.pdf', type: 'primaire', annee: 1965, langue: 'en' },
+      { auteur: 'Intel', titre: 'Intel 4 Versus Intel 7 and Intel Process Technology Naming', url: 'https://www.intel.com/content/www/us/en/support/articles/000097598.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Apple', titre: 'Apple unveils M3, M3 Pro, and M3 Max', url: 'https://www.apple.com/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'Nvidia', titre: 'NVIDIA Blackwell Architecture', url: 'https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/', type: 'primaire', langue: 'en' },
+      { auteur: 'TrendForce', titre: 'Classement des fondeurs, 2ᵉ trimestre 2026', url: 'https://www.trendforce.com/presscenter/news/20260909-13225.html', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'G. W. Leibniz', titre: "Explication de l'arithmétique binaire (fac-similé HAL)", url: 'https://hal.science/ads-00104781', type: 'primaire', annee: 1703 },
+      { auteur: 'F. Yergeau', titre: 'RFC 3629 — UTF-8', url: 'https://www.rfc-editor.org/rfc/rfc3629.txt', type: 'primaire', annee: 2003, langue: 'en' },
+      { auteur: 'W3Techs', titre: 'Usage statistics of character encodings for websites (relevé du 13/10/2026)', url: 'https://w3techs.com/technologies/overview/character_encoding', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'MacTutor (St Andrews)', titre: 'The Booth-Britten 1947 reports', url: 'https://mathshistory.st-andrews.ac.uk/Extras/Booth-Britten_reports/', type: 'recherche', langue: 'en' },
+      { auteur: 'IBM', titre: 'Fortran (IBM History)', url: 'https://www.ibm.com/history/fortran', type: 'site', langue: 'en' },
+      { auteur: 'Lisa Nakamura', titre: 'Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture (American Quarterly)', url: 'https://muse.jhu.edu/article/563663', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Sophie Wilson (Fellow)', url: 'https://computerhistory.org/profile/sophie-wilson/', type: 'site', langue: 'en' },
+      { auteur: 'MDN', titre: "Number.EPSILON (précision des nombres à virgule)", url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON', type: 'site' },
+    ]}
+  />
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1.5rem 0; }
+  .reglages .tag { margin: 0; }
+  .final { padding-top: 2rem; border-top: 1px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
+

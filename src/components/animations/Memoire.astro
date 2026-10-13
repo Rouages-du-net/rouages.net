@@ -1,0 +1,150 @@
+---
+// Animation « Se souvenir » (étape 4 du module « Comment marche un
+// ordinateur ») : 1) un verrou SR (deux portes NON-OU rebouclées) qui garde
+// son état une fois l'impulsion relâchée ; 2) une petite mémoire vive de
+// 16 cases adressables, où l'on écrit et lit à une adresse donnée.
+---
+<div class="anim memoire" data-memoire>
+  <div class="anim-repli">
+    <p>
+      Un verrou est fait de deux portes dont la sortie de l'une revient à l'entrée de l'autre.
+      Une impulsion sur « Mettre » le fait passer à 1, et il reste à 1 même quand on relâche ;
+      une impulsion sur « Effacer » le remet à 0. La mémoire vive est un grand tableau de cases
+      numérotées : pour lire ou écrire, on donne le numéro de la case, son adresse.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre verrou">
+      <h4>1. Un verrou : un bit qui se souvient</h4>
+      <div class="ligne">
+        <div class="boutons">
+          <button type="button" class="anim-bouton" data-impulsion="mettre">Mettre (S)</button>
+          <button type="button" class="anim-bouton" data-impulsion="effacer">Effacer (R)</button>
+        </div>
+        <div class="boucle" aria-hidden="true">
+          <span class="porte-nor">NON-OU</span>
+          <span class="fleches">⇅</span>
+          <span class="porte-nor">NON-OU</span>
+        </div>
+        <div class="sortie">Sortie Q : <strong data-q>0</strong></div>
+      </div>
+      <p class="anim-note" data-verrou-texte aria-live="polite"></p>
+    </div>
+
+    <div class="anim-cadre ram">
+      <h4>2. Une mémoire vive de 16 cases</h4>
+      <div class="commandes-ram">
+        <label>Adresse
+          <select data-adresse>
+            {Array.from({ length: 16 }, (_, i) => <option value={i}>{i} ({i.toString(2).padStart(4, '0')})</option>)}
+          </select>
+        </label>
+        <label>Valeur
+          <input type="number" min="0" max="255" value="5" data-valeur inputmode="numeric" />
+        </label>
+        <button type="button" class="anim-bouton principal" data-action="ecrire">Écrire</button>
+        <button type="button" class="anim-bouton" data-action="lire">Lire</button>
+      </div>
+      <ol class="cases" start="0">
+        {Array.from({ length: 16 }, (_, i) => <li data-case={i}><span class="adr">{i}</span><span class="val">0</span></li>)}
+      </ol>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-memoire]').forEach((racine) => {
+    activerScene(racine);
+
+    // 1. Verrou SR : l'état ne change que sur impulsion, et persiste ensuite.
+    let q = 0;
+    const qEl = racine.querySelector<HTMLElement>('[data-q]')!;
+    const texte = racine.querySelector<HTMLElement>('[data-verrou-texte]')!;
+    const majVerrou = (msg: string) => {
+      qEl.textContent = String(q);
+      racine.querySelector('.verrou')!.classList.toggle('un', q === 1);
+      texte.textContent = msg;
+    };
+    racine.querySelectorAll<HTMLButtonElement>('[data-impulsion]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const avant = q;
+        q = b.dataset.impulsion === 'mettre' ? 1 : 0;
+        majVerrou(
+          avant === q
+            ? `Q valait déjà ${q} : rien ne change. Le verrou garde son état tant qu'il est alimenté.`
+            : `Impulsion reçue : Q passe à ${q}. L'impulsion est finie, mais les deux portes se maintiennent l'une l'autre : le verrou s'en souvient.`,
+        );
+      }),
+    );
+    majVerrou("Q vaut 0. Envoie une impulsion « Mettre » : le verrou passera à 1 et y restera.");
+
+    // 2. Mémoire vive de 16 cases.
+    const memoire = new Array(16).fill(0);
+    const adresse = racine.querySelector<HTMLSelectElement>('[data-adresse]')!;
+    const valeur = racine.querySelector<HTMLInputElement>('[data-valeur]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const cases = [...racine.querySelectorAll<HTMLLIElement>('[data-case]')];
+
+    function surligner(i: number, classe: string) {
+      cases.forEach((c, j) => {
+        c.classList.toggle('choisie', j === i);
+        c.classList.remove('lue', 'ecrite');
+      });
+      cases[i].classList.add(classe);
+    }
+
+    racine.querySelector('[data-action="ecrire"]')!.addEventListener('click', () => {
+      const i = Number(adresse.value);
+      const v = Math.max(0, Math.min(255, Math.round(Number(valeur.value) || 0)));
+      valeur.value = String(v);
+      memoire[i] = v;
+      cases[i].querySelector('.val')!.textContent = String(v);
+      surligner(i, 'ecrite');
+      legende.textContent = `Écriture : l'adresse ${i} (${i.toString(2).padStart(4, '0')}) sélectionne une seule case, qui reçoit ${v} (${v.toString(2).padStart(8, '0')}). Les 15 autres ne bougent pas.`;
+    });
+    racine.querySelector('[data-action="lire"]')!.addEventListener('click', () => {
+      const i = Number(adresse.value);
+      surligner(i, 'lue');
+      legende.textContent = `Lecture : la case ${i} contient ${memoire[i]}. Lire ne l'efface pas. Mais si l'on coupe le courant, toute la mémoire vive s'efface : c'est pour cela qu'on enregistre ses fichiers sur un stockage (disque, mémoire flash).`;
+    });
+    legende.textContent = 'Choisis une adresse et une valeur, puis écris ; choisis une adresse et lis.';
+  });
+</script>
+
+<style>
+  h4 { margin: 0 0 0.6rem; font-size: 0.95rem; }
+  .verrou { border-top: 4px solid var(--ill-client); }
+  .ram { margin-top: 0.75rem; border-top: 4px solid var(--ill-serveur); }
+  .ligne { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  .boutons { display: grid; gap: 0.4rem; }
+  .boucle { display: grid; justify-items: center; gap: 0.15rem; font-size: 0.8rem; }
+  .porte-nor { border: 2px solid var(--ill-reseau); border-radius: 0.3rem 1rem 1rem 0.3rem; padding: 0.25rem 0.6rem; }
+  .fleches { color: var(--ill-paquet); font-size: 1.1rem; }
+  .sortie { font-size: 1.05rem; }
+  .sortie strong { display: inline-grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--border); font-family: var(--police-mono); }
+  .verrou.un .sortie strong { background: var(--ill-client); border-color: var(--ill-client); color: var(--bg); }
+  .commandes-ram { display: flex; flex-wrap: wrap; align-items: end; gap: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
+  .commandes-ram label { display: grid; gap: 0.2rem; font-size: 0.85rem; }
+  .commandes-ram select, .commandes-ram input {
+    font: inherit;
+    font-family: var(--police-mono);
+    padding: 0.3rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.4rem;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .commandes-ram input { width: 5rem; }
+  .cases { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.3rem; }
+  .cases li { border: 1px solid var(--border); border-radius: 0.3rem; text-align: center; padding: 0.2rem; font-family: var(--police-mono); }
+  .cases .adr { display: block; font-size: 0.7rem; color: var(--muted); }
+  .cases .val { font-size: 0.95rem; }
+  .cases li.choisie { border-color: var(--fg); }
+  .cases li.ecrite { background: color-mix(in oklab, var(--ill-paquet) 22%, transparent); }
+  .cases li.lue { background: color-mix(in oklab, var(--ill-client) 18%, transparent); }
+  @media (max-width: 40rem) { .cases { grid-template-columns: repeat(4, 1fr); } }
+</style>

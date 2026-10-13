@@ -246,6 +246,53 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Arnaque qui imite un site ou un message de confiance (banque, administration) pour te faire donner un mot de passe ou des coordonnées bancaires.",
   },
+  'bit': {
+    terme: 'Bit',
+    definition:
+      "La plus petite information possible : 0 ou 1. Dans un ordinateur, c'est une tension basse ou haute sur un fil. Huit bits forment un octet.",
+    voirAussi: ['octet'],
+  },
+  'transistor': {
+    terme: 'Transistor',
+    definition:
+      "Minuscule interrupteur commandé par l'électricité, sans pièce mobile. Une puce récente en contient des dizaines de milliards ; combinés, ils forment les portes logiques.",
+    voirAussi: ['porte-logique'],
+  },
+  'porte-logique': {
+    terme: 'Porte logique',
+    definition:
+      "Petit circuit de quelques transistors qui combine des bits selon une règle simple : ET, OU, NON… Toute l'électronique de calcul est faite de portes.",
+    voirAussi: ['transistor', 'bit'],
+  },
+  'processeur': {
+    terme: 'Processeur',
+    definition:
+      "La puce qui exécute les programmes : elle va chercher une instruction en mémoire, la décode, l'exécute, puis passe à la suivante, des milliards de fois par seconde.",
+    voirAussi: ['registre-processeur', 'horloge'],
+  },
+  'registre-processeur': {
+    terme: 'Registre (processeur)',
+    definition:
+      "Petite case de mémoire très rapide, à l'intérieur même du processeur, où il garde les nombres sur lesquels il travaille. À ne pas confondre avec le registre des noms de domaine.",
+    voirAussi: ['processeur'],
+  },
+  'horloge': {
+    terme: 'Horloge (fréquence)',
+    definition:
+      "Signal qui bat la mesure du processeur : à chaque tic, ses circuits avancent d'un pas. Elle se mesure en hertz ; 3 GHz, c'est 3 milliards de tics par seconde.",
+    voirAussi: ['processeur'],
+  },
+  'memoire-vive': {
+    terme: 'Mémoire vive (RAM)',
+    definition:
+      "Mémoire de travail de l'ordinateur, faite de cases numérotées (les adresses). Rapide, mais elle s'efface quand on coupe le courant, contrairement au stockage (disque, mémoire flash).",
+  },
+  'compilateur': {
+    terme: 'Compilateur',
+    definition:
+      "Programme qui traduit, avant l'exécution, un texte écrit dans un langage lisible (C, Rust…) en instructions pour un processeur précis.",
+    voirAussi: ['processeur'],
+  },
 };
 
 export function entree(id: string): Entree {

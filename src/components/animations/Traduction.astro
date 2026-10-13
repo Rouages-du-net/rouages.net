@@ -1,0 +1,119 @@
+---
+// Animation « Du langage humain aux bits » (étape 7 du module « Comment
+// marche un ordinateur ») : la ligne `total = 2 + 3` traduite étage par
+// étage. Deux processeurs : le mini-processeur de l'étape 6 et un vrai jeu
+// d'instructions, RISC-V (encodages calculés selon la spécification RV32I).
+
+const riscv = [
+  { asm: 'addi t0, zero, 2', bits: '00000000001000000000001010010011', sens: 't0 ← 0 + 2' },
+  { asm: 'addi t1, zero, 3', bits: '00000000001100000000001100010011', sens: 't1 ← 0 + 3' },
+  { asm: 'add  t2, t0, t1', bits: '00000000011000101000001110110011', sens: 't2 ← t0 + t1' },
+];
+const mini = [
+  { asm: 'CHARGE 14', bits: '00011110', sens: "accumulateur ← case 14 (qui contient 2)" },
+  { asm: 'AJOUTE 15', bits: '00101111', sens: 'accumulateur ← accumulateur + case 15 (qui contient 3)' },
+  { asm: 'RANGE 13', bits: '01001101', sens: 'case 13 (« total ») ← accumulateur' },
+];
+---
+<div class="anim traduction" data-traduction>
+  <div class="anim-repli">
+    <p>
+      La ligne Python <code>total = 2 + 3</code> devient, pour un vrai processeur RISC-V, trois
+      instructions en langage d'assemblage (<code>addi t0, zero, 2</code> ; <code>addi t1, zero, 3</code> ;
+      <code>add t2, t0, t1</code>), chacune codée sur 32 bits. Pour le mini-processeur de l'étape 6,
+      ce sont « CHARGE 14 », « AJOUTE 15 », « RANGE 13 », chacune sur 8 bits.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <fieldset class="cible">
+      <legend>Choisis le processeur</legend>
+      <label><input type="radio" name="trad-cible" value="mini" checked /> Le mini-processeur (étape 6)</label>
+      <label><input type="radio" name="trad-cible" value="riscv" /> Un vrai processeur RISC-V</label>
+    </fieldset>
+
+    <ol class="etages">
+      <li class="etage" data-etage="1">
+        <p class="nom">Ce que tu écris (langage Python)</p>
+        <pre><code>total = 2 + 3</code></pre>
+      </li>
+      <li class="etage" data-etage="2">
+        <p class="nom">Langage d'assemblage (une instruction par ligne)</p>
+        <pre data-cible="mini"><code>{mini.map((l) => `${l.asm.padEnd(12)}; ${l.sens}`).join('\n')}</code></pre>
+        <pre data-cible="riscv" hidden><code>{riscv.map((l) => `${l.asm.padEnd(18)}# ${l.sens}`).join('\n')}</code></pre>
+      </li>
+      <li class="etage" data-etage="3">
+        <p class="nom">Code machine (ce que lit vraiment le processeur)</p>
+        <pre data-cible="mini"><code>{mini.map((l) => l.bits).join('\n')}</code></pre>
+        <pre data-cible="riscv" hidden><code>{riscv.map((l) => l.bits).join('\n')}</code></pre>
+      </li>
+    </ol>
+
+    <p class="anim-legende" aria-live="polite"></p>
+    <div class="anim-commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="anim-compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-traduction]').forEach((racine) => {
+    activerScene(racine);
+    let cible = 'mini';
+    const legendes: Record<string, string[]> = {
+      mini: [
+        'Tu écris une ligne lisible : « total vaut 2 + 3 ». Le processeur, lui, ne la comprend pas.',
+        "Un compilateur la découpe en instructions simples du mini-processeur : charger 2, ajouter 3, ranger le résultat dans la case réservée à « total ».",
+        "Chaque instruction devient un octet : 4 bits pour l'opération, 4 bits pour l'adresse. C'est exactement le programme « 2 + 3 » de l'étape 6 : essaie-le !",
+      ],
+      riscv: [
+        'Tu écris une ligne lisible : « total vaut 2 + 3 ». Le processeur, lui, ne la comprend pas.',
+        'Pour un vrai processeur RISC-V, on obtient trois instructions : mettre 2 dans le registre t0, 3 dans t1, puis additionner les deux dans t2.',
+        'Chaque instruction RISC-V tient sur 32 bits : des champs précis disent quelle opération faire et sur quels registres. Un vrai compilateur ferait même le calcul à l’avance et écrirait directement 5.',
+      ],
+    };
+
+    const anim = pasAPas(racine, () => 3, (n) => {
+      racine.querySelectorAll<HTMLElement>('.etage').forEach((e) => {
+        const k = Number(e.dataset.etage);
+        e.classList.toggle('visible', k <= n);
+        e.classList.toggle('courant', k === n);
+      });
+      racine.querySelectorAll<HTMLElement>('pre[data-cible]').forEach((p) => {
+        p.hidden = p.dataset.cible !== cible;
+      });
+      return legendes[cible][n - 1];
+    });
+    racine.querySelectorAll<HTMLInputElement>('input[name="trad-cible"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        cible = r.value;
+        anim.redessiner();
+      }),
+    );
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .cible { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: none; padding: 0; margin: 0 0 0.75rem; font-size: 0.9rem; }
+  .cible legend { font-weight: 600; margin-bottom: 0.25rem; }
+  .etages { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .etage {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    opacity: 0.25;
+    transition: opacity 0.3s ease-out;
+  }
+  .etage.visible { opacity: 1; }
+  .etage.courant { border-color: var(--ill-paquet); border-width: 2px; }
+  .etage + .etage::before { content: '↓ traduit en'; display: block; font-size: 0.75rem; color: var(--muted); margin: -0.35rem 0 0.3rem; }
+  .nom { margin: 0 0 0.3rem; font-weight: 600; font-size: 0.85rem; }
+  pre { margin: 0; font-size: 0.82rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>

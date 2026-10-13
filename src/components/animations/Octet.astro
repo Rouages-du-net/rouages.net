@@ -1,0 +1,158 @@
+---
+// Animation « Un octet, huit interrupteurs » (étape 0 du module « Comment
+// marche un ordinateur ») : on bascule 8 bits et l'on voit le nombre, le
+// caractère correspondant (code ASCII, s'il est imprimable) et un niveau de
+// gris. Puis on tape un mot : le navigateur l'encode en UTF-8 (TextEncoder),
+// octet par octet ; les lettres accentuées prennent 2 octets ou plus.
+const poids = [128, 64, 32, 16, 8, 4, 2, 1];
+---
+<div class="anim octet" data-octet>
+  <div class="anim-repli">
+    <p>
+      Un octet, ce sont 8 bits, donc 8 interrupteurs. Chacun vaut 0 ou 1 et compte pour
+      128, 64, 32, 16, 8, 4, 2 ou 1. Par exemple 01000001 vaut 64 + 1 = 65, le code de la
+      lettre « A ». En UTF-8, le mot « été » prend 5 octets : chaque « é » en prend 2.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="bits" role="group" aria-label="Les 8 bits de l'octet (du plus fort au plus faible)">
+        {poids.map((p) => (
+          <button type="button" class="bit" data-poids={p} aria-pressed="false" aria-label={`Bit de poids ${p}`}>
+            <span class="valeur">0</span>
+            <span class="poids">{p}</span>
+          </button>
+        ))}
+      </div>
+      <div class="lectures">
+        <p><span class="etiquette">En décimal</span> <strong data-decimal>0</strong></p>
+        <p><span class="etiquette">Somme</span> <span data-somme>0</span></p>
+        <p><span class="etiquette">Comme caractère</span> <strong data-caractere>—</strong></p>
+        <p><span class="etiquette">Comme gris</span> <span class="gris" data-gris></span></p>
+      </div>
+      <p class="anim-note">Le même octet peut être lu comme un nombre, une lettre ou une couleur : tout dépend du programme qui le lit.</p>
+    </div>
+
+    <div class="anim-cadre mot">
+      <label>Tape un mot (ton prénom, par exemple)
+        <input type="text" value="été" maxlength="20" spellcheck="false" data-mot />
+      </label>
+      <ol class="octets" data-octets aria-live="polite"></ol>
+      <p class="anim-note" data-total></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-octet]').forEach((racine) => {
+    activerScene(racine);
+    const bits = [...racine.querySelectorAll<HTMLButtonElement>('.bit')];
+    const sortie = (n: string) => racine.querySelector<HTMLElement>(`[data-${n}]`)!;
+
+    function lire() {
+      let total = 0;
+      const termes: string[] = [];
+      bits.forEach((b) => {
+        const allume = b.getAttribute('aria-pressed') === 'true';
+        b.querySelector('.valeur')!.textContent = allume ? '1' : '0';
+        if (allume) {
+          total += Number(b.dataset.poids);
+          termes.push(b.dataset.poids!);
+        }
+      });
+      sortie('decimal').textContent = String(total);
+      sortie('somme').textContent = termes.length ? `${termes.join(' + ')} = ${total}` : '0';
+      sortie('caractere').textContent =
+        total >= 33 && total <= 126 ? `« ${String.fromCharCode(total)} »` : total === 32 ? 'une espace' : '(non imprimable en ASCII)';
+      // Niveau de gris : 0 = noir, 255 = blanc (rendu tel quel, c'est le sujet de l'animation).
+      sortie('gris').style.background = `rgb(${total} ${total} ${total})`;
+    }
+
+    bits.forEach((b) =>
+      b.addEventListener('click', () => {
+        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+        lire();
+      }),
+    );
+
+    // Encodage UTF-8 réel, fait par le navigateur.
+    const champ = racine.querySelector<HTMLInputElement>('[data-mot]')!;
+    const liste = racine.querySelector<HTMLOListElement>('[data-octets]')!;
+    const total = racine.querySelector<HTMLElement>('[data-total]')!;
+    const encodeur = new TextEncoder();
+
+    function encoder() {
+      liste.replaceChildren();
+      const caracteres = [...champ.value];
+      let n = 0;
+      caracteres.forEach((c) => {
+        const octets = encodeur.encode(c);
+        n += octets.length;
+        const li = document.createElement('li');
+        const lettre = document.createElement('strong');
+        lettre.textContent = c === ' ' ? '␣' : c;
+        const code = document.createElement('span');
+        code.className = 'codes';
+        code.textContent = [...octets].map((o) => o.toString(2).padStart(8, '0')).join(' ');
+        li.append(lettre, code);
+        if (octets.length > 1) li.classList.add('multi');
+        liste.append(li);
+      });
+      total.textContent = caracteres.length
+        ? `${caracteres.length} ${caracteres.length > 1 ? 'caractères' : 'caractère'}, ${n} ${n > 1 ? 'octets' : 'octet'} en UTF-8. Les caractères en couleur prennent plusieurs octets.`
+        : '';
+    }
+    champ.addEventListener('input', encoder);
+
+    // Départ : 01000001 = 65 = « A ».
+    bits.forEach((b) => b.setAttribute('aria-pressed', ['64', '1'].includes(b.dataset.poids!) ? 'true' : 'false'));
+    lire();
+    encoder();
+  });
+</script>
+
+<style>
+  .bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.35rem; }
+  .bit {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    font: inherit;
+    cursor: pointer;
+  }
+  .bit[aria-pressed='true'] { background: var(--ill-client); border-color: var(--ill-client); color: var(--bg); }
+  .bit .valeur { font-family: var(--police-mono); font-size: 1.4rem; font-weight: 700; }
+  .bit .poids { font-size: 0.75rem; opacity: 0.85; }
+  .lectures { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.25rem 1rem; margin-top: 0.75rem; }
+  .lectures p { margin: 0; }
+  .etiquette { display: block; font-size: 0.8rem; color: var(--muted); }
+  [data-somme] { font-family: var(--police-mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+  .gris { display: inline-block; width: 3rem; height: 1.5rem; border: 1px solid var(--border); border-radius: 0.3rem; vertical-align: middle; }
+  .mot { margin-top: 0.75rem; }
+  .mot label { display: grid; gap: 0.3rem; font-size: 0.9rem; }
+  .mot input {
+    font: 1.1rem var(--police-mono);
+    padding: 0.4rem 0.6rem;
+    border: 2px solid var(--ill-client);
+    border-radius: 0.5rem;
+    background: var(--bg);
+    color: var(--fg);
+    max-width: 20rem;
+  }
+  .octets { list-style: none; padding: 0; margin: 0.75rem 0 0.25rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .octets :global(li) { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.3rem 0.5rem; display: grid; gap: 0.1rem; text-align: center; }
+  .octets :global(li.multi) { border-color: var(--ill-paquet); }
+  .octets :global(strong) { font-size: 1.1rem; }
+  .octets :global(.codes) { font-family: var(--police-mono); font-size: 0.75rem; color: var(--muted); }
+  @media (max-width: 40rem) {
+    .bit .valeur { font-size: 1.1rem; }
+    .bit .poids { font-size: 0.65rem; }
+  }
+</style>
