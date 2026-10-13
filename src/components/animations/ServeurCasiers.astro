@@ -1,0 +1,139 @@
+---
+// Animation « Un serveur, plusieurs sites » (étape 6) : hébergement
+// mutualisé et hôtes virtuels. On compose une requête HTTP/2 (site + page),
+// le serveur choisit le bon « casier » grâce au nom demandé, cherche le
+// fichier et répond 200 ou 404. Les deux autres sites sont fictifs
+// (domaines réservés .example, RFC 2606).
+const sites = [
+  { hote: 'rouages.net', fichiers: { '/': 'index.html', '/glossaire/': 'glossaire/index.html', '/jeux/': 'jeux/index.html' } },
+  { hote: 'boulangerie.example', fichiers: { '/': 'index.html', '/horaires/': 'horaires/index.html' } },
+  { hote: 'club-echecs.example', fichiers: { '/': 'index.html', '/tournois/': 'tournois/index.html' } },
+];
+const chemins = ['/', '/glossaire/', '/horaires/', '/tournois/', '/page-inexistante/'];
+---
+<div class="anim casiers" data-casiers data-sites={JSON.stringify(sites)}>
+  <div class="anim-repli">
+    <p>
+      Un même serveur héberge plusieurs sites, chacun dans son dossier. Quand la requête
+      demande <code>:authority: rouages.net</code> et <code>:path: /</code>, Apache ouvre le
+      dossier de rouages.net, trouve <code>index.html</code> et répond <code>200</code>. Si la
+      page n'existe pas dans ce dossier, il répond <code>404</code>.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <form class="requete anim-cadre">
+      <p class="titre">Ta requête HTTP/2</p>
+      <label><span>Site (<code>:authority</code>)</span>
+        <select name="hote">{sites.map((s) => <option>{s.hote}</option>)}</select>
+      </label>
+      <label><span>Page (<code>:path</code>)</span>
+        <select name="chemin">{chemins.map((c) => <option>{c}</option>)}</select>
+      </label>
+      <button type="submit" class="anim-bouton principal">Envoyer la requête ▶</button>
+    </form>
+
+    <div class="serveur anim-cadre">
+      <p class="titre">Le serveur (Apache, hébergement mutualisé)</p>
+      <div class="rangee">
+        {sites.map((s) => (
+          <section class="casier" data-hote={s.hote}>
+            <h4>{s.hote}</h4>
+            <ul>
+              {Object.values(s.fichiers).map((f) => <li data-fichier={f}>{f}</li>)}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+
+    <pre class="reponse anim-cadre" aria-live="polite"></pre>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../lib/pasapas';
+
+  interface Site { hote: string; fichiers: Record<string, string> }
+
+  document.querySelectorAll<HTMLElement>('[data-casiers]').forEach((racine) => {
+    activerScene(racine);
+    const sites: Site[] = JSON.parse(racine.dataset.sites!);
+    const form = racine.querySelector<HTMLFormElement>('form')!;
+    const reponse = racine.querySelector<HTMLElement>('.reponse')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = form.querySelector<HTMLButtonElement>('button')!;
+
+    const reinitialiser = () => {
+      racine.querySelectorAll('.casier, [data-fichier]').forEach((e) => e.classList.remove('ouvert', 'trouve'));
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      bouton.disabled = true;
+      reinitialiser();
+      const hote = (form.elements.namedItem('hote') as HTMLSelectElement).value;
+      const chemin = (form.elements.namedItem('chemin') as HTMLSelectElement).value;
+      const site = sites.find((s) => s.hote === hote)!;
+
+      reponse.textContent = `:method: GET\n:scheme: https\n:authority: ${hote}\n:path: ${chemin}\naccept-encoding: gzip, br`;
+      legende.textContent = 'La requête arrive au serveur…';
+      await pause(700);
+
+      const casier = racine.querySelector<HTMLElement>(`.casier[data-hote="${hote}"]`)!;
+      casier.classList.add('ouvert');
+      legende.textContent = `Le serveur lit le nom demandé (${hote}) et ouvre le dossier de ce site parmi tous ceux qu'il héberge.`;
+      await pause(900);
+
+      const fichier = site.fichiers[chemin];
+      if (fichier) {
+        casier.querySelector(`[data-fichier="${fichier}"]`)!.classList.add('trouve');
+        reponse.textContent =
+          `:status: 200\ncontent-type: text/html; charset=utf-8\ncontent-encoding: gzip\ncache-control: no-cache\n\n<!doctype html>…  (${fichier})`;
+        legende.textContent = `Il trouve ${fichier}, le compresse et le renvoie avec le code 200 : « tout va bien ».`;
+      } else {
+        reponse.textContent = `:status: 404\ncontent-type: text/html; charset=utf-8\n\n<!doctype html>…  (page d'erreur du site)`;
+        legende.textContent = `Le dossier de ${hote} ne contient pas ${chemin} : le serveur répond 404, « introuvable ». Sur un autre site du même serveur, la page existe peut-être !`;
+      }
+      bouton.disabled = false;
+    });
+  });
+</script>
+
+<style>
+  .requete { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem 1rem; }
+  .requete label { display: grid; gap: 0.2rem; font-size: 0.85rem; }
+  .requete select {
+    font: inherit;
+    font-family: var(--police-mono);
+    padding: 0.3rem 0.4rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .titre { width: 100%; margin: 0 0 0.25rem; font-weight: 700; font-size: 0.95rem; }
+  .serveur { margin-top: 0.75rem; border-top: 4px solid var(--ill-serveur); }
+  .rangee { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.6rem; }
+  .casier {
+    border: 2px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.85rem;
+    transition: border-color 0.3s ease-out;
+  }
+  .casier h4 { margin: 0 0 0.3rem; font-family: var(--police-mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+  .casier ul { margin: 0; padding-left: 1rem; font-family: var(--police-mono); font-size: 0.78rem; color: var(--muted); }
+  .casier.ouvert { border-color: var(--ill-serveur); }
+  .casier li.trouve { color: var(--fg); font-weight: 700; }
+  .casier li.trouve::marker { content: '▶ '; color: var(--ill-paquet); }
+  .reponse {
+    margin: 0.75rem 0 0;
+    font-family: var(--police-mono);
+    font-size: 0.82rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    min-height: 6.5em;
+  }
+</style>

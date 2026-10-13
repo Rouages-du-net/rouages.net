@@ -72,6 +72,11 @@ Consignes à donner à tout agent de recherche web :
   AA.
 - Aucun pisteur, aucune ressource tierce (polices et scripts servis par le
   site lui-même).
+- Animations : réutiliser `src/lib/pasapas.ts` (pas à pas, légende annoncée,
+  repli `.anim-repli` sans JavaScript) et `src/lib/anim.ts` ; styles communs
+  `.anim-*` dans `global.css`. Jamais de boucle infinie.
+- `compressHTML` est désactivé dans `astro.config.mjs` : il collait les mots
+  aux balises placées en début de ligne. Ne pas le réactiver.
 
 ## Commandes
 

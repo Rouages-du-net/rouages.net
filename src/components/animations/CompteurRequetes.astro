@@ -1,0 +1,119 @@
+---
+// Animation « Combien de requêtes ? » (étape 7) : mesure EN DIRECT des
+// requêtes faites par cette page (API Performance du navigateur), groupées
+// par domaine, comparées aux médianes du Web Almanac 2024 (HTTP Archive).
+const MEDIANE_REQUETES = 71; // ordinateur ; 66 sur mobile
+const MEDIANE_REQUETES_MOBILE = 66;
+const PART_PAGES_TIERS = 92; // % de pages avec au moins un tiers
+const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de sites
+---
+<div class="anim compteur" data-compteur data-mediane={MEDIANE_REQUETES}>
+  <div class="anim-repli">
+    <p>
+      Une page web médiane fait {MEDIANE_REQUETES} requêtes sur ordinateur
+      ({MEDIANE_REQUETES_MOBILE} sur mobile), et {PART_PAGES_TIERS} % des pages font appel à au
+      moins un service tiers (Web Almanac 2024). Cette page-ci ne contacte que son propre
+      serveur : aucun service tiers.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <button type="button" class="anim-bouton principal" data-action="mesurer">Mesurer cette page maintenant ▶</button>
+
+    <div class="comparaison">
+      <section class="anim-cadre colonne ici">
+        <h4>Cette page, mesurée dans ton navigateur</h4>
+        <p class="total"><span class="nombre">—</span> requêtes</p>
+        <div class="carres" aria-hidden="true"></div>
+        <ul class="domaines"></ul>
+      </section>
+      <section class="anim-cadre colonne mediane">
+        <h4>Une page web médiane (2024)</h4>
+        <p class="total"><span class="nombre">{MEDIANE_REQUETES}</span> requêtes</p>
+        <div class="carres" aria-hidden="true">
+          {Array.from({ length: MEDIANE_REQUETES }, () => <span class="carre" />)}
+        </div>
+        <p class="anim-note">
+          {PART_PAGES_TIERS} % des pages appellent au moins un service tiers ; la médiane est de
+          {MEDIANE_TIERS} tiers différents par page parmi le premier million de sites.
+        </p>
+      </section>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-compteur]').forEach((racine) => {
+    activerScene(racine);
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="mesurer"]')!;
+    const ici = racine.querySelector<HTMLElement>('.ici')!;
+    const nombre = ici.querySelector<HTMLElement>('.nombre')!;
+    const carres = ici.querySelector<HTMLElement>('.carres')!;
+    const domaines = ici.querySelector<HTMLUListElement>('.domaines')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    bouton.addEventListener('click', async () => {
+      bouton.disabled = true;
+      // La page elle-même (navigation) + chaque fichier chargé ensuite.
+      const entrees = [
+        ...performance.getEntriesByType('navigation'),
+        ...performance.getEntriesByType('resource'),
+      ] as PerformanceResourceTiming[];
+      const parDomaine = new Map<string, number>();
+      entrees.forEach((e) => {
+        const hote = new URL(e.name, location.href).host;
+        parDomaine.set(hote, (parDomaine.get(hote) ?? 0) + 1);
+      });
+
+      carres.replaceChildren();
+      domaines.replaceChildren();
+      nombre.textContent = '0';
+      for (let i = 0; i < entrees.length; i++) {
+        const c = document.createElement('span');
+        c.className = 'carre';
+        if (new URL(entrees[i].name, location.href).host !== location.host) c.classList.add('tiers');
+        carres.append(c);
+        nombre.textContent = String(i + 1);
+        await pause(60);
+      }
+      parDomaine.forEach((n, hote) => {
+        const li = document.createElement('li');
+        const tiers = hote !== location.host;
+        li.textContent = `${hote} : ${n} ${n > 1 ? 'requêtes' : 'requête'}${tiers ? ' (tiers)' : ' (ce site)'}`;
+        if (tiers) li.classList.add('tiers');
+        domaines.append(li);
+      });
+      const nbTiers = [...parDomaine.keys()].filter((h) => h !== location.host).length;
+      legende.textContent =
+        `Mesuré à l'instant : ${entrees.length} requêtes, vers ${parDomaine.size} ${parDomaine.size > 1 ? 'domaines' : 'domaine'}` +
+        (nbTiers ? `, dont ${nbTiers} tiers.` : ', aucun service tiers : ni publicité, ni statistiques, ni réseau social.') +
+        ' Recharge la page et mesure à nouveau : ce qui est en cache peut ne pas être redemandé.';
+      bouton.disabled = false;
+      bouton.textContent = 'Mesurer à nouveau ↺';
+    });
+  });
+</script>
+
+<style>
+  [data-action='mesurer'] { margin-bottom: 0.75rem; }
+  .comparaison { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.75rem; }
+  .colonne h4 { margin: 0 0 0.25rem; font-size: 0.95rem; }
+  .ici { border-top: 4px solid var(--ill-client); }
+  .mediane { border-top: 4px solid var(--ill-reseau); }
+  .total { margin: 0 0 0.5rem; color: var(--muted); }
+  .total .nombre { font-size: 2rem; font-weight: 700; color: var(--fg); }
+  .carres { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.5rem; }
+  .carres :global(.carre), .carre {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--ill-client);
+  }
+  .mediane .carre { background: var(--ill-reseau); }
+  .carres :global(.carre.tiers) { background: var(--ill-paquet); }
+  .domaines { margin: 0; padding-left: 1.1rem; font-family: var(--police-mono); font-size: 0.8rem; overflow-wrap: anywhere; }
+  .domaines :global(.tiers) { color: var(--accent); }
+</style>

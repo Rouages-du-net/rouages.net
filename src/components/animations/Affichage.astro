@@ -1,0 +1,162 @@
+---
+// Animation « Du code aux pixels » (étape 8) : le pipeline de rendu d'un
+// navigateur sur une mini-page : HTML → DOM → styles (CSSOM) → mise en page
+// → peinture → composition.
+const html = `<article>
+  <h1>Les rouages du net</h1>
+  <p>Comment marche internet ?</p>
+  <button>Commencer</button>
+</article>`;
+// Du vrai CSS : les variables sont celles de la charte, donc l'aperçu peint
+// exactement ces couleurs (en thème clair comme sombre).
+const css = `article { padding: 16px; background: var(--bg); }
+h1 { color: var(--accent); font-size: 1.3rem; }
+button { background: var(--accent); color: var(--bg); }`;
+---
+<div class="anim rendu" data-rendu>
+  <div class="anim-repli">
+    <ol>
+      <li>Le navigateur lit le HTML et construit un arbre d'éléments : le DOM.</li>
+      <li>Il lit le CSS et calcule le style de chaque élément.</li>
+      <li>Il calcule la place et la taille de chaque boîte : la mise en page.</li>
+      <li>Il remplit les pixels : la peinture.</li>
+      <li>Il assemble les calques, souvent avec la carte graphique : la composition.</li>
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="grille">
+      <div class="anim-cadre code">
+        <p class="titre">Ce que reçoit le navigateur</p>
+        <pre class="source html" data-source="1"><code>{html}</code></pre>
+        <pre class="source css" data-source="3"><code>{css}</code></pre>
+      </div>
+
+      <div class="anim-cadre vues">
+        <div class="vue arbre" data-vue="2">
+          <p class="titre">DOM</p>
+          <ul>
+            <li>article
+              <ul>
+                <li>h1 <span class="txt">« Les rouages du net »</span></li>
+                <li>p <span class="txt">« Comment marche internet ? »</span></li>
+                <li>button <span class="txt">« Commencer »</span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="vue apercu" data-vue="4">
+          <p class="titre etiquette-apercu"></p>
+          <div class="mini-page">
+            <div class="b article" data-balise="article"><span class="cote"></span>
+              <div class="b h1" data-balise="h1">Les rouages du net<span class="cote"></span></div>
+              <div class="b p" data-balise="p">Comment marche internet ?<span class="cote"></span></div>
+              <div class="b bouton" data-balise="button">Commencer<span class="cote"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="anim-legende" aria-live="polite"></p>
+    <div class="anim-commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="anim-compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../lib/pasapas';
+
+  const etapes = [
+    { phase: 'html', legende: 'Le navigateur reçoit du texte : le HTML. Pour lui, ce ne sont encore que des caractères.' },
+    { phase: 'dom', legende: "Il découpe ce texte et construit un arbre d'éléments, le DOM : un article qui contient un titre, un paragraphe et un bouton." },
+    { phase: 'css', legende: "Il lit le CSS et calcule le style de chaque élément (couleur, taille de police, marges) : c'est le CSSOM." },
+    { phase: 'layout', legende: 'Mise en page : il calcule la position et la taille de chaque boîte, au pixel près, selon la largeur de l’écran. Les dimensions affichées sont mesurées à l’instant dans ton navigateur.' },
+    { phase: 'paint', legende: 'Peinture : il remplit les pixels de chaque boîte avec ses couleurs, son texte, ses bordures.' },
+    { phase: 'composite', legende: 'Composition : certains éléments sont peints sur des calques séparés, que la carte graphique superpose. Bouger un calque ne demande pas de tout repeindre : le bouton peut s’animer sans effort.' },
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-rendu]').forEach((racine) => {
+    activerScene(racine);
+    const etiquette = racine.querySelector<HTMLElement>('.etiquette-apercu')!;
+    const noms: Record<string, string> = { layout: 'Mise en page (boîtes)', paint: 'Peinture', composite: 'Composition (calques)' };
+
+    pasAPas(racine, () => etapes.length, (n) => {
+      const e = etapes[n - 1];
+      racine.dataset.phase = e.phase;
+      racine.querySelectorAll<HTMLElement>('[data-source]').forEach((el) => {
+        el.classList.toggle('actif', Number(el.dataset.source) === n);
+      });
+      racine.querySelectorAll<HTMLElement>('[data-vue]').forEach((el) => {
+        el.hidden = n < Number(el.dataset.vue);
+      });
+      etiquette.textContent = noms[e.phase] ?? '';
+      // Mise en page : les dimensions affichées sont mesurées pour de vrai,
+      // à la largeur actuelle de ton écran.
+      if (e.phase === 'layout') {
+        racine.querySelectorAll<HTMLElement>('[data-balise]').forEach((el) => {
+          const r = el.getBoundingClientRect();
+          el.querySelector(':scope > .cote')!.textContent = `${el.dataset.balise} · ${Math.round(r.width)} × ${Math.round(r.height)} px`;
+        });
+      }
+      return e.legende;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0.75rem; }
+  .titre { margin: 0 0 0.35rem; font-weight: 700; font-size: 0.9rem; }
+  .source {
+    margin: 0 0 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.4rem;
+    border: 2px solid transparent;
+    font-size: 0.78rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .source.actif { border-color: var(--ill-paquet); }
+  .vues { display: grid; gap: 0.75rem; align-content: start; }
+  .arbre ul { margin: 0; padding-left: 1.1rem; font-family: var(--police-mono); font-size: 0.85rem; }
+  .arbre .txt { color: var(--muted); font-family: var(--police); font-size: 0.8rem; }
+
+  .mini-page { max-width: 20rem; }
+  .b { position: relative; }
+  .cote { display: none; position: absolute; right: 0.25rem; top: 0.1rem; font-family: var(--police-mono); font-size: 0.65rem; color: var(--accent-2); }
+  .article { padding: 1rem; border: 1px dashed var(--muted); }
+  .h1, .p { padding: 0.2rem 0; border: 1px dashed var(--muted); margin-bottom: 0.4rem; color: transparent; }
+  .h1 { font-weight: 700; font-size: 1.3rem; }
+  .bouton { display: inline-block; padding: 0.35rem 0.9rem; border: 1px dashed var(--muted); color: transparent; border-radius: 0.4rem; }
+
+  /* Mise en page : des boîtes et leurs dimensions, pas encore de couleur. */
+  [data-phase='layout'] .cote { display: block; }
+
+  /* Peinture : couleurs, texte, fond. */
+  [data-phase='paint'] .article, [data-phase='composite'] .article { border-style: solid; border-color: var(--border); background: var(--bg); }
+  [data-phase='paint'] .h1, [data-phase='composite'] .h1,
+  [data-phase='paint'] .p, [data-phase='composite'] .p { border-color: transparent; color: var(--fg); }
+  [data-phase='paint'] .h1, [data-phase='composite'] .h1 { color: var(--accent); }
+  [data-phase='paint'] .bouton, [data-phase='composite'] .bouton { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+
+  /* Composition : le bouton est sur son propre calque et s'anime. */
+  [data-phase='composite'] .bouton {
+    box-shadow: 0 0 0 3px var(--ill-client);
+    animation: calque 0.8s ease-in-out 4 alternate; /* jamais de boucle infinie (charte) */
+  }
+  [data-phase='composite'] .bouton::after {
+    content: 'calque séparé';
+    position: absolute;
+    left: 105%;
+    top: 0.4rem;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    color: var(--ill-client);
+  }
+  @keyframes calque { to { transform: translateX(0.6rem); } }
+</style>

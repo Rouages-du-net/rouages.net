@@ -1,0 +1,240 @@
+---
+// Animation « La box qui réécrit l'enveloppe » (étape 2) : traduction
+// d'adresses (NAT) en IPv4, comparée à IPv6 sans traduction.
+// Adresses : plages privées (192.168.0.0/16) et plages réservées à la
+// documentation (203.0.113.0/24, 198.51.100.0/24, 2001:db8::/32 ; RFC 5737
+// et 3849) : aucune n'est une vraie adresse publique.
+const appareils = [
+  { id: 'ordi', nom: 'Ordinateur', ip4: '192.168.1.10', port: 51234, ip6: '2001:db8:42::10' },
+  { id: 'tel', nom: 'Téléphone', ip4: '192.168.1.11', port: 49200, ip6: '2001:db8:42::11' },
+  { id: 'tele', nom: 'Télévision', ip4: '192.168.1.12', port: 50510, ip6: '2001:db8:42::12' },
+];
+const BOX_PUB = '203.0.113.7';
+const SERVEUR4 = '198.51.100.20';
+const SERVEUR6 = '2001:db8:beef::20';
+---
+<div
+  class="anim box-nat"
+  data-box
+  data-appareils={JSON.stringify(appareils)}
+  data-ip={JSON.stringify({ BOX_PUB, SERVEUR4, SERVEUR6 })}
+>
+  <div class="anim-repli">
+    <p>
+      L'ordinateur (adresse privée 192.168.1.10) envoie un paquet au serveur. La box remplace
+      l'adresse d'expéditeur par son adresse publique ({BOX_PUB}) et un numéro de port, et
+      note la correspondance dans sa table. Quand la réponse revient, elle consulte sa table et
+      la renvoie à l'ordinateur. En IPv6, chaque appareil a sa propre adresse publique : pas de
+      traduction.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="reglages">
+      <fieldset>
+        <legend>Appareil</legend>
+        {appareils.map((a, i) => (
+          <label><input type="radio" name="box-appareil" value={a.id} checked={i === 0} /> {a.nom}</label>
+        ))}
+      </fieldset>
+      <fieldset>
+        <legend>Version d'IP</legend>
+        <label><input type="radio" name="box-ip" value="4" checked /> IPv4 (avec NAT)</label>
+        <label><input type="radio" name="box-ip" value="6" /> IPv6</label>
+      </fieldset>
+    </div>
+
+    <div class="plan">
+      <section class="zone maison">
+        <h4>Chez toi</h4>
+        <ul class="appareils">
+          {appareils.map((a) => (
+            <li data-appareil={a.id}><strong>{a.nom}</strong><span class="ip" data-ip4={a.ip4} data-ip6={a.ip6}>{a.ip4}</span></li>
+          ))}
+        </ul>
+      </section>
+      <section class="zone box">
+        <h4>Ta box</h4>
+        <p class="ip-box"></p>
+        <table class="table-nat">
+          <caption>Table de traduction (NAT)</caption>
+          <thead><tr><th scope="col">Dehors</th><th scope="col">Dedans</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section class="zone dehors">
+        <h4>Internet</h4>
+        <p><strong>Serveur</strong><span class="ip ip-serveur"></span></p>
+      </section>
+    </div>
+
+    <div class="enveloppe" data-ou="maison">
+      <p class="titre-env">✉ Paquet</p>
+      <dl>
+        <dt>De</dt><dd class="de"></dd>
+        <dt>À</dt><dd class="a"></dd>
+      </dl>
+    </div>
+
+    <p class="anim-legende" aria-live="polite"></p>
+    <div class="anim-commandes">
+      <button type="button" data-action="precedent">◀ Précédent</button>
+      <span class="anim-compteur"></span>
+      <button type="button" data-action="suivant">Suivant ▶</button>
+      <button type="button" data-action="recommencer">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../lib/pasapas';
+
+  interface Appareil { id: string; nom: string; ip4: string; port: number; ip6: string }
+
+  document.querySelectorAll<HTMLElement>('[data-box]').forEach((racine) => {
+    activerScene(racine);
+    const appareils: Appareil[] = JSON.parse(racine.dataset.appareils!);
+    const { BOX_PUB, SERVEUR4, SERVEUR6 } = JSON.parse(racine.dataset.ip!);
+    const env = racine.querySelector<HTMLElement>('.enveloppe')!;
+    const de = env.querySelector<HTMLElement>('.de')!;
+    const a = env.querySelector<HTMLElement>('.a')!;
+    const tbody = racine.querySelector<HTMLTableSectionElement>('.table-nat tbody')!;
+    const table = racine.querySelector<HTMLTableElement>('.table-nat')!;
+    let appareil = appareils[0];
+    let v6 = false;
+
+    // Port public choisi par la box pour cette connexion (illustratif).
+    const portPublic = (ap: Appareil) => 40000 + appareils.indexOf(ap) + 1;
+
+    function contexte() {
+      racine.querySelector<HTMLElement>('.ip-box')!.textContent = v6
+        ? 'Pas de traduction en IPv6 : la box route et filtre.'
+        : `Dedans : 192.168.1.1 · Dehors : ${BOX_PUB}`;
+      racine.querySelector<HTMLElement>('.ip-serveur')!.textContent = v6 ? SERVEUR6 : SERVEUR4;
+      racine.querySelectorAll<HTMLElement>('.appareils .ip').forEach((s) => {
+        s.textContent = v6 ? s.dataset.ip6! : s.dataset.ip4!;
+      });
+      racine.querySelectorAll<HTMLElement>('[data-appareil]').forEach((li) =>
+        li.classList.toggle('choisi', li.dataset.appareil === appareil.id),
+      );
+      table.hidden = v6;
+    }
+
+    function rendre(etape: number): string {
+      contexte();
+      const moi4 = `${appareil.ip4}:${appareil.port}`;
+      const pub4 = `${BOX_PUB}:${portPublic(appareil)}`;
+      const srv4 = `${SERVEUR4}:443`;
+      const moi6 = `[${appareil.ip6}]:${appareil.port}`;
+      const srv6 = `[${SERVEUR6}]:443`;
+      // Entrée de la table : visible à partir de l'étape 2 (IPv4).
+      tbody.replaceChildren();
+      if (!v6 && etape >= 2) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${pub4}</td><td>${moi4}</td>`;
+        if (etape === 2 || etape === 4) tr.classList.add('active');
+        tbody.append(tr);
+      }
+      env.classList.remove('reecrit');
+      const ou = ['maison', 'dehors', 'dehors', 'maison'][etape - 1];
+      env.dataset.ou = etape === 2 || etape === 3 ? 'dehors' : ou;
+
+      if (v6) {
+        const textes = [
+          [moi6, srv6, `Le ${appareil.nom.toLowerCase()} envoie un paquet avec sa propre adresse IPv6, déjà publique.`],
+          [moi6, srv6, 'La box le laisse passer sans rien réécrire : elle se contente de router (et de filtrer, comme un pare-feu).'],
+          [srv6, moi6, "Le serveur répond directement à l'adresse de l'appareil."],
+          [srv6, moi6, 'La box reconnaît une réponse à une connexion ouverte de l’intérieur et la laisse entrer.'],
+        ][etape - 1];
+        de.textContent = textes[0];
+        a.textContent = textes[1];
+        return textes[2];
+      }
+      switch (etape) {
+        case 1:
+          de.textContent = moi4;
+          a.textContent = srv4;
+          return `Le ${appareil.nom.toLowerCase()} envoie un paquet. Son adresse ${appareil.ip4} est privée : elle n'a aucun sens hors de la maison.`;
+        case 2:
+          de.textContent = pub4;
+          a.textContent = srv4;
+          env.classList.add('reecrit');
+          return `La box réécrit l'expéditeur : son adresse publique ${BOX_PUB} et un port libre (${portPublic(appareil)}). Elle note la correspondance dans sa table.`;
+        case 3:
+          de.textContent = srv4;
+          a.textContent = pub4;
+          return `Le serveur répond à l'adresse qu'il a vue : celle de la box. Il ne sait rien de l'appareil qui est derrière.`;
+        default:
+          de.textContent = srv4;
+          a.textContent = moi4;
+          env.classList.add('reecrit');
+          return `La box retrouve le port ${portPublic(appareil)} dans sa table et réécrit le destinataire : le paquet arrive au ${appareil.nom.toLowerCase()}.`;
+      }
+    }
+
+    const anim = pasAPas(racine, () => 4, rendre);
+    racine.querySelectorAll<HTMLInputElement>('input[name="box-appareil"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        appareil = appareils.find((x) => x.id === r.value)!;
+        anim.aller(1);
+      }),
+    );
+    racine.querySelectorAll<HTMLInputElement>('input[name="box-ip"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        v6 = r.value === '6';
+        anim.aller(1);
+      }),
+    );
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .reglages { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .reglages fieldset { border: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; }
+  .reglages legend { font-weight: 600; width: 100%; margin-bottom: 0.2rem; }
+  .plan { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 0.75rem; }
+  .zone {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .zone h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .maison { border-top: 4px solid var(--ill-client); }
+  .box { border-top: 4px solid var(--ill-reseau); }
+  .dehors { border-top: 4px solid var(--ill-serveur); }
+  .dehors p { margin: 0; }
+  .appareils { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+  .appareils li { padding: 0.3rem 0.5rem; border-radius: 0.4rem; border: 1px solid transparent; }
+  .appareils li.choisi { border-color: var(--ill-client); }
+  .ip { display: block; font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+  .ip-box { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--muted); }
+  .table-nat { width: 100%; border-collapse: collapse; font-family: var(--police-mono); font-size: 0.75rem; }
+  .table-nat caption { text-align: left; font-family: var(--police); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.25rem; }
+  .table-nat th { text-align: left; font-family: var(--police); font-weight: 600; color: var(--muted); }
+  .table-nat :global(td), .table-nat th { padding: 0.2rem 0.3rem; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+  .table-nat :global(tr.active) { background: color-mix(in oklab, var(--ill-paquet) 18%, transparent); }
+  .enveloppe {
+    margin: 0.75rem auto 0;
+    width: min(100%, 22rem);
+    background: var(--card);
+    border: 2px solid var(--ill-paquet);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    transition: transform 0.4s ease-out;
+  }
+  .enveloppe[data-ou='maison'] { transform: translateX(-25%); }
+  .enveloppe[data-ou='dehors'] { transform: translateX(25%); }
+  .titre-env { margin: 0 0 0.25rem; font-weight: 700; color: var(--ill-paquet); }
+  .enveloppe dl { display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 0.75rem; margin: 0; font-size: 0.9rem; }
+  .enveloppe dt { color: var(--muted); }
+  .enveloppe dd { margin: 0; font-family: var(--police-mono); overflow-wrap: anywhere; }
+  .enveloppe.reecrit dd { animation: surligne 1s ease-out; }
+  @keyframes surligne { from { background: color-mix(in oklab, var(--ill-paquet) 35%, transparent); } }
+  @media (max-width: 40rem) {
+    .plan { grid-template-columns: 1fr; }
+    .enveloppe[data-ou] { transform: none; }
+  }
+</style>
