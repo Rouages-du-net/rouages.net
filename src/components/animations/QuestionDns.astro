@@ -70,7 +70,7 @@ const noeuds = [
 
   <div class="scene" hidden>
     <fieldset class="scenarios">
-      <legend>Situation</legend>
+      <legend>Choisis une situation</legend>
       {Object.entries(scenarios).map(([id, s], i) => (
         <label><input type="radio" name="dns-scenario" value={id} checked={i === 0} /> {s.nom}</label>
       ))}
@@ -176,7 +176,7 @@ const noeuds = [
         g.classList.toggle('inutile', !ms.some((x) => x.de === id || x.a === id));
       });
       message.textContent = m
-        ? `${etape}/${ms.length} — ${pos(m.de).nom} → ${pos(m.a).nom} : ${m.texte}`
+        ? `${etape}/${ms.length} — ${pos(m.de).nom} → ${pos(m.a).nom}\u00a0: ${m.texte}`
         : 'Appuie sur « Suivant » pour envoyer la question.';
       note.textContent = m?.note ?? '';
       compteur.textContent = `${etape} / ${ms.length}`;

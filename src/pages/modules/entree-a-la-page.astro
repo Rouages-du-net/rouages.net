@@ -62,7 +62,7 @@ const etapes = [
       La barre d'adresse sert aussi de barre de recherche. Comme <code>rouages.net</code>
       ressemble à un <Terme id="nom-de-domaine">nom de domaine</Terme>, le navigateur décide d'y
       aller au lieu de lancer une recherche. Les navigateurs récents essaient d'abord
-      <code>https://</code> et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
+      <code>https://</code> (la version chiffrée, voir l'étape 4) et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
       site impose HTTPS.
     </p>
     <p slot="ingenieur">
@@ -93,12 +93,12 @@ const etapes = [
     <div slot="curieux">
       <p>
         Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>), puis demande
-        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton fournisseur d'accès.
+        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
         S'il ne connaît pas la réponse, le résolveur interroge dans l'ordre :
       </p>
       <ol>
         <li>un <Terme id="serveur-racine">serveur racine</Terme> : « voici qui gère <code>.net</code> » ;</li>
-        <li>le registre de <code>.net</code> : « voici les serveurs DNS de ce domaine » ;</li>
+        <li>le {' '}<Terme id="registre">registre</Terme> de <code>.net</code> (l'organisme qui gère cette extension) : « voici les serveurs DNS de ce domaine » ;</li>
         <li>les serveurs du domaine : « <code>rouages.net</code>, c'est telle adresse ».</li>
       </ol>
       <p>
@@ -147,13 +147,13 @@ const etapes = [
     <BoxNat slot="animation" />
     <p slot="decouverte">
       Ton ordinateur ne parle pas directement à internet : il passe par ta
-      {' '}<Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
+      {' '}<Terme id="box">box</Terme> (ou, sur ton téléphone en 4G ou 5G, par l'antenne-relais de ton opérateur). La box est la porte de la maison.
     </p>
     <p slot="curieux">
       Chez toi, chaque appareil a une adresse privée (souvent <code>192.168.x.x</code>). Vu de
       l'extérieur, toute la maison partage une adresse IPv4 publique, et de plus en plus
-      souvent la partage même avec d'autres abonnés : c'est le <Terme id="nat">NAT</Terme>. Avec
-      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonnés en France, chaque
+      souvent la partage même avec d'autres abonné·es : c'est le <Terme id="nat">NAT</Terme>. Avec
+      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonné·es en France, chaque
       appareil peut avoir sa propre adresse publique.
     </p>
     <p slot="ingenieur">
@@ -177,15 +177,15 @@ const etapes = [
   <Etape numero={3} titre="Ouvrir la liaison" ancre="liaison" duree="~10 à 100 ms">
     <PoigneeTcp slot="animation" />
     <p slot="decouverte">
-      Avant de parler, on se dit bonjour : l'ordinateur et le serveur vérifient qu'ils
-      s'entendent avant d'échanger la page.
+      Avant de parler, on se dit bonjour : ton navigateur et le {' '}<Terme id="serveur">serveur</Terme> vérifient qu'ils
+      se reçoivent bien, puis la page peut voyager.
     </p>
     <p slot="curieux">
       Internet transporte des <Terme id="paquet">paquets</Terme> indépendants, qui peuvent se perdre
       ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il numérote, accuse
       réception, renvoie ce qui manque. Il commence par une poignée de main en trois temps.
       Quand le serveur le propose, les navigateurs utilisent <Terme id="quic">QUIC</Terme> (HTTP/3),
-      qui économise un aller-retour. Ce site, servi par Apache, utilise TCP et HTTP/2.
+      qui économise un aller-retour. Ce site, servi par le logiciel Apache, utilise TCP et HTTP/2.
     </p>
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
@@ -213,7 +213,7 @@ const etapes = [
     <PotsDePeinture slot="animation" />
     <p slot="decouverte">
       Avant d'envoyer quoi que ce soit, on s'assure de parler au <strong>bon</strong> serveur et
-      on brouille la conversation pour que personne en chemin ne puisse la lire.
+      on chiffre la conversation (on la brouille avec une clé secrète) pour que personne en chemin ne puisse la lire.
     </p>
     <p slot="curieux">
       Les deux machines fabriquent d'abord ensemble une clé secrète, sans jamais l'envoyer
@@ -243,7 +243,7 @@ const etapes = [
       Chrome) → certificat : qui l'a émis, jusqu'à quand.
     </p>
     <ul slot="mythes">
-      <li><strong>« Cadenas = site sûr. »</strong> Non : un site d'hameçonnage peut avoir un cadenas.</li>
+      <li><strong>« Cadenas = site sûr. »</strong> Non : un faux site qui imite ta banque pour voler ton mot de passe ({' '}<Terme id="hameconnage">hameçonnage</Terme>) peut très bien avoir un cadenas.</li>
       <li><strong>« HTTPS cache tout. »</strong> Non : le nom du site reste souvent visible, et ton fournisseur d'accès voit à quel serveur tu te connectes.</li>
     </ul>
   </Etape>
@@ -252,7 +252,7 @@ const etapes = [
   <Etape numero={5} titre="Le voyage des paquets" ancre="voyage" duree="~5 à 150 ms">
     <VoyagePaquets slot="animation" />
     <p slot="decouverte">
-      Tes paquets sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
+      Ta demande voyage en petits morceaux, les {' '}<Terme id="paquet">paquets</Terme>. Ils sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
       passe de centre de tri en centre de tri. Personne ne connaît tout le chemin : chaque
       routeur sait seulement où envoyer ensuite.
     </p>
@@ -292,7 +292,7 @@ const etapes = [
     <ServeurCasiers slot="animation" />
     <p slot="decouverte">
       Le <Terme id="serveur">serveur</Terme> est un ordinateur allumé en permanence dans un
-      datacenter. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
+      <Terme id="datacenter">datacenter</Terme>. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
     </p>
     <p slot="curieux">
       Le navigateur envoie une requête <Terme id="http">HTTP</Terme> : « donne-moi la page d'accueil
@@ -328,7 +328,7 @@ const etapes = [
     <CompteurRequetes slot="animation" />
     <p slot="decouverte">
       La page arrive… mais ce n'est qu'un plan. Pour la dessiner, le navigateur doit aller
-      chercher le reste : styles, images, scripts.
+      chercher le reste : les styles (couleurs, mise en page), les images, les scripts (de petits programmes).
     </p>
     <p slot="curieux">
       En lisant le HTML, le navigateur découvre d'autres fichiers à demander

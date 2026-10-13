@@ -41,7 +41,7 @@ export function pasAPas(
     occupe = true;
     majBoutons();
     const texte = await rendre(courante, avance);
-    if (legende) legende.textContent = `Étape ${courante} sur ${total()} : ${texte}`;
+    if (legende) legende.textContent = `Étape ${courante} sur ${total()}\u00a0: ${texte}`;
     occupe = false;
     majBoutons();
   }

@@ -24,8 +24,8 @@ const vitesseFibre = Math.round(C_VIDE / INDICE_FIBRE / 1000) * 1000;
 
 const noeuds = [
   { id: 'box', nom: 'Ta box', sous: 'chez toi', x: 70, y: 170, role: 'client' },
-  { id: 'fai1', nom: 'Routeur du FAI', sous: 'Lyon', x: 225, y: 85, role: 'reseau' },
-  { id: 'fai2', nom: 'Routeur du FAI', sous: 'Marseille', x: 225, y: 255, role: 'reseau' },
+  { id: 'fai1', nom: 'Ton fournisseur', sous: 'routeur, Lyon', x: 225, y: 85, role: 'reseau' },
+  { id: 'fai2', nom: 'Ton fournisseur', sous: 'routeur, Marseille', x: 225, y: 255, role: 'reseau' },
   // Un point d'échange est un grand commutateur (couche 2) : il ne
   // décrémente pas le TTL et n'apparaît pas comme un saut de traceroute.
   { id: 'ixp', nom: "Point d'échange", sous: 'Paris', x: 400, y: 85, role: 'reseau', commutateur: true },
@@ -66,7 +66,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
 <div class="voyage" data-voyage data-noeuds={JSON.stringify(noeuds)} data-liens={JSON.stringify(liens)} data-delai={JSON.stringify({ allerMs, retourMs, vitesseFibre })}>
   <div class="texte-etapes">
     <p>
-      Sans coupure, le paquet quitte ton ordinateur avec un TTL de 64, passe par ta
+      Sans coupure, le paquet quitte ton ordinateur avec un TTL de 64 (le nombre de routeurs qu'il a encore le droit de traverser), passe par ta
       box, par le routeur de ton fournisseur d'accès à Lyon, par le point d'échange de
       Paris, entre chez l'hébergeur et arrive au serveur. Chaque routeur traversé, box
       comprise, baisse son TTL de 1 ; le point d'échange, lui, est un grand commutateur
@@ -128,7 +128,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
     </div>
 
     <details class="couper">
-      <summary>Couper un lien (ou clique sur un trait du schéma)</summary>
+      <summary>Coupe un lien (ou clique sur un trait du schéma)</summary>
       <ul>
         {liens.map((l, i) => (
           <li data-mode={noeuds.find((n) => (n.id === l[0] || n.id === l[1]) && 'mode' in n)?.mode}>

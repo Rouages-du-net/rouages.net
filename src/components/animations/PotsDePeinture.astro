@@ -55,7 +55,7 @@ const etapes = [
       <section class="colonne nav" aria-labelledby="pots-nav">
         <h4 id="pots-nav">Ton navigateur</h4>
         <div class="choix" data-choix="nav" data-des="2">
-          <p class="legende">Ta couleur secrète :</p>
+          <p class="legende">Ta couleur secrète (choisis-la à l'étape 2) :</p>
           <div class="pastilles" role="radiogroup" aria-label="Couleur secrète du navigateur">
             {choix.map((c, i) => (
               <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-couleur={c.id} style={`--c: var(--ill-${c.id})`} aria-label={c.nom} />
@@ -81,7 +81,7 @@ const etapes = [
       <section class="colonne srv" aria-labelledby="pots-srv">
         <h4 id="pots-srv">Le serveur</h4>
         <div class="choix" data-choix="srv" data-des="2">
-          <p class="legende">Sa couleur secrète :</p>
+          <p class="legende">Sa couleur secrète (choisis-la à l'étape 2) :</p>
           <div class="pastilles" role="radiogroup" aria-label="Couleur secrète du serveur">
             {choix.map((c, i) => (
               <button type="button" role="radio" aria-checked={i === 1 ? 'true' : 'false'} data-couleur={c.id} style={`--c: var(--ill-${c.id})`} aria-label={c.nom} />
@@ -243,7 +243,7 @@ const etapes = [
         bt.disabled = etape !== 2;
       });
 
-      legende.textContent = `Étape ${etape} sur ${etapes.length} : ${etapes[etape - 1]}`;
+      legende.textContent = `Étape ${etape} sur ${etapes.length}\u00a0: ${etapes[etape - 1]}`;
       verdict.textContent =
         etape === 5
           ? finNav === finSrv
