@@ -5,9 +5,9 @@
 // documentation (203.0.113.0/24, 198.51.100.0/24, 2001:db8::/32 ; RFC 5737
 // et 3849) : aucune n'est une vraie adresse publique.
 const appareils = [
-  { id: 'ordi', nom: 'Ordinateur', ip4: '192.168.1.10', port: 51234, ip6: '2001:db8:42::10' },
-  { id: 'tel', nom: 'Téléphone', ip4: '192.168.1.11', port: 49200, ip6: '2001:db8:42::11' },
-  { id: 'tele', nom: 'Télévision', ip4: '192.168.1.12', port: 50510, ip6: '2001:db8:42::12' },
+  { id: 'ordi', nom: 'Ordinateur', sujet: "L'ordinateur", vers: "à l'ordinateur", ip4: '192.168.1.10', port: 51234, ip6: '2001:db8:42::10' },
+  { id: 'tel', nom: 'Téléphone', sujet: 'Le téléphone', vers: 'au téléphone', ip4: '192.168.1.11', port: 49200, ip6: '2001:db8:42::11' },
+  { id: 'tele', nom: 'Télévision', sujet: 'La télévision', vers: 'à la télévision', ip4: '192.168.1.12', port: 50510, ip6: '2001:db8:42::12' },
 ];
 const BOX_PUB = '203.0.113.7';
 const SERVEUR4 = '198.51.100.20';
@@ -89,7 +89,7 @@ const SERVEUR6 = '2001:db8:beef::20';
 <script>
   import { activerScene, pasAPas } from '../../lib/pasapas';
 
-  interface Appareil { id: string; nom: string; ip4: string; port: number; ip6: string }
+  interface Appareil { id: string; nom: string; sujet: string; vers: string; ip4: string; port: number; ip6: string }
 
   document.querySelectorAll<HTMLElement>('[data-box]').forEach((racine) => {
     activerScene(racine);
@@ -141,7 +141,7 @@ const SERVEUR6 = '2001:db8:beef::20';
 
       if (v6) {
         const textes = [
-          [moi6, srv6, `Le ${appareil.nom.toLowerCase()} envoie un paquet avec sa propre adresse IPv6, déjà publique.`],
+          [moi6, srv6, `${appareil.sujet} envoie un paquet avec sa propre adresse IPv6, déjà publique.`],
           [moi6, srv6, 'La box le laisse passer sans rien réécrire : elle se contente de router (et de filtrer, comme un pare-feu).'],
           [srv6, moi6, "Le serveur répond directement à l'adresse de l'appareil."],
           [srv6, moi6, 'La box reconnaît une réponse à une connexion ouverte de l’intérieur et la laisse entrer.'],
@@ -154,7 +154,7 @@ const SERVEUR6 = '2001:db8:beef::20';
         case 1:
           de.textContent = moi4;
           a.textContent = srv4;
-          return `Le ${appareil.nom.toLowerCase()} envoie un paquet. Son adresse ${appareil.ip4} est privée : elle n'a aucun sens hors de la maison.`;
+          return `${appareil.sujet} envoie un paquet. Son adresse ${appareil.ip4} est privée : elle n'a aucun sens hors de la maison.`;
         case 2:
           de.textContent = pub4;
           a.textContent = srv4;
@@ -168,7 +168,7 @@ const SERVEUR6 = '2001:db8:beef::20';
           de.textContent = srv4;
           a.textContent = moi4;
           env.classList.add('reecrit');
-          return `La box retrouve le port ${portPublic(appareil)} dans sa table et réécrit le destinataire : le paquet arrive au ${appareil.nom.toLowerCase()}.`;
+          return `La box retrouve le port ${portPublic(appareil)} dans sa table et réécrit le destinataire : le paquet arrive ${appareil.vers}.`;
       }
     }
 

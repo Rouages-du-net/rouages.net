@@ -35,7 +35,7 @@ const etapes = [
   <p class="chapo">
     Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. En une seconde
     environ, des dizaines de machines, d'organisations et de règles entrent en jeu.
-    Suivons cette page, celle que tu lis, depuis ton clavier jusqu'à l'écran.
+    Suivons la page d'accueil de ce site, depuis ton clavier jusqu'à l'écran.
   </p>
 
   <div class="reglages">
@@ -61,8 +61,8 @@ const etapes = [
     <p slot="curieux">
       La barre d'adresse sert aussi de barre de recherche. Comme <code>rouages.net</code>
       ressemble à un <Terme id="nom-de-domaine">nom de domaine</Terme>, le navigateur décide d'y
-      aller au lieu de lancer une recherche. Les navigateurs récents essaient d'abord
-      <code>https://</code> et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
+      aller au lieu de lancer une recherche. Les navigateurs récents (Chrome, par exemple) essaient d'abord
+      <code>https://</code> (la version chiffrée, voir l'étape 4) et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
       site impose HTTPS.
     </p>
     <p slot="ingenieur">
@@ -80,7 +80,7 @@ const etapes = [
   </Etape>
 
   <!-- Étape 1 -->
-  <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~1 à 100 ms">
+  <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~0 à 200 ms">
     <QuestionDns slot="animation" />
     <div slot="decouverte">
       <p>
@@ -92,13 +92,13 @@ const etapes = [
     </div>
     <div slot="curieux">
       <p>
-        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>), puis demande
-        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton fournisseur d'accès.
+        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>) et dans celle du système, puis demande
+        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
         S'il ne connaît pas la réponse, le résolveur interroge dans l'ordre :
       </p>
       <ol>
         <li>un <Terme id="serveur-racine">serveur racine</Terme> : « voici qui gère <code>.net</code> » ;</li>
-        <li>le registre de <code>.net</code> : « voici les serveurs DNS de ce domaine » ;</li>
+        <li>le {' '}<Terme id="registre">registre</Terme> de <code>.net</code> (l'organisme qui gère cette extension) : « voici les serveurs DNS de ce domaine » ;</li>
         <li>les serveurs du domaine : « <code>rouages.net</code>, c'est telle adresse ».</li>
       </ol>
       <p>
@@ -117,7 +117,7 @@ const etapes = [
     </p>
     <div slot="decide">
       <p>
-        L'IANA (fonction assurée par une filiale de l'<Terme id="icann">ICANN</Terme>) pour la racine ;
+        L'IANA (fonction assurée par une filiale de l'<Terme id="icann">ICANN</Terme>) pour le contenu de la zone racine, et douze organisations qui exploitent les serveurs racine ;
         Verisign, sous contrat avec l'ICANN, pour <code>.net</code> ; le bureau d'enregistrement ;
         l'hébergeur ou le service DNS du domaine ; ton fournisseur d'accès.
       </p>
@@ -147,13 +147,13 @@ const etapes = [
     <BoxNat slot="animation" />
     <p slot="decouverte">
       Ton ordinateur ne parle pas directement à internet : il passe par ta
-      {' '}<Terme id="box">box</Terme> (ou l'antenne de ton téléphone). La box est la porte de la maison.
+      {' '}<Terme id="box">box</Terme> (ou, sur ton téléphone en 4G ou 5G, par l'antenne-relais de ton opérateur). La box est la porte de la maison.
     </p>
     <p slot="curieux">
       Chez toi, chaque appareil a une adresse privée (souvent <code>192.168.x.x</code>). Vu de
       l'extérieur, toute la maison partage une adresse IPv4 publique, et de plus en plus
-      souvent la partage même avec d'autres abonnés : c'est le <Terme id="nat">NAT</Terme>. Avec
-      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonnés en France, chaque
+      souvent la partage même avec d'autres abonné·es : c'est le <Terme id="nat">NAT</Terme>. Avec
+      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonné·es en France, chaque
       appareil peut avoir sa propre adresse publique.
     </p>
     <p slot="ingenieur">
@@ -165,7 +165,7 @@ const etapes = [
     <p slot="decide">L'IEEE (normes Wi-Fi et Ethernet) ; ton fournisseur d'accès ; l'Arcep, qui régule les opérateurs.</p>
     <p slot="histoire">
       <strong>Radia Perlman</strong> a inventé en 1985 l'algorithme de l'arbre couvrant, qui
-      permet de relier de nombreux réseaux Ethernet sans que les messages tournent en rond.
+      permet de relier de nombreux segments Ethernet par des ponts sans que les messages tournent en rond.
     </p>
     <p slot="verifie">
       <code>ip addr</code> ou <code>ipconfig</code> (adresse privée), puis un site « quelle est
@@ -177,15 +177,15 @@ const etapes = [
   <Etape numero={3} titre="Ouvrir la liaison" ancre="liaison" duree="~10 à 100 ms">
     <PoigneeTcp slot="animation" />
     <p slot="decouverte">
-      Avant de parler, on se dit bonjour : l'ordinateur et le serveur vérifient qu'ils
-      s'entendent avant d'échanger la page.
+      Avant de parler, on se dit bonjour : ton navigateur et le {' '}<Terme id="serveur">serveur</Terme> vérifient qu'ils
+      se reçoivent bien, puis la page peut voyager.
     </p>
     <p slot="curieux">
       Internet transporte des <Terme id="paquet">paquets</Terme> indépendants, qui peuvent se perdre
       ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il numérote, accuse
       réception, renvoie ce qui manque. Il commence par une poignée de main en trois temps.
       Quand le serveur le propose, les navigateurs utilisent <Terme id="quic">QUIC</Terme> (HTTP/3),
-      qui économise un aller-retour. Ce site, servi par Apache, utilise TCP et HTTP/2.
+      qui économise un aller-retour. Selon son hébergeur, ce site peut t'arriver par TCP (HTTP/2) ou par QUIC (HTTP/3) : regarde la colonne « Protocole » ci-dessous.
     </p>
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
@@ -213,22 +213,22 @@ const etapes = [
     <PotsDePeinture slot="animation" />
     <p slot="decouverte">
       Avant d'envoyer quoi que ce soit, on s'assure de parler au <strong>bon</strong> serveur et
-      on brouille la conversation pour que personne en chemin ne puisse la lire.
+      on chiffre la conversation (on la brouille avec une clé secrète) pour que personne en chemin ne puisse la lire.
     </p>
     <p slot="curieux">
       Les deux machines fabriquent d'abord ensemble une clé secrète, sans jamais l'envoyer
       sur le réseau (<Terme id="diffie-hellman">Diffie-Hellman</Terme>). Puis le serveur présente,
       déjà chiffré, son <Terme id="certificat">certificat</Terme>, qui garantit qu'il a le droit de
-      parler au nom de <code>rouages.net</code>. Le certificat garantit le nom du site, pas
+      parler au nom de <code>rouages.net</code>, et il signe l'échange avec la clé secrète qui va avec : un imposteur pourrait copier le certificat, pas cette signature. Le certificat garantit le nom du site, pas
       l'honnêteté de son propriétaire.
     </p>
     <p slot="ingenieur">
       {' '}<Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
-      le SNI, part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
+      le SNI, sauf si le site gère ECH, RFC 9849 ; part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
       <code>Certificate</code>, <code>CertificateVerify</code>, <code>Finished</code>. Échange de
       clés souvent X25519, de plus en plus hybride post-quantique (X25519MLKEM768).
       Certificats journalisés (<i>Certificate Transparency</i>, RFC 6962), consultables sur
-      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de 90 jours.
+      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de courte durée (90 jours aujourd'hui), renouvelés automatiquement.
     </p>
     <p slot="decide">
       Les autorités de certification ; les navigateurs, qui choisissent quelles autorités
@@ -243,7 +243,7 @@ const etapes = [
       Chrome) → certificat : qui l'a émis, jusqu'à quand.
     </p>
     <ul slot="mythes">
-      <li><strong>« Cadenas = site sûr. »</strong> Non : un site d'hameçonnage peut avoir un cadenas.</li>
+      <li><strong>« Cadenas = site sûr. »</strong> Non : un faux site qui imite ta banque pour voler ton mot de passe ({' '}<Terme id="hameconnage">hameçonnage</Terme>) peut très bien avoir un cadenas.</li>
       <li><strong>« HTTPS cache tout. »</strong> Non : le nom du site reste souvent visible, et ton fournisseur d'accès voit à quel serveur tu te connectes.</li>
     </ul>
   </Etape>
@@ -252,7 +252,7 @@ const etapes = [
   <Etape numero={5} titre="Le voyage des paquets" ancre="voyage" duree="~5 à 150 ms">
     <VoyagePaquets slot="animation" />
     <p slot="decouverte">
-      Tes paquets sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
+      Ta demande voyage en petits morceaux, les {' '}<Terme id="paquet">paquets</Terme>. Ils sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
       passe de centre de tri en centre de tri. Personne ne connaît tout le chemin : chaque
       routeur sait seulement où envoyer ensuite.
     </p>
@@ -262,7 +262,7 @@ const etapes = [
       Marseille, Lyon…), soit par des liaisons directes. Si le serveur est sur un autre
       continent, ils empruntent un <Terme id="cable-sous-marin">câble sous-marin</Terme>. Chaque
       réseau annonce aux autres les adresses qu'il sait atteindre : c'est
-      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble.
+      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble. Ce voyage n'a pas lieu une seule fois : chaque aller-retour des étapes 1, 3, 4 et 6 le refait, c'est pourquoi la distance du serveur compte autant.
     </p>
     <p slot="ingenieur">
       Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
@@ -277,7 +277,7 @@ const etapes = [
       (coupures, censure).
     </p>
     <p slot="histoire">
-      Les câbles sous-marins depuis 1858 ; <strong>Kilnam Chon</strong> et le premier réseau
+      Les câbles sous-marins (le premier câble transatlantique date de 1858) ; <strong>Kilnam Chon</strong> et le premier réseau
       TCP/IP d'Asie (1982) ; <strong>Nii Quaynor</strong> et la connexion du Ghana (1993-1995).
     </p>
     <p slot="verifie"><code>traceroute rouages.net</code> (<code>tracert</code> sous Windows).</p>
@@ -292,7 +292,7 @@ const etapes = [
     <ServeurCasiers slot="animation" />
     <p slot="decouverte">
       Le <Terme id="serveur">serveur</Terme> est un ordinateur allumé en permanence dans un
-      datacenter. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
+      <Terme id="datacenter">datacenter</Terme>. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
     </p>
     <p slot="curieux">
       Le navigateur envoie une requête <Terme id="http">HTTP</Terme> : « donne-moi la page d'accueil
@@ -328,7 +328,7 @@ const etapes = [
     <CompteurRequetes slot="animation" />
     <p slot="decouverte">
       La page arrive… mais ce n'est qu'un plan. Pour la dessiner, le navigateur doit aller
-      chercher le reste : styles, images, scripts.
+      chercher le reste : les styles (couleurs, mise en page), les images, les scripts (de petits programmes).
     </p>
     <p slot="curieux">
       En lisant le HTML, le navigateur découvre d'autres fichiers à demander
@@ -364,7 +364,7 @@ const etapes = [
     <p slot="ingenieur">
       HTML → DOM ; CSS → CSSOM ; arbre de rendu ; <i>layout</i> ; <i>paint</i> ; composition
       (souvent sur la carte graphique). Mesures : First Contentful Paint, Largest Contentful
-      Paint (Google recommande un LCP de 2,5 s au plus).
+      Paint (Google recommande un LCP de 2,5 s au plus pour 75 % des visites).
     </p>
   </Etape>
 
@@ -395,6 +395,7 @@ const etapes = [
       { auteur: 'RFC Editor', titre: 'RFC 4271 — BGP-4', url: 'https://www.rfc-editor.org/rfc/rfc4271', type: 'primaire', langue: 'en' },
       { titre: 'Root Server Technical Operations', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
       { auteur: 'A. J. Han Vinck (schéma original), Wikimedia Commons', titre: "Diffie-Hellman Key Exchange (l'analogie des pots de peinture)", url: 'https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg', type: 'site', langue: 'en' },
+      { auteur: 'M. Antesberger et al.', titre: 'Distribution of Telecom Entangled Photons through a 7.7 km Antiresonant Hollow-Core Fiber (indice de la fibre standard ≈ 1,47)', url: 'https://arxiv.org/abs/2308.01337', type: 'recherche', annee: 2023, langue: 'en' },
       { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Page Weight (nombre médian de requêtes)', url: 'https://almanac.httparchive.org/en/2024/page-weight', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Third Parties (services tiers)', url: 'https://almanac.httparchive.org/en/2024/third-parties', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'Art of the Problem', titre: 'Diffie-Hellman Key Exchange (vidéo)', url: 'https://www.youtube.com/watch?v=3QnD2c4Xovk', type: 'site', langue: 'en' },

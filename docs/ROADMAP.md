@@ -15,17 +15,18 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] Scénario pas-à-pas (brouillon) : [`scenarios/entree-a-la-page.md`](scenarios/entree-a-la-page.md)
 - [x] Vérification et sourçage des faits techniques du scénario
-- [ ] Relecture du scénario (technique et grand public)
+- [x] Relecture technique et grand public de la page et des animations (relecture assistée : 8 erreurs et 22 imprécisions techniques corrigées, 7 corrections et 19 améliorations de clarté, 13 termes ajoutés au glossaire)
 - [x] Page du module avec frise des étapes et curseur de niveau : `/modules/entree-a-la-page/`
 - [x] Animation « Les pots de peinture » (étape 4, échange de clés)
 - [x] Animation « La question qui rebondit » (étape 1, DNS : trois situations)
 - [x] Animation « Le voyage des paquets » (étape 5 : routes de secours, coupures, TTL et traceroute)
 - [x] Animations des six autres scènes : barre d'adresse, box et NAT, poignée de main TCP, serveur et hôtes virtuels, compteur de requêtes (mesure en direct), affichage
-- [ ] Variante « serveur lointain » du voyage des paquets, par câble sous-marin
+- [x] Variante « serveur lointain » du voyage des paquets, par câble sous-marin (délai minimal sourcé)
 - [x] Encarts « Qui décide ? » à chaque étape (ICANN, IETF, opérateurs…)
 - [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
 - [x] Glossaire : 34 premiers termes, page `/glossaire/`
-- [ ] Relecture technique et relecture « grand public »
+- [ ] Relecture humaine finale (technique et grand public), une fois le site en ligne sur rouages.net
+- [ ] Relever les exemples réels (`dig`, certificat, `curl -I`, protocole HTTP/2 ou HTTP/3, `traceroute`) sur le site en ligne
 - [ ] **Lancement public**
 
 ## Phase 2 — Comment marche un ordinateur

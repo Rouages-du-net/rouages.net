@@ -17,7 +17,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   ipv6: {
     terme: 'IPv6',
     definition:
-      "Nouvelle version des adresses IP, assez nombreuses pour donner une adresse à chaque appareil. Elle remplace progressivement IPv4, dont les adresses sont épuisées.",
+      "Version plus récente des adresses IP, assez nombreuses pour donner une adresse à chaque appareil. Elle remplace progressivement IPv4, dont les adresses sont épuisées.",
   },
   'nom-de-domaine': {
     terme: 'Nom de domaine',
@@ -39,7 +39,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   'serveur-racine': {
     terme: 'Serveur racine',
     definition:
-      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il en existe 13 identités, copiées dans plus de 2 000 lieux.",
+      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il en existe 13 (nommés de a à m), copiés en plus de 2 000 exemplaires (instances) dans le monde.",
   },
   ttl: {
     terme: 'TTL',
@@ -49,7 +49,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   box: {
     terme: 'Box',
     definition:
-      "Boîtier fourni par l'opérateur, qui relie les appareils de la maison à internet. Elle combine un routeur, un point d'accès Wi-Fi et souvent le NAT.",
+      "Boîtier fourni par ton fournisseur d'accès, qui relie les appareils de la maison à internet. Elle se raccorde à la ligne (cuivre ou fibre), sert de routeur et de borne Wi-Fi, et fait souvent du NAT.",
   },
   nat: {
     terme: 'NAT',
@@ -69,7 +69,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   tcp: {
     terme: 'TCP',
     definition:
-      "Transmission Control Protocol : il numérote les paquets, vérifie leur arrivée et renvoie ceux qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
+      "Transmission Control Protocol : il numérote les données envoyées, vérifie leur arrivée et renvoie ceux qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
   },
   udp: {
     terme: 'UDP',
@@ -154,17 +154,17 @@ export const GLOSSAIRE: Record<string, Entree> = {
   cookie: {
     terme: 'Cookie',
     definition:
-      "Petit fichier qu'un site dépose dans le navigateur pour se souvenir de toi. Les cookies « tiers », posés par d'autres domaines, servent souvent au pistage.",
+      "Petite information qu'un site enregistre dans ton navigateur pour se souvenir de toi (connexion, panier, préférences). Les cookies « tiers », posés par d'autres domaines, servent souvent au pistage.",
   },
   ietf: {
     terme: 'IETF',
     definition:
-      "Internet Engineering Task Force : organisation ouverte où ingénieurs et ingénieures rédigent, par consensus, les normes d'internet (les RFC).",
+      "Internet Engineering Task Force : organisation ouverte où des ingénieur·es rédigent, par « consensus approximatif », des normes d'internet publiées sous forme de RFC.",
   },
   rfc: {
     terme: 'RFC',
     definition:
-      "Request for Comments : les documents numérotés publiés par l'IETF. Certains sont des normes (TCP, HTTP…), d'autres des informations ou des expériences.",
+      "Request for Comments : les documents numérotés publiés par le RFC Editor, pour la plupart issus de l'IETF. Certains sont des normes (TCP, HTTP…), d'autres des informations ou des expériences.",
   },
   icann: {
     terme: 'ICANN',
@@ -180,6 +180,71 @@ export const GLOSSAIRE: Record<string, Entree> = {
     terme: 'Arcom',
     definition:
       "Autorité française de régulation de l'audiovisuel et du numérique. Elle intervient notamment dans certains blocages de sites (piratage, pornographie sans vérification d'âge).",
+  },
+  'navigateur': {
+    terme: 'Navigateur',
+    definition:
+      "Logiciel qui affiche les pages web (Firefox, Chrome, Safari, Edge…). Il demande les fichiers aux serveurs, puis les assemble pour dessiner la page.",
+  },
+  'requete': {
+    terme: 'Requête',
+    definition:
+      "Demande envoyée par le navigateur à un serveur, par exemple « donne-moi la page d'accueil ». Une seule page web en déclenche souvent des dizaines (images, styles, scripts…).",
+  },
+  'datacenter': {
+    terme: 'Datacenter',
+    definition:
+      "Bâtiment rempli de serveurs, avec de quoi les alimenter en électricité, les refroidir et les relier à internet. On dit aussi « centre de données ».",
+  },
+  'fai': {
+    terme: "Fournisseur d'accès (FAI)",
+    definition:
+      "Entreprise ou association qui te relie à internet, à la maison par la box ou par le réseau mobile.",
+  },
+  'https': {
+    terme: 'HTTPS',
+    definition:
+      "HTTP protégé par TLS : la conversation entre ton navigateur et le serveur est chiffrée. C'est ce qu'indique le cadenas, qui ne garantit pas pour autant que le site est honnête.",
+  },
+  'chiffrement': {
+    terme: 'Chiffrement',
+    definition:
+      "Transformation d'un message, à l'aide d'une clé, qui le rend illisible pour qui n'a pas la clé. On dit « chiffrer » (et non « crypter »).",
+  },
+  'autorite-certification': {
+    terme: 'Autorité de certification',
+    definition:
+      "Organisme qui vérifie qu'un demandeur contrôle bien un nom de domaine, puis signe son certificat. Les navigateurs ont une liste des autorités qu'ils acceptent (ex. Let's Encrypt).",
+  },
+  'port': {
+    terme: 'Port',
+    definition:
+      "Numéro qui indique à quel programme d'une machine un paquet est destiné, comme le numéro d'appartement après l'adresse de l'immeuble. Le web chiffré utilise le port 443.",
+  },
+  'octet': {
+    terme: 'Octet',
+    definition:
+      "Unité de base des données : 8 bits, soit un nombre entre 0 et 255. Une lettre simple tient en un octet.",
+  },
+  'commutateur': {
+    terme: 'Commutateur (switch)',
+    definition:
+      "Appareil qui relie directement plusieurs machines d'un même réseau. Contrairement à un routeur, il ne choisit pas de route à travers internet.",
+  },
+  'registre': {
+    terme: 'Registre',
+    definition:
+      "Organisme qui gère une extension (.net, .fr…) et tient la liste de tous les noms de domaine qui la portent. Exemple : Verisign pour .net, l'Afnic pour .fr.",
+  },
+  'script': {
+    terme: 'Script',
+    definition:
+      "Petit programme (en JavaScript) envoyé avec une page web, que le navigateur exécute pour la rendre interactive.",
+  },
+  'hameconnage': {
+    terme: 'Hameçonnage',
+    definition:
+      "Arnaque qui imite un site ou un message de confiance (banque, administration) pour te faire donner un mot de passe ou des coordonnées bancaires.",
   },
 };
 

@@ -28,12 +28,13 @@ const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de s
         <ul class="domaines"></ul>
       </section>
       <section class="anim-cadre colonne mediane">
-        <h4>Une page web médiane (2024)</h4>
+        <h4>Une page web typique (médiane 2024)</h4>
         <p class="total"><span class="nombre">{MEDIANE_REQUETES}</span> requêtes</p>
         <div class="carres" aria-hidden="true">
           {Array.from({ length: MEDIANE_REQUETES }, () => <span class="carre" />)}
         </div>
         <p class="anim-note">
+          La moitié des pages en font plus, l'autre moitié moins.
           {PART_PAGES_TIERS} % des pages appellent au moins un service tiers ; la médiane est de
           {MEDIANE_TIERS} tiers différents par page parmi le premier million de sites.
         </p>
@@ -90,9 +91,9 @@ const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de s
       legende.textContent =
         `Mesuré à l'instant : ${entrees.length} requêtes, vers ${parDomaine.size} ${parDomaine.size > 1 ? 'domaines' : 'domaine'}` +
         (nbTiers ? `, dont ${nbTiers} tiers.` : ', aucun service tiers : ni publicité, ni statistiques, ni réseau social.') +
-        ' Recharge la page et mesure à nouveau : ce qui est en cache peut ne pas être redemandé.';
+        ' Recharge la page et mesure à nouveau : les fichiers repris du cache restent comptés, mais ils ne sont pas retéléchargés.';
       bouton.disabled = false;
-      bouton.textContent = 'Mesurer à nouveau ↺';
+      bouton.textContent = '↺ Mesurer à nouveau';
     });
   });
 </script>

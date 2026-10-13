@@ -3,7 +3,8 @@
 // TCP en trois temps, puis livraison de morceaux arrivés dans le désordre,
 // avec une perte et une retransmission.
 // Simplification assumée : TCP numérote en réalité des octets, pas des
-// morceaux ; les numéros de séquence de la poignée de main sont réalistes.
+// morceaux ; les numéros de séquence initiaux sont en réalité tirés au
+// hasard sur 32 bits (RFC 9293, RFC 6528) : 1000 et 5000 sont pédagogiques.
 const morceaux = ['Voi', 'ci la ', 'page ', 'de rou', 'ages.', 'net'];
 ---
 <div class="anim tcp" data-tcp data-morceaux={JSON.stringify(morceaux)}>
@@ -62,7 +63,7 @@ const morceaux = ['Voi', 'ci la ', 'page ', 'de rou', 'ages.', 'net'];
       {
         msgs: [{ sens: 'aller', texte: 'SYN', detail: 'seq = 1000' }],
         recus: [],
-        legende: "Le navigateur dit bonjour (SYN) et annonce qu'il commencera à compter ses octets à partir de 1000.",
+        legende: "Le navigateur dit bonjour (SYN) et annonce qu'il commencera à compter ses octets à partir de 1000 (en vrai, un grand nombre tiré au hasard, pour qu'un intrus ne puisse pas le deviner).",
       },
       {
         msgs: [{ sens: 'retour', texte: 'SYN-ACK', detail: 'seq = 5000, ack = 1001' }],
@@ -72,7 +73,7 @@ const morceaux = ['Voi', 'ci la ', 'page ', 'de rou', 'ages.', 'net'];
       {
         msgs: [{ sens: 'aller', texte: 'ACK', detail: 'seq = 1001, ack = 5001' }],
         recus: [],
-        legende: 'Le navigateur accuse réception à son tour. La connexion est ouverte : un aller-retour et demi.',
+        legende: 'Le navigateur accuse réception à son tour. La connexion est ouverte : il a fallu un aller-retour complet avant que le navigateur puisse envoyer sa demande (elle part avec ce dernier ACK ou juste après).',
       },
       {
         msgs: [
@@ -80,7 +81,7 @@ const morceaux = ['Voi', 'ci la ', 'page ', 'de rou', 'ages.', 'net'];
           { sens: 'retour', texte: 'Morceau 4', detail: 'perdu en route', perdu: true },
         ],
         recus: arrivee,
-        legende: 'Le serveur envoie la page en 6 morceaux. Ils arrivent dans le désordre (3 avant 2) et le morceau 4 se perd en route.',
+        legende: 'Plus tard (une fois la connexion chiffrée et la page demandée, étapes 4 à 6), le serveur envoie la page en 6 morceaux. Ils arrivent dans le désordre (3 avant 2) et le morceau 4 se perd en route.',
       },
       {
         msgs: [{ sens: 'aller', texte: 'ACK', detail: "« j'ai tout jusqu'au 3, j'attends le 4 » (répété)" }],

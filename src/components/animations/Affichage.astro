@@ -75,10 +75,10 @@ button { background: var(--accent); color: var(--bg); }`;
   const etapes = [
     { phase: 'html', legende: 'Le navigateur reçoit du texte : le HTML. Pour lui, ce ne sont encore que des caractères.' },
     { phase: 'dom', legende: "Il découpe ce texte et construit un arbre d'éléments, le DOM : un article qui contient un titre, un paragraphe et un bouton." },
-    { phase: 'css', legende: "Il lit le CSS et calcule le style de chaque élément (couleur, taille de police, marges) : c'est le CSSOM." },
+    { phase: 'css', legende: "Il lit le CSS, qu'il range dans un arbre de règles (le CSSOM), puis calcule le style de chaque élément (couleur, taille de police, marges)." },
     { phase: 'layout', legende: 'Mise en page : il calcule la position et la taille de chaque boîte, au pixel près, selon la largeur de l’écran. Les dimensions affichées sont mesurées à l’instant dans ton navigateur.' },
     { phase: 'paint', legende: 'Peinture : il remplit les pixels de chaque boîte avec ses couleurs, son texte, ses bordures.' },
-    { phase: 'composite', legende: 'Composition : certains éléments sont peints sur des calques séparés, que la carte graphique superpose. Bouger un calque ne demande pas de tout repeindre : le bouton peut s’animer sans effort.' },
+    { phase: 'composite', legende: 'Composition : certains éléments sont peints sur des calques séparés, que la carte graphique superpose. Bouger un calque ne demande pas de tout repeindre : un bouton animé par déplacement ou transparence (transform, opacity) s’anime sans effort.' },
   ];
 
   document.querySelectorAll<HTMLElement>('[data-rendu]').forEach((racine) => {
