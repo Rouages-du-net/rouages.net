@@ -31,9 +31,13 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## Phase 2 — Comment marche un ordinateur
 
-- [ ] Portes logiques à câbler
-- [ ] Mini-processeur 4 bits pas-à-pas
-- [ ] De la mémoire au programme
+- [x] Scénario en 8 étapes (`docs/scenarios/ordinateur.md`) et dossier de sources
+- [x] Binaire et octet, transistor, portes logiques, additionneur
+- [x] Mémoire (verrou et mémoire vive), horloge
+- [x] Mini-processeur 4 bits pas-à-pas, programmable
+- [x] Du langage humain aux bits (mini-processeur et RISC-V)
+- [x] Glossaire : 8 termes ajoutés (bit, transistor, porte logique, processeur…)
+- [ ] Relecture humaine finale
 
 ## Phase 3 — Qui décide (cartographie des acteurs)
 
