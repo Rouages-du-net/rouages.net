@@ -35,7 +35,7 @@ const etapes = [
   <p class="chapo">
     Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. En une seconde
     environ, des dizaines de machines, d'organisations et de règles entrent en jeu.
-    Suivons cette page, celle que tu lis, depuis ton clavier jusqu'à l'écran.
+    Suivons la page d'accueil de ce site, depuis ton clavier jusqu'à l'écran.
   </p>
 
   <div class="reglages">
@@ -61,7 +61,7 @@ const etapes = [
     <p slot="curieux">
       La barre d'adresse sert aussi de barre de recherche. Comme <code>rouages.net</code>
       ressemble à un <Terme id="nom-de-domaine">nom de domaine</Terme>, le navigateur décide d'y
-      aller au lieu de lancer une recherche. Les navigateurs récents essaient d'abord
+      aller au lieu de lancer une recherche. Les navigateurs récents (Chrome, par exemple) essaient d'abord
       <code>https://</code> (la version chiffrée, voir l'étape 4) et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
       site impose HTTPS.
     </p>
@@ -80,7 +80,7 @@ const etapes = [
   </Etape>
 
   <!-- Étape 1 -->
-  <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~1 à 100 ms">
+  <Etape numero={1} titre="Le nom devient une adresse" ancre="nom" duree="~0 à 200 ms">
     <QuestionDns slot="animation" />
     <div slot="decouverte">
       <p>
@@ -92,7 +92,7 @@ const etapes = [
     </div>
     <div slot="curieux">
       <p>
-        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>), puis demande
+        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>) et dans celle du système, puis demande
         à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
         S'il ne connaît pas la réponse, le résolveur interroge dans l'ordre :
       </p>
@@ -117,7 +117,7 @@ const etapes = [
     </p>
     <div slot="decide">
       <p>
-        L'IANA (fonction assurée par une filiale de l'<Terme id="icann">ICANN</Terme>) pour la racine ;
+        L'IANA (fonction assurée par une filiale de l'<Terme id="icann">ICANN</Terme>) pour le contenu de la zone racine, et douze organisations qui exploitent les serveurs racine ;
         Verisign, sous contrat avec l'ICANN, pour <code>.net</code> ; le bureau d'enregistrement ;
         l'hébergeur ou le service DNS du domaine ; ton fournisseur d'accès.
       </p>
@@ -165,7 +165,7 @@ const etapes = [
     <p slot="decide">L'IEEE (normes Wi-Fi et Ethernet) ; ton fournisseur d'accès ; l'Arcep, qui régule les opérateurs.</p>
     <p slot="histoire">
       <strong>Radia Perlman</strong> a inventé en 1985 l'algorithme de l'arbre couvrant, qui
-      permet de relier de nombreux réseaux Ethernet sans que les messages tournent en rond.
+      permet de relier de nombreux segments Ethernet par des ponts sans que les messages tournent en rond.
     </p>
     <p slot="verifie">
       <code>ip addr</code> ou <code>ipconfig</code> (adresse privée), puis un site « quelle est
@@ -185,7 +185,7 @@ const etapes = [
       ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il numérote, accuse
       réception, renvoie ce qui manque. Il commence par une poignée de main en trois temps.
       Quand le serveur le propose, les navigateurs utilisent <Terme id="quic">QUIC</Terme> (HTTP/3),
-      qui économise un aller-retour. Ce site, servi par le logiciel Apache, utilise TCP et HTTP/2.
+      qui économise un aller-retour. Selon son hébergeur, ce site peut t'arriver par TCP (HTTP/2) ou par QUIC (HTTP/3) : regarde la colonne « Protocole » ci-dessous.
     </p>
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
@@ -219,16 +219,16 @@ const etapes = [
       Les deux machines fabriquent d'abord ensemble une clé secrète, sans jamais l'envoyer
       sur le réseau (<Terme id="diffie-hellman">Diffie-Hellman</Terme>). Puis le serveur présente,
       déjà chiffré, son <Terme id="certificat">certificat</Terme>, qui garantit qu'il a le droit de
-      parler au nom de <code>rouages.net</code>. Le certificat garantit le nom du site, pas
+      parler au nom de <code>rouages.net</code>, et il signe l'échange avec la clé secrète qui va avec : un imposteur pourrait copier le certificat, pas cette signature. Le certificat garantit le nom du site, pas
       l'honnêteté de son propriétaire.
     </p>
     <p slot="ingenieur">
       {' '}<Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
-      le SNI, part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
+      le SNI, sauf si le site gère ECH, RFC 9849 ; part de clé), <code>ServerHello</code>, puis chiffrés : <code>EncryptedExtensions</code>,
       <code>Certificate</code>, <code>CertificateVerify</code>, <code>Finished</code>. Échange de
       clés souvent X25519, de plus en plus hybride post-quantique (X25519MLKEM768).
       Certificats journalisés (<i>Certificate Transparency</i>, RFC 6962), consultables sur
-      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de 90 jours.
+      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de courte durée (90 jours aujourd'hui), renouvelés automatiquement.
     </p>
     <p slot="decide">
       Les autorités de certification ; les navigateurs, qui choisissent quelles autorités
@@ -262,7 +262,7 @@ const etapes = [
       Marseille, Lyon…), soit par des liaisons directes. Si le serveur est sur un autre
       continent, ils empruntent un <Terme id="cable-sous-marin">câble sous-marin</Terme>. Chaque
       réseau annonce aux autres les adresses qu'il sait atteindre : c'est
-      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble.
+      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble. Ce voyage n'a pas lieu une seule fois : chaque aller-retour des étapes 1, 3, 4 et 6 le refait, c'est pourquoi la distance du serveur compte autant.
     </p>
     <p slot="ingenieur">
       Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
@@ -277,7 +277,7 @@ const etapes = [
       (coupures, censure).
     </p>
     <p slot="histoire">
-      Les câbles sous-marins depuis 1858 ; <strong>Kilnam Chon</strong> et le premier réseau
+      Les câbles sous-marins (le premier câble transatlantique date de 1858) ; <strong>Kilnam Chon</strong> et le premier réseau
       TCP/IP d'Asie (1982) ; <strong>Nii Quaynor</strong> et la connexion du Ghana (1993-1995).
     </p>
     <p slot="verifie"><code>traceroute rouages.net</code> (<code>tracert</code> sous Windows).</p>
@@ -364,7 +364,7 @@ const etapes = [
     <p slot="ingenieur">
       HTML → DOM ; CSS → CSSOM ; arbre de rendu ; <i>layout</i> ; <i>paint</i> ; composition
       (souvent sur la carte graphique). Mesures : First Contentful Paint, Largest Contentful
-      Paint (Google recommande un LCP de 2,5 s au plus).
+      Paint (Google recommande un LCP de 2,5 s au plus pour 75 % des visites).
     </p>
   </Etape>
 

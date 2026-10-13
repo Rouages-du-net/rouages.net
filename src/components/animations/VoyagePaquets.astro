@@ -66,7 +66,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
 <div class="voyage" data-voyage data-noeuds={JSON.stringify(noeuds)} data-liens={JSON.stringify(liens)} data-delai={JSON.stringify({ allerMs, retourMs, vitesseFibre })}>
   <div class="texte-etapes">
     <p>
-      Sans coupure, le paquet quitte ton ordinateur avec un TTL de 64 (le nombre de routeurs qu'il a encore le droit de traverser), passe par ta
+      Sans coupure, le paquet quitte ton ordinateur avec un TTL de 64 (le nombre de routeurs qu'il a encore le droit de traverser ; la valeur de départ dépend du système, 64 est fréquent), passe par ta
       box, par le routeur de ton fournisseur d'accès à Lyon, par le point d'échange de
       Paris, entre chez l'hébergeur et arrive au serveur. Chaque routeur traversé, box
       comprise, baisse son TTL de 1 ; le point d'échange, lui, est un grand commutateur

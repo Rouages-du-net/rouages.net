@@ -39,7 +39,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   'serveur-racine': {
     terme: 'Serveur racine',
     definition:
-      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il en existe 13 (nommés de a à m), copiés dans plus de 2 000 lieux.",
+      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il en existe 13 (nommés de a à m), copiés en plus de 2 000 exemplaires (instances) dans le monde.",
   },
   ttl: {
     terme: 'TTL',
@@ -49,7 +49,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   box: {
     terme: 'Box',
     definition:
-      "Boîtier fourni par ton fournisseur d'accès, qui relie les appareils de la maison à internet. Elle sert de routeur et de borne Wi-Fi, et fait souvent du NAT.",
+      "Boîtier fourni par ton fournisseur d'accès, qui relie les appareils de la maison à internet. Elle se raccorde à la ligne (cuivre ou fibre), sert de routeur et de borne Wi-Fi, et fait souvent du NAT.",
   },
   nat: {
     terme: 'NAT',
@@ -69,7 +69,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   tcp: {
     terme: 'TCP',
     definition:
-      "Transmission Control Protocol : il numérote les paquets, vérifie leur arrivée et renvoie ceux qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
+      "Transmission Control Protocol : il numérote les données envoyées, vérifie leur arrivée et renvoie ceux qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
   },
   udp: {
     terme: 'UDP',
@@ -159,12 +159,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
   ietf: {
     terme: 'IETF',
     definition:
-      "Internet Engineering Task Force : organisation ouverte où des ingénieur·es rédigent, par consensus, les normes d'internet (les RFC).",
+      "Internet Engineering Task Force : organisation ouverte où des ingénieur·es rédigent, par « consensus approximatif », des normes d'internet publiées sous forme de RFC.",
   },
   rfc: {
     terme: 'RFC',
     definition:
-      "Request for Comments : les documents numérotés publiés par l'IETF. Certains sont des normes (TCP, HTTP…), d'autres des informations ou des expériences.",
+      "Request for Comments : les documents numérotés publiés par le RFC Editor, pour la plupart issus de l'IETF. Certains sont des normes (TCP, HTTP…), d'autres des informations ou des expériences.",
   },
   icann: {
     terme: 'ICANN',

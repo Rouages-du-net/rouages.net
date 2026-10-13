@@ -98,7 +98,7 @@ const exemples = ['rouages.net', 'rouages.net/glossaire/', 'chat qui dort', 'htt
       ligne('Adresse complète', url.href);
       explication.textContent =
         url.protocol === 'http:' && !local
-          ? "Tu as demandé HTTP, sans chiffrement : le navigateur peut afficher « Non sécurisé », ou passer en HTTPS si le site l'impose (HSTS)."
+          ? "Tu as demandé HTTP, sans chiffrement. Des navigateurs comme Chrome essaient quand même HTTPS d'abord ; si le site ne répond qu'en HTTP, la page s'affiche avec la mention « Non sécurisé ». Avec HSTS, le site impose HTTPS sans retour possible."
           : local
             ? '« localhost », c’est ta propre machine : pratique pour développer un site.'
             : "Prochaine étape : trouver l'adresse IP de « " + url.hostname + ' » grâce au DNS.';

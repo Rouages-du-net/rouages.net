@@ -20,14 +20,14 @@ const scenarios: Record<string, { nom: string; messages: Message[] }> = {
   vide: {
     nom: 'Mémoire vide',
     messages: [
-      { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »", note: 'Ton navigateur demande au résolveur de ton fournisseur d’accès.' },
-      { de: 'res', a: 'racine', texte: '« Qui gère .net ? »', note: 'Le résolveur ne demande à la racine que ce dont elle a besoin : elle ne voit que « net. ».' },
+      { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »", note: 'Ton appareil demande au résolveur de ton fournisseur d’accès.' },
+      { de: 'res', a: 'racine', texte: '« Qui gère .net ? »', note: 'Les résolveurs récents ne demandent à la racine que ce dont elle a besoin (minimisation, RFC 9156) : elle ne voit que « net. ».' },
       { de: 'racine', a: 'res', texte: '« Voici les serveurs de .net. »', note: 'La racine ne connaît pas rouages.net : elle indique seulement à qui demander ensuite.' },
       { de: 'res', a: 'tld', texte: '« Qui gère rouages.net ? »' },
       { de: 'tld', a: 'res', texte: '« Voici les serveurs DNS de rouages.net. »', note: 'Le registre de .net (Verisign) sait quels serveurs font autorité pour le domaine.' },
       { de: 'res', a: 'dom', texte: "« Quelle est l'adresse de rouages.net ? »" },
-      { de: 'dom', a: 'res', texte: `« ${IP}, valable une heure. »`, note: 'La réponse porte une durée de vie (TTL) : le résolveur la garde en mémoire.' },
-      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Ton navigateur peut maintenant contacter le serveur. Tout cela a pris de quelques millisecondes à une centaine.' },
+      { de: 'dom', a: 'res', texte: `« ${IP}, valable cinq minutes. »`, note: 'La réponse porte une durée de vie (TTL), choisie par le gestionnaire du domaine (de quelques minutes à plusieurs jours) : le résolveur la garde en mémoire jusque-là.' },
+      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Ton navigateur peut maintenant contacter le serveur. Tout cela a pris de quelques dizaines à quelques centaines de millisecondes ; quand la réponse est déjà en mémoire, c\u2019est presque instantané.' },
     ],
   },
   courant: {
@@ -37,7 +37,7 @@ const scenarios: Record<string, { nom: string; messages: Message[] }> = {
       { de: 'res', a: 'tld', texte: '« Qui gère rouages.net ? »', note: 'Le résolveur connaît déjà les serveurs de .net (il les garde deux jours) : pas besoin de la racine.' },
       { de: 'tld', a: 'res', texte: '« Voici les serveurs DNS de rouages.net. »' },
       { de: 'res', a: 'dom', texte: "« Quelle est l'adresse de rouages.net ? »" },
-      { de: 'dom', a: 'res', texte: `« ${IP}, valable une heure. »` },
+      { de: 'dom', a: 'res', texte: `« ${IP}, valable cinq minutes. »` },
       { de: 'res', a: 'nav', texte: `« ${IP} »` },
     ],
   },
@@ -45,7 +45,7 @@ const scenarios: Record<string, { nom: string; messages: Message[] }> = {
     nom: 'Déjà en mémoire',
     messages: [
       { de: 'nav', a: 'res', texte: "« Quelle est l'adresse de rouages.net ? »" },
-      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Quelqu’un a déjà demandé il y a moins d’une heure : le résolveur répond aussitôt, de mémoire.' },
+      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Quelqu’un a déjà demandé il y a moins de cinq minutes (la durée de vie de la réponse) : le résolveur répond aussitôt, de mémoire.' },
     ],
   },
 };
@@ -53,9 +53,9 @@ const scenarios: Record<string, { nom: string; messages: Message[] }> = {
 const noeuds = [
   { id: 'nav', nom: 'Ton navigateur', sous: 'ton appareil', x: 90, y: 150, role: 'client' },
   { id: 'res', nom: 'Résolveur DNS', sous: 'chez ton fournisseur', x: 330, y: 150, role: 'reseau' },
-  { id: 'racine', nom: 'Serveur racine', sous: '13 identités, 2 000+ lieux', x: 610, y: 50, role: 'serveur' },
+  { id: 'racine', nom: 'Serveur racine', sous: '13 identités, 2 000+ instances', x: 610, y: 50, role: 'serveur' },
   { id: 'tld', nom: 'Registre de .net', sous: 'Verisign', x: 610, y: 150, role: 'serveur' },
-  { id: 'dom', nom: 'Serveurs du domaine', sous: "chez l'hébergeur", x: 610, y: 250, role: 'serveur' },
+  { id: 'dom', nom: 'Serveurs du domaine', sous: 'service DNS du domaine', x: 610, y: 250, role: 'serveur' },
 ];
 ---
 <div class="dns" data-dns data-scenarios={JSON.stringify(scenarios)} data-noeuds={JSON.stringify(noeuds)}>

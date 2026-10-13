@@ -91,7 +91,7 @@ const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de s
       legende.textContent =
         `Mesuré à l'instant : ${entrees.length} requêtes, vers ${parDomaine.size} ${parDomaine.size > 1 ? 'domaines' : 'domaine'}` +
         (nbTiers ? `, dont ${nbTiers} tiers.` : ', aucun service tiers : ni publicité, ni statistiques, ni réseau social.') +
-        ' Recharge la page et mesure à nouveau : ce qui est en cache peut ne pas être redemandé.';
+        ' Recharge la page et mesure à nouveau : les fichiers repris du cache restent comptés, mais ils ne sont pas retéléchargés.';
       bouton.disabled = false;
       bouton.textContent = '↺ Mesurer à nouveau';
     });
