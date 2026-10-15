@@ -1,17 +1,39 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Sources from '../../../components/Sources.astro';
+import { CHAPITRES } from '../../../scripts/terminus/chapitres';
 ---
 <Base
   title="Terminus"
   description="Un jeu d'aventure pour apprendre les commandes Linux, directement dans le navigateur."
 >
   <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
-  <h1>Terminus <small class="tag">en français · prototype</small></h1>
-  <p>
+  <h1>Terminus <small class="tag">en français</small></h1>
+  <p class="intro">
     Un jeu d'aventure où l'on se déplace avec de <strong>vraies commandes Linux</strong>.
-    Chaque lieu est un dossier, chaque objet un fichier. Commence par taper <code>ls</code>.
+    Chaque lieu est un dossier, chaque objet un fichier. L'Effaceur ravage le royaume :
+    à toi de réparer ce qu'il a détruit, une commande après l'autre.
   </p>
+
+  <noscript>
+    <p class="anim-cadre">Ce jeu a besoin de JavaScript pour simuler un terminal dans ton navigateur.</p>
+  </noscript>
+
+  <nav class="chapitres" aria-label="Chapitres" hidden>
+    <ol>
+      {CHAPITRES.map((c, i) => (
+        <li>
+          <button type="button" data-chapitre={i}>
+            <span class="num">Chapitre {c.numero}</span>
+            <span class="titre">{c.titre}</span>
+            <span class="resume">{c.resume}</span>
+            <span class="etat"></span>
+          </button>
+        </li>
+      ))}
+      <li class="bientot"><span class="num">Chapitre 3</span><span class="titre">Le Noyau</span><span class="resume">Bientôt : sudo, les permissions, et l'Effaceur en personne.</span></li>
+    </ol>
+  </nav>
 
   <div class="terminal" id="terminal">
     <div id="sortie" role="log" aria-live="polite"></div>
@@ -21,21 +43,30 @@ import Sources from '../../../components/Sources.astro';
     </form>
   </div>
 
+  <div class="fin" id="fin" hidden>
+    <button type="button" class="anim-bouton principal" id="suivant">Chapitre suivant →</button>
+  </div>
+
+  <p class="tag astuces">
+    Astuces : <kbd>Tab</kbd> complète les noms, <kbd>↑</kbd> rappelle les commandes,
+    <code>aide</code> liste celles que tu connais. Ta progression est gardée dans ce navigateur.
+    <button type="button" class="lien" id="recommencer">Recommencer ce chapitre</button>
+  </p>
+
   <p class="tag">
-    Astuces : <kbd>Tab</kbd> complète les noms, <kbd>↑</kbd> rappelle les commandes.
-    Inspiré de
-    <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>&nbsp;(MIT,
-    en anglais), réécrit en français pour Les rouages du net.
+    Inspiré de <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>,
+    créé au MIT par Shawn Conrad et Michele Pratusevich (en anglais) : même progression des
+    commandes, histoire et textes réécrits en français pour Les rouages du net.
   </p>
 
   <Sources
-    verifie="2026-10-11"
+    verifie="2026-10-15"
     sources={[
       {
         titre: 'Terminus, le jeu original',
         url: 'https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html',
         type: 'site',
-        auteur: 'MIT',
+        auteur: 'Shawn Conrad, Michele Pratusevich (MIT)',
         langue: 'en',
       },
     ]}
@@ -56,11 +87,11 @@ import Sources from '../../../components/Sources.astro';
   }
   #sortie :global(pre) { margin: 0 0 0.5rem; white-space: pre-wrap; word-break: break-word; font: inherit; }
   #sortie :global(.cmd) { color: color-mix(in oklab, var(--terminal-fg) 75%, var(--terminal-bg)); }
-  form { display: flex; gap: 0.5ch; }
-  .invite { color: var(--terminal-invite); white-space: nowrap; }
+  form { display: flex; flex-wrap: wrap; gap: 0 0.5ch; }
+  .invite { color: var(--terminal-invite); overflow-wrap: anywhere; }
   input {
     flex: 1;
-    min-width: 0;
+    min-width: 12ch;
     background: transparent;
     border: none;
     color: inherit;
@@ -68,24 +99,76 @@ import Sources from '../../../components/Sources.astro';
     outline: none;
     caret-color: var(--terminal-fg);
   }
+  .intro { max-width: var(--mesure); }
+  .chapitres ol {
+    list-style: none;
+    margin: 1.5rem 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+  .chapitres button, .bientot {
+    display: grid;
+    gap: 0.15rem;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    font: inherit;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--card);
+    color: var(--fg);
+  }
+  .chapitres button { cursor: pointer; }
+  .chapitres button:disabled { cursor: default; opacity: 0.6; }
+  .chapitres button[aria-current='true'] { border: 2px solid var(--accent); }
+  .bientot { border-style: dashed; color: var(--muted); }
+  .num { font-size: 0.8rem; color: var(--muted); }
+  .titre { font-weight: 700; }
+  .resume { font-size: 0.9rem; color: var(--muted); }
+  .etat { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+  .fin { margin-top: 1rem; }
+  @media (max-width: 40rem) {
+    .chapitres ol { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .chapitres .resume { display: none; }
+  }
+  .astuces { margin-top: 1rem; }
+  .lien { font: inherit; background: none; border: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; }
   kbd { border: 1px solid var(--border); border-radius: 0.25rem; padding: 0 0.3em; font-size: 0.85em; }
 </style>
 
 <script>
   import { Shell } from '../../../scripts/terminus/shell';
+  import { CHAPITRES } from '../../../scripts/terminus/chapitres';
 
-  const shell = new Shell();
+  const CLE = 'rouages-terminus';
   const terminal = document.getElementById('terminal')!;
   const sortie = document.getElementById('sortie')!;
   const form = document.getElementById('formulaire') as HTMLFormElement;
   const saisie = document.getElementById('saisie') as HTMLInputElement;
   const invite = document.getElementById('invite')!;
+  const fin = document.getElementById('fin')!;
+  const nav = document.querySelector<HTMLElement>('.chapitres')!;
+  const boutons = [...nav.querySelectorAll<HTMLButtonElement>('[data-chapitre]')];
+
+  // Progression : la liste des chapitres terminés, gardée dans ce navigateur.
+  let termines: string[] = [];
+  try {
+    termines = JSON.parse(localStorage.getItem(CLE) ?? '[]').termines ?? [];
+  } catch {}
+  const sauver = () => {
+    try {
+      localStorage.setItem(CLE, JSON.stringify({ termines }));
+    } catch {}
+  };
+  const ouvert = (i: number) => i === 0 || termines.includes(CHAPITRES[i - 1].id);
+
+  let shell: Shell;
+  let courant = 0;
   const historique: string[] = [];
   let position = 0;
-
-  const majInvite = () => {
-    invite.textContent = `vous@rouages:${shell.cwd.replace(/^\/Accueil/, '~')}$`;
-  };
 
   const afficher = (texte: string, classe?: string) => {
     if (!texte) return;
@@ -95,8 +178,28 @@ import Sources from '../../../components/Sources.astro';
     sortie.appendChild(pre);
   };
 
-  afficher(shell.executer('cat bienvenue.txt') ?? '');
-  majInvite();
+  const majNav = () => {
+    boutons.forEach((b, i) => {
+      b.disabled = !ouvert(i);
+      b.setAttribute('aria-current', String(i === courant));
+      b.querySelector('.etat')!.textContent = termines.includes(CHAPITRES[i].id)
+        ? '✓ Terminé'
+        : ouvert(i)
+          ? ''
+          : '🔒 Termine le chapitre précédent';
+    });
+  };
+
+  const demarrer = (i: number) => {
+    courant = i;
+    shell = new Shell(CHAPITRES[i]);
+    sortie.replaceChildren();
+    fin.hidden = true;
+    afficher(`— Chapitre ${CHAPITRES[i].numero} : ${CHAPITRES[i].titre} —`);
+    afficher(shell.executer(`cat ${CHAPITRES[i].accueil}`) ?? '');
+    invite.textContent = shell.invite();
+    majNav();
+  };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -104,11 +207,19 @@ import Sources from '../../../components/Sources.astro';
     afficher(`${invite.textContent} ${ligne}`, 'cmd');
     if (ligne.trim()) historique.push(ligne);
     position = historique.length;
+    const dejaFini = shell.termine;
     const resultat = shell.executer(ligne);
     if (resultat === null) sortie.replaceChildren();
     else afficher(resultat);
+    if (shell.termine && !dejaFini) {
+      const id = CHAPITRES[courant].id;
+      if (!termines.includes(id)) termines.push(id);
+      sauver();
+      majNav();
+      fin.hidden = courant >= CHAPITRES.length - 1;
+    }
     saisie.value = '';
-    majInvite();
+    invite.textContent = shell.invite();
     terminal.scrollTop = terminal.scrollHeight;
   });
 
@@ -129,4 +240,21 @@ import Sources from '../../../components/Sources.astro';
   terminal.addEventListener('click', () => {
     if (!window.getSelection()?.toString()) saisie.focus();
   });
+  boutons.forEach((b, i) => b.addEventListener('click', () => {
+    demarrer(i);
+    saisie.focus();
+  }));
+  document.getElementById('suivant')!.addEventListener('click', () => {
+    demarrer(courant + 1);
+    saisie.focus();
+  });
+  document.getElementById('recommencer')!.addEventListener('click', () => {
+    demarrer(courant);
+    saisie.focus();
+  });
+
+  nav.hidden = false;
+  // On reprend au premier chapitre pas encore terminé.
+  const reprise = CHAPITRES.findIndex((c) => !termines.includes(c.id));
+  demarrer(reprise === -1 ? CHAPITRES.length - 1 : reprise);
 </script>

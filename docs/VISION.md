@@ -125,7 +125,7 @@ Apprendre en jouant, avec de **vrais** outils et de vraies commandes.
 
 | Jeu | Ce qu'on apprend | État |
 |---|---|---|
-| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins | Lien vers l'original du MIT (en anglais) + prototype français sur `/jeux/terminus/` |
+| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins, puis `grep`, `touch`, `cp`, `mkdir`, `rm` | Lien vers l'original du MIT (en anglais) + version française en chapitres sur `/jeux/terminus/` (voir `docs/scenarios/terminus.md`) |
 | *Le routeur* (idée) | Router des paquets dans un réseau qui tombe en panne | — |
 | *Casse le code* (idée) | Du chiffre de César au chiffrement moderne | — |
 | *Le paquet perdu* (idée) | Retrouver un paquet avec `ping`, `traceroute`, `dig` | — |
