@@ -64,7 +64,12 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Terminus : chapitre 2 « Le Bourg » (`grep`, `touch`, `cp`, `mkdir`, `rm`, jokers `*`)
 - [x] Terminus : sauvegarde de la progression dans le navigateur (par chapitre)
 - [x] Terminus : chapitre 3 « La Racine » (`ls -l`, `chmod`, `whoami`, `sudo`, permissions) — fin de l'histoire de l'Effaceur
-- [ ] Terminus : autres histoires (voir le scénario : Le Datacenter, La Machine à remonter le temps, Le Paquet perdu)
+- [x] Terminus : moteur avec tubes `|`, redirections `>` `>>`, guillemets, sortie d'erreur séparée
+- [x] Terminus : histoire « Le Datacenter » (`head`, `tail`, `wc`, `cut`, `sort`, `uniq`, `tee`, `ps`, `kill`, `systemctl`)
+- [x] Terminus : histoire « Le Paquet perdu » (`ping`, `dig`, `traceroute`, `curl`)
+- [x] Terminus : histoire « La Machine à remonter le temps » (`git`)
+- [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
+- [ ] Terminus : suites possibles (voir « Idées pour la suite » dans le scénario)
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
 
 ## Ensuite

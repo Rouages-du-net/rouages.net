@@ -14,6 +14,10 @@ export type Fichier = {
   // Fichier « ligne par ligne » (journal, liste, configuration) : chaque
   // ligne compte (pour grep notamment), on ne recolle pas les paragraphes.
   lignes?: boolean;
+  // Taille simulée en octets (images, vidéos…), sinon celle du texte.
+  taille?: number;
+  // Contenu d'une archive tar : chemins relatifs → copies des fichiers.
+  archive?: { fichiers: Record<string, Fichier>; compresse: boolean };
 } & Droits;
 // Propriétaire et permissions Unix (rwx pour le propriétaire, le groupe,
 // les autres). Par défaut : « vous », rw-r--r-- (fichier), rwxr-xr-x (lieu).
@@ -55,6 +59,17 @@ export interface Chapitre {
   apresCommande?: (jeu: Jeu) => string | void;
   // Mot de passe de « vous » pour sudo (absent : sudo pas encore appris).
   motDePasse?: string;
+  // État propre à l'histoire (processus, réseau, dépôts git…), recréé à
+  // chaque partie. Les commandes spécialisées le lisent et le modifient.
+  etat?: () => Record<string, unknown>;
+}
+
+// Une histoire : une suite de chapitres. Les histoires sont indépendantes.
+export interface Histoire {
+  id: string;
+  titre: string;
+  resume: string;
+  chapitres: Chapitre[];
 }
 
 // Les textes sont écrits avec des retours à la ligne pour être lisibles dans
