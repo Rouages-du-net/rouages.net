@@ -61,6 +61,21 @@ chaque élément porte aussi une étiquette ou une forme distinctive.
 - Taille de base 17 px, interligne 1,6 ; titres en graisse 700 ; jamais de
   texte en dessous de 13 px.
 
+## Mise en page : aérer
+
+Une page dense fatigue. Règles :
+
+- le texte courant ne dépasse pas `--mesure` (42rem, environ 70 signes par ligne) ;
+  seules les animations prennent toute la largeur ;
+- interligne 1,7 ; grands espaces entre l'animation, le texte et les encarts ;
+- les encarts « Un peu d'histoire », « Qui décide ? », « Vérifie toi-même » et
+  « Idées reçues » sont **repliés** (`<details>`) : on les ouvre à la demande ;
+- **un écran par étape** (par défaut, `src/lib/ecrans.ts`) : une seule étape
+  affichée, des liens Précédent / Suivant en bas, la frise pour sauter
+  ailleurs. L'ancre de l'URL suit l'étape (liens internes et bouton Retour).
+  Le lecteur peut choisir « Tout sur une page » (mémorisé). Sans JavaScript et
+  à l'impression, tout est sur une seule page.
+
 ## Illustrations
 
 - **SVG** uniquement, intégrés dans la page (pas d'image bitmap pour un schéma).

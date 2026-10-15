@@ -38,7 +38,9 @@ const rendus = await Promise.all(niveaux.map((niv) => Astro.slots.render(niv.slo
 </script>
 
 <style>
-  .niv { margin: 0 0 1rem; }
+  .niveaux { max-width: var(--mesure); }
+  .niv { margin: 0 0 1.25rem; }
+  .niv :global(p) { margin: 0 0 1rem; }
   .niv :global(p:last-child) { margin-bottom: 0; }
   .etiquette {
     margin: 0 0 0.25rem;

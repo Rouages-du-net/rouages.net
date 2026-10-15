@@ -5,6 +5,7 @@ import Terme from '../../components/Terme.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
 import Sources from '../../components/Sources.astro';
 import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
 import PotsDePeinture from '../../components/animations/PotsDePeinture.astro';
 import QuestionDns from '../../components/animations/QuestionDns.astro';
 import VoyagePaquets from '../../components/animations/VoyagePaquets.astro';
@@ -25,6 +26,7 @@ const etapes = [
   { ancre: 'serveur', court: 'Le serveur' },
   { ancre: 'retour', court: 'Le retour' },
   { ancre: 'affichage', court: "L'affichage" },
+  { ancre: 'bilan', court: 'En cas de panne', pastille: '✓' },
 ];
 ---
 <Base
@@ -33,7 +35,7 @@ const etapes = [
 >
   <p class="tag">Comment ça marche · module en construction</p>
   <h1>De l'Entrée à la page</h1>
-  <p class="chapo">
+  <p class="chapo seulement-debut">
     Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. En une seconde
     environ, des dizaines de machines, d'organisations et de règles entrent en jeu.
     Suivons la page d'accueil de ce site, depuis ton clavier jusqu'à l'écran.
@@ -41,7 +43,8 @@ const etapes = [
 
   <div class="reglages">
     <SelecteurNiveau />
-    <p class="tag">Choisis ton niveau : tu peux en changer à tout moment.</p>
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
   </div>
 
   <Frise etapes={etapes} />
@@ -363,7 +366,7 @@ const etapes = [
     </p>
   </Etape>
 
-  <section class="pannes" aria-labelledby="titre-pannes">
+  <section class="pannes" id="bilan" data-ecran aria-labelledby="titre-pannes">
     <h2 id="titre-pannes">Et si ça ne marche pas ?</h2>
     <p>Chaque message d'erreur correspond à une étape que tu connais maintenant.</p>
     <table>
@@ -379,7 +382,6 @@ const etapes = [
       </tbody>
     </table>
     <p class="tag">Les durées indiquées sont des ordres de grandeur, qui varient selon ta connexion et la distance du serveur.</p>
-  </section>
 
   <Sources
     verifie="2026-10-11"
@@ -396,13 +398,15 @@ const etapes = [
       { auteur: 'Art of the Problem', titre: 'Diffie-Hellman Key Exchange (vidéo)', url: 'https://www.youtube.com/watch?v=3QnD2c4Xovk', type: 'site', langue: 'en' },
     ]}
   />
+  </section>
 </Base>
 
 <style>
-  .chapo { font-size: 1.15rem; }
-  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1.5rem 0; }
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
   .reglages .tag { margin: 0; }
-  .pannes { padding-top: 2rem; border-top: 1px solid var(--border); }
+  .pannes { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .pannes > p { max-width: var(--mesure); }
   table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
   th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
   td code { overflow-wrap: anywhere; }

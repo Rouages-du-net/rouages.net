@@ -28,6 +28,9 @@
   --police: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --police-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Menlo, Consolas, monospace;
 
+  /* Largeur de lecture confortable pour le texte courant (~70 signes). */
+  --mesure: 42rem;
+
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
@@ -57,7 +60,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 1.0625rem/1.6 var(--police);
+  font: 1.0625rem/1.7 var(--police);
 }
 h1, h2, h3 { line-height: 1.25; font-weight: 700; }
 code, kbd, pre { font-family: var(--police-mono); }
@@ -115,3 +118,37 @@ footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2r
 .anim-commandes button:disabled, .anim-bouton:disabled { opacity: 0.45; cursor: default; }
 .anim-compteur { color: var(--muted); font-size: 0.9rem; }
 .anim-apparait { transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
+
+/* Lecture « un écran par étape » (voir src/lib/ecrans.ts). Sans JavaScript,
+   data-lecture n'est jamais posé : tout reste sur une seule page. */
+html[data-lecture='ecrans'] .ecran:not(.ecran-actif) { display: none; }
+html[data-lecture='ecrans'][data-ecran-courant]:not([data-ecran-courant='0']) .seulement-debut { display: none; }
+.ecran-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3.5rem;
+}
+.ecran-nav a {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  color: var(--fg);
+  text-decoration: none;
+}
+.ecran-nav a:hover { border-color: var(--accent); }
+.ecran-nav .sens { font-size: 0.85rem; color: var(--muted); }
+.ecran-nav .titre { font-weight: 700; }
+.ecran-nav .suivant { grid-column: 2; text-align: right; background: var(--accent); border-color: var(--accent); }
+.ecran-nav .suivant, .ecran-nav .suivant .sens { color: var(--bg); }
+@media (max-width: 40rem) {
+  .ecran-nav { grid-template-columns: 1fr; }
+  .ecran-nav .suivant { grid-column: 1; grid-row: 1; }
+}
+@media print {
+  html[data-lecture='ecrans'] .ecran { display: block !important; }
+  .ecran-nav, .frise { display: none !important; }
+}

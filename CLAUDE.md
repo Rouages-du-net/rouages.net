@@ -63,8 +63,11 @@ Consignes à donner à tout agent de recherche web :
 ## Code
 
 - Composants dans `src/components/` : `Niveaux` et `SelecteurNiveau` (lecture
-  🟢/🟡/🔴), `Terme` (glossaire, données dans `src/data/glossaire.ts`), `Etape`,
-  `Sources`.
+  🟢/🟡/🔴), `Terme` (glossaire, données dans `src/data/glossaire.ts`), `Etape`
+  (encarts repliés), `Frise`, `ModeLecture` (un écran par étape, voir
+  `src/lib/ecrans.ts` ; la section finale d'un module porte `id="bilan"
+  data-ecran`), `Sources`.
+- Aérer : texte limité à `--mesure`, voir « Mise en page » dans `docs/CHARTE.md`.
 - Couleurs et typographie : uniquement via les variables de
   `src/styles/global.css` (voir `docs/CHARTE.md`) ; mode sombre obligatoire.
 - Accessibilité : contenu lisible sans JavaScript, équivalent texte de chaque
