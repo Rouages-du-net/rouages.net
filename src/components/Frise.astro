@@ -1,15 +1,16 @@
 ---
 // Frise de navigation d'un module : une pastille par étape, collée en haut
 // de l'écran, qui suit la lecture (étape courante en surbrillance).
+// `pastille` remplace le numéro (ex. « ✓ » pour le bilan).
 interface Props {
-  etapes: { ancre: string; court: string }[];
+  etapes: { ancre: string; court: string; pastille?: string }[];
 }
 const { etapes } = Astro.props;
 ---
 <nav class="frise" aria-label="Étapes du parcours">
   <ol>
     {etapes.map((e, i) => (
-      <li><a href={`#${e.ancre}`}><span class="pastille">{i}</span><span class="court">{e.court}</span></a></li>
+      <li><a href={`#${e.ancre}`}><span class="pastille" aria-hidden={e.pastille ? 'true' : undefined}>{e.pastille ?? i}</span><span class="court">{e.court}</span></a></li>
     ))}
   </ol>
 </nav>
@@ -30,7 +31,9 @@ const { etapes } = Astro.props;
     (entrees) => entrees.filter((e) => e.isIntersecting).forEach((e) => marquer(e.target.id)),
     { rootMargin: '-30% 0px -60% 0px' },
   );
-  document.querySelectorAll('.etape').forEach((s) => observateur.observe(s));
+  document.querySelectorAll('.etape, [data-ecran]').forEach((s) => observateur.observe(s));
+  // Lecture « un écran par étape » (src/lib/ecrans.ts).
+  document.addEventListener('rouages:ecran', (e) => marquer((e as CustomEvent<string>).detail));
 </script>
 
 <style>

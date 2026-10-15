@@ -23,6 +23,14 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Mode de lecture des modules (src/lib/ecrans.ts), posé avant l'affichage.
+      try {
+        document.documentElement.dataset.lecture = localStorage.getItem('rouages-lecture') === 'continu' ? 'continu' : 'ecrans';
+      } catch (e) {
+        document.documentElement.dataset.lecture = 'ecrans';
+      }
+    </script>
   </head>
   <body>
     <header class="site">

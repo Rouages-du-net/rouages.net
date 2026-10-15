@@ -1,0 +1,54 @@
+---
+// Choix du mode de lecture d'un module : une étape par écran (par défaut) ou
+// tout sur une seule page. Mémorisé dans le navigateur. Sans JavaScript, le
+// sélecteur reste caché et la page se lit d'un bloc. Voir src/lib/ecrans.ts.
+---
+<fieldset class="mode-lecture" hidden>
+  <legend>Mode de lecture</legend>
+  <label><input type="radio" name="lecture" value="ecrans" /> <span>Une étape par écran</span></label>
+  <label><input type="radio" name="lecture" value="continu" /> <span>Tout sur une page</span></label>
+</fieldset>
+
+<script>
+  import { initialiserEcrans, modeLecture, type ModeLecture } from '../lib/ecrans';
+
+  const changer = initialiserEcrans();
+  document.querySelectorAll<HTMLFieldSetElement>('.mode-lecture').forEach((f) => {
+    f.hidden = false;
+    f.querySelectorAll<HTMLInputElement>('input').forEach((i) => {
+      i.checked = i.value === modeLecture();
+    });
+    f.addEventListener('change', (e) => changer((e.target as HTMLInputElement).value as ModeLecture));
+  });
+</script>
+
+<style>
+  .mode-lecture {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem;
+    margin: 0;
+    background: var(--card);
+  }
+  legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  label { position: relative; }
+  input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  span {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  input:checked + span { background: var(--accent); color: var(--bg); }
+  input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>

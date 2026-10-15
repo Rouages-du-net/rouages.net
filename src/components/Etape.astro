@@ -1,9 +1,10 @@
 ---
-// Une étape du module « De l'Entrée à la page ».
+// Une étape d'un module (voir aussi src/lib/ecrans.ts : un écran par étape).
 // Slots : decouverte, curieux, ingenieur (texte à trois niveaux),
 // animation (scène interactive) ou, à défaut, scene (description de
 // l'animation à venir), decide, histoire, verifie,
-// mythes. Les encarts absents ne sont pas affichés.
+// mythes. Les encarts absents ne sont pas affichés ; les autres sont repliés
+// (<details>) pour ne pas surcharger l'écran : on les ouvre à la demande.
 import Niveaux from './Niveaux.astro';
 
 interface Props {
@@ -16,9 +17,9 @@ interface Props {
 const { numero, titre, ancre, duree } = Astro.props;
 const s = Astro.slots;
 const encarts = [
-  { slot: 'decide', titre: 'Qui décide ?' },
-  { slot: 'histoire', titre: "Un peu d'histoire" },
-  { slot: 'verifie', titre: 'Vérifie toi-même' },
+  { slot: 'histoire', titre: "Un peu d'histoire", icone: '📜' },
+  { slot: 'decide', titre: 'Qui décide ?', icone: '🏛️' },
+  { slot: 'verifie', titre: 'Vérifie toi-même', icone: '🔎' },
 ].filter((e) => s.has(e.slot));
 const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
 ---
@@ -46,33 +47,33 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
     <slot name="ingenieur" slot="ingenieur" />
   </Niveaux>
 
-  {encarts.length > 0 && (
+  {(encarts.length > 0 || s.has('mythes')) && (
     <div class="encarts">
       {encarts.map((e, i) => (
-        <aside class={`encart encart-${e.slot}`}>
-          <h3>{e.titre}</h3>
-          <Fragment set:html={rendus[i]} />
-        </aside>
+        <details class={`encart encart-${e.slot}`}>
+          <summary><span aria-hidden="true">{e.icone}</span> {e.titre}</summary>
+          <div class="contenu"><Fragment set:html={rendus[i]} /></div>
+        </details>
       ))}
+      {s.has('mythes') && (
+        <details class="encart mythes">
+          <summary><span aria-hidden="true">🤔</span> Idées reçues</summary>
+          <div class="contenu"><slot name="mythes" /></div>
+        </details>
+      )}
     </div>
-  )}
-
-  {s.has('mythes') && (
-    <aside class="mythes">
-      <h3>Idées reçues</h3>
-      <slot name="mythes" />
-    </aside>
   )}
 </section>
 
 <style>
   .etape {
-    padding: 2rem 0;
+    padding: 3.5rem 0 4rem;
     border-top: 1px solid var(--border);
-    scroll-margin-top: 5rem;
+    scroll-margin-top: 4.5rem;
   }
-  header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-  h2 { margin: 0; font-size: 1.5rem; }
+  header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+  h2 { margin: 0; font-size: 1.65rem; }
+  h2:focus { outline: none; }
   .numero {
     display: inline-grid;
     place-items: center;
@@ -84,8 +85,9 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
     font-weight: 700;
   }
   .duree { color: var(--muted); font-size: 0.9rem; }
+  .animation { margin: 0 0 2.5rem; }
   .scene {
-    margin: 1.25rem 0;
+    margin: 0 0 2.5rem;
     padding: 1.25rem;
     border: 2px dashed var(--border);
     border-radius: 0.75rem;
@@ -96,20 +98,28 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
   figcaption { font-size: 0.8rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .encarts {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    margin-top: 1.25rem;
+    gap: 0.75rem;
+    max-width: var(--mesure);
+    margin-top: 2.5rem;
   }
-  .encart, .mythes {
+  .encart {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 0.75rem;
-    padding: 1rem 1.1rem;
-    font-size: 0.95rem;
+    font-size: 0.97rem;
   }
-  .encart h3, .mythes h3 { margin: 0 0 0.5rem; font-size: 1rem; }
-  .encart :global(p), .mythes :global(p) { margin: 0 0 0.5rem; }
-  .encart :global(ul), .mythes :global(ul) { margin: 0; padding-left: 1.1rem; }
+  summary {
+    cursor: pointer;
+    padding: 0.8rem 1.1rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+  }
+  summary:hover { color: var(--accent); }
+  .contenu { padding: 0 1.25rem 1.1rem; }
+  .contenu :global(p) { margin: 0 0 0.75rem; }
+  .contenu :global(p:last-child) { margin-bottom: 0; }
+  .contenu :global(ul) { margin: 0; padding-left: 1.1rem; }
+  .contenu :global(li + li) { margin-top: 0.5rem; }
   .encart-verifie :global(code) { white-space: nowrap; }
-  .mythes { margin-top: 1rem; border-left: 4px solid var(--accent); }
+  .mythes { border-left: 4px solid var(--accent); }
 </style>

@@ -5,6 +5,7 @@ import Terme from '../../components/Terme.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
 import Sources from '../../components/Sources.astro';
 import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
 import Octet from '../../components/animations/Octet.astro';
 import Transistor from '../../components/animations/Transistor.astro';
 import PortesLogiques from '../../components/animations/PortesLogiques.astro';
@@ -31,6 +32,7 @@ const etapes = [
   { ancre: 'horloge', court: "L'horloge" },
   { ancre: 'processeur', court: 'Le processeur' },
   { ancre: 'langages', court: 'Les langages' },
+  { ancre: 'bilan', court: 'Ton ordinateur', pastille: '✓' },
 ];
 ---
 <Base
@@ -39,7 +41,7 @@ const etapes = [
 >
   <p class="tag">Comment ça marche · module en construction</p>
   <h1>Comment marche un ordinateur</h1>
-  <p class="chapo">
+  <p class="chapo seulement-debut">
     Un ordinateur n'a rien de magique : c'est un empilement de mécanismes simples. Suivons un
     même calcul, <code>2 + 3</code>, depuis de minuscules interrupteurs jusqu'au programme. À
     chaque étage, c'est toi qui construis la pièce.
@@ -47,7 +49,8 @@ const etapes = [
 
   <div class="reglages">
     <SelecteurNiveau />
-    <p class="tag">Choisis ton niveau : tu peux en changer à tout moment.</p>
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
   </div>
 
   <Frise etapes={etapes} />
@@ -339,7 +342,7 @@ const etapes = [
     </div>
   </Etape>
 
-  <section class="final" aria-labelledby="titre-final">
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
     <h2 id="titre-final">Et ton ordinateur à toi ?</h2>
     <p>Chaque ligne d'une fiche technique correspond à une étape que tu connais maintenant.</p>
     <table>
@@ -352,7 +355,6 @@ const etapes = [
         <tr><td>Architecture x86 ou ARM</td><td><a href="#processeur">6 — Le processeur</a> : la liste des instructions qu'il comprend.</td></tr>
       </tbody>
     </table>
-  </section>
 
   <Sources
     verifie="2026-10-13"
@@ -377,13 +379,15 @@ const etapes = [
       { auteur: 'MDN', titre: "Number.EPSILON (précision des nombres à virgule)", url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON', type: 'site' },
     ]}
   />
+  </section>
 </Base>
 
 <style>
-  .chapo { font-size: 1.15rem; }
-  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1.5rem 0; }
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
   .reglages .tag { margin: 0; }
-  .final { padding-top: 2rem; border-top: 1px solid var(--border); }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
   table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
   th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
 </style>
