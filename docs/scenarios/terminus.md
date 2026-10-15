@@ -32,18 +32,24 @@ briques `monde.ts`, un fichier par chapitre dans `chapitres/`).
 | `rm -r`, `cp -r` | refusés | effacent / copient des dossiers entiers |
 | `grep` sans résultat | « (aucune ligne ne contient …) » | n'affiche rien |
 | `man` | une ligne de résumé | une longue page de manuel |
+| `ls -l` | type et droits, propriétaire, groupe (= propriétaire), taille, nom | ajoute le nombre de liens et la date |
+| permissions | propriétaire et « les autres » ; pas de groupes | le groupe a ses propres droits |
+| `chmod -w` (sans u/g/o) | agit sur tout le monde | tient compte du masque `umask` |
+| `rm` d'un fichier protégé en écriture | efface sans demander | demande confirmation |
+| `sudo` | redemande le mot de passe seulement au premier usage du chapitre | s'en souvient environ 15 minutes |
 
 ## Histoire 1 : l'Effaceur
 
 Une créature, l'Effaceur, parcourt le royaume et efface tout ce qu'elle
 touche. On découvrira qu'elle n'est pas méchante : c'est un programme qui
-obéit à un ordre ancien, « tout effacer », écrit par erreur dans le Noyau.
+obéit à un ordre ancien, écrit par erreur dans sa configuration, à la
+Racine (`/`).
 Morale technique : un programme fait ce qu'on lui a dit, pas ce qu'on voulait.
 
 ```mermaid
 flowchart LR
   C1["Chapitre 1 · L'Éveil<br/>ls, cd, pwd, cat, less, ls -a, mv"] --> C2["Chapitre 2 · Le Bourg<br/>grep, touch, cp, mkdir, rm"]
-  C2 --> C3["Chapitre 3 · Le Noyau (à venir)<br/>sudo, ls -l, chmod"]
+  C2 --> C3["Chapitre 3 · La Racine<br/>ls -l, chmod, whoami, sudo"]
 ```
 
 ### Chapitre 1 — L'Éveil (fait)
@@ -77,23 +83,29 @@ clairière, ronces, trolls).
 | GrotteDesTrolls | nourrir le troll sans retourner à la ferme | `cp ~/…/epi .` (chemin complet, `.`) |
 | Cage | libérer Nour | — |
 
-### Chapitre 3 — Le Noyau (proposition)
+### Chapitre 3 — La Racine (fait)
 
 Correspond à la fin de l'original (toboggan, fichiers du noyau, `sudo`).
+Pourquoi « La Racine » et pas « Le Noyau » : sous Linux, le noyau (*kernel*)
+est le programme central du système ; l'arborescence des fichiers, elle,
+part de la racine `/`, et l'administrateur s'appelle `root`.
 
-- **Le Toboggan** mène au Noyau : un lieu où presque tout appartient à
-  `root`, la « racine ». `ls -l` révèle les permissions (`rwx`) et les
-  propriétaires.
-- **Permission refusée** : on ne peut ni lire ni effacer certains fichiers.
-  Un ancien manuel explique `sudo` (« fais-le en tant que root ») et ses
-  dangers. Le mot de passe se trouve avec `grep` dans des journaux.
-- **Protéger le Bourg** : sous Linux, effacer un fichier dépend du droit
-  d'écriture **sur le dossier**. `chmod -w` sur un lieu empêche l'Effaceur d'y
-  effacer quoi que ce soit (vrai comportement, bonne leçon).
-- **Le dénouement** : l'Effaceur est un *démon* (le vrai nom des programmes
-  qui tournent en arrière-plan sous Unix). Son ordre est dans un fichier
-  `ordres` appartenant à root. On le renomme ou le corrige avec `sudo`, et
-  l'Effaceur redevient ce qu'il était au début : un rangeur.
+Le Toboggan dépose le personnage dans sa vraie maison, `/home/vous`. Le
+monde ressemble enfin à un vrai Linux : `/home`, `/etc`, `/var/log`, `/root`.
+
+| Lieu | Énigme | Commande apprise |
+|---|---|---|
+| `/home/vous` | l'Effaceur efface un souvenir à chaque commande : le lieu `souvenirs` est en `rwxrwxrwx` | `ls -l`, `chmod o-w` (effacer = écrire dans le lieu) |
+| `/var/log` | le journal du démon montre deux cibles au lieu d'une | `cat`, `grep cible` |
+| `/etc/effaceur.conf` | « cible = /Royaume /Corbeille » : une espace en trop ; le fichier appartient à root | Permission non accordée |
+| `journal.txt` | retrouver son mot de passe (noté, « très mauvaise idée ») | `grep "mot de passe"` (guillemets) |
+| `/etc` | installer la version corrigée | `sudo cp ~/effaceur.conf.corrige /etc/effaceur.conf` |
+| bonus | `/root`, `/etc/sudoers`, `/home/nour` (journal intime : on ne le lit pas, même root) | `sudo ls`, `sudo cat`, `whoami`, `sudo cd` (introuvable : `cd` est intégré au shell) |
+
+Le dénouement : le personnage était l'administrateur·ice du royaume. C'est
+lui ou elle qui avait écrit la configuration, avec une espace de trop.
+L'Effaceur n'était pas méchant : il faisait exactement ce qu'on lui avait
+écrit. Le message de `sudo` (« Réfléchissez avant de taper ») est le vrai.
 
 ## Autres histoires (idées)
 

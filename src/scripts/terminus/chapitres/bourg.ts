@@ -10,7 +10,7 @@ const PONT = `${M}/PontCasse`;
 const CLAIRIERE = `${PONT}/Clairiere`;
 const GROTTE = `${CLAIRIERE}/SentierSombre/GrotteDesTrolls`;
 
-const livre = (titre: string, lignes: string[]) => f([titre, '', ...lignes].join('\n'));
+const livre = (titre: string, lignes: string[]) => f([titre, '', ...lignes].join('\n'), { lignes: true });
 
 export const bourg: Chapitre = {
   id: 'bourg',
@@ -118,15 +118,15 @@ CHRONIQUE DU ROYAUME
 
 An 1 : fondation du Bourg au bord de la rivière.
 An 12 : construction du pont, en bois de chêne.
-An 40 : l'Effaceur est créé dans le Noyau pour faire le ménage.
+An 40 : l'Effaceur est créé à la Racine pour vider la Corbeille.
 An 41 : grande récolte de maïs.
 An 77 : la maison de l'horloger est agrandie.
 An 102 : l'Effaceur n'obéit plus qu'à un seul ordre : tout effacer.
-An 103 : on raconte que seul le mot de la racine peut l'arrêter.
+An 103 : on raconte que seule la personne qui l'a lancé peut l'arrêter.
 An 104 : la foire aux pommes est annulée (il pleut).
 An 130 : un portail est caché dans les Montagnes, par prudence.
-An 131 : l'Effaceur vit au fond du Noyau, sous la grotte des trolls.
-`),
+An 131 : l'Effaceur vit à la Racine, sous la grotte des trolls.
+`, { lignes: true }),
             },
             (jeu) => (jeu.drapeaux.has('levier') ? null : 'Une étagère pleine de livres. Pas de porte en vue… Il doit y avoir un mécanisme.'),
           ),
@@ -207,7 +207,7 @@ son chemin complet et . (le lieu où tu es) comme destination :
 Nour sort de la cage en s'étirant.
 
 « Merci ! L'Effaceur m'a enfermée ici quand j'ai voulu le suivre. Je l'ai
-vu descendre par un Toboggan, au fond de la grotte, vers le Noyau. Il
+vu descendre par un Toboggan, au fond de la grotte, vers la Racine. Il
 parlait tout seul : "effacer, effacer, l'ordre de la racine…"
 
 Rentrons au Bourg. Mon père m'attend. »
@@ -287,7 +287,7 @@ Rentrons au Bourg. Mon père m'attend. »
 Tu sais maintenant chercher (grep), créer (touch, mkdir), copier (cp) et
 effacer (rm) — avec prudence, puisqu'il n'y a pas de corbeille.
 
-L'Effaceur se cache dans le Noyau. Le chapitre 3 arrive bientôt.`,
+L'Effaceur se cache à la Racine : le chapitre 3 t'attend.`,
     },
   ],
 };

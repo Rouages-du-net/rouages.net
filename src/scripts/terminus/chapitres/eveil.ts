@@ -204,7 +204,9 @@ Gravé près du rocher :
 Un gardien de pierre bloque le fond de la salle.
 
 « Halte ! Le portail ne s'ouvre que pour qui porte une clé nommée
-exactement :  cle
+exactement :
+
+  cle
 
 Je vois que tu as ramassé une vieille_cle_rouillee. Ce n'est pas le bon
 nom. Mais tu sais peut-être comment changer le nom d'un objet ? »

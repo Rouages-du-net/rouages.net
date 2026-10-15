@@ -31,7 +31,7 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
           </button>
         </li>
       ))}
-      <li class="bientot"><span class="num">Chapitre 3</span><span class="titre">Le Noyau</span><span class="resume">Bientôt : sudo, les permissions, et l'Effaceur en personne.</span></li>
+      <li class="bientot"><span class="num">Bientôt</span><span class="titre">D'autres histoires</span><span class="resume">Le Datacenter, Le Paquet perdu, La Machine à remonter le temps…</span></li>
     </ol>
   </nav>
 
@@ -178,6 +178,11 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     sortie.appendChild(pre);
   };
 
+  const majInvite = () => {
+    invite.textContent = shell.invite();
+    saisie.type = shell.attente ? 'password' : 'text';
+  };
+
   const majNav = () => {
     boutons.forEach((b, i) => {
       b.disabled = !ouvert(i);
@@ -197,15 +202,17 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     fin.hidden = true;
     afficher(`— Chapitre ${CHAPITRES[i].numero} : ${CHAPITRES[i].titre} —`);
     afficher(shell.executer(`cat ${CHAPITRES[i].accueil}`) ?? '');
-    invite.textContent = shell.invite();
+    majInvite();
     majNav();
   };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const ligne = saisie.value;
-    afficher(`${invite.textContent} ${ligne}`, 'cmd');
-    if (ligne.trim()) historique.push(ligne);
+    // Un mot de passe ne s'affiche pas et ne va pas dans l'historique.
+    const secret = shell.attente !== null;
+    afficher(secret ? (invite.textContent ?? '') : `${invite.textContent} ${ligne}`, 'cmd');
+    if (ligne.trim() && !secret) historique.push(ligne);
     position = historique.length;
     const dejaFini = shell.termine;
     const resultat = shell.executer(ligne);
@@ -219,11 +226,12 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
       fin.hidden = courant >= CHAPITRES.length - 1;
     }
     saisie.value = '';
-    invite.textContent = shell.invite();
+    majInvite();
     terminal.scrollTop = terminal.scrollHeight;
   });
 
   saisie.addEventListener('keydown', (e) => {
+    if (shell.attente) return;
     if (e.key === 'Tab') {
       e.preventDefault();
       saisie.value = shell.completer(saisie.value);

@@ -11,13 +11,19 @@ export type Fichier = {
   lu?: (jeu: Jeu) => string | void;
   // Si présent, l'objet refuse d'être déplacé ou effacé, avec ce message.
   protege?: { mv?: string; rm?: string };
-};
+  // Fichier « ligne par ligne » (journal, liste, configuration) : chaque
+  // ligne compte (pour grep notamment), on ne recolle pas les paragraphes.
+  lignes?: boolean;
+} & Droits;
+// Propriétaire et permissions Unix (rwx pour le propriétaire, le groupe,
+// les autres). Par défaut : « vous », rw-r--r-- (fichier), rwxr-xr-x (lieu).
+export type Droits = { proprio?: string; mode?: string };
 export type Dossier = {
   type: 'dossier';
   enfants: Record<string, Noeud>;
   // Raison du blocage si on ne peut pas encore y entrer, sinon null.
   bloque?: (jeu: Jeu) => string | null;
-};
+} & Droits;
 export type Noeud = Fichier | Dossier;
 
 // Un événement de l'histoire : quand `condition` devient vraie (vérifiée
@@ -27,7 +33,7 @@ export interface Evenement {
   id: string;
   condition: (jeu: Jeu) => boolean;
   action?: (jeu: Jeu) => void;
-  message: string;
+  message: string | ((jeu: Jeu) => string);
 }
 
 export interface Chapitre {
@@ -45,6 +51,10 @@ export interface Chapitre {
   evenements: Evenement[];
   // Le chapitre est réussi quand cet événement s'est produit.
   final: string;
+  // Appelé après chaque commande (ex. l'Effaceur qui avance) ; renvoie un message.
+  apresCommande?: (jeu: Jeu) => string | void;
+  // Mot de passe de « vous » pour sudo (absent : sudo pas encore appris).
+  motDePasse?: string;
 }
 
 // Les textes sont écrits avec des retours à la ligne pour être lisibles dans
@@ -62,16 +72,21 @@ export const nettoyer = (t: string) =>
       else lignes.push(l);
       return lignes;
     }, [])
-    .join('\n');
+    .join('\n')
+    // Typographie française : espaces insécables avant : ; ! ? » et après «,
+    // pour qu'un signe ne se retrouve jamais seul en début de ligne.
+    .replace(/« /g, '«\u00a0')
+    .replace(/ ([:;!?»])/g, '\u00a0$1');
 
-export const f = (contenu: string, options: Omit<Fichier, 'type' | 'contenu'> = {}): Fichier => ({
+export const f = (contenu: Fichier['contenu'], options: Omit<Fichier, 'type' | 'contenu'> = {}): Fichier => ({
   type: 'fichier',
-  contenu: nettoyer(contenu),
+  contenu: typeof contenu !== 'string' ? contenu : options.lignes ? contenu.replace(/^\n+|\s+$/g, '') : nettoyer(contenu),
   ...options,
 });
 
-export const d = (enfants: Record<string, Noeud>, bloque?: Dossier['bloque']): Dossier => ({
+export const d = (enfants: Record<string, Noeud>, bloque?: Dossier['bloque'], droits: Droits = {}): Dossier => ({
   type: 'dossier',
   enfants,
   bloque,
+  ...droits,
 });
