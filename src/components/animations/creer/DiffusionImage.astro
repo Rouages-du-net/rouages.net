@@ -1,0 +1,125 @@
+---
+// Animation « Une image qui sort du bruit » (étape 1 du module « Les IA qui
+// créent ») : la même diffusion sur des images de 16 × 16 pixels. Le
+// « texte » choisit la catégorie (seuls les exemples de cette catégorie
+// guident le débruitage). Avec une mémoire parfaite, l'image produite est
+// la copie exacte d'un exemple ; avec une mémoire plus floue, elle est
+// nouvelle.
+import { FORMES } from '../../../lib/voir';
+---
+<div class="anim diffusion-image" data-diffusion-image>
+  <div class="anim-repli">
+    <p>
+      On demande « un cercle ». Le modèle part d'une image de bruit pur et, en 40 étapes,
+      enlève le bruit en s'aidant de ce qu'il a appris des cercles. Avec une mémoire parfaite
+      de ses 6 exemples de cercles, il recopie exactement l'un d'eux. Avec une mémoire plus
+      floue, il produit un cercle qui ne figure pas dans ses exemples. Les vrais modèles sont
+      entre les deux, et des chercheurs ont montré qu'ils recopient parfois des images
+      d'entraînement presque à l'identique.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Ta demande (le « texte »)</legend>
+        {FORMES.map((f, k) => <label><input type="radio" name="dimg-forme" value={k} checked={k === 0} /> {f === 'croix' ? 'une' : 'un'} {f}</label>)}
+      </fieldset>
+      <fieldset class="choix">
+        <legend>Mémoire du modèle</legend>
+        <label><input type="radio" name="dimg-flou" value="0" checked /> parfaite</label>
+        <label><input type="radio" name="dimg-flou" value="4" /> floue</label>
+      </fieldset>
+      <div class="etapes" data-etapes aria-hidden="true"></div>
+      <div class="resultat">
+        <figure><div data-final></div><figcaption>Image produite</figcaption></figure>
+        <figure><div data-proche></div><figcaption>L'exemple le plus proche</figcaption></figure>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="generer">✨ Générer</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <details class="exemples-d">
+        <summary>Voir les 24 exemples d'entraînement</summary>
+        <div class="exemples" data-exemples></div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { ETAPES, remonter, plusProche, gauss } from '../../../lib/creer';
+  import { forme, FORMES } from '../../../lib/voir';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  // Les pixels vont de −1 (vide) à 1 (encre).
+  function image(px: ArrayLike<number>) {
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 16 16');
+    for (let i = 0; i < 256; i++) {
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', String(i % 16));
+      r.setAttribute('y', String(Math.floor(i / 16)));
+      r.setAttribute('width', '1.02');
+      r.setAttribute('height', '1.02');
+      r.setAttribute('fill-opacity', Math.max(0, Math.min(1, (px[i] + 1) / 2)).toFixed(2));
+      svg.append(r);
+    }
+    return svg;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-diffusion-image]').forEach((racine) => {
+    activerScene(racine);
+    const exemples = Array.from({ length: 24 }, (_, i) => ({ classe: i % 4, px: Array.from(forme(FORMES[i % 4], hasard(50 + i)).px, (v) => v * 2 - 1) }));
+    racine.querySelector('[data-exemples]')!.append(...exemples.map((e) => image(e.px)));
+    const etapes = racine.querySelector<HTMLElement>('[data-etapes]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="generer"]')!;
+    let graine = 3;
+    const choix = (nom: string) => Number(racine.querySelector<HTMLInputElement>(`input[name="${nom}"]:checked`)!.value);
+
+    async function generer() {
+      bouton.disabled = true;
+      const classe = choix('dimg-forme');
+      const flou = choix('dimg-flou');
+      const siens = exemples.filter((e) => e.classe === classe).map((e) => e.px);
+      const alea = hasard(graine++);
+      let x = Float64Array.from({ length: 256 }, () => gauss(alea));
+      etapes.replaceChildren(image(x));
+      for (let t = ETAPES; t >= 1; t--) {
+        x = remonter(x, t, siens, flou).suivant;
+        if ((t - 1) % 10 === 0) {
+          etapes.append(image(x));
+          if (!mouvementReduit()) await new Promise((r) => setTimeout(r, 200));
+        }
+      }
+      racine.querySelector('[data-final]')!.replaceChildren(image(x));
+      const p = plusProche(x, siens);
+      racine.querySelector('[data-proche]')!.replaceChildren(image(siens[p.indice]));
+      const copie = p.ecart < 0.02;
+      legende.textContent = copie
+        ? `C’est une copie exacte d’un des 6 exemples de ${FORMES[classe] === 'croix' ? 'croix' : `${FORMES[classe]}s`} (écart ${p.ecart.toFixed(3).replace('.', ',')}). Un modèle qui se souvient trop bien recopie ses exemples. Essaie une mémoire floue.`
+        : `C’est ${FORMES[classe] === 'croix' ? 'une croix nouvelle : elle ne correspond' : `un ${FORMES[classe]} nouveau : il ne correspond`} exactement à aucun exemple (écart moyen de ${p.ecart.toFixed(2).replace('.', ',')} avec le plus proche). Le modèle a mélangé ce qu’il a appris.`;
+      bouton.disabled = false;
+    }
+    bouton.addEventListener('click', generer);
+    legende.textContent = 'Choisis ta demande et clique sur « Générer » : de gauche à droite, l’image passe du bruit pur à la forme.';
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .etapes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; min-height: 3rem; }
+  .resultat { display: grid; grid-template-columns: repeat(2, minmax(0, 9rem)); gap: 1rem; margin-top: 0.75rem; }
+  figure { margin: 0; }
+  figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+  .exemples { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-top: 0.5rem; }
+  :global(.diffusion-image svg) { width: 100%; aspect-ratio: 1; display: block; background: var(--bg); border: 1px solid var(--border); }
+  :global(.diffusion-image svg rect) { fill: var(--fg); }
+  .exemples-d summary { cursor: pointer; font-size: 0.9rem; }
+</style>

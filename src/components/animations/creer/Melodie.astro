@@ -1,0 +1,107 @@
+---
+// Animation « Composer une mélodie » (étape 2 du module « Les IA qui
+// créent ») : une chaîne de Markov apprend, sur trois airs traditionnels,
+// quelle note suit quelles deux notes, puis compose. On voit la mélodie
+// (une note par barre, la hauteur de bas en haut) et la plus longue suite
+// recopiée telle quelle d'un air.
+import { AIRS } from '../../../lib/creer';
+---
+<div class="anim melodie" data-melodie>
+  <div class="anim-repli">
+    <p>
+      La machine a « écouté » trois airs : {AIRS.map((a) => `« ${a.nom} »`).join(', ')}. Pour
+      chaque paire de notes, elle a compté quelles notes suivaient. Pour composer, elle part
+      de deux notes et tire au sort la suivante selon ces comptes, encore et encore. Avec si
+      peu d'exemples, elle recopie souvent de longs passages des airs qu'elle connaît.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 120" role="img" aria-label="La mélodie composée : une barre par note" data-rouleau></svg>
+      <label class="curseur">Audace (température) : <output data-sortie></output>
+        <input type="range" min="0.3" max="3" step="0.1" value="1" data-temp />
+      </label>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="composer">🎼 Composer</button>
+        <button type="button" data-action="ecouter">🔊 Écouter</button>
+        {AIRS.map((a, k) => <button type="button" data-air={k}>🔊 {a.nom}</button>)}
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { AIRS, Melodiste, plusLongueCopie, jouerMelodie, type Note } from '../../../lib/creer';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const NOMS = ['do', 'do♯', 'ré', 'ré♯', 'mi', 'fa', 'fa♯', 'sol', 'sol♯', 'la', 'la♯', 'si'];
+  const nom = (h: number) => NOMS[((h % 12) + 12) % 12];
+
+  document.querySelectorAll<HTMLElement>('[data-melodie]').forEach((racine) => {
+    activerScene(racine);
+    const airs = AIRS.map((a) => a.notes);
+    const m = new Melodiste(airs);
+    const svg = racine.querySelector<SVGSVGElement>('[data-rouleau]')!;
+    const temp = racine.querySelector<HTMLInputElement>('[data-temp]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 4;
+    let melodie: Note[] = [];
+
+    function dessiner(mel: Note[], copie: { debut: number; longueur: number } | null) {
+      const total = mel.reduce((s, n) => s + n.d, 0);
+      let x = 0;
+      svg.replaceChildren(
+        ...mel.map((n, i) => {
+          const r = document.createElementNS(NS, 'rect');
+          const w = (n.d / total) * 316;
+          r.setAttribute('x', (2 + x).toFixed(1));
+          r.setAttribute('y', String(100 - (n.h + 6) * 4.5));
+          r.setAttribute('width', Math.max(1, w - 1.5).toFixed(1));
+          r.setAttribute('height', '6');
+          r.setAttribute('rx', '1.5');
+          r.setAttribute('class', copie && i >= copie.debut && i < copie.debut + copie.longueur ? 'copie' : '');
+          const t = document.createElementNS(NS, 'title');
+          t.textContent = nom(n.h);
+          r.append(t);
+          x += w;
+          return r;
+        }),
+      );
+    }
+
+    function composer() {
+      melodie = m.generer(airs[graine % 3].slice(0, 2), 28, Number(temp.value), hasard(graine++));
+      const c = plusLongueCopie(melodie, airs);
+      // Position de la copie dans la mélodie, pour la surligner.
+      let debut = 0;
+      search: for (let i = 0; i < melodie.length; i++)
+        for (let j = 0; j < airs[c.air].length; j++) {
+          let l = 0;
+          while (i + l < melodie.length && j + l < airs[c.air].length && melodie[i + l].h === airs[c.air][j + l].h && melodie[i + l].d === airs[c.air][j + l].d) l++;
+          if (l === c.longueur) { debut = i; break search; }
+        }
+      dessiner(melodie, { debut, longueur: c.longueur });
+      legende.textContent = `${melodie.length} notes : ${melodie.map((n) => nom(n.h)).join(' ')}. En orange, la plus longue suite recopiée telle quelle : ${c.longueur} notes de « ${AIRS[c.air].nom} ». ${Number(temp.value) < 0.8 ? 'Peu d’audace : la machine suit ses habitudes et recopie beaucoup.' : 'Avec si peu d’exemples, elle recopie des passages entiers ; plus d’exemples, et des modèles plus riches, rendent la copie plus rare… sans la faire disparaître.'}`;
+    }
+
+    temp.addEventListener('input', () => (racine.querySelector<HTMLOutputElement>('[data-sortie]')!.value = temp.value.replace('.', ',')));
+    temp.dispatchEvent(new Event('input'));
+    racine.querySelector('[data-action="composer"]')!.addEventListener('click', composer);
+    racine.querySelector('[data-action="ecouter"]')!.addEventListener('click', () => jouerMelodie(melodie));
+    racine.querySelectorAll<HTMLButtonElement>('[data-air]').forEach((b) => b.addEventListener('click', () => jouerMelodie(AIRS[Number(b.dataset.air)].notes)));
+    composer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; height: auto; display: block; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; }
+  svg :global(rect) { fill: var(--ill-client); }
+  svg :global(rect.copie) { fill: var(--ill-paquet); }
+  .curseur { display: grid; gap: 0.25rem; margin-top: 0.6rem; font-size: 0.95rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-family: var(--police-mono); font-weight: 700; }
+</style>

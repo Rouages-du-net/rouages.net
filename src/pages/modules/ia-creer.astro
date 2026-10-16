@@ -1,0 +1,135 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Diffusion2D from '../../components/animations/creer/Diffusion2D.astro';
+import DiffusionImage from '../../components/animations/creer/DiffusionImage.astro';
+import Melodie from '../../components/animations/creer/Melodie.astro';
+
+// Faits sourcés : voir docs/sources/ia-creer.md.
+const etapes = [
+  { ancre: 'bruit', court: 'Du bruit à la forme' },
+  { ancre: 'image', court: 'Une image' },
+  { ancre: 'musique', court: 'Une mélodie' },
+  { ancre: 'auteur', court: "L'auteur ?" },
+  { ancre: 'bilan', court: 'Reconnaître', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui créent"
+  description="Comment une machine fabrique une image ou une mélodie : la diffusion, du bruit à la forme, la copie et la nouveauté, et les questions de droit d'auteur que cela pose."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui créent</h1>
+  <p class="chapo seulement-debut">
+    Une phrase suffit pour obtenir une image, une voix, une chanson. Comment une machine
+    fabrique-t-elle quelque chose qui n'existait pas ? Et l'a-t-elle vraiment inventé, ou
+    l'a-t-elle recopié ? Fais sortir des formes du bruit, compose une mélodie, puis regarde à
+    qui appartient le résultat.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Du bruit à la forme" ancre="bruit">
+    <Diffusion2D slot="animation" />
+    <p slot="decouverte">
+      Les IA qui fabriquent des images partent… du bruit, comme la neige d'une vieille
+      télévision. Elles l'enlèvent pas à pas, et une forme apparaît. Ici, des points au hasard
+      retrouvent une étoile.
+    </p>
+    <p slot="curieux">
+      Pour apprendre, on abîme les exemples en leur ajoutant du bruit, un peu plus à chaque
+      étape, et le modèle s'entraîne à deviner l'exemple d'origine. C'est un
+      <Terme id="modele-de-diffusion">modèle de diffusion</Terme>. Pour créer, il part d'un bruit
+      pur et applique ce savoir à l'envers, étape par étape.
+    </p>
+    <p slot="ingenieur">
+      À l'étape t, x<sub>t</sub> = √ᾱ<sub>t</sub> · x<sub>0</sub> + √(1 − ᾱ<sub>t</sub>) · ε, avec
+      ε un bruit gaussien. Un réseau apprend à prédire ε (ou x<sub>0</sub>) à partir de x<sub>t</sub>
+      et de t. Ici, pas de réseau : on calcule le débruiteur idéal pour les 160 exemples (leur
+      moyenne pondérée par la ressemblance avec x<sub>t</sub>), et l'on remonte avec la méthode
+      déterministe DDIM, en 40 pas.
+    </p>
+    <div slot="histoire" data-a-sourcer="diffusion"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Une image qui sort du bruit" ancre="image">
+    <DiffusionImage slot="animation" />
+    <p slot="decouverte">
+      Même chose avec une petite image. Ta demande, « un cercle », guide le débruitage. Compare
+      l'image produite avec les exemples du modèle : est-ce une copie ou une création ?
+    </p>
+    <p slot="curieux">
+      Un modèle qui se souvient parfaitement de ses exemples les recopie. Un modèle qui en a
+      retenu les régularités sans les détails produit des images nouvelles. Les vrais modèles,
+      entraînés sur des milliards d'images, généralisent la plupart du temps, mais recopient
+      parfois des images qu'ils ont vues souvent.
+    </p>
+    <p slot="ingenieur">
+      Le « texte » sert de condition : ici, il restreint les exemples à une catégorie ; dans
+      les vrais modèles, un encodeur de texte transforme la phrase en vecteurs que le réseau
+      prend en compte à chaque étape (le guidage). Pour aller vite, Stable Diffusion travaille
+      sur une version compressée de l'image (un « espace latent »), puis la décompresse.
+    </p>
+    <div slot="histoire" data-a-sourcer="memoire"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Composer une mélodie" ancre="musique">
+    <Melodie slot="animation" />
+    <p slot="decouverte">
+      La machine a appris trois comptines. Elle compose en tirant au sort chaque note selon ce
+      qu'elle a entendu après les deux notes précédentes. Écoute, et repère les passages
+      recopiés.
+    </p>
+    <p slot="curieux">
+      C'est le même principe que les IA qui écrivent : deviner la suite. Avec si peu
+      d'exemples, la machine recopie des passages entiers. Les générateurs de musique actuels
+      apprennent sur des millions de morceaux, et fabriquent directement le son.
+    </p>
+    <p slot="ingenieur">
+      Chaîne de Markov d'ordre 2 sur des couples (hauteur, durée) ; la température élève les
+      comptes à la puissance 1/T avant le tirage. On mesure la plus longue sous-suite commune
+      avec un air d'entraînement. Les systèmes récents combinent des modèles de type
+      transformeur sur des « tokens » audio et des modèles de diffusion.
+    </p>
+    <div slot="histoire" data-a-sourcer="musique"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="À qui appartient l'œuvre ?" ancre="auteur">
+    <p slot="decouverte" data-a-sourcer="auteur">À compléter.</p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Reconnaître une création d'IA</h2>
+    <p data-a-sourcer="tracabilite">À compléter.</p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
