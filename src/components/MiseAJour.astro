@@ -1,0 +1,27 @@
+---
+// Date de mise à jour affichée sous le titre d'une page. Pour les sujets qui
+// bougent vite (procès, lois, chiffres d'entreprises), `evolutif` précise ce
+// qui risque d'avoir changé depuis : la date devient alors un avertissement.
+// Utiliser la même date que `verifie` dans <Sources>.
+interface Props {
+  date: string; // ISO, ex. '2026-10-16'
+  evolutif?: string; // ex. 'procès en cours, règles européennes'
+}
+const { date, evolutif } = Astro.props;
+const lisible = new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<p class={`maj${evolutif ? ' evolutif' : ''}`}>
+  {evolutif && <span aria-hidden="true">⏳ </span>}Mis à jour le <time datetime={date}>{lisible}</time>.
+  {evolutif && <>Ce sujet évolue vite ({evolutif}) : vérifie s'il y a du nouveau depuis cette date.</>}
+</p>
+
+<style>
+  .maj { font-size: 0.9rem; color: var(--muted); margin: -0.5rem 0 1rem; max-width: var(--mesure); }
+  .maj.evolutif {
+    color: var(--fg);
+    background: color-mix(in oklab, var(--ill-commun) 16%, transparent);
+    border-left: 3px solid var(--ill-commun);
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.25rem;
+  }
+</style>

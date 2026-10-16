@@ -80,3 +80,14 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Les IA qui voient » (image numérique, Hubel et Wiesel, réseaux convolutifs, reconnaissance faciale, droit)](sources/ia-voir.md)
 - [Module « Les IA qui entendent et parlent » (échantillonnage, formants, reconnaissance et synthèse de la parole, voix clonées)](sources/ia-entendre.md)
 - [Module « Les IA qui créent » (diffusion, mémorisation, LAION, procès, droit d'auteur, traçabilité)](sources/ia-creer.md)
+- [Module « Les IA qui recommandent » (filtrage collaboratif, prix Netflix, objectifs, popularité, bulles de filtre, santé, DSA)](sources/ia-recommander.md)
+
+## Dater ce qui bouge vite
+
+Chaque page affiche sous son titre sa date de mise à jour (`<MiseAJour>`, même
+date que `verifie` dans `<Sources>`). Quand un sujet évolue vite (procès en
+cours, calendrier d'une loi, chiffres d'entreprises), on ajoute `evolutif`
+pour que la date devienne un avertissement visible, et l'on écrit « état au
+[date] » en tête des encarts concernés (tableaux de procès, « Qui décide ? »).
+Lors d'une mise à jour, changer les deux dates ensemble.
+

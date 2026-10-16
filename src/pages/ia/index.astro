@@ -4,6 +4,7 @@
 // module paraît, il suffit d'y renseigner son lien et son résumé.
 import Base from '../../layouts/Base.astro';
 import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
 import { BUTS } from '../../lib/carte-ia';
 
 const disponibles = BUTS.filter((b) => b.lien);
@@ -16,6 +17,7 @@ const titre = (nom: string) => `Les IA ${nom}`;
 >
   <p class="tag">Comment ça marche</p>
   <h1>L'IA</h1>
+  <MiseAJour date="2026-10-16" />
 
   <div class="intro">
     <p>

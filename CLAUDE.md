@@ -38,6 +38,9 @@ Respecter `docs/SOURCES.md` :
 - deux sources indépendantes pour un fait contesté ou surprenant ;
 - Wikipédia seulement en renvoi « pour aller plus loin », label vérifié ;
 - chaque page affiche ses sources (`<Sources>`) et sa date de vérification ;
+- sous le titre, `<MiseAJour date=… />` (même date) ; pour les sujets qui
+  bougent vite (procès, lois, chiffres), ajouter `evolutif` et écrire « état
+  au [date] » dans les encarts concernés ;
 - les dossiers de recherche vont dans `docs/sources/`.
 
 Ligne éditoriale : histoire mondiale (pas seulement l'Occident), mettre en

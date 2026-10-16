@@ -1,0 +1,92 @@
+---
+// Animation « Ce qu'on optimise » (étape 2 du module « Les IA qui
+// recommandent ») : un fil de 12 vidéos classé selon un objectif réglable,
+// entre « ce qui te plaît » et « le temps passé ». Hypothèses de la
+// simulation inventées et affichées : les vidéos « choc » retiennent un peu
+// plus longtemps, même sans plaire davantage.
+---
+<div class="anim fil" data-fil>
+  <div class="anim-repli">
+    <p>
+      Une plateforme doit choisir ce qu'elle cherche à maximiser : le plaisir que tu dis
+      prendre, le nombre de clics, le temps passé… Dans cette simulation, on suppose que les
+      vidéos qui misent sur l'émotion forte retiennent un peu plus longtemps, même quand elles
+      plaisent moins. Si l'on classe le fil pour maximiser le temps passé, ces vidéos montent
+      en tête, même chez quelqu'un qui préfère la cuisine et les sciences. Le choix de
+      l'objectif change ce que l'on voit.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Ce que tu aimes</legend>
+        {['cuisine', 'sciences', 'sport', 'jeux', 'musique', 'humour'].map((t) => (
+          <label><input type="checkbox" value={t} checked={t === 'cuisine' || t === 'sciences'} /> {t}</label>
+        ))}
+      </fieldset>
+      <label class="curseur">La plateforme optimise : <output data-sortie></output>
+        <input type="range" min="0" max="100" step="5" value="0" data-poids />
+      </label>
+      <p class="bornes"><span>ce qui te plaît</span><span>le temps passé</span></p>
+      <ol class="flux" data-flux></ol>
+      <p class="bilan" data-bilan></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Simulation : chiffres et hypothèses inventés pour montrer le principe, pas mesurés sur une vraie plateforme.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { classerFil } from '../../../lib/recommander';
+
+  document.querySelectorAll<HTMLElement>('[data-fil]').forEach((racine) => {
+    activerScene(racine);
+    const poids = racine.querySelector<HTMLInputElement>('[data-poids]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const themes = [...racine.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked')].map((c) => c.value);
+      const w = Number(poids.value) / 100;
+      racine.querySelector<HTMLOutputElement>('[data-sortie]')!.value = w < 0.2 ? 'surtout ce qui te plaît' : w > 0.8 ? 'surtout le temps passé' : 'un mélange';
+      const fil = classerFil(themes, w).slice(0, 5);
+      racine.querySelector('[data-flux]')!.replaceChildren(
+        ...fil.map((x) => {
+          const li = document.createElement('li');
+          li.className = x.video.choc >= 0.6 ? 'choc' : '';
+          li.innerHTML = `<span aria-hidden="true">${x.video.icone}</span> ${x.video.titre} <small>(${x.video.theme}${x.video.choc >= 0.6 ? ', choc' : ''})</small>`;
+          return li;
+        }),
+      );
+      const chocs = fil.filter((x) => x.video.choc >= 0.6).length;
+      const aimes = fil.filter((x) => themes.includes(x.video.theme)).length;
+      const temps = fil.reduce((s, x) => s + x.temps, 0);
+      const plaisir = fil.reduce((s, x) => s + x.satisfaction, 0);
+      racine.querySelector('[data-bilan]')!.textContent = `Dans tes 5 premières vidéos : ${aimes} de tes thèmes, ${chocs} vidéo${chocs > 1 ? 's' : ''} « choc ». Temps passé (simulé) : ${temps.toFixed(1).replace('.', ',')} ; satisfaction (simulée) : ${plaisir.toFixed(1).replace('.', ',')}.`;
+      legende.textContent =
+        w > 0.8
+          ? 'Optimisé pour le temps passé, le fil fait remonter les vidéos qui retiennent l’attention, même hors de tes thèmes et même si elles te plaisent moins. Personne n’a programmé « montre des vidéos choc » : c’est un effet de l’objectif choisi.'
+          : w < 0.2
+            ? 'Optimisé pour ce qui te plaît, le fil suit tes thèmes. Mais comment mesurer « ce qui plaît » ? Les plateformes s’appuient souvent sur des signaux faciles à compter (clics, temps, partages), qui ne disent pas tout. Pousse le curseur vers la droite.'
+            : 'Un compromis : le fil mélange tes thèmes et des vidéos qui retiennent l’attention.';
+    }
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .bornes { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin: 0.1rem 0 0.6rem; }
+  .flux { margin: 0; padding-left: 1.4rem; display: grid; gap: 0.3rem; }
+  .flux :global(li) { font-size: 0.9rem; }
+  .flux :global(li.choc) { color: var(--accent); font-weight: 600; }
+  .flux :global(small) { color: var(--muted); font-weight: 400; }
+  .bilan { font-family: var(--police-mono); font-size: 0.8rem; margin: 0.6rem 0 0; }
+</style>

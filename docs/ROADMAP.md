@@ -86,7 +86,7 @@ flowchart TB
 - [x] **Les IA qui voient** *(`/modules/ia-voir/`, relecture humaine à faire)* — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
 - [x] **Les IA qui entendent et parlent** *(`/modules/ia-entendre/`, relecture humaine à faire)* — reconnaissance vocale, synthèse de la voix, sous-titres automatiques
 - [x] **Les IA qui créent** *(`/modules/ia-creer/`, relecture humaine à faire ; état des procès à mettre à jour)* — images (diffusion : le débruitage), musique ; droit d'auteur
-- [ ] **Les IA qui recommandent** — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)
+- [x] **Les IA qui recommandent** *(`/modules/ia-recommander/`, relecture humaine à faire ; procédures européennes à suivre)* — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)
 - [ ] **Les IA qui prédisent** — météo, consommation, police prédictive : séries temporelles, corrélation et causalité
 - [ ] **Les IA qui décident pour nous** — crédit, aides sociales, justice : boîte noire ou modèle explicable (réseaux bayésiens, arbres, systèmes experts), droit à l'explication, biais
 - [ ] **Les IA qui jouent** — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)

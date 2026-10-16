@@ -1,0 +1,95 @@
+---
+// Animation « Les gens qui te ressemblent » (étape 0 du module « Les IA qui
+// recommandent ») : filtrage collaboratif. On note quelques vidéos ; le
+// système cherche les personnes dont les notes ressemblent aux nôtres, et
+// prédit nos notes pour les vidéos qu'on n'a pas vues.
+import { VIDEOS } from '../../../lib/recommander';
+---
+<div class="anim voisins" data-voisins>
+  <div class="anim-repli">
+    <p>
+      Le système ne sait rien des vidéos : ni leur sujet, ni leur contenu. Il sait seulement qui
+      a donné quelle note à quoi. Pour te recommander quelque chose, il cherche les personnes
+      qui ont noté comme toi les vidéos que vous avez toutes les deux vues, puis regarde ce
+      qu'elles ont aimé d'autre. Attention : deux personnes qui n'ont que deux vidéos en
+      commun peuvent sembler identiques par hasard.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <h4>Note quelques vidéos (de 1 à 5 étoiles)</h4>
+      <ul class="liste">
+        {VIDEOS.map((v, i) => (
+          <li>
+            <span class="titre"><span aria-hidden="true">{v.icone}</span> {v.titre}</span>
+            <span class="etoiles" role="group" aria-label={`Ta note pour « ${v.titre} »`}>
+              {[1, 2, 3, 4, 5].map((n) => <button type="button" data-video={i} data-note={n} aria-label={`${n} sur 5`}>★</button>)}
+              <button type="button" class="effacer" data-video={i} data-note="0" aria-label="Pas vu">✕</button>
+            </span>
+            <span class="prediction" data-pred={i}></span>
+          </li>
+        ))}
+      </ul>
+      <p class="voisins-liste" data-voisins-liste aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { VIDEOS, PERSONNES, recommander } from '../../../lib/recommander';
+
+  const fr = (v: number) => v.toFixed(1).replace('.', ',');
+
+  document.querySelectorAll<HTMLElement>('[data-voisins]').forEach((racine) => {
+    activerScene(racine);
+    const moi = [5, 0, 4, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      racine.querySelectorAll<HTMLButtonElement>('[data-note]').forEach((b) => {
+        const i = Number(b.dataset.video), n = Number(b.dataset.note);
+        b.classList.toggle('pleine', n > 0 && n <= moi[i]);
+        b.setAttribute('aria-pressed', String(n === moi[i]));
+      });
+      const { voisins, predictions } = recommander(moi, PERSONNES);
+      predictions.forEach((p, i) => {
+        const el = racine.querySelector<HTMLElement>(`[data-pred="${i}"]`)!;
+        el.textContent = moi[i] ? 'ta note' : p === null ? '?' : `prévu : ${fr(p)}`;
+        el.className = `prediction${p !== null && p >= 3.5 ? ' conseil' : ''}`;
+      });
+      racine.querySelector('[data-voisins-liste]')!.textContent = voisins.length
+        ? `Les personnes qui te ressemblent le plus : ${voisins.map((v) => `${v.nom} (ressemblance ${fr(v.r)}, ${v.communes} vidéos en commun)`).join(', ')}.`
+        : 'Note au moins deux vidéos pour trouver des personnes qui te ressemblent.';
+      const meilleure = predictions.map((p, i) => ({ p, i })).filter((x) => x.p !== null).sort((a, b) => b.p! - a.p!)[0];
+      legende.textContent = meilleure
+        ? `Recommandation : « ${VIDEOS[meilleure.i].titre} » (note prévue ${fr(meilleure.p!)}). Le système ne sait pas de quoi parle cette vidéo : il sait seulement que des personnes qui notent comme toi l’ont aimée.`
+        : 'Pas encore assez d’informations pour recommander.';
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-note]').forEach((b) =>
+      b.addEventListener('click', () => {
+        moi[Number(b.dataset.video)] = Number(b.dataset.note);
+        maj();
+      }),
+    );
+    maj();
+  });
+</script>
+
+<style>
+  h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .liste li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'titre etoiles' 'pred pred'; gap: 0 0.5rem; border-bottom: 1px solid var(--border); padding: 0.25rem 0; font-size: 0.9rem; }
+  .titre { grid-area: titre; }
+  .etoiles { grid-area: etoiles; display: inline-flex; gap: 0.05rem; }
+  .etoiles button { font: inherit; background: none; border: none; color: var(--border); cursor: pointer; padding: 0.1rem 0.15rem; font-size: 1.05rem; line-height: 1; }
+  .etoiles button.pleine { color: var(--ill-commun); }
+  .etoiles .effacer { color: var(--muted); font-size: 0.8rem; }
+  .etoiles button:focus-visible { outline: 2px solid var(--accent); }
+  .prediction { grid-area: pred; font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); }
+  .prediction.conseil { color: var(--ill-secret-b); font-weight: 700; }
+  .voisins-liste { font-size: 0.9rem; margin: 0.75rem 0 0; }
+</style>
