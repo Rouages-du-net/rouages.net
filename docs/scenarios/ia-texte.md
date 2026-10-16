@@ -9,8 +9,10 @@ et [`docs/sources/ia.md`](../sources/ia.md).
 
 Ce module traite des modèles de langage. Il fait partie d'une famille de
 modules sur l'IA, rangés par but, avec un module transversal par mécanisme
-(voir `docs/ROADMAP.md`, phase 5). Quand « Comment apprend une machine »
-existera, les étapes 3 (le neurone) et 4 (apprendre) y seront déplacées.
+(voir `docs/ROADMAP.md`, phase 5). Les anciennes étapes « Un neurone
+artificiel » et « Apprendre en se trompant » ont été déplacées dans
+« Comment apprend une machine » (`docs/scenarios/apprendre.md`) ; il en reste
+ici une étape de texte qui y renvoie.
 
 ## Intention
 
@@ -53,11 +55,10 @@ tokens jusqu'au tirage du mot suivant.
 | 0 | Deviner le mot suivant | `MotSuivant` | modèle n-gramme entraîné dans le navigateur : on écrit un début, on clique les mots proposés, ou on le laisse finir |
 | 1 | Découper en tokens | `Tokeniseur` | les fusions BPE apprises pas à pas, puis son propre texte découpé en tokens numérotés |
 | 2 | Les mots deviennent des points | `Plongements` | carte 2D : voisins, analogies, et le piège des analogies (exclure les mots de départ) |
-| 3 | Un neurone artificiel | `Neurone` | perceptron à deux entrées : régler les poids à la main ou par la règle de Rosenblatt |
-| 4 | Apprendre en se trompant | `Descente` | descente de gradient sur une courbe d'erreur, taille du pas (dont un pas qui diverge) |
-| 5 | L'attention | `Attention` | « il » regarde « chat » ou « pont » selon la fin de la phrase ; calcul softmax(q·k/√d) |
-| 6 | Écrire : un peu de hasard | `Temperature` | curseur de température, cinq phrases tirées au sort |
-| 7 | Les coulisses | `Fabrication` | la chaîne : textes, pré-entraînement, ajustement humain, filtres, réponse |
+| 3 | Apprendre : des milliards de réglages | — | texte seul : poids, erreur, descente de gradient ; renvoi vers « Comment apprend une machine » |
+| 4 | L'attention | `Attention` | « il » regarde « chat » ou « pont » selon la fin de la phrase ; calcul softmax(q·k/√d) |
+| 5 | Écrire : un peu de hasard | `Temperature` | curseur de température, cinq phrases tirées au sort |
+| 6 | Les coulisses | `Fabrication` | la chaîne : textes, pré-entraînement, ajustement humain, filtres, réponse |
 | ✓ | Bilan | tableau | ce qui se passe quand on parle à un assistant |
 
 Chaque étape a ses trois niveaux de lecture et, selon les besoins, ses encarts

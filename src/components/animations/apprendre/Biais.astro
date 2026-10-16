@@ -1,0 +1,151 @@
+---
+// Animation « Les données font le modèle » (étape 4 du module « Comment
+// apprend une machine ») : un classeur aux k plus proches voisins trie des
+// fruits mûrs et pas mûrs d'après des photos. Les photos prises à l'ombre
+// paraissent plus sombres ; s'il y en a très peu dans l'entraînement, le
+// modèle se trompe surtout sur elles. Même algorithme, autres données :
+// autre résultat.
+---
+<div class="anim biais" data-biais>
+  <div class="anim-repli">
+    <p>
+      Une machine apprend à reconnaître les fruits mûrs d'après leur couleur sur une photo.
+      Presque toutes ses photos d'entraînement ont été prises en plein soleil ; à l'ombre, les
+      couleurs paraissent plus sombres. Résultat : elle classe très bien les fruits photographiés
+      au soleil, mais se trompe souvent sur ceux photographiés à l'ombre, parce qu'elle n'en a
+      presque jamais vu. Avec autant de photos d'ombre que de soleil, le même algorithme fait
+      aussi bien pour les deux.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre grille">
+      <svg viewBox="0 0 280 260" role="img" aria-labelledby="biais-titre">
+        <title id="biais-titre">Les fruits selon leur couleur sur la photo (horizontal) et leur fermeté (vertical) ; les fruits d'examen mal classés sont marqués d'une croix.</title>
+        <rect x="20" y="10" width="250" height="220" class="cadre" />
+        <g data-points></g>
+        <text x="145" y="252" class="axe">couleur sur la photo : vert → rouge</text>
+        <text x="10" y="120" class="axe" transform="rotate(-90 10 120)">fermeté</text>
+      </svg>
+      <div class="reglages">
+        <fieldset>
+          <legend>Photos d'entraînement</legend>
+          <label><input type="radio" name="biais-donnees" value="deseq" checked /> 60 au soleil, 4 à l'ombre</label>
+          <label><input type="radio" name="biais-donnees" value="eq" /> 32 au soleil, 32 à l'ombre</label>
+        </fieldset>
+        <table class="scores">
+          <caption>Examen : 40 nouvelles photos de chaque sorte</caption>
+          <thead><tr><th scope="col">Photos</th><th scope="col">Bien classées</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">☀️ au soleil</th><td data-score="soleil"></td></tr>
+            <tr><th scope="row">🌳 à l'ombre</th><td data-score="ombre"></td></tr>
+          </tbody>
+        </table>
+        <label class="voir"><input type="checkbox" data-voir="examen" checked /> Montrer l'examen</label>
+        <p class="legende-fruits">
+          <span class="cle c1">●</span> mûr <span class="cle c0">●</span> pas mûr ·
+          ○ soleil △ ombre · plein : entraînement, creux : examen
+        </p>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { voisins } from '../../../lib/modeles';
+  import { hasard } from '../../../lib/minilm';
+
+  type Fruit = { x: number; y: number; classe: 'mur' | 'vert'; lumiere: 'soleil' | 'ombre' };
+  const NS = 'http://www.w3.org/2000/svg';
+  const X = (x: number) => 20 + x * 250;
+  const Y = (y: number) => 230 - y * 220;
+  const K = 5;
+
+  // Un fruit : sa vraie couleur et sa fermeté. À l'ombre, la photo paraît
+  // plus sombre : la couleur mesurée est plus terne (glisse vers la gauche).
+  function fruit(alea: () => number, lumiere: Fruit['lumiere']): Fruit {
+    const mur = alea() < 0.5;
+    const couleur = mur ? 0.55 + alea() * 0.4 : 0.1 + alea() * 0.4;
+    const fermete = mur ? 0.1 + alea() * 0.55 : 0.35 + alea() * 0.55;
+    const mesure = lumiere === 'ombre' ? couleur * 0.6 : couleur;
+    return { x: Math.min(0.98, Math.max(0.02, mesure + (alea() - 0.5) * 0.08)), y: fermete, classe: mur ? 'mur' : 'vert', lumiere };
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-biais]').forEach((racine) => {
+    activerScene(racine);
+    const gPoints = racine.querySelector<SVGGElement>('[data-points]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const voir = racine.querySelector<HTMLInputElement>('[data-voir="examen"]')!;
+    const alea = hasard(21);
+    const examen = [...Array.from({ length: 40 }, () => fruit(alea, 'soleil')), ...Array.from({ length: 40 }, () => fruit(alea, 'ombre'))];
+
+    const forme = (f: Fruit, plein: boolean, faux: boolean) => {
+      const g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', `f ${f.classe} ${plein ? 'plein' : 'creux'}${faux ? ' faux' : ''}`);
+      const cx = X(f.x);
+      const cy = Y(f.y);
+      const el = f.lumiere === 'soleil' ? document.createElementNS(NS, 'circle') : document.createElementNS(NS, 'polygon');
+      if (f.lumiere === 'soleil') {
+        el.setAttribute('cx', String(cx));
+        el.setAttribute('cy', String(cy));
+        el.setAttribute('r', '4.5');
+      } else el.setAttribute('points', `${cx},${cy - 5.5} ${cx + 5},${cy + 4} ${cx - 5},${cy + 4}`);
+      g.append(el);
+      if (faux) {
+        const t = document.createElementNS(NS, 'text');
+        t.setAttribute('x', String(cx + 6));
+        t.setAttribute('y', String(cy - 3));
+        t.textContent = '✗';
+        g.append(t);
+      }
+      return g;
+    };
+
+    function calculer() {
+      const choix = racine.querySelector<HTMLInputElement>('input[name="biais-donnees"]:checked')!.value;
+      const a = hasard(choix === 'eq' ? 31 : 32);
+      const nOmbre = choix === 'eq' ? 32 : 4;
+      const entrainement = [...Array.from({ length: 64 - nOmbre }, () => fruit(a, 'soleil')), ...Array.from({ length: nOmbre }, () => fruit(a, 'ombre'))];
+      const resultats = examen.map((f) => ({ f, juste: voisins(entrainement, f, K).classe === f.classe }));
+      const score = (l: Fruit['lumiere']) => resultats.filter((r) => r.f.lumiere === l && r.juste).length;
+      const [s, o] = [score('soleil'), score('ombre')];
+      racine.querySelector('[data-score="soleil"]')!.textContent = `${s} / 40`;
+      racine.querySelector('[data-score="ombre"]')!.textContent = `${o} / 40`;
+      gPoints.replaceChildren(
+        ...entrainement.map((f) => forme(f, true, false)),
+        ...(voir.checked ? resultats.map((r) => forme(r.f, false, !r.juste)) : []),
+      );
+      legende.textContent =
+        choix === 'eq'
+          ? `Même algorithme, données équilibrées : ${s} sur 40 au soleil, ${o} sur 40 à l’ombre. Les deux groupes sont presque aussi bien traités.`
+          : `Le modèle classe bien les photos au soleil (${s} sur 40), beaucoup moins celles à l’ombre (${o} sur 40) : il n’en a vu que 4. Pour un fruit à l’ombre, ses plus proches voisins sont surtout des photos au soleil, qui ne lui ressemblent pas vraiment.`;
+    }
+
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('change', calculer));
+    calculer();
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: minmax(14rem, 1.2fr) minmax(13rem, 1fr); gap: 1rem; align-items: center; }
+  svg { width: 100%; height: auto; }
+  .cadre { fill: var(--bg); stroke: var(--border); }
+  .axe { fill: var(--muted); font: 11px var(--police); text-anchor: middle; }
+  svg :global(.f.mur > :first-child) { fill: var(--ill-paquet); stroke: var(--ill-paquet); }
+  svg :global(.f.vert > :first-child) { fill: var(--ill-secret-b); stroke: var(--ill-secret-b); }
+  svg :global(.f.creux > :first-child) { fill: var(--bg); stroke-width: 1.8; }
+  svg :global(.f.faux text) { fill: var(--fg); font: 700 11px var(--police); }
+  fieldset { border: 1px solid var(--border); border-radius: 0.5rem; margin: 0 0 0.6rem; padding: 0.4rem 0.75rem 0.6rem; display: grid; gap: 0.25rem; }
+  legend { font-size: 0.85rem; color: var(--muted); padding: 0 0.25rem; }
+  fieldset label, .voir { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .scores { border-collapse: collapse; font-size: 0.9rem; margin-bottom: 0.5rem; width: 100%; }
+  .scores caption { text-align: left; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.25rem; }
+  .scores th, .scores td { border-bottom: 1px solid var(--border); padding: 0.25rem 0.4rem; text-align: left; }
+  .scores td { font-family: var(--police-mono); font-weight: 700; }
+  .legende-fruits { font-size: 0.85rem; color: var(--muted); }
+  .cle.c1 { color: var(--ill-paquet); }
+  .cle.c0 { color: var(--ill-secret-b); }
+  @media (max-width: 40rem) { .grille { grid-template-columns: 1fr; } }
+</style>

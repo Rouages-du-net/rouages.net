@@ -1,0 +1,146 @@
+---
+// Animation « Par cœur ou compris ? » (étape 3 du module « Comment apprend
+// une machine ») : on ajuste un polynôme à 8 points d'entraînement
+// (moindres carrés), et on le juge sur 30 points qu'il n'a jamais vus.
+// Plus le degré monte, plus il colle à l'entraînement… et plus il peut se
+// tromper à l'examen : c'est le sur-apprentissage.
+---
+<div class="anim surapp" data-surapp>
+  <div class="anim-repli">
+    <p>
+      Une machine apprend une courbe à partir de 8 points mesurés, un peu bruités. Un modèle
+      trop simple (une droite) passe à côté de la forme : erreur élevée partout. Un modèle de
+      complexité moyenne suit la tendance : erreur faible sur les points d'entraînement comme
+      sur de nouveaux points. Un modèle très complexe passe exactement par les 8 points
+      (erreur nulle à l'entraînement) mais ondule entre eux : sur de nouveaux points, il se
+      trompe davantage. Il a appris « par cœur », bruit compris.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 200" role="img" aria-labelledby="surapp-titre">
+        <title id="surapp-titre">Les points d'entraînement, les points d'examen et la courbe apprise.</title>
+        <rect x="0" y="0" width="320" height="200" class="fond" />
+        <polyline class="courbe" data-courbe points="" />
+        <g data-test></g>
+        <g data-train></g>
+      </svg>
+      <label class="degre">Complexité du modèle (degré du polynôme) : <output data-sortie>1</output>
+        <input type="range" min="0" max="7" step="1" value="1" data-degre />
+      </label>
+      <div class="scores">
+        <div><span class="cle train">●</span> Erreur à l'entraînement <strong data-err="train"></strong><span class="barre"><span data-barre="train"></span></span></div>
+        <div><span class="cle test">○</span> Erreur à l'examen <strong data-err="test"></strong><span class="barre"><span data-barre="test"></span></span></div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <label class="voir"><input type="checkbox" data-voir-test checked /> Montrer les points d'examen</label>
+        <button type="button" data-action="nouveau">🎲 Autres mesures</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { ajusterPolynome, evaluer, erreur, type Pt } from '../../../lib/modeles';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const X = (x: number) => 10 + (x + 1) * 150;
+  const Y = (y: number) => 100 - y * 60;
+  const borne = (v: number) => Math.max(-6, Math.min(206, v));
+  const fr = (v: number) => v.toFixed(2).replace('.', ',');
+  // La « vraie » loi, que la machine ne connaît pas.
+  const loi = (x: number) => Math.sin(2.6 * x) * 0.9 + 0.2 * x;
+
+  document.querySelectorAll<HTMLElement>('[data-surapp]').forEach((racine) => {
+    activerScene(racine);
+    const curseur = racine.querySelector<HTMLInputElement>('[data-degre]')!;
+    const sortie = racine.querySelector<HTMLOutputElement>('[data-sortie]')!;
+    const courbe = racine.querySelector<SVGPolylineElement>('[data-courbe]')!;
+    const gTrain = racine.querySelector<SVGGElement>('[data-train]')!;
+    const gTest = racine.querySelector<SVGGElement>('[data-test]')!;
+    const voirTest = racine.querySelector<HTMLInputElement>('[data-voir-test]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 3;
+    let train: Pt[] = [];
+    let test: Pt[] = [];
+
+    const point = (p: Pt, classe: string) => {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', String(X(p.x)));
+      c.setAttribute('cy', String(borne(Y(p.y))));
+      c.setAttribute('r', classe === 'train' ? '5' : '3.5');
+      c.setAttribute('class', classe);
+      return c;
+    };
+
+    function mesurer() {
+      const alea = hasard(graine++);
+      const bruit = () => (alea() - 0.5) * 0.6;
+      // 8 mesures réparties sur l'intervalle, à des endroits un peu irréguliers.
+      train = Array.from({ length: 8 }, (_, i) => {
+        const x = -0.95 + (1.9 * (i + 0.2 + alea() * 0.6)) / 8;
+        return { x, y: loi(x) + bruit() };
+      });
+      test = Array.from({ length: 30 }, () => {
+        const x = -0.95 + alea() * 1.9;
+        return { x, y: loi(x) + bruit() };
+      });
+      gTrain.replaceChildren(...train.map((p) => point(p, 'train')));
+      gTest.replaceChildren(...test.map((p) => point(p, 'test')));
+      dessiner();
+    }
+
+    function dessiner() {
+      const d = Number(curseur.value);
+      sortie.value = String(d);
+      const coefs = ajusterPolynome(train, d);
+      courbe.setAttribute(
+        'points',
+        Array.from({ length: 151 }, (_, i) => -1 + i / 75)
+          .map((x) => `${X(x).toFixed(1)},${borne(Y(evaluer(coefs, x))).toFixed(1)}`)
+          .join(' '),
+      );
+      const eTrain = erreur(coefs, train);
+      const eTest = erreur(coefs, test);
+      for (const [cle, e] of [['train', eTrain], ['test', eTest]] as const) {
+        racine.querySelector<HTMLElement>(`[data-err="${cle}"]`)!.textContent = fr(e);
+        racine.querySelector<HTMLElement>(`[data-barre="${cle}"]`)!.style.width = `${Math.min(100, e * 100)}%`;
+      }
+      legende.textContent =
+        d <= 1
+          ? `Degré ${d} : le modèle est trop simple (${d ? 'une droite' : 'une constante'}). Il rate la forme : erreur élevée à l’entraînement comme à l’examen. On parle de sous-apprentissage.`
+          : d >= 6
+            ? `Degré ${d} : la courbe passe ${eTrain < 0.01 ? 'exactement' : 'presque'} par les 8 points d’entraînement, mais elle ondule entre eux. À l’examen, l’erreur ${eTest > eTrain * 2 ? 'est bien plus grande' : 'reste plus grande'} : le modèle a appris le bruit par cœur. C’est le sur-apprentissage.`
+            : `Degré ${d} : le modèle suit la tendance sans coller à chaque point. L’erreur à l’examen reste faible : il a appris quelque chose qui marche aussi sur des points qu’il n’a jamais vus.`;
+    }
+
+    curseur.addEventListener('input', dessiner);
+    voirTest.addEventListener('change', () => (gTest.style.display = voirTest.checked ? '' : 'none'));
+    racine.querySelector('[data-action="nouveau"]')!.addEventListener('click', mesurer);
+    mesurer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  .courbe { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+  svg :global(circle.train) { fill: var(--ill-paquet); stroke: var(--bg); stroke-width: 1.5; }
+  svg :global(circle.test) { fill: none; stroke: var(--ill-client); stroke-width: 1.5; }
+  .degre { display: grid; gap: 0.25rem; margin-top: 0.75rem; font-size: 0.95rem; }
+  .degre input { width: 100%; accent-color: var(--accent); }
+  .degre output { font-family: var(--police-mono); font-weight: 700; }
+  .scores { display: grid; gap: 0.4rem; margin-top: 0.75rem; font-size: 0.9rem; }
+  .scores > div { display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; column-gap: 0.4rem; align-items: center; }
+  .scores strong { font-family: var(--police-mono); }
+  .barre { grid-column: 1 / -1; height: 0.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .barre span { display: block; height: 100%; background: var(--muted); transition: width 0.3s; }
+  .cle.train { color: var(--ill-paquet); }
+  .cle.test { color: var(--ill-client); }
+  .voir { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  @media (prefers-reduced-motion: reduce) { .barre span { transition: none; } }
+</style>

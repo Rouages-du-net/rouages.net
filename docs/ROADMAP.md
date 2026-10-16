@@ -66,7 +66,7 @@ flowchart TB
 
 ### Les IA qui écrivent (`/modules/ia-texte/`)
 
-- [x] Scénario en 8 étapes (`docs/scenarios/ia-texte.md`) et dossier de sources (`docs/sources/ia-mecanismes.md`)
+- [x] Scénario (`docs/scenarios/ia-texte.md`), 7 étapes depuis le déplacement du neurone et de la descente de gradient, et dossier de sources (`docs/sources/ia-mecanismes.md`)
 - [x] Mini-modèle dans le navigateur (`src/lib/minilm.ts`) : n-gramme, BPE, softmax et température, perceptron
 - [x] Mot suivant, tokens, plongements, neurone, descente de gradient, attention, température, chaîne de fabrication
 - [x] Glossaire : 10 termes (token, plongement, attention, transformeur, hallucination…)

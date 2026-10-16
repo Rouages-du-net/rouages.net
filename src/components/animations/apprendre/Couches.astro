@@ -1,0 +1,190 @@
+---
+// Animation « Plusieurs couches » (étape 2 du module « Comment apprend une
+// machine ») : un petit réseau de neurones (2 entrées, une couche cachée,
+// 1 sortie) apprend par rétropropagation à séparer des points qu'aucune
+// droite ne sépare : le « ou exclusif », puis un cercle. Un seul neurone
+// caché échoue ; avec plusieurs, la frontière se courbe.
+---
+<div class="anim couches" data-couches>
+  <div class="anim-repli">
+    <p>
+      Les points bleus sont en haut à gauche et en bas à droite, les orange dans les deux
+      autres coins : c'est le « ou exclusif ». Aucune ligne droite ne les sépare, donc un seul
+      neurone n'y arrive pas. Un réseau avec une couche de neurones « cachés » entre l'entrée
+      et la sortie y parvient : chaque neurone caché trace sa propre droite, et le neurone de
+      sortie les combine. L'entraînement ajuste tous les poids à la fois, en remontant
+      l'erreur de la sortie vers l'entrée (rétropropagation).
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre grille">
+      <svg viewBox="0 0 240 240" role="img" aria-labelledby="couches-titre">
+        <title id="couches-titre">Les points à séparer et, en fond, la réponse du réseau en chaque endroit.</title>
+        <g data-fond shape-rendering="crispEdges"></g>
+        <rect x="0" y="0" width="240" height="240" class="cadre" />
+        <g data-points></g>
+      </svg>
+      <div class="reglages">
+        <fieldset>
+          <legend>Les données</legend>
+          <label><input type="radio" name="couches-donnees" value="xor" checked /> Le « ou exclusif »</label>
+          <label><input type="radio" name="couches-donnees" value="cercle" /> Un cercle</label>
+        </fieldset>
+        <fieldset>
+          <legend>Neurones cachés</legend>
+          <label><input type="radio" name="couches-caches" value="1" /> 1</label>
+          <label><input type="radio" name="couches-caches" value="2" /> 2</label>
+          <label><input type="radio" name="couches-caches" value="4" checked /> 4</label>
+          <label><input type="radio" name="couches-caches" value="8" /> 8</label>
+        </fieldset>
+        <p class="etat" data-etat></p>
+        <div class="anim-commandes">
+          <button type="button" class="principal" data-action="entrainer">🎓 Entraîner (200 passes)</button>
+          <button type="button" data-action="recommencer">🎲 Autres poids de départ</button>
+        </div>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { Reseau, type Exemple } from '../../../lib/modeles';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const N = 20; // cases du fond, par côté
+  const P = (v: number) => 120 + v * 110;
+  const fr = (v: number) => v.toFixed(2).replace('.', ',');
+
+  function donnees(nom: string): Exemple[] {
+    const alea = hasard(nom === 'xor' ? 11 : 12);
+    const autour = (c: number) => c + (alea() - 0.5) * 0.7;
+    if (nom === 'xor')
+      return Array.from({ length: 48 }, (_, i) => {
+        const cx = i % 2 ? 0.55 : -0.55;
+        const cy = i % 4 < 2 ? 0.55 : -0.55;
+        return { x: autour(cx), y: autour(cy), classe: (cx > 0) !== (cy > 0) ? 1 : 0 };
+      });
+    return Array.from({ length: 60 }, (_, i) => {
+      const dedans = i % 2 === 0;
+      const r = dedans ? alea() * 0.45 : 0.65 + alea() * 0.3;
+      const a = alea() * 2 * Math.PI;
+      return { x: r * Math.cos(a), y: r * Math.sin(a), classe: dedans ? 1 : 0 };
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-couches]').forEach((racine) => {
+    activerScene(racine);
+    const gFond = racine.querySelector<SVGGElement>('[data-fond]')!;
+    const gPoints = racine.querySelector<SVGGElement>('[data-points]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="entrainer"]')!;
+    const choix = (nom: string) => racine.querySelector<HTMLInputElement>(`input[name="${nom}"]:checked`)!.value;
+
+    const cases: SVGRectElement[] = [];
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const r = document.createElementNS(NS, 'rect');
+        r.setAttribute('x', String((i * 240) / N));
+        r.setAttribute('y', String((j * 240) / N));
+        r.setAttribute('width', String(240 / N + 0.5));
+        r.setAttribute('height', String(240 / N + 0.5));
+        gFond.append(r);
+        cases.push(r);
+      }
+
+    let exemples: Exemple[] = [];
+    let reseau = new Reseau(4);
+    let graine = 1;
+    let passes = 0;
+    let perte = NaN;
+    let enCours = false;
+
+    function dessiner() {
+      cases.forEach((r, k) => {
+        const x = ((k % N) + 0.5) / N * 2 - 1;
+        const y = 1 - (Math.floor(k / N) + 0.5) / N * 2;
+        const p = reseau.predire(x, y);
+        r.setAttribute('class', p > 0.5 ? 'z1' : 'z0');
+        r.style.opacity = String(0.15 + Math.abs(p - 0.5) * 0.9);
+      });
+      gPoints.replaceChildren(
+        ...exemples.map((e) => {
+          const juste = (reseau.predire(e.x, e.y) > 0.5 ? 1 : 0) === e.classe;
+          const c = document.createElementNS(NS, 'circle');
+          c.setAttribute('cx', String(P(e.x)));
+          c.setAttribute('cy', String(P(-e.y)));
+          c.setAttribute('r', '4');
+          c.setAttribute('class', `c${e.classe}${juste ? '' : ' faux'}`);
+          return c;
+        }),
+      );
+      const justes = reseau.justes(exemples);
+      etat.textContent = `${passes} passes · erreur ${Number.isNaN(perte) ? '—' : fr(perte)} · ${justes} / ${exemples.length} points bien classés`;
+      return justes;
+    }
+
+    function recommencer() {
+      exemples = donnees(choix('couches-donnees'));
+      reseau = new Reseau(Number(choix('couches-caches')), graine++);
+      passes = 0;
+      perte = NaN;
+      dessiner();
+      legende.textContent = `Les poids sont tirés au hasard : la réponse du réseau (le fond) n’a encore aucun rapport avec les points. Clique sur « Entraîner ».`;
+    }
+
+    async function entrainer() {
+      if (enCours) return;
+      enCours = true;
+      bouton.disabled = true;
+      // 200 passes, montrées par paquets de 10 (d'un coup si l'animation est réduite).
+      for (let k = 0; k < 20; k++) {
+        for (let i = 0; i < 10; i++) perte = reseau.passe(exemples, 0.5);
+        passes += 10;
+        if (!mouvementReduit()) {
+          dessiner();
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+      }
+      const justes = dessiner();
+      const n = reseau.caches;
+      const tous = justes === exemples.length;
+      legende.textContent =
+        n === 1
+          ? `Avec un seul neurone caché, la frontière reste une droite : impossible de tout séparer (${justes} sur ${exemples.length}). Il faut plus de neurones.`
+          : tous
+            ? `Réussi : ${n} neurones cachés tracent chacun une droite, et la sortie les combine en une frontière courbe. Tous les points sont bien classés.`
+            : `${justes} points sur ${exemples.length} bien classés. Continue l’entraînement… ou, si l’erreur ne baisse plus, le réseau est coincé dans un « creux » : relance avec d’autres poids de départ.`;
+      enCours = false;
+      bouton.disabled = false;
+    }
+
+    bouton.addEventListener('click', entrainer);
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', recommencer);
+    racine.querySelectorAll('input[type="radio"]').forEach((r) => r.addEventListener('change', recommencer));
+    recommencer();
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(13rem, 1fr); gap: 1rem; align-items: center; }
+  svg { width: 100%; max-width: 22rem; height: auto; display: block; margin: 0 auto; }
+  .cadre { fill: none; stroke: var(--border); }
+  svg :global(rect.z1) { fill: var(--ill-client); }
+  svg :global(rect.z0) { fill: var(--ill-paquet); }
+  svg :global(rect) { transition: opacity 0.1s; }
+  svg :global(circle.c1) { fill: var(--ill-client); stroke: var(--bg); stroke-width: 1.5; }
+  svg :global(circle.c0) { fill: var(--ill-paquet); stroke: var(--bg); stroke-width: 1.5; }
+  svg :global(circle.faux) { stroke: var(--fg); stroke-width: 2.5; }
+  fieldset { border: 1px solid var(--border); border-radius: 0.5rem; margin: 0 0 0.6rem; padding: 0.4rem 0.75rem 0.6rem; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+  legend { font-size: 0.85rem; color: var(--muted); padding: 0 0.25rem; }
+  fieldset label { font-size: 0.9rem; display: inline-flex; gap: 0.3rem; align-items: center; }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.25rem 0 0; }
+  @media (max-width: 40rem) { .grille { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { svg :global(rect) { transition: none; } }
+</style>

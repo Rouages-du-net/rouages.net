@@ -357,6 +357,18 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Branche de l'IA où la machine n'applique pas des règles écrites à la main : elle les déduit d'exemples. Avec des exemples corrigés (supervisé), sans étiquettes (non supervisé) ou par essais et récompenses (par renforcement).",
     voirAussi: ['parametre'],
   },
+  'retropropagation': {
+    terme: 'Rétropropagation',
+    definition:
+      "Méthode qui calcule, pour chaque paramètre d'un réseau de neurones, dans quel sens le corriger pour réduire l'erreur. On part de l'erreur à la sortie et on remonte, couche par couche, vers l'entrée.",
+    voirAussi: ['descente-de-gradient', 'neurone-artificiel'],
+  },
+  'sur-apprentissage': {
+    terme: 'Sur-apprentissage (overfitting)',
+    definition:
+      "Défaut d'un modèle qui a appris ses exemples d'entraînement « par cœur », jusqu'à leurs détails accidentels : il réussit sur eux mais se trompe sur de nouveaux cas. On le repère en le testant sur des exemples mis de côté.",
+    voirAussi: ['apprentissage-automatique'],
+  },
 };
 
 export function entree(id: string): Entree {
