@@ -1,7 +1,7 @@
-# Sources — Comment marche l'IA
+# Sources — Les IA qui écrivent
 
 Dossier de sources établi selon la [charte des sources](../SOURCES.md), pour
-le module [« Comment marche l'IA »](../scenarios/ia.md) ; voir aussi [`ia.md`](ia.md) (histoire de l'IA).
+le module [« Les IA qui écrivent »](../scenarios/ia-texte.md) ; voir aussi [`ia.md`](ia.md) (histoire de l'IA).
 
 - **Recherche effectuée le** : 16 octobre 2026
 - **Wikipédia** : l'API a répondu 429 (trop de requêtes) ; aucun renvoi « pour aller plus loin » n'a été vérifié pour ce dossier.

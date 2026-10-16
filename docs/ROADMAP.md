@@ -51,12 +51,24 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## Phase 5 — L'IA
 
-- [x] Scénario en 8 étapes (`docs/scenarios/ia.md`) et dossier de sources (`docs/sources/ia-mecanismes.md`)
+Une famille de modules : « L'IA, c'est quoi ? » (porte d'entrée), « Comment apprend une machine », « Les IA qui écrivent », « Les IA qui voient », « Les IA qui dessinent », « Les IA qui jouent ».
+
+### Les IA qui écrivent (`/modules/ia-texte/`)
+
+- [x] Scénario en 8 étapes (`docs/scenarios/ia-texte.md`) et dossier de sources (`docs/sources/ia-mecanismes.md`)
 - [x] Mini-modèle dans le navigateur (`src/lib/minilm.ts`) : n-gramme, BPE, softmax et température, perceptron
 - [x] Mot suivant, tokens, plongements, neurone, descente de gradient, attention, température, chaîne de fabrication
 - [x] Glossaire : 10 termes (token, plongement, attention, transformeur, hallucination…)
 - [ ] Relecture humaine finale
 - [ ] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » (2026) citée par un cabinet d'avocats
+
+### À venir
+
+- [ ] L'IA, c'est quoi ? — IA à règles (systèmes experts, échecs) et IA qui apprend ; trois façons d'apprendre
+- [ ] Comment apprend une machine — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage
+- [ ] Les IA qui voient — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
+- [ ] Les IA qui dessinent — modèles de diffusion (débruitage), droit d'auteur
+- [ ] Les IA qui jouent — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)
 
 ## En parallèle — Jeux et idées reçues
 

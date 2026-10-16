@@ -62,16 +62,26 @@ const etapes = [
 ];
 ---
 <Base
-  title="Comment marche l'IA"
+  title="Les IA qui écrivent"
   description="Les grands modèles de langage, démontés pièce par pièce : prédire le mot suivant, tokens, plongements, neurones, attention, température, et les humains derrière la machine."
 >
-  <p class="tag">Comment ça marche · module en construction</p>
-  <h1>Comment marche l'IA</h1>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Les IA qui écrivent</h1>
   <p class="chapo seulement-debut">
     Les assistants comme ChatGPT, Gemini ou Le Chat semblent penser. En réalité, ils font
     une seule chose, très bien : deviner la suite d'un texte. Démontons la machine, pièce par
     pièce, avec un vrai petit modèle qui tourne dans ton navigateur.
   </p>
+  <aside class="autres-ia seulement-debut" aria-labelledby="titre-autres-ia">
+    <p id="titre-autres-ia"><strong>L'IA ne se limite pas aux chatbots.</strong></p>
+    <p>
+      Ce module parle des <em>modèles de langage</em>, les IA qui écrivent. D'autres IA
+      reconnaissent des visages, créent des images, jouent aux échecs, conduisent des
+      voitures ou choisissent les vidéos qu'on te propose ; certaines n'apprennent même pas,
+      elles suivent des règles écrites à la main. Ces autres familles auront leurs propres
+      modules.
+    </p>
+  </aside>
 
   <div class="reglages">
     <SelecteurNiveau />
@@ -475,6 +485,18 @@ const etapes = [
 
 <style>
   .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .autres-ia {
+    max-width: var(--mesure);
+    margin: 1.5rem 0 0;
+    padding: 0.9rem 1.1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-2);
+    border-radius: 0.75rem;
+    font-size: 0.97rem;
+  }
+  .autres-ia p { margin: 0 0 0.5rem; }
+  .autres-ia p:last-child { margin: 0; }
   .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
   .reglages .tag { margin: 0; }
   .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }

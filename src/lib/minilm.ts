@@ -1,5 +1,5 @@
 // Un vrai (tout petit) modèle de langage, calculé dans le navigateur, pour
-// le module « Comment marche l'IA ». Tout ici est exact dans son principe :
+// le module « Les IA qui écrivent ». Tout ici est exact dans son principe :
 // les grands modèles font la même chose, avec des milliards de paramètres
 // au lieu de quelques centaines de compteurs.
 //
