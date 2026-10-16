@@ -1,0 +1,357 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Itineraire from '../../components/animations/chercher/Itineraire.astro';
+import Tournee from '../../components/animations/chercher/Tournee.astro';
+import Fourmis from '../../components/animations/chercher/Fourmis.astro';
+import Evolution from '../../components/animations/chercher/Evolution.astro';
+
+// Faits sourcés : voir docs/sources/ia-chercher.md.
+const etapes = [
+  { ancre: 'chemin', court: 'Le plus court chemin' },
+  { ancre: 'astar', court: 'Chercher malin' },
+  { ancre: 'tournee', court: 'Trop de tournées' },
+  { ancre: 'fourmis', court: 'Les fourmis' },
+  { ancre: 'evolution', court: 'Évoluer' },
+  { ancre: 'bilan', court: 'Qui choisit ?', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui cherchent et optimisent"
+  description="GPS, tournées de livraison, emplois du temps : comment une machine cherche la meilleure solution parmi des milliards. Dijkstra, A*, le voyageur de commerce, les fourmis et l'évolution."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Les IA qui cherchent et optimisent</h1>
+  <p class="chapo seulement-debut">
+    Ton GPS trouve un trajet en une fraction de seconde parmi des millions possibles. Ces IA
+    n'apprennent rien : elles cherchent. Elles explorent intelligemment les possibilités, et
+    parfois s'inspirent des fourmis ou de l'évolution des espèces.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le plus court chemin" ancre="chemin">
+    <Itineraire slot="animation" modes={['dijkstra']} />
+    <p slot="decouverte">
+      Pour aller de D à A, il y a des millions de trajets possibles. L'algorithme de Dijkstra
+      ne les essaie pas tous : il avance en onde, en calculant le temps pour atteindre chaque
+      carrefour, des plus proches aux plus lointains. L'avenue du milieu est embouteillée.
+    </p>
+    <p slot="curieux">
+      La carte devient un « graphe » : des carrefours (les nœuds) reliés par des rues (les
+      arêtes), chacune avec un coût, ici des minutes. Dijkstra garde toujours le meilleur temps
+      connu pour chaque carrefour. Quand il atteint l'arrivée, il est sûr d'avoir le meilleur
+      trajet. Ce n'est pas de l'apprentissage : c'est de la recherche, l'une des plus vieilles
+      branches de l'IA.
+    </p>
+    <p slot="ingenieur">
+      À chaque tour, on retire de la liste des carrefours « ouverts » celui qui a le plus petit
+      temps depuis le départ, puis on met à jour ses voisins : si passer par lui est plus
+      rapide, on retient ce nouveau temps et d'où l'on vient. Avec une file de priorité, le
+      coût est de l'ordre de (A + N) log N pour N carrefours et A rues. Cela ne marche que si
+      aucune rue n'a un coût négatif.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1956, Edsger Dijkstra, programmeur au Centre mathématique d'Amsterdam, cherche une
+        démonstration compréhensible par tous pour un nouvel ordinateur, l'ARMAC : trouver le
+        plus court trajet entre deux villes, sur une carte simplifiée de 64 villes des Pays-Bas.
+        Il raconte avoir conçu la méthode « en une vingtaine de minutes », de tête, à la terrasse
+        d'un café d'Amsterdam où il se reposait avec sa fiancée. Il ne la publie qu'en 1959, et
+        découvre plus tard son nom dans un manuel allemand : « Das Dijkstra'sche Verfahren ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Dijkstra a inventé le calcul du plus court chemin. »</strong> Sa description,
+      courte et claire, s'est imposée. Mais d'autres équipes ont décrit la même méthode ou des
+      méthodes proches à la même époque, comme Leyzorek et ses collègues en 1957, ou Edward
+      Moore, aux Bell Labs, pour acheminer les appels téléphoniques.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Chercher malin : A*" ancre="astar">
+    <Itineraire slot="animation" />
+    <p slot="decouverte">
+      Dijkstra explore même les rues qui partent à l'opposé de l'arrivée. A* (« A étoile »)
+      ajoute une estimation : la distance à vol d'oiseau qui reste. Compare le nombre de
+      carrefours examinés. Puis essaie de foncer vers l'arrivée sans réfléchir.
+    </p>
+    <p slot="curieux">
+      L'estimation est une <Terme id="heuristique">heuristique</Terme> : une règle approximative
+      qui guide la recherche. Si elle ne surestime jamais le temps restant, A* trouve toujours
+      le meilleur trajet. Si on lui fait trop confiance, on va plus vite… mais on peut se jeter
+      dans le bouchon.
+    </p>
+    <p slot="ingenieur">
+      A* classe les carrefours ouverts selon f = g + h : g est le temps depuis le départ, h
+      l'estimation du temps restant (ici la distance de Manhattan, à 1 minute par pâté de
+      maisons). Une heuristique « admissible » (h ≤ vrai coût) garantit l'optimalité. La
+      troisième méthode prend f = g + 5h : beaucoup moins de carrefours examinés, mais plus de
+      garantie. Les calculateurs d'itinéraires réels prétraitent en plus le réseau routier pour
+      répondre en quelques millisecondes.
+    </p>
+    <div slot="histoire">
+      <p>
+        A* naît au Stanford Research Institute, en Californie, pour Shakey, un robot mobile
+        étudié de 1966 à 1972. Selon le récit de Nils Nilsson, il propose d'estimer la distance
+        restante « à vol d'oiseau » ; Bertram Raphael, qui dirige alors les travaux sur Shakey,
+        propose d'y ajouter la distance déjà parcourue ; Peter Hart montre que si l'estimation
+        ne dépasse jamais la vraie distance, on trouve toujours le plus court chemin. L'article
+        paraît en 1968. « A » pour algorithme, « * » pour sa propriété de trouver le plus court
+        chemin. Selon l'IEEE, des dérivés guident aujourd'hui les rovers martiens.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« C'est le GPS qui calcule mon itinéraire. »</strong> Les satellites GPS ne
+      donnent qu'une position. Le trajet est calculé par un logiciel, sur une carte. Sur le
+      réseau routier d'Europe de l'Ouest (18 millions de carrefours), un Dijkstra simple met
+      environ 2 secondes ; avec un précalcul qui ajoute des raccourcis au réseau (« hiérarchies
+      de contraction »), une réponse prend environ un dixième de milliseconde. La synthèse de
+      référence sur ces méthodes est cosignée notamment par <strong>Hannah Bast</strong>,
+      <strong>Dorothea Wagner</strong> et Peter Sanders, en Allemagne.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Trop de tournées" ancre="tournee">
+    <Tournee slot="animation" />
+    <p slot="decouverte">
+      Un livreur doit passer par 8 hameaux et revenir au départ, par le chemin le plus court.
+      Trace ta tournée, puis compare avec l'ordinateur. Pour 8 hameaux, il peut tout essayer.
+      Pour 30, plus du tout.
+    </p>
+    <p slot="curieux">
+      C'est le problème du voyageur de commerce. Le nombre de tournées explose avec le nombre
+      de villes : on dit que le problème est « combinatoire ». Personne ne connaît de méthode
+      rapide qui garantisse la meilleure tournée pour un grand nombre de villes. En pratique,
+      on se contente de très bonnes tournées, trouvées par des méthodes approchées : les
+      heuristiques.
+    </p>
+    <p slot="ingenieur">
+      Pour n villes, il y a (n − 1)!/2 tournées. Le problème est NP-difficile. Les méthodes
+      exactes (séparation et évaluation, plans de coupe) savent pourtant résoudre des
+      instances de dizaines de milliers de villes, au prix d'énormes calculs. « Au plus
+      proche » est glouton ; 2-opt est une recherche locale : on améliore une solution par
+      petites modifications jusqu'à ne plus pouvoir.
+    </p>
+    <div slot="histoire">
+      <p>
+        Un manuel allemand pour voyageurs de commerce de 1832 pose déjà le problème : passer par
+        le plus de lieux possible sans repasser deux fois au même endroit. En 1930, à Vienne, le
+        mathématicien Karl Menger l'énonce comme le « problème du messager », celui que tout
+        facteur doit résoudre, et remarque qu'aller au point le plus proche ne donne pas en
+        général le plus court chemin. En 1949, <strong>Julia Robinson</strong> emploie le nom
+        de « problème du voyageur de commerce » dans le titre d'un rapport de la RAND ; on ne
+        sait pas qui l'a inventé.
+      </p>
+      <p>
+        En 1954, George Dantzig, Ray Fulkerson et Selmer Johnson prouvent la meilleure tournée
+        pour 49 villes américaines. En 1960, à la London School of Economics,
+        <strong>Ailsa Land</strong> et <strong>Alison Doig</strong> (aujourd'hui Alison
+        Harcourt) publient la méthode de « séparation et évaluation », faite à l'époque sur des
+        calculatrices de bureau ; en 1980, Ailsa Land devient la première femme titulaire d'une
+        chaire de recherche opérationnelle au Royaume-Uni. En 1963, <strong>Caroline
+        Karel</strong> cosigne l'article sur le voyageur de commerce qui donne son nom anglais à
+        la méthode, <em>branch and bound</em>.
+      </p>
+      <p>
+        En 1972, Richard Karp range le problème parmi les « NP-difficiles ». Pourtant, le
+        logiciel Concorde a résolu exactement un problème de 85 900 points en 2006, et l'équipe
+        de William Cook a trouvé en 2025 la meilleure tournée de 81 998 bars de Corée du Sud,
+        sur les vraies routes.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« NP-difficile, ça veut dire impossible à résoudre. »</strong> Cela veut dire
+      qu'on ne connaît pas de méthode rapide pour tous les cas. En pratique, on résout
+      exactement des problèmes de dizaines de milliers de villes, et l'on trouve de très bonnes
+      tournées pour bien plus.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="S'inspirer des fourmis" ancre="fourmis">
+    <Fourmis slot="animation" />
+    <p slot="decouverte">
+      Une fourmi seule ne sait pas trouver le plus court chemin. Une colonie, si : chaque
+      fourmi laisse une trace chimique, la phéromone, et préfère suivre les traces les plus
+      fortes. Des fourmis virtuelles font la même chose sur 20 villes.
+    </p>
+    <p slot="curieux">
+      Les routes courtes sont parcourues plus vite, donc renforcées plus souvent ; la
+      phéromone des autres s'évapore. La bonne solution émerge sans chef. On parle
+      d'intelligence collective, ou « en essaim ». D'autres méthodes imitent les vols
+      d'oiseaux ou les bancs de poissons.
+    </p>
+    <p slot="ingenieur">
+      Ant System : la fourmi en i choisit j avec une probabilité proportionnelle à τᵢⱼ^α ·
+      (1/dᵢⱼ)^β (ici α = 1, β = 3) ; après chaque génération, τ ← (1 − ρ)·τ (évaporation,
+      ρ = 0,3), puis chaque fourmi dépose une quantité inversement proportionnelle à la
+      longueur de sa tournée. C'est une méthode « métaheuristique » : elle ne garantit pas
+      l'optimum.
+    </p>
+    <div slot="histoire">
+      <p>
+        À l'Université libre de Bruxelles, Simon Goss, Serge Aron, Jean-Louis Deneubourg et
+        Jacques Pasteels relient un nid de fourmis d'Argentine à de la nourriture par deux
+        ponts (1989-1990). Si un pont est plus court, la colonie finit par le choisir : la
+        phéromone s'y accumule plus vite. Ce type de communication indirecte, par
+        l'environnement, avait été nommé « stigmergie » par l'entomologiste français
+        Pierre-Paul Grassé, à propos des termites.
+      </p>
+      <p>
+        À l'École polytechnique de Milan, Marco Dorigo s'en inspire au début des années 1990,
+        avec Vittorio Maniezzo et Alberto Colorni : c'est l'Ant System, publié en 1996 pour le
+        voyageur de commerce. En 1995, James Kennedy, psychologue social, et Russell Eberhart,
+        ingénieur, proposent l'optimisation par essaim particulaire, inspirée des simulations de
+        vols d'oiseaux, comme les « boids » de Craig Reynolds (1986), qui suivent trois règles
+        simples : se séparer, s'aligner, rester groupés.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="S'inspirer de l'évolution" ancre="evolution">
+    <Evolution slot="animation" />
+    <p slot="decouverte">
+      Quoi emporter en randonnée, sans dépasser 9 kg ? Un <Terme
+      id="algorithme-genetique">algorithme génétique</Terme> fait « évoluer » une population de
+      sacs : les meilleurs se reproduisent, se mélangent, et mutent un peu.
+    </p>
+    <p slot="curieux">
+      Chaque sac est une suite de 0 et de 1 (un objet emporté ou non), comme un petit
+      « génome ». La sélection favorise les sacs utiles et pas trop lourds ; le croisement
+      mélange deux bons sacs ; la mutation apporte de la nouveauté. Sur 32 768 sacs possibles,
+      l'algorithme n'en examine que quelques centaines.
+    </p>
+    <p slot="ingenieur">
+      Population de 24, sélection par tournoi entre deux individus, croisement en un point,
+      mutation de chaque gène avec une probabilité de 5 %, élitisme (les deux meilleurs sont
+      gardés). Un sac trop lourd est pénalisé de 50 points par kilo en trop. Ici, on peut
+      vérifier le résultat en essayant les 2¹⁵ sacs ; pour 100 objets, ce serait impossible.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'idée d'imiter l'évolution sur ordinateur naît dans plusieurs pays à la fois : Nils
+        Aall Barricelli fait évoluer des « organismes » numériques à Princeton dès 1953 ; Alex
+        Fraser simule la génétique en Australie en 1957 ; Ingo Rechenberg et Hans-Paul Schwefel
+        inventent les « stratégies d'évolution » à Berlin dans les années 1960 ; Lawrence Fogel
+        travaille aux États-Unis. En 1975, John Holland, à l'université du Michigan, donne le
+        cadre des algorithmes génétiques.
+      </p>
+      <p>
+        Le 22 mars 2006, la NASA lance les trois microsatellites ST5. Une de leurs antennes a
+        été dessinée par un algorithme génétique : une forme biscornue qu'un ingénieur n'aurait
+        sans doute pas imaginée. Selon la NASA, ce sont les premiers objets « évolués » envoyés
+        dans l'espace.
+      </p>
+      <p>
+        Une autre méthode imite la métallurgie : le recuit simulé (Kirkpatrick, Gelatt et Vecchi
+        en 1983, publié aussi par Vlado Černý à Bratislava en 1985). Elle repose sur un calcul
+        de physique de 1953, cosigné par <strong>Arianna Rosenbluth</strong> et
+        <strong>Augusta Teller</strong>.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« John Holland a inventé les algorithmes génétiques. »</strong> Il en a donné le
+      cadre en 1975, mais le calcul évolutionnaire est né de plusieurs équipes indépendantes,
+      aux États-Unis, en Allemagne et en Australie.
+    </p>
+    <p slot="mythes">
+      <strong>« Les IA qui imitent la nature sont plus intelligentes. »</strong> Fourmis et
+      évolution sont des images utiles, pas des garanties. Sur beaucoup de problèmes, une
+      méthode mathématique classique fait mieux. Elles servent surtout quand le problème est
+      trop irrégulier pour les méthodes exactes.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Qui choisit ce qu'on optimise ?</h2>
+    <p>
+      Un algorithme d'optimisation trouve « le meilleur »… selon un critère choisi par des
+      humains. Changer de critère, c'est changer de résultat.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Problème</th><th scope="col">On peut optimiser…</th><th scope="col">… ou plutôt</th></tr></thead>
+      <tbody>
+        <tr><td>Itinéraire</td><td>le temps de trajet</td><td>la distance, la consommation, la tranquillité des quartiers traversés</td></tr>
+        <tr><td>Tournée de livraison</td><td>les kilomètres</td><td>les horaires et les pauses des livreur·ses</td></tr>
+        <tr><td>Emploi du temps</td><td>le nombre de salles utilisées</td><td>les trous dans la journée des élèves</td></tr>
+        <tr><td>Planning d'hôpital</td><td>le coût</td><td>la fatigue des équipes, la continuité des soins</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Ces calculs sont partout. Selon UPS, son système ORION calcule chaque jour la tournée de
+      ses 55 000 chauffeurs américains et économise des dizaines de millions de litres de
+      carburant par an (chiffres de l'entreprise). En France, Parcoursup répartit les places
+      dans l'enseignement supérieur avec une adaptation de l'algorithme de Gale et Shapley
+      (1962), selon Claire Mathieu, qui a travaillé sur sa conception : ce n'est plus un chemin
+      qu'on cherche, mais un appariement entre candidat·es et formations. La théorie de ces
+      appariements a valu en 2012 le prix d'économie en mémoire d'Alfred Nobel à Lloyd Shapley
+      et Alvin Roth.
+    </p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'P. L. Frana (Charles Babbage Institute)', titre: 'An Interview with Edsger W. Dijkstra (OH 330)', url: 'https://conservancy.umn.edu/server/api/core/bitstreams/7a97387c-e045-4647-925c-d6d94a312f6e/content', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'E. W. Dijkstra', titre: 'A note on two problems in connexion with graphs (Numerische Mathematik)', url: 'https://doi.org/10.1007/BF01386390', type: 'primaire', annee: 1959, langue: 'en' },
+      { auteur: 'A. Schrijver (Documenta Mathematica)', titre: 'On the History of the Shortest Path Problem', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/32_schrijver-alexander-sp.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'University of Texas at Austin', titre: 'E. W. Dijkstra Archive (manuscrits EWD)', url: 'https://www.cs.utexas.edu/~EWD/', type: 'primaire', langue: 'en' },
+      { auteur: 'P. E. Hart, N. J. Nilsson, B. Raphael', titre: 'A Formal Basis for the Heuristic Determination of Minimum Cost Paths', url: 'https://doi.org/10.1109/TSSC.1968.300136', type: 'primaire', annee: 1968, langue: 'en' },
+      { auteur: 'N. J. Nilsson', titre: 'The Quest for Artificial Intelligence (§ 12.1, A* et Shakey)', url: 'https://ai.stanford.edu/~nilsson/QAI/qai.pdf', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'IEEE Milestones', titre: 'Shakey: The World’s First Mobile, Intelligent Robot, 1972', url: 'https://ieeemilestones.ethw.org/Milestones:Shakey:_The_World%E2%80%99s_First_Mobile,_Intelligent_Robot,_1972', type: 'site', langue: 'en' },
+      { auteur: 'H. Bast, D. Delling, A. Goldberg et al.', titre: 'Route Planning in Transportation Networks', url: 'https://arxiv.org/abs/1504.05140', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'GPS.gov', titre: 'My Address Is Wrong! (les satellites ne donnent qu’une position)', url: 'https://www.gps.gov/my-address-wrong', type: 'site', langue: 'en' },
+      { auteur: 'W. Cook (University of Waterloo)', titre: 'Traveling Salesman Problem (histoire, records, Concorde)', url: 'https://www.math.uwaterloo.ca/tsp/', type: 'site', langue: 'en' },
+      { auteur: 'A. Schrijver (CWI)', titre: 'On the history of combinatorial optimization (till 1960)', url: 'https://homepages.cwi.nl/~lex/files/histco.pdf', type: 'recherche', langue: 'en' },
+      { auteur: 'G. Dantzig, R. Fulkerson, S. Johnson', titre: 'Solution of a Large-Scale Traveling-Salesman Problem', url: 'https://doi.org/10.1287/opre.2.4.393', type: 'primaire', annee: 1954, langue: 'en' },
+      { auteur: 'D. S. Johnson (Documenta Mathematica)', titre: 'A Brief History of NP-Completeness, 1954-2012', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/50_johnson-david.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'W. Cook (Documenta Mathematica)', titre: 'Markowitz and Manne + Eastman + Land and Doig = Branch and Bound', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/38_cook-bill.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'A. H. Land, A. G. Doig', titre: 'An Automatic Method of Solving Discrete Programming Problems (Econometrica)', url: 'https://doi.org/10.2307/1910129', type: 'primaire', annee: 1960, langue: 'en' },
+      { auteur: 'LSE, Department of Mathematics', titre: 'In memory of Ailsa Land (1927-2021)', url: 'https://www.lse.ac.uk/Mathematics/News/In-memory-of-Ailsa-Land', type: 'site', annee: 2021, langue: 'en' },
+      { auteur: 'INFORMS', titre: 'Ailsa H. Land (biographie)', url: 'https://www.informs.org/Explore/History-of-O.R.-Excellence/Biographical-Profiles/Land-Ailsa-H', type: 'site', langue: 'en' },
+      { auteur: 'Pearcey Foundation', titre: 'Recognition for Alison Harcourt AO', url: 'https://pearcey.org.au/blog/2019/recognition-for-alison-harcourt-ao', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'M. Dorigo, M. Birattari, T. Stützle', titre: 'Ant Colony Optimization: Artificial Ants as a Computational Intelligence Technique', url: 'https://www.cs.princeton.edu/courses/archive/fall24/cos597C/bib2/Ant_colony_optimization.pdf', type: 'recherche', annee: 2006, langue: 'en' },
+      { auteur: 'S. Goss, S. Aron, J.-L. Deneubourg, J. M. Pasteels', titre: 'Self-organized shortcuts in the Argentine ant (Naturwissenschaften)', url: 'https://doi.org/10.1007/BF00462870', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'M. Dorigo, V. Maniezzo, A. Colorni', titre: 'Ant System: optimization by a colony of cooperating agents', url: 'https://doi.org/10.1109/3477.484436', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'J. Kennedy, R. Eberhart', titre: 'Particle swarm optimization', url: 'https://www.asc.ohio-state.edu/statistics/comp_exp/jour.club/KenEbe1995.pdf', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'C. W. Reynolds', titre: 'Boids (Flocks, Herds, and Schools: a Distributed Behavioral Model)', url: 'https://www.red3d.com/cwr/boids/', type: 'primaire', langue: 'en' },
+      { auteur: 'T. Bäck, U. Hammel, H.-P. Schwefel', titre: 'Evolutionary Computation: Comments on the History and Current State', url: 'https://sci2s.ugr.es/sites/default/files/files/Teaching/OtherPostGraduateCourses/Metaheuristicas/01%20-%20EC-History-IEEETEC-1-1-1997.pdf', type: 'recherche', annee: 1997, langue: 'en' },
+      { auteur: 'T. Taylor, A. Dorin, K. Korb', titre: 'Digital Genesis: Computers, Evolution and Artificial Life (Barricelli)', url: 'https://arxiv.org/abs/1512.02100', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'University of Michigan', titre: 'John Henry Holland, who computerized evolution, dies at 86', url: 'https://prod.lsa.umich.edu/psych/news-events/all-news/archived-news/2015/08/john-henry-holland--who-computerized-evolution--dies-at-86.html', type: 'site', annee: 2015, langue: 'en' },
+      { auteur: 'C. Carlisle (NASA Goddard)', titre: 'Space Technology 5 - A Successful Micro-Satellite Constellation Mission', url: 'https://ntrs.nasa.gov/api/citations/20080013221/downloads/20080013221.pdf', type: 'primaire', langue: 'en' },
+      { auteur: 'G. Hornby, A. Globus, D. Linden, J. Lohn (NASA)', titre: 'Automated Antenna Design with Evolutionary Algorithms', url: 'https://ntrs.nasa.gov/citations/20060024675', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'S. Kirkpatrick, C. D. Gelatt, M. P. Vecchi', titre: 'Optimization by Simulated Annealing (Science)', url: 'https://doi.org/10.1126/science.220.4598.671', type: 'primaire', annee: 1983, langue: 'en' },
+      { auteur: 'N. Metropolis, A. W. Rosenbluth, M. N. Rosenbluth, A. H. Teller, E. Teller', titre: 'Equation of State Calculations by Fast Computing Machines', url: 'https://doi.org/10.1063/1.1699114', type: 'primaire', annee: 1953, langue: 'en' },
+      { auteur: 'INFORMS', titre: 'UPS On-Road Integrated Optimization and Navigation (ORION) Project', url: 'https://www.informs.org/Impact/O.R.-Analytics-Success-Stories/UPS-On-Road-Integrated-Optimization-and-Navigation-ORION-Project', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'Nobelprize.org', titre: 'The Prize in Economic Sciences 2012 — Press release', url: 'https://www.nobelprize.org/prizes/economic-sciences/2012/press-release/', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'Bulletin 1024 de la SIF', titre: 'Journée sur les algorithmes d’aide à la décision publique (témoignage de Claire Mathieu sur Parcoursup)', url: 'https://1024.socinfo.fr/2023/11/1024_22_2023_13.pdf', type: 'recherche', annee: 2023 },
+      { auteur: 'Ministère de l’Enseignement supérieur', titre: 'Document de présentation des algorithmes de Parcoursup', url: 'https://www.enseignementsup-recherche.gouv.fr/sites/default/files/content_migration/document/Presentation_Algorithmes_Parcoursup2019_1133522.pdf', type: 'primaire', annee: 2019 },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

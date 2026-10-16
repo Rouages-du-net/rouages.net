@@ -1,0 +1,168 @@
+---
+// Animation « Le plus court chemin » (étapes 0 et 1 du module « Les IA qui
+// cherchent et optimisent ») : un calcul d'itinéraire dans une ville en
+// grille, avec une avenue embouteillée. On regarde, case par case, ce que
+// l'algorithme explore : Dijkstra (en onde, dans toutes les directions), A*
+// (guidé par la distance qui reste) ou une recherche qui fonce vers
+// l'arrivée (rapide, mais piégée par le bouchon).
+interface Props {
+  modes?: ('dijkstra' | 'astar' | 'glouton')[];
+}
+const { modes = ['dijkstra', 'astar', 'glouton'] } = Astro.props;
+const NOMS = { dijkstra: 'Dijkstra : au plus près d’abord', astar: 'A* : avec une estimation', glouton: 'Foncer vers l’arrivée' };
+const id = `itin-${modes.join('-')}`;
+---
+<div class="anim itineraire" data-itineraire>
+  <div class="anim-repli">
+    <p>
+      Pour aller de D à A dans une ville en grille, où l'avenue directe est embouteillée
+      (5 minutes par pâté de maisons au lieu de 1), l'algorithme de Dijkstra explore les rues
+      en onde, des plus proches aux plus lointaines : il examine 167 carrefours avant de
+      trouver le meilleur trajet, 27 minutes, qui contourne le bouchon.
+      {modes.includes('astar') && ' A* ajoute à chaque carrefour une estimation de la distance qui reste : il trouve le même trajet de 27 minutes en n’examinant que 34 carrefours.'}
+      {modes.includes('glouton') && ' Une recherche qui fonce vers l’arrivée n’examine que 22 carrefours, mais prend l’avenue embouteillée : 81 minutes.'}
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      {modes.length > 1 && (
+        <fieldset class="modes">
+          <legend>Méthode</legend>
+          {modes.map((m, k) => (
+            <label><input type="radio" name={id} value={m} checked={k === 1 || modes.length === 1} /> {NOMS[m]}</label>
+          ))}
+        </fieldset>
+      )}
+      {modes.length === 1 && <input type="radio" name={id} value={modes[0]} checked hidden />}
+      <svg viewBox="0 0 240 130" role="img" aria-labelledby={`${id}-titre`} data-plan>
+        <title id={`${id}-titre`}>Plan de la ville : rues, bâtiments, bouchon, carrefours explorés et trajet trouvé.</title>
+      </svg>
+      <p class="cle"><span class="k rue"></span> rue (1 min) <span class="k bouchon"></span> bouchon (5 min) <span class="k vu"></span> carrefour examiné <span class="k chemin"></span> trajet</p>
+      <p class="etat" data-etat aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="lancer">▶ Chercher</button>
+        <button type="button" data-action="instant">⏭ Résultat direct</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { lireCarte, chercher } from '../../../lib/chercher';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const PLAN = [
+    '........................',
+    '.##.###.###.##.###.###..',
+    '.##.###.###.##.###.###..',
+    '........................',
+    '.##.###.###.##.###.###..',
+    '.##.###.###.##.###.###..',
+    '.D..~~~~~~~~~~~~~~~...A.',
+    '.##.###.###.##.###.###..',
+    '.##.###.###.##.###.###..',
+    '........................',
+    '.##.###.###.##.###.###..',
+    '.##.###.###.##.###.###..',
+    '........................',
+  ];
+  const POIDS = { dijkstra: 0, astar: 1, glouton: 5 };
+  const T = 10;
+
+  document.querySelectorAll<HTMLElement>('[data-itineraire]').forEach((racine) => {
+    activerScene(racine);
+    const carte = lireCarte(PLAN);
+    const svg = racine.querySelector<SVGSVGElement>('[data-plan]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-action]')];
+    const rects = carte.cases.map((c, i) => {
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', String((i % carte.larg) * T));
+      r.setAttribute('y', String(Math.floor(i / carte.larg) * T));
+      r.setAttribute('width', String(T));
+      r.setAttribute('height', String(T));
+      r.setAttribute('class', c === '#' ? 'bat' : c === '~' ? 'bouchon' : 'rue');
+      svg.append(r);
+      return r;
+    });
+    for (const [lettre, i] of [['D', carte.depart], ['A', carte.arrivee]] as const) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', String((i % carte.larg) * T + T / 2));
+      t.setAttribute('y', String(Math.floor(i / carte.larg) * T + T / 2 + 3.5));
+      t.setAttribute('class', 'lettre');
+      t.textContent = lettre;
+      svg.append(t);
+    }
+    const mode = () => racine.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value as keyof typeof POIDS;
+    const total = carte.cases.filter((c) => c !== '#').length;
+    let jeton = 0;
+
+    function effacer() {
+      rects.forEach((r, i) => r.classList.remove('vu', 'chemin'));
+      etat.textContent = '';
+      legende.textContent = 'Clique sur « Chercher » pour voir les carrefours que l’algorithme examine, dans l’ordre.';
+    }
+
+    function finir(r: ReturnType<typeof chercher>) {
+      r.chemin.forEach((i) => rects[i].classList.add('chemin'));
+      etat.textContent = `${r.ordre.length} carrefours examinés sur ${total} · trajet : ${r.cout} minutes`;
+      const m = mode();
+      legende.textContent =
+        m === 'dijkstra'
+          ? `Dijkstra s’étend en onde dans toutes les directions, même à l’opposé de l’arrivée. Mais quand il atteint A, il est sûr d’avoir le meilleur trajet : ${r.cout} minutes, en contournant le bouchon.`
+          : m === 'astar'
+            ? `A* trouve le même trajet de ${r.cout} minutes en examinant bien moins de carrefours : il privilégie ceux qui rapprochent de l’arrivée. Son estimation (la distance à vol d’oiseau) ne surestime jamais le temps restant : c’est ce qui garantit le meilleur trajet.`
+            : `Très peu de carrefours examinés… mais ${r.cout} minutes de trajet, dans le bouchon ! En donnant trop de poids à « se rapprocher », on rate le détour. Aller vite ou être sûr : c’est un choix.`;
+      boutons.forEach((b) => (b.disabled = false));
+    }
+
+    async function lancer(direct: boolean) {
+      const mon = ++jeton;
+      effacer();
+      const r = chercher(carte, POIDS[mode()]);
+      if (direct || mouvementReduit()) {
+        r.ordre.forEach((i) => rects[i].classList.add('vu'));
+        return finir(r);
+      }
+      boutons.forEach((b) => (b.disabled = true));
+      for (let k = 0; k < r.ordre.length; k++) {
+        if (mon !== jeton) return;
+        rects[r.ordre[k]].classList.add('vu');
+        etat.textContent = `${k + 1} carrefours examinés…`;
+        if (k % 3 === 2) await new Promise((ok) => setTimeout(ok, 30));
+      }
+      finir(r);
+    }
+
+    racine.querySelector('[data-action="lancer"]')!.addEventListener('click', () => lancer(false));
+    racine.querySelector('[data-action="instant"]')!.addEventListener('click', () => lancer(true));
+    racine.querySelectorAll('input[type="radio"]').forEach((i) => i.addEventListener('change', () => { jeton++; boutons.forEach((b) => (b.disabled = false)); effacer(); }));
+    effacer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 36rem; height: auto; display: block; margin: 0 auto; }
+  svg :global(rect.bat) { fill: var(--border); }
+  svg :global(rect.rue) { fill: var(--bg); }
+  svg :global(rect.bouchon) { fill: color-mix(in oklab, var(--ill-commun) 45%, var(--bg)); }
+  svg :global(rect.vu) { fill: color-mix(in oklab, var(--ill-client) 35%, var(--bg)); }
+  svg :global(rect.bouchon.vu) { fill: color-mix(in oklab, var(--ill-client) 35%, var(--ill-commun)); }
+  svg :global(rect.chemin) { fill: var(--ill-paquet); }
+  svg :global(.lettre) { font: 700 8px var(--police); text-anchor: middle; fill: var(--fg); }
+  .modes { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.5rem 0.9rem; margin: 0 0 0.75rem; }
+  .modes legend { font-weight: 600; padding: 0 0.3rem; }
+  .modes label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .cle { font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; align-items: center; margin: 0.5rem 0 0; }
+  .k { display: inline-block; width: 0.8rem; height: 0.8rem; border: 1px solid var(--border); vertical-align: middle; margin-right: 0.2rem; }
+  .k.rue { background: var(--bg); }
+  .k.bouchon { background: color-mix(in oklab, var(--ill-commun) 45%, var(--bg)); }
+  .k.vu { background: color-mix(in oklab, var(--ill-client) 35%, var(--bg)); }
+  .k.chemin { background: var(--ill-paquet); }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; min-height: 1.3em; }
+</style>

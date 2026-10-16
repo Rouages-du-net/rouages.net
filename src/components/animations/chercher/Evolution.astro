@@ -1,0 +1,110 @@
+---
+// Animation « Évoluer » (étape 4 du module « Les IA qui cherchent et
+// optimisent ») : un algorithme génétique remplit un sac de randonnée
+// (15 objets, 9 kg au plus). Chaque ligne est un sac de la population ;
+// génération après génération, sélection, croisement et mutation
+// améliorent le meilleur sac.
+import { OBJETS_SAC } from '../../../lib/chercher';
+---
+<div class="anim evolution" data-evolution>
+  <div class="anim-repli">
+    <p>
+      Il faut choisir, parmi 15 objets, ce qu'on emporte en randonnée sans dépasser 9 kg, en
+      étant le plus utile possible. Il y a 32 768 sacs possibles. L'algorithme génétique part
+      de 24 sacs remplis au hasard. À chaque génération, les meilleurs sacs ont plus de chances
+      d'être « parents » ; chaque nouveau sac prend le début de la liste d'un parent et la fin
+      de l'autre (croisement), et quelques objets sont ajoutés ou retirés au hasard (mutation).
+      En une douzaine de générations, il trouve ici le meilleur sac possible (75 points,
+      9 kg), sans les avoir tous essayés.
+    </p>
+    <ul>{OBJETS_SAC.map((o) => <li>{o.icone} {o.nom} : {String(o.poids).replace('.', ',')} kg, utilité {o.utilite}</li>)}</ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="meilleur">
+        <h4>Le meilleur sac de la génération <span data-gen>0</span></h4>
+        <p class="contenu" data-contenu></p>
+        <p class="etat" data-etat aria-live="polite"></p>
+      </div>
+      <div class="population" aria-hidden="true">
+        <div class="entete">{OBJETS_SAC.map((o) => <span title={o.nom}>{o.icone}</span>)}</div>
+        <div data-population></div>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="un">🧬 Une génération</button>
+        <button type="button" data-action="dix">10 générations</button>
+        <button type="button" data-action="recommencer">↺ Nouvelle population</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { Evolution, OBJETS_SAC, MAX_SAC, poidsSac, utiliteSac, meilleurSacExact } from '../../../lib/chercher';
+  import { hasard } from '../../../lib/minilm';
+
+  const kg = (v: number) => v.toFixed(1).replace('.', ',');
+  const exact = utiliteSac(OBJETS_SAC, meilleurSacExact(OBJETS_SAC, MAX_SAC).sac);
+
+  document.querySelectorAll<HTMLElement>('[data-evolution]').forEach((racine) => {
+    activerScene(racine);
+    const pop = racine.querySelector<HTMLElement>('[data-population]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 2;
+    let evo = new Evolution(OBJETS_SAC, MAX_SAC, hasard(graine));
+
+    function dessiner() {
+      const m = evo.meilleur;
+      const p = poidsSac(OBJETS_SAC, m);
+      const u = utiliteSac(OBJETS_SAC, m);
+      racine.querySelector('[data-gen]')!.textContent = String(evo.generation);
+      racine.querySelector('[data-contenu]')!.textContent = OBJETS_SAC.filter((_, i) => m[i]).map((o) => `${o.icone} ${o.nom}`).join(', ') || '(vide)';
+      racine.querySelector('[data-etat]')!.textContent = `${kg(p)} kg sur ${MAX_SAC} · utilité ${u} points${p > MAX_SAC ? ' · trop lourd !' : ''} (meilleur possible : ${exact})`;
+      pop.replaceChildren(
+        ...evo.population.map((s) => {
+          const ligne = document.createElement('div');
+          ligne.className = `sac${poidsSac(OBJETS_SAC, s) > MAX_SAC ? ' lourd' : ''}`;
+          ligne.append(...s.map((b) => Object.assign(document.createElement('span'), { className: b ? 'dans' : '' })));
+          return ligne;
+        }),
+      );
+      return u;
+    }
+
+    function avancer(n: number) {
+      for (let k = 0; k < n; k++) evo.suivante();
+      const u = dessiner();
+      legende.textContent =
+        u >= exact && poidsSac(OBJETS_SAC, evo.meilleur) <= MAX_SAC
+          ? `Génération ${evo.generation} : le meilleur sac possible est trouvé (${exact} points), sans essayer les 32 768 sacs. Les lignes se ressemblent : la population a convergé. Mais rien ne garantissait d’y arriver : une autre population peut rester coincée un peu en dessous.`
+          : `Génération ${evo.generation} : les sacs les mieux notés ont eu plus d’enfants ; chaque enfant mélange deux parents, avec quelques mutations. Les lignes (les sacs de la population) se ressemblent de plus en plus.`;
+    }
+
+    const act = (nom: string, f: () => void) => racine.querySelector(`[data-action="${nom}"]`)!.addEventListener('click', f);
+    act('un', () => avancer(1));
+    act('dix', () => avancer(10));
+    act('recommencer', () => {
+      evo = new Evolution(OBJETS_SAC, MAX_SAC, hasard(++graine));
+      dessiner();
+      legende.textContent = 'Nouvelle population de 24 sacs remplis au hasard.';
+    });
+    dessiner();
+    legende.textContent = 'Génération 0 : 24 sacs remplis au hasard (une ligne par sac, une case colorée par objet emporté ; en grisé, les sacs trop lourds).';
+  });
+</script>
+
+<style>
+  .meilleur h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+  .contenu { margin: 0; font-size: 0.95rem; }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.3rem 0 0.75rem; }
+  .population { overflow-x: auto; }
+  .entete, .population :global(.sac) { display: grid; grid-template-columns: repeat(15, 1.3rem); gap: 2px; }
+  .entete span { font-size: 0.85rem; text-align: center; }
+  .population :global(.sac) { margin-top: 2px; }
+  .population :global(.sac span) { height: 0.55rem; background: var(--bg); border: 1px solid var(--border); border-radius: 2px; }
+  .population :global(.sac span.dans) { background: var(--ill-secret-b); border-color: var(--ill-secret-b); }
+  .population :global(.sac.lourd) { opacity: 0.35; }
+</style>

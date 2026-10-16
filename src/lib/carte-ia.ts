@@ -23,7 +23,7 @@ export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lie
   { nom: 'qui recommandent', exemples: 'vidéos, fil d’actualité', mecanismes: ['stats', 'neurones'] },
   { nom: 'qui prédisent', exemples: 'météo, consommation', mecanismes: ['stats', 'neurones', 'probas'] },
   { nom: 'qui décident pour nous', exemples: 'crédit, aides sociales', mecanismes: ['regles', 'stats', 'probas', 'neurones'] },
-  { nom: 'qui cherchent et optimisent', exemples: 'GPS, tournées, horaires', mecanismes: ['recherche', 'nature'] },
+  { nom: 'qui cherchent et optimisent', exemples: 'GPS, tournées, horaires', mecanismes: ['recherche', 'nature'], lien: '/modules/ia-chercher/' },
   { nom: 'qui jouent', exemples: 'échecs, go', mecanismes: ['recherche', 'renforcement', 'neurones'] },
   { nom: 'qui agissent', exemples: 'robots, voitures autonomes', mecanismes: ['neurones', 'renforcement', 'recherche', 'regles'] },
   { nom: 'qui surveillent', exemples: 'fraude, vidéosurveillance', mecanismes: ['stats', 'neurones', 'regles'] },

@@ -1,0 +1,147 @@
+---
+// Animation « Trop de tournées » (étape 2 du module « Les IA qui cherchent
+// et optimisent ») : le problème du voyageur de commerce. On trace soi-même
+// une tournée entre 8 villes, puis on compare avec une méthode gloutonne,
+// son amélioration « 2-opt » et l'essai des 2 520 tournées possibles.
+import { nombreTournees } from '../../../lib/chercher';
+
+const lignes = [5, 8, 10, 15, 20, 30].map((n) => ({ n, t: nombreTournees(n) }));
+const fmt = (x: number) =>
+  x < 1e15 ? new Intl.NumberFormat('fr-FR').format(x) : `≈ ${(x / 10 ** Math.floor(Math.log10(x))).toFixed(1).replace('.', ',')} × 10^${Math.floor(Math.log10(x))}`;
+---
+<div class="anim tournee" data-tournee>
+  <div class="anim-repli">
+    <p>
+      Un livreur doit passer par 8 villes et revenir à son point de départ. Il existe 2 520
+      tournées différentes : un ordinateur peut toutes les essayer. Mais ce nombre explose avec
+      le nombre de villes :
+    </p>
+  </div>
+  <table class="explosion">
+    <caption>Nombre de tournées possibles</caption>
+    <thead><tr><th scope="col">Villes</th><th scope="col">Tournées différentes</th></tr></thead>
+    <tbody>{lignes.map((l) => <tr><td>{l.n}</td><td>{fmt(l.t)}</td></tr>)}</tbody>
+  </table>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 220" role="img" aria-labelledby="tournee-titre">
+        <title id="tournee-titre">Huit hameaux et la tournée en cours.</title>
+        <rect x="0" y="0" width="320" height="220" class="fond" />
+        <polyline data-trace class="trace" points="" />
+        <g data-villes></g>
+      </svg>
+      <p class="etat" data-etat aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="effacer">↺ Effacer</button>
+        <button type="button" data-action="glouton">🏃 Au plus proche</button>
+        <button type="button" data-action="deuxopt">✂️ Décroiser (2-opt)</button>
+        <button type="button" class="principal" data-action="tout">🧮 Essayer les 2 520</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { forceBrute, plusProcheVoisin, deuxOpt, longueur, type Ville } from '../../../lib/chercher';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  // Hameaux imaginaires, placés au hasard (graine fixe).
+  const NOMS = ['Abeille', 'Bruyère', 'Cèdre', 'Dune', 'Érable', 'Fougère', 'Genêt', 'Houx'];
+  const fr = (v: number) => Math.round(v).toLocaleString('fr-FR');
+
+  document.querySelectorAll<HTMLElement>('[data-tournee]').forEach((racine) => {
+    activerScene(racine);
+    const a = hasard(3);
+    const villes: Ville[] = NOMS.map((nom) => ({ nom, x: 20 + a() * 280, y: 20 + a() * 180 }));
+    const trace = racine.querySelector<SVGPolylineElement>('[data-trace]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const optimum = longueur(villes, forceBrute(villes).ordre);
+    let ordre: number[] = [];
+
+    const boutonsVilles = villes.map((v, i) => {
+      const g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', 'ville');
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', `Aller à la ville ${v.nom}`);
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', String(v.x));
+      c.setAttribute('cy', String(v.y));
+      c.setAttribute('r', '7');
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', String(v.x));
+      t.setAttribute('y', String(v.y - 11));
+      t.textContent = v.nom.charAt(0);
+      g.append(c, t);
+      const choisir = () => {
+        if (ordre.includes(i)) return;
+        ordre.push(i);
+        dessiner();
+      };
+      g.addEventListener('click', choisir);
+      g.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), choisir()));
+      racine.querySelector('[data-villes]')!.append(g);
+      return g;
+    });
+
+    function dessiner(message?: string) {
+      const ferme = ordre.length === villes.length;
+      const pts = [...ordre, ...(ferme ? [ordre[0]] : [])].map((i) => `${villes[i].x},${villes[i].y}`);
+      trace.setAttribute('points', pts.join(' '));
+      boutonsVilles.forEach((g, i) => g.classList.toggle('visitee', ordre.includes(i)));
+      if (!ordre.length) {
+        etat.textContent = '';
+        legende.textContent = 'Clique sur les hameaux dans l’ordre de ta tournée (leurs initiales sont affichées). Elle se refermera toute seule.';
+        return;
+      }
+      if (!ferme) {
+        etat.textContent = `${ordre.length} villes sur ${villes.length}`;
+        legende.textContent = '';
+        return;
+      }
+      const l = longueur(villes, ordre);
+      const ecart = (l / optimum - 1) * 100;
+      etat.textContent = `Tournée : ${fr(l)} km · meilleure possible : ${fr(optimum)} km`;
+      legende.textContent = message ?? (ecart < 0.05 ? 'Bravo, c’est la meilleure tournée possible !' : `${ecart.toFixed(0)} % plus longue que la meilleure. Essaie les boutons.`);
+    }
+
+    const act = (nom: string, f: () => void) => racine.querySelector(`[data-action="${nom}"]`)!.addEventListener('click', f);
+    act('effacer', () => { ordre = []; dessiner(); });
+    act('glouton', () => {
+      ordre = plusProcheVoisin(villes, ordre[0] ?? 0);
+      dessiner(`Au plus proche : de chaque ville, on va à la plus proche pas encore visitée. Rapide, mais ${fr(longueur(villes, ordre))} km contre ${fr(optimum)} : à la fin, il faut souvent revenir de loin.`);
+    });
+    act('deuxopt', () => {
+      if (ordre.length < villes.length) ordre = plusProcheVoisin(villes, ordre[0] ?? 0);
+      ordre = deuxOpt(villes, ordre);
+      dessiner(`2-opt : tant que deux routes se croisent ou qu’échanger deux liaisons raccourcit la tournée, on le fait. ${fr(longueur(villes, ordre))} km${longueur(villes, ordre) < optimum + 0.5 ? ' : ici, c’est le meilleur' : ''}. Mais rien ne garantit en général d’atteindre le meilleur.`);
+    });
+    act('tout', () => {
+      const r = forceBrute(villes);
+      ordre = r.ordre;
+      dessiner(`L’ordinateur a essayé les ${r.essais.toLocaleString('fr-FR')} tournées : la meilleure fait ${fr(optimum)} km. Facile pour 8 villes… impossible pour 30, même avec tous les ordinateurs du monde (voir le tableau).`);
+    });
+    dessiner();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  .trace { fill: none; stroke: var(--ill-paquet); stroke-width: 2.5; stroke-linejoin: round; }
+  svg :global(.ville) { cursor: pointer; }
+  svg :global(.ville circle) { fill: var(--card); stroke: var(--ill-client); stroke-width: 2.5; }
+  svg :global(.ville.visitee circle) { fill: var(--ill-client); }
+  svg :global(.ville:focus-visible circle) { stroke: var(--fg); stroke-width: 3.5; }
+  svg :global(.ville text) { font: 700 11px var(--police); text-anchor: middle; fill: var(--fg); }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.5rem 0 0; min-height: 1.3em; }
+  .explosion { border-collapse: collapse; margin: 0 0 1rem; font-size: 0.95rem; }
+  .explosion caption { text-align: left; font-weight: 600; margin-bottom: 0.3rem; }
+  .explosion th, .explosion td { border-bottom: 1px solid var(--border); padding: 0.3rem 0.8rem; text-align: left; }
+  .explosion td:last-child { font-family: var(--police-mono); }
+</style>

@@ -381,6 +381,18 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Les deux erreurs d'un classement oui/non. Faux positif : le système dit « oui » à tort (un vrai courriel classé spam). Faux négatif : il dit « non » à tort (un spam qui passe). Baisser l'une fait souvent monter l'autre.",
     voirAussi: ['classifieur-bayesien'],
   },
+  'heuristique': {
+    terme: 'Heuristique',
+    definition:
+      "Règle approximative qui guide une recherche vers les solutions prometteuses, sans tout essayer : par exemple « privilégier les rues qui rapprochent de l'arrivée ». Elle accélère, mais ne garantit pas toujours la meilleure solution.",
+    voirAussi: ['algorithme-genetique'],
+  },
+  'algorithme-genetique': {
+    terme: 'Algorithme génétique',
+    definition:
+      "Méthode d'optimisation inspirée de l'évolution des espèces : une population de solutions est notée, les meilleures se « reproduisent » (croisement) avec un peu de hasard (mutation), et l'on recommence sur de nombreuses générations.",
+    voirAussi: ['heuristique'],
+  },
 };
 
 export function entree(id: string): Entree {
