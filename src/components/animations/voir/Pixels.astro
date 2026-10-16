@@ -1,0 +1,79 @@
+---
+// Animation « Une image, ce sont des nombres » (étape 0 du module « Les IA
+// qui voient ») : on dessine sur une grille de 16 × 16 pixels et l'on voit,
+// à côté, les nombres que l'ordinateur reçoit réellement (0 = blanc,
+// 255 = noir… ici, encre).
+---
+<div class="anim pixels" data-pixels>
+  <div class="anim-repli">
+    <p>
+      Pour un ordinateur, une image n'est qu'un tableau de nombres. Une image de 16 × 16
+      pixels en niveaux de gris, c'est 256 nombres, chacun entre 0 (pas d'encre) et 255 (encre
+      pleine). Une photo en couleur de 12 millions de pixels, c'est 36 millions de nombres :
+      trois par pixel, pour le rouge, le vert et le bleu.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre deux">
+      <div>
+        <h4>Ce que tu vois</h4>
+        <svg class="dessin" role="img" aria-label="Grille de dessin de 16 × 16 pixels" data-dessin></svg>
+        <div class="anim-commandes">
+          <button type="button" data-action="effacer">↺ Effacer</button>
+          <button type="button" data-action="exemple">🙂 Un exemple</button>
+        </div>
+      </div>
+      <div>
+        <h4>Ce que reçoit l'ordinateur</h4>
+        <div class="anim-cadre-defile"><pre class="nombres" data-nombres aria-live="off"></pre></div>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { grilleDessin } from '../../../lib/grille-dessin';
+  import { nouvelleImage } from '../../../lib/voir';
+
+  // Un petit visage souriant, pour l'exemple.
+  function visage() {
+    const im = nouvelleImage(16, 16);
+    for (let y = 0; y < 16; y++)
+      for (let x = 0; x < 16; x++) {
+        const d = Math.hypot(x + 0.5 - 8, y + 0.5 - 8);
+        let v = Math.max(0, 1 - Math.abs(d - 6.3) * 1.2);
+        if (Math.hypot(x + 0.5 - 5.5, y + 0.5 - 6) < 1.2 || Math.hypot(x + 0.5 - 10.5, y + 0.5 - 6) < 1.2) v = 1;
+        if (d > 2.6 && d < 3.9 && y + 0.5 > 9) v = Math.max(v, 0.9);
+        im.px[y * 16 + x] = Math.min(1, v);
+      }
+    return im;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-pixels]').forEach((racine) => {
+    activerScene(racine);
+    const nombres = racine.querySelector<HTMLElement>('[data-nombres]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const g = grilleDessin(racine.querySelector<SVGSVGElement>('[data-dessin]')!, 16, () => {
+      const vals = Array.from(g.image.px, (v) => Math.round(v * 255));
+      nombres.textContent = Array.from({ length: 16 }, (_, y) => vals.slice(y * 16, y * 16 + 16).map((v) => String(v).padStart(3, ' ')).join(' ')).join('\n');
+      const encre = vals.filter((v) => v > 0).length;
+      legende.textContent = encre
+        ? `${encre} pixels sur 256 ont de l’encre. L’ordinateur ne « voit » ni cercle ni visage : seulement ces 256 nombres. Tout le travail d’une IA qui voit, c’est de retrouver la forme dans les nombres.`
+        : 'Dessine avec la souris ou le doigt dans la grille de gauche.';
+    });
+    racine.querySelector('[data-action="effacer"]')!.addEventListener('click', () => g.effacer());
+    racine.querySelector('[data-action="exemple"]')!.addEventListener('click', () => g.charger(visage()));
+    g.charger(visage());
+  });
+</script>
+
+<style>
+  .deux { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); align-items: start; }
+  h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .dessin { width: 100%; max-width: 16rem; aspect-ratio: 1; display: block; background: var(--bg); border: 1px solid var(--border); cursor: crosshair; }
+  .dessin :global(rect) { fill: var(--fg); }
+  .nombres { font-family: var(--police-mono); font-size: 0.55rem; line-height: 1.35; margin: 0; }
+</style>

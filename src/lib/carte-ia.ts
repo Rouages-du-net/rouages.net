@@ -16,7 +16,7 @@ export type Mecanisme = (typeof MECANISMES)[number]['id'];
 
 export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lien?: string }[] = [
   { nom: 'qui écrivent', exemples: 'assistants, traduction', mecanismes: ['neurones', 'probas'], lien: '/modules/ia-texte/' },
-  { nom: 'qui voient', exemples: 'visages, tri postal', mecanismes: ['neurones', 'stats'] },
+  { nom: 'qui voient', exemples: 'visages, tri postal', mecanismes: ['neurones', 'stats'], lien: '/modules/ia-voir/' },
   { nom: 'qui entendent et parlent', exemples: 'assistants vocaux, sous-titres', mecanismes: ['neurones', 'probas'] },
   { nom: 'qui créent', exemples: 'images, musique', mecanismes: ['neurones'] },
   { nom: 'qui classent', exemples: 'spam, diagnostic, tri de CV', mecanismes: ['probas', 'stats', 'neurones', 'regles'], lien: '/modules/ia-classer/' },

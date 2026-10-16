@@ -393,6 +393,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Méthode d'optimisation inspirée de l'évolution des espèces : une population de solutions est notée, les meilleures se « reproduisent » (croisement) avec un peu de hasard (mutation), et l'on recommence sur de nombreuses générations.",
     voirAussi: ['heuristique'],
   },
+  'convolution': {
+    terme: 'Convolution',
+    definition:
+      "Opération qui fait glisser un petit filtre (par exemple 3 × 3 coefficients) sur toute une image : pour chaque pixel, on multiplie ses voisins par les coefficients et l'on additionne. Selon le filtre, on obtient un flou, des bords, des textures. Les réseaux convolutifs apprennent leurs filtres.",
+    voirAussi: ['neurone-artificiel'],
+  },
 };
 
 export function entree(id: string): Entree {

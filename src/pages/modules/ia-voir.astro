@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Pixels from '../../components/animations/voir/Pixels.astro';
+import Convolution from '../../components/animations/voir/Convolution.astro';
+import Formes from '../../components/animations/voir/Formes.astro';
+import Visages from '../../components/animations/voir/Visages.astro';
+
+// Faits sourcés : voir docs/sources/ia-voir.md.
+const etapes = [
+  { ancre: 'pixels', court: 'Des nombres' },
+  { ancre: 'filtres', court: 'Les filtres' },
+  { ancre: 'reseau', court: 'Le réseau' },
+  { ancre: 'visages', court: 'Les visages' },
+  { ancre: 'bilan', court: 'Autour de toi', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui voient"
+  description="Comment une machine reconnaît une forme, un objet ou un visage : des pixels aux réseaux convolutifs, avec un vrai petit réseau qui apprend sous tes yeux, et les questions que pose la reconnaissance faciale."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Les IA qui voient</h1>
+  <p class="chapo seulement-debut">
+    Ton téléphone reconnaît ton visage, une application trouve le nom d'une plante, une
+    voiture repère un piéton. Pourtant, une machine ne voit que des nombres. Dessine, filtre,
+    entraîne un petit réseau qui apprend à reconnaître des formes, puis regarde ce qui se
+    passe quand on applique tout cela à des visages.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Une image, ce sont des nombres" ancre="pixels">
+    <Pixels slot="animation" />
+    <p slot="decouverte">
+      Dessine dans la grille. À droite, voici ce que reçoit vraiment l'ordinateur : un tableau
+      de nombres, un par petit carré (un pixel). 0, c'est vide ; 255, c'est plein.
+    </p>
+    <p slot="curieux">
+      Une photo en couleur a trois nombres par pixel : la quantité de rouge, de vert et de
+      bleu. Une photo de téléphone de 12 millions de pixels, c'est donc 36 millions de nombres.
+      Reconnaître un chat, c'est trouver une régularité dans ces millions de nombres, alors
+      que le même chat, un peu décalé ou mieux éclairé, donne des nombres tout différents.
+    </p>
+    <p slot="ingenieur">
+      Une image est un tableau à trois dimensions : hauteur × largeur × canaux (1 en niveaux de
+      gris, 3 en RVB), souvent des entiers de 0 à 255 sur 8 bits, convertis en nombres entre 0
+      et 1 avant d'entrer dans un réseau. Comparer deux images pixel par pixel ne marche pas :
+      il faut des représentations qui ne changent pas quand l'objet bouge un peu.
+    </p>
+    <div slot="histoire" data-a-sourcer="kirsch"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Des filtres pour voir les bords" ancre="filtres">
+    <Convolution slot="animation" />
+    <p slot="decouverte">
+      Pour retrouver une forme, on commence par chercher ses bords. On fait glisser sur
+      l'image une petite grille de 9 coefficients, le « filtre », et l'on calcule une somme
+      pour chaque pixel. Change de filtre et compare.
+    </p>
+    <p slot="curieux">
+      Cette opération s'appelle une <Terme id="convolution">convolution</Terme>. Le même filtre
+      est appliqué partout : un bord est détecté, qu'il soit en haut ou en bas de l'image.
+      Les logiciels de retouche photo s'en servent pour flouter ou rendre plus net.
+    </p>
+    <p slot="ingenieur">
+      Sortie(x, y) = Σ noyau(i, j) × image(x + i, y + j), pour i et j de −1 à 1. Les noyaux
+      « bords verticaux » et « bords horizontaux » sont ceux de Sobel. En dehors de l'image, on
+      compte les pixels comme vides. Un réseau convolutif ne se donne pas ces noyaux : il les
+      apprend.
+    </p>
+    <div slot="histoire" data-a-sourcer="hubel"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Un réseau qui apprend ses filtres" ancre="reseau">
+    <Formes slot="animation" />
+    <p slot="decouverte">
+      Ce petit réseau n'a jamais vu de forme. Entraîne-le sur 400 dessins, puis dessine un
+      cercle, un carré, un triangle ou une croix : il te dit ce qu'il reconnaît.
+    </p>
+    <p slot="curieux">
+      Le réseau a 4 filtres de 3 × 3 qui partent du hasard. À chaque erreur, la
+      rétropropagation les ajuste, avec la couche finale qui transforme ce qu'ils détectent en
+      réponse. Il découvre seul les traits utiles : diagonales, coins, courbes. Les grands
+      réseaux empilent des dizaines de couches : les premières voient des bords, les suivantes
+      des textures, puis des morceaux d'objets.
+    </p>
+    <p slot="ingenieur">
+      Architecture : convolution (4 filtres 3 × 3, sans bord : 14 × 14), ReLU, regroupement
+      par maximum 2 × 2 (7 × 7), couche dense vers 4 sorties, softmax ; entropie croisée,
+      descente de gradient par paquets de 20. Moins de 900 paramètres. Le regroupement rend le
+      réseau un peu insensible aux petits décalages. Le réseau ne connaît que ses quatre
+      formes : un dessin d'un autre genre recevra quand même l'une des quatre réponses.
+    </p>
+    <div slot="histoire" data-a-sourcer="cnn"><p>À compléter.</p></div>
+    <p slot="mythes">
+      <strong>« L'IA voit comme nous. »</strong> Elle trouve des régularités dans des nombres.
+      Elle peut se tromper là où personne ne se tromperait, ou répondre avec assurance sur un
+      dessin qui n'a rien à voir avec ce qu'elle connaît.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Quand l'image est un visage" ancre="visages">
+    <Visages slot="animation" />
+    <p slot="decouverte">
+      Les mêmes techniques servent à reconnaître des visages. Mais un système peut marcher très
+      bien pour certaines personnes et beaucoup moins pour d'autres. Compare les taux d'erreur
+      mesurés en 2018 sur trois logiciels commerciaux.
+    </p>
+    <p slot="curieux">
+      Ces écarts viennent en grande partie des photos d'entraînement et de test, longtemps
+      composées surtout d'hommes à la peau claire. Une erreur de reconnaissance faciale n'a pas
+      les mêmes conséquences pour déverrouiller un téléphone que pour une enquête de police.
+    </p>
+    <p slot="ingenieur">
+      Il faut distinguer la vérification (est-ce bien la même personne ? un contre un), comme
+      pour déverrouiller un téléphone, et l'identification (qui est-ce ? un contre des
+      millions), plus risquée. Les taux d'erreur se mesurent séparément pour chaque groupe :
+      une précision moyenne de 95 % peut cacher 30 % d'erreurs pour un groupe.
+    </p>
+    <div slot="histoire" data-a-sourcer="visages"><p>À compléter.</p></div>
+    <div slot="decide" data-a-sourcer="droit"><p>À compléter.</p></div>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Les IA qui voient, autour de toi</h2>
+    <table>
+      <thead><tr><th scope="col">Usage</th><th scope="col">Ce qu'elle voit</th><th scope="col">La question à se poser</th></tr></thead>
+      <tbody>
+        <tr><td>Déverrouiller son téléphone</td><td>ton visage, comparé à celui enregistré</td><td>Où est stockée l'empreinte de ton visage ?</td></tr>
+        <tr><td>Trier le courrier, lire un chèque</td><td>des chiffres écrits à la main</td><td>Que se passe-t-il quand elle hésite ?</td></tr>
+        <tr><td>Identifier une plante, traduire un panneau</td><td>une photo que tu prends</td><td>La photo part-elle sur un serveur ?</td></tr>
+        <tr><td>Aider à lire une radio ou un fond d'œil</td><td>des signes de maladie</td><td>Qui valide le diagnostic ?</td></tr>
+        <tr><td>Caméras dans l'espace public</td><td>des silhouettes, des comportements, parfois des visages</td><td>Qui l'a décidé, et dans quel cadre légal ?</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Pour voir comment ces réseaux apprennent, va voir « <a href="/modules/apprendre/">Comment
+      apprend une machine</a> ».
+    </p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
