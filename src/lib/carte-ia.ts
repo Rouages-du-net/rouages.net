@@ -19,7 +19,7 @@ export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lie
   { nom: 'qui voient', exemples: 'visages, tri postal', mecanismes: ['neurones', 'stats'] },
   { nom: 'qui entendent et parlent', exemples: 'assistants vocaux, sous-titres', mecanismes: ['neurones', 'probas'] },
   { nom: 'qui créent', exemples: 'images, musique', mecanismes: ['neurones'] },
-  { nom: 'qui classent', exemples: 'spam, diagnostic, tri de CV', mecanismes: ['probas', 'stats', 'neurones', 'regles'] },
+  { nom: 'qui classent', exemples: 'spam, diagnostic, tri de CV', mecanismes: ['probas', 'stats', 'neurones', 'regles'], lien: '/modules/ia-classer/' },
   { nom: 'qui recommandent', exemples: 'vidéos, fil d’actualité', mecanismes: ['stats', 'neurones'] },
   { nom: 'qui prédisent', exemples: 'météo, consommation', mecanismes: ['stats', 'neurones', 'probas'] },
   { nom: 'qui décident pour nous', exemples: 'crédit, aides sociales', mecanismes: ['regles', 'stats', 'probas', 'neurones'] },

@@ -52,23 +52,11 @@ import { REGLES, EXEMPLES, QUESTIONS } from '../../../lib/animaux';
 
 <script>
   import { activerScene } from '../../../lib/pasapas';
-  import { deduire, apprendreArbre, classer, type Arbre } from '../../../lib/apprendre';
+  import { deduire, apprendreArbre, classer, arbreEnTexte } from '../../../lib/apprendre';
   import { REGLES, EXEMPLES, QUESTIONS } from '../../../lib/animaux';
 
   const texte = Object.fromEntries(QUESTIONS.map((q) => [q.id, q.texte]));
   const arbre = apprendreArbre(EXEMPLES, QUESTIONS.map((q) => q.id));
-
-  // L'arbre, dessiné en texte (les lignes à suivre sont mises en évidence).
-  function dessiner(a: Arbre, chemin: string[], prefixe = '', profondeur = 0): string {
-    if ('feuille' in a) return `${prefixe}→ ${a.feuille}\n`;
-    const q = texte[a.question];
-    const actif = (r: string) => (chemin[profondeur] === `${a.question} ? ${r}` ? '▶ ' : '  ');
-    return (
-      `${prefixe}${q} ?\n` +
-      `${prefixe}${actif('oui')}oui : ` + dessiner(a.oui, chemin, prefixe + '      ', profondeur + 1).trimStart() +
-      `${prefixe}${actif('non')}non : ` + dessiner(a.non, chemin, prefixe + '      ', profondeur + 1).trimStart()
-    );
-  }
 
   document.querySelectorAll<HTMLElement>('[data-regles]').forEach((racine) => {
     activerScene(racine);
@@ -91,7 +79,7 @@ import { REGLES, EXEMPLES, QUESTIONS } from '../../../lib/animaux';
       // Arbre appris.
       const attributs = Object.fromEntries(QUESTIONS.map((q) => [q.id, faits.includes(q.id)]));
       const { classe, chemin } = classer(arbre, attributs);
-      dessin.textContent = dessiner(arbre, chemin);
+      dessin.textContent = arbreEnTexte(arbre, texte, chemin);
       appris.textContent = `L’arbre répond : ${classe}. Il a suivi : ${chemin.map((c) => { const [q, r] = c.split(' ? '); return `${texte[q]} ? ${r}`; }).join(' → ')}. Personne ne lui a écrit ces questions : il les a choisies parce qu’elles séparent le mieux ses exemples.`;
     }
 

@@ -71,13 +71,13 @@ flowchart TB
 - [x] Mot suivant, tokens, plongements, neurone, descente de gradient, attention, température, chaîne de fabrication
 - [x] Glossaire : 10 termes (token, plongement, attention, transformeur, hallucination…)
 - [ ] Relecture humaine finale
-- [ ] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » (2026) citée par un cabinet d'avocats
+- [x] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » : règlement (UE) 2026/1744 du 8 juillet 2026 (JO du 24.7.2026), obligations à haut risque de l'annexe III au 2 décembre 2027 (voir `docs/sources/ia-classer.md`, § 8)
 
 ### À venir (ordre prévu)
 
 - [x] **L'IA, c'est quoi ?** (`/modules/ia/`, relecture humaine à faire) — définitions (et pourquoi elles changent), IA à règles et IA qui apprend, trois façons d'apprendre, carte buts × mécanismes, hivers et printemps de l'IA, idée reçue « tout est de l'IA »
 - [x] **Comment apprend une machine** *(transversal, `/modules/apprendre/`, relecture humaine à faire)* — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage, apprentissage supervisé, non supervisé, par renforcement
-- [ ] **Les IA qui classent** — spam, diagnostic, tri de CV : Bayes naïf (un filtre anti-spam qu'on entraîne soi-même), arbres de décision, plus proches voisins
+- [x] **Les IA qui classent** *(`/modules/ia-classer/`, relecture humaine à faire)* — spam, diagnostic, tri de CV : Bayes naïf (un filtre anti-spam qu'on entraîne soi-même), arbres de décision, plus proches voisins
 - [ ] **Les IA qui cherchent et optimisent** — GPS, tournées, emplois du temps : recherche A* ; IA inspirées de la nature : algorithmes génétiques, colonies de fourmis, essaims
 - [ ] **Les IA qui voient** — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
 - [ ] **Les IA qui entendent et parlent** — reconnaissance vocale, synthèse de la voix, sous-titres automatiques

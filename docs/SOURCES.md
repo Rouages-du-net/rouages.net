@@ -75,3 +75,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Les IA qui écrivent » (mécanismes, histoire, acteurs, coûts)](sources/ia-mecanismes.md)
 - [Module « L'IA, c'est quoi ? » (définitions, systèmes experts, apprentissage, saisons de l'IA)](sources/ia-intro.md)
 - [Module « Comment apprend une machine » (descente de gradient, moindres carrés, validation croisée, plus proches voisins, biais des données)](sources/apprendre.md)
+- [Module « Les IA qui classent » (Bayes, filtrage du spam, ROC, arbres de décision, droit des décisions automatisées)](sources/ia-classer.md)

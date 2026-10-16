@@ -184,3 +184,14 @@ export class Labyrinthe {
     return { chemin, total };
   }
 }
+
+// L'arbre, écrit en texte indenté ; « ▶ » marque le chemin suivi.
+export function arbreEnTexte(a: Arbre, textes: Record<string, string>, chemin: string[] = [], prefixe = '', profondeur = 0): string {
+  if ('feuille' in a) return `${prefixe}→ ${a.feuille}\n`;
+  const actif = (r: string) => (chemin[profondeur] === `${a.question} ? ${r}` ? '▶ ' : '  ');
+  return (
+    `${prefixe}${textes[a.question]} ?\n` +
+    `${prefixe}${actif('oui')}oui : ` + arbreEnTexte(a.oui, textes, chemin, prefixe + '      ', profondeur + 1).trimStart() +
+    `${prefixe}${actif('non')}non : ` + arbreEnTexte(a.non, textes, chemin, prefixe + '      ', profondeur + 1).trimStart()
+  );
+}

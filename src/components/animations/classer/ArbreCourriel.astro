@@ -1,0 +1,98 @@
+---
+// Animation « Un arbre qui s'explique » (étape 3 du module « Les IA qui
+// classent ») : un arbre de décision (ID3, src/lib/apprendre.ts) apprend à
+// trier les courriels à partir de cinq questions lisibles. Avec toutes les
+// questions, il prend un raccourci (« l'expéditeur est-il dans mes
+// contacts ? ») ; on peut lui retirer des questions et voir ce qu'il apprend.
+import { QUESTIONS_COURRIEL } from '../../../lib/classer';
+---
+<div class="anim arbre-courriel" data-arbre-courriel>
+  <div class="anim-repli">
+    <p>
+      Un arbre de décision apprend à trier les 24 courriels d'entraînement en se posant des
+      questions simples. Il choisit tout seul la question qui sépare le mieux les exemples. Ici,
+      il trouve un raccourci : tous les courriels normaux de l'entraînement venaient de
+      contacts connus. Il apprend donc « inconnu = spam », et se trompe sur le relevé d'une
+      vraie banque, la promotion d'une librairie et l'avis d'un transporteur. Sans cette
+      question, il apprend « argent ou lien = spam », et se trompe autrement. Dans les deux
+      cas, on peut lire son raisonnement : c'est l'avantage des arbres.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="questions">
+        <legend>Questions que l'arbre a le droit de poser</legend>
+        {QUESTIONS_COURRIEL.map((q) => (
+          <label><input type="checkbox" data-question={q.id} checked /> {q.texte}</label>
+        ))}
+      </fieldset>
+      <div class="deux">
+        <div>
+          <h4>L'arbre appris (24 exemples)</h4>
+          <pre class="dessin" data-dessin></pre>
+        </div>
+        <div>
+          <h4>L'examen : 24 nouveaux courriels</h4>
+          <p class="score" data-score></p>
+          <ul class="erreurs" data-erreurs></ul>
+        </div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { apprendreArbre, classer, arbreEnTexte } from '../../../lib/apprendre';
+  import { ENTRAINEMENT, EXAMEN, QUESTIONS_COURRIEL, attributsCourriel } from '../../../lib/classer';
+
+  const textes = Object.fromEntries(QUESTIONS_COURRIEL.map((q) => [q.id, q.texte]));
+  const exemples = ENTRAINEMENT.map((c) => ({ nom: c.objet, attributs: attributsCourriel(c), classe: c.etiquette }));
+
+  document.querySelectorAll<HTMLElement>('[data-arbre-courriel]').forEach((racine) => {
+    activerScene(racine);
+    const cases = [...racine.querySelectorAll<HTMLInputElement>('[data-question]')];
+    const dessin = racine.querySelector<HTMLElement>('[data-dessin]')!;
+    const score = racine.querySelector<HTMLElement>('[data-score]')!;
+    const erreurs = racine.querySelector<HTMLElement>('[data-erreurs]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const permises = cases.filter((c) => c.checked).map((c) => c.dataset.question!);
+      const arbre = apprendreArbre(exemples, permises);
+      dessin.textContent = arbreEnTexte(arbre, textes);
+      const ratés = EXAMEN.map((c) => ({ c, r: classer(arbre, attributsCourriel(c)) })).filter((x) => x.r.classe !== x.c.etiquette);
+      score.textContent = `${EXAMEN.length - ratés.length} bien classés sur ${EXAMEN.length}.`;
+      erreurs.replaceChildren(
+        ...ratés.map(({ c, r }) => {
+          const li = document.createElement('li');
+          li.textContent = `« ${c.objet} » (${c.etiquette === 'spam' ? 'spam' : 'normal'}), classé ${r.classe} : ${r.chemin.map((p) => { const [q, rep] = p.split(' ? '); return `${textes[q]} ? ${rep}`; }).join(' → ') || 'aucune question'}`;
+          return li;
+        }),
+      );
+      legende.textContent = !permises.length
+        ? 'Sans aucune question, l’arbre répond toujours la même chose.'
+        : 'feuille' in arbre
+          ? 'Avec ces seules questions, aucune ne sépare les exemples : l’arbre répond toujours pareil.'
+          : arbre.question === 'contact'
+            ? 'Raccourci ! Dans l’entraînement, tous les courriels normaux venaient de contacts. L’arbre a appris « inconnu = spam » : une seule question, parfaite sur l’entraînement, fausse pour une vraie banque ou un transporteur. Décoche cette question.'
+            : 'L’arbre pose maintenant d’autres questions. Lis son raisonnement : on voit exactement pourquoi il se trompe sur chaque courriel raté.';
+    }
+    cases.forEach((c) => c.addEventListener('change', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .questions { display: grid; gap: 0.25rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.6rem 0.9rem; margin: 0 0 0.75rem; }
+  .questions legend { font-weight: 600; padding: 0 0.3rem; }
+  .questions label { font-size: 0.9rem; display: flex; gap: 0.4rem; align-items: baseline; }
+  .deux { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .dessin { font-size: 0.8rem; margin: 0; white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem; }
+  .score { font-weight: 700; margin: 0 0 0.4rem; }
+  .erreurs { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+  .erreurs li { margin-bottom: 0.3rem; }
+</style>
