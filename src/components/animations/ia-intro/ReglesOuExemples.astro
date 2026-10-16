@@ -1,0 +1,115 @@
+---
+// Animation « Règles ou exemples ? » (étape 1 du module « L'IA, c'est
+// quoi ? ») : le même problème (reconnaître un animal) résolu deux fois.
+// 1) Un système expert : des règles écrites par des humains, appliquées par
+//    chaînage avant ; il explique son raisonnement.
+// 2) Un arbre de décision appris à partir d'exemples (algorithme ID3).
+// Tout est calculé pour de vrai (src/lib/apprendre.ts).
+import { REGLES, EXEMPLES, QUESTIONS } from '../../../lib/animaux';
+---
+<div class="anim regles" data-regles>
+  <div class="anim-repli">
+    <p>
+      Première façon : des humains écrivent des règles (« SI l'animal a des plumes ALORS c'est
+      un oiseau »), et la machine les enchaîne. Elle peut expliquer chaque conclusion. Deuxième
+      façon : on donne à la machine des exemples d'animaux déjà classés, et elle trouve seule
+      les questions qui séparent le mieux les classes. Personne n'a écrit les règles ; elle les
+      a déduites des exemples… et elles ne valent que ce que valent les exemples.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <fieldset class="faits">
+      <legend>Décris un animal</legend>
+      {QUESTIONS.map((q) => (
+        <label><input type="checkbox" data-fait={q.id} /> {q.texte}</label>
+      ))}
+    </fieldset>
+
+    <div class="deux">
+      <section class="anim-cadre">
+        <h4>1. Un système expert (des règles écrites à la main)</h4>
+        <ol class="liste-regles">
+          {REGLES.map((r, i) => (
+            <li data-regle={i}><code>SI {r.si.join(' ET ')} ALORS {r.alors}</code></li>
+          ))}
+        </ol>
+        <p class="conclusion" data-expert aria-live="polite"></p>
+      </section>
+
+      <section class="anim-cadre">
+        <h4>2. Un arbre appris à partir de {EXEMPLES.length} exemples</h4>
+        <details class="exemples">
+          <summary>Voir les exemples</summary>
+          <ul>{EXEMPLES.map((e) => <li>{e.nom} : {e.classe}</li>)}</ul>
+        </details>
+        <pre class="arbre" data-arbre aria-label="L'arbre de décision appris"></pre>
+        <p class="conclusion" data-appris aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { deduire, apprendreArbre, classer, type Arbre } from '../../../lib/apprendre';
+  import { REGLES, EXEMPLES, QUESTIONS } from '../../../lib/animaux';
+
+  const texte = Object.fromEntries(QUESTIONS.map((q) => [q.id, q.texte]));
+  const arbre = apprendreArbre(EXEMPLES, QUESTIONS.map((q) => q.id));
+
+  // L'arbre, dessiné en texte (les lignes à suivre sont mises en évidence).
+  function dessiner(a: Arbre, chemin: string[], prefixe = '', profondeur = 0): string {
+    if ('feuille' in a) return `${prefixe}→ ${a.feuille}\n`;
+    const q = texte[a.question];
+    const actif = (r: string) => (chemin[profondeur] === `${a.question} ? ${r}` ? '▶ ' : '  ');
+    return (
+      `${prefixe}${q} ?\n` +
+      `${prefixe}${actif('oui')}oui : ` + dessiner(a.oui, chemin, prefixe + '      ', profondeur + 1).trimStart() +
+      `${prefixe}${actif('non')}non : ` + dessiner(a.non, chemin, prefixe + '      ', profondeur + 1).trimStart()
+    );
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-regles]').forEach((racine) => {
+    activerScene(racine);
+    const cases = [...racine.querySelectorAll<HTMLInputElement>('[data-fait]')];
+    const expert = racine.querySelector<HTMLElement>('[data-expert]')!;
+    const appris = racine.querySelector<HTMLElement>('[data-appris]')!;
+    const dessin = racine.querySelector<HTMLElement>('[data-arbre]')!;
+
+    function maj() {
+      const faits = cases.filter((c) => c.checked).map((c) => c.dataset.fait!);
+      // Système expert.
+      const { faits: deduits, trace } = deduire(faits.map((f) => texte[f]), REGLES);
+      racine.querySelectorAll<HTMLElement>('[data-regle]').forEach((li) => {
+        li.classList.toggle('active', trace.some((t) => REGLES.indexOf(t.regle) === Number(li.dataset.regle)));
+      });
+      const conclusions = ['oiseau', 'mammifère', 'poisson', 'manchot', 'chauve-souris', 'dauphin'].filter((c) => deduits.has(c));
+      expert.textContent = trace.length
+        ? `Conclusion : ${conclusions.join(', ')}. Pourquoi ? ${trace.map((t) => `parce que ${t.regle.si.join(' et ')}, donc ${t.regle.alors}`).join(' ; ')}.`
+        : 'Aucune règle ne s’applique : le système ne sait pas. Il ne connaît que ce qu’on lui a écrit.';
+      // Arbre appris.
+      const attributs = Object.fromEntries(QUESTIONS.map((q) => [q.id, faits.includes(q.id)]));
+      const { classe, chemin } = classer(arbre, attributs);
+      dessin.textContent = dessiner(arbre, chemin);
+      appris.textContent = `L’arbre répond : ${classe}. Il a suivi : ${chemin.map((c) => { const [q, r] = c.split(' ? '); return `${texte[q]} ? ${r}`; }).join(' → ')}. Personne ne lui a écrit ces questions : il les a choisies parce qu’elles séparent le mieux ses exemples.`;
+    }
+
+    cases.forEach((c) => c.addEventListener('change', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .faits { display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.6rem 0.9rem; margin: 0 0 0.75rem; }
+  .faits legend { font-weight: 600; padding: 0 0.3rem; }
+  .deux { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  h4 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .liste-regles { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; }
+  .liste-regles li { margin-bottom: 0.2rem; opacity: 0.6; }
+  .liste-regles li.active { opacity: 1; font-weight: 700; }
+  .liste-regles li.active code { background: color-mix(in oklab, var(--ill-paquet) 22%, transparent); }
+  .conclusion { margin: 0.6rem 0 0; font-size: 0.9rem; font-weight: 600; }
+  .exemples { font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .arbre { font-size: 0.8rem; margin: 0; white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem; }
+</style>

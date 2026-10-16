@@ -1,0 +1,125 @@
+---
+// Animation « L'attention » (étape 5 du module « Les IA qui écrivent ») : à
+// qui renvoie « il » ? Les poids d'attention sont calculés avec la vraie
+// formule (softmax du produit scalaire requête · clé, divisé par √d), mais
+// sur des vecteurs à 4 dimensions choisis à la main pour l'illustration ; un
+// vrai modèle les apprend, en a des milliers, et empile de nombreuses têtes
+// et couches d'attention.
+
+// Dimensions : [être vivant, objet ou lieu, masculin, est un nom]
+const CLES: Record<string, number[]> = {
+  le: [0, 0, 0.5, 0], chat: [1, 0, 1, 1], ne: [0, 0, 0, 0], traverse: [0.3, 0.2, 0, 0], pas: [0, 0, 0, 0],
+  pont: [0, 1, 1, 1], car: [0, 0, 0, 0], il: [0, 0, 1, 0], est: [0, 0, 0, 0], trop: [0, 0, 0, 0],
+  fatigué: [0.6, 0, 0.5, 0], étroit: [0, 0.6, 0.5, 0],
+};
+// La requête de « il » : ce qu'il « cherche ». Elle dépend du reste de la
+// phrase, que « il » a déjà regardé dans les couches précédentes.
+const REQUETES = { fatigué: [3, 0, 1, 2], étroit: [0, 3, 1, 2] };
+const PHRASES = {
+  fatigué: 'le chat ne traverse pas le pont car il est trop fatigué'.split(' '),
+  étroit: 'le chat ne traverse pas le pont car il est trop étroit'.split(' '),
+};
+---
+<div class="anim attention" data-attention data-cles={JSON.stringify(CLES)} data-requetes={JSON.stringify(REQUETES)} data-phrases={JSON.stringify(PHRASES)}>
+  <div class="anim-repli">
+    <p>
+      Dans « le chat ne traverse pas le pont car il est trop fatigué », le mot « il » porte
+      surtout son attention sur « chat ». Remplace « fatigué » par « étroit » : « il » regarde
+      alors surtout « pont ». Le modèle mélange les informations des mots regardés, en
+      proportion de ces poids d'attention.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Le dernier mot de la phrase</legend>
+        <label><input type="radio" name="attention-fin" value="fatigué" checked /> … trop <strong>fatigué</strong></label>
+        <label><input type="radio" name="attention-fin" value="étroit" /> … trop <strong>étroit</strong></label>
+      </fieldset>
+      <p class="consigne">Vers quels mots « <strong>il</strong> » porte-t-il son attention ?</p>
+      <ol class="phrase" data-phrase aria-live="polite"></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <details class="calcul">
+        <summary>Voir le calcul (🔴)</summary>
+        <p>Pour chaque mot : score = (requête de « il ») · (clé du mot) ÷ √4, puis softmax sur tous les scores. Vecteurs choisis à la main, à 4 dimensions : être vivant, objet ou lieu, masculin, est un nom.</p>
+        <table data-table>
+          <thead><tr><th scope="col">mot</th><th scope="col">clé</th><th scope="col">score</th><th scope="col">poids</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { softmax } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-attention]').forEach((racine) => {
+    activerScene(racine);
+    const CLES: Record<string, number[]> = JSON.parse(racine.dataset.cles!);
+    const REQUETES: Record<string, number[]> = JSON.parse(racine.dataset.requetes!);
+    const PHRASES: Record<string, string[]> = JSON.parse(racine.dataset.phrases!);
+    const phrase = racine.querySelector<HTMLElement>('[data-phrase]')!;
+    const corps = racine.querySelector<HTMLElement>('[data-table] tbody')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const fr = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+
+    function dessiner(fin: string) {
+      const mots = PHRASES[fin];
+      const q = REQUETES[fin];
+      const scores = mots.map((m) => CLES[m].reduce((s, k, i) => s + k * q[i], 0) / Math.sqrt(q.length));
+      const poids = softmax(scores);
+      phrase.replaceChildren(
+        ...mots.map((m, i) => {
+          const li = document.createElement('li');
+          li.className = m === 'il' ? 'mot requete' : 'mot';
+          li.style.setProperty('--p', String(poids[i]));
+          li.innerHTML = '<span class="texte"></span><span class="pct"></span>';
+          li.querySelector('.texte')!.textContent = m;
+          li.querySelector('.pct')!.textContent = `${Math.round(poids[i] * 100)} %`;
+          return li;
+        }),
+      );
+      corps.replaceChildren(
+        ...mots.map((m, i) => {
+          const tr = document.createElement('tr');
+          for (const t of [m, `(${CLES[m].join(' ; ')})`, fr(scores[i]), `${fr(poids[i] * 100, 1)} %`]) {
+            const td = document.createElement('td');
+            td.textContent = t;
+            tr.append(td);
+          }
+          return tr;
+        }),
+      );
+      const ordre = mots.map((m, i) => [m, poids[i]] as const).sort((a, b) => b[1] - a[1]);
+      legende.textContent = `« il » regarde surtout « ${ordre[0][0]} » (${Math.round(ordre[0][1] * 100)} %), puis « ${ordre[1][0]} » (${Math.round(ordre[1][1] * 100)} %). Sa nouvelle représentation sera un mélange des mots regardés, dans ces proportions.`;
+    }
+
+    racine.querySelectorAll<HTMLInputElement>('input[name="attention-fin"]').forEach((r) => r.addEventListener('change', () => dessiner(r.value)));
+    dessiner('fatigué');
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: none; padding: 0; margin: 0 0 0.75rem; }
+  .choix legend { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.9rem; }
+  .consigne { margin: 0 0 0.5rem; }
+  .phrase { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .phrase :global(.mot) {
+    display: grid;
+    justify-items: center;
+    padding: 0.35rem 0.55rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--ill-paquet) calc(var(--p) * 100%), transparent);
+    transition: background 0.3s;
+  }
+  .phrase :global(.requete) { outline: 3px solid var(--ill-client); }
+  .phrase :global(.texte) { font-weight: 600; }
+  .phrase :global(.pct) { font-family: var(--police-mono); font-size: 0.75rem; }
+  .calcul { margin-top: 0.75rem; font-size: 0.9rem; }
+  .calcul table { border-collapse: collapse; font-family: var(--police-mono); font-size: 0.8rem; }
+  .calcul th, .calcul td { padding: 0.15rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+</style>

@@ -293,6 +293,70 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Programme qui traduit, avant l'exécution, un texte écrit dans un langage lisible (C, Rust…) en instructions pour un processeur précis.",
     voirAussi: ['processeur'],
   },
+  'modele-de-langage': {
+    terme: 'Modèle de langage',
+    definition:
+      "Programme qui, pour un début de texte, calcule la probabilité de chaque suite possible. Les grands modèles de langage (LLM) sont ceux qui font tourner les assistants comme ChatGPT, Gemini ou Le Chat.",
+    voirAussi: ['token'],
+  },
+  'token': {
+    terme: 'Token',
+    definition:
+      "Morceau de texte (un mot courant, un bout de mot, un signe) que le modèle de langage manipule sous forme de numéro. Les modèles lisent et écrivent token par token.",
+    voirAussi: ['modele-de-langage'],
+  },
+  'plongement': {
+    terme: 'Plongement (embedding)',
+    definition:
+      "Liste de nombres qui représente un token, comme des coordonnées : des mots de sens proche ont des plongements proches. Ils sont appris, pas choisis à la main.",
+    voirAussi: ['token'],
+  },
+  'neurone-artificiel': {
+    terme: 'Neurone artificiel',
+    definition:
+      "Petite formule : il multiplie chacune de ses entrées par un poids, additionne, puis transforme le résultat. Des milliards de neurones, organisés en couches, forment un réseau de neurones.",
+    voirAussi: ['parametre'],
+  },
+  'parametre': {
+    terme: 'Paramètre',
+    definition:
+      "Nombre réglé pendant l'apprentissage, comme les poids des neurones. Un grand modèle de langage en compte des milliards.",
+    voirAussi: ['neurone-artificiel', 'descente-de-gradient'],
+  },
+  'descente-de-gradient': {
+    terme: 'Descente de gradient',
+    definition:
+      "Méthode d'apprentissage : on mesure l'erreur du modèle, on calcule dans quel sens elle diminue (la pente), et l'on corrige un peu les paramètres dans ce sens. On recommence des milliards de fois.",
+    voirAussi: ['parametre'],
+  },
+  'attention': {
+    terme: 'Attention',
+    definition:
+      "Mécanisme qui permet à chaque token de « regarder » les autres tokens du texte et d'y prendre les informations utiles, par exemple pour savoir à qui renvoie « il ».",
+    voirAussi: ['transformeur'],
+  },
+  'transformeur': {
+    terme: 'Transformeur (transformer)',
+    definition:
+      "Architecture de réseau de neurones fondée sur l'attention, publiée en 2017. C'est celle de tous les grands modèles de langage actuels (le T de GPT).",
+    voirAussi: ['attention'],
+  },
+  'temperature': {
+    terme: 'Température',
+    definition:
+      "Réglage de la part de hasard quand le modèle choisit le token suivant : basse, il prend presque toujours le plus probable ; haute, il ose des choix moins probables.",
+  },
+  'hallucination': {
+    terme: 'Hallucination',
+    definition:
+      "Réponse fausse mais formulée de façon plausible et assurée, produite par un modèle d'IA. Elle découle du fonctionnement même du modèle, qui produit du vraisemblable, pas du vérifié.",
+  },
+  'apprentissage-automatique': {
+    terme: 'Apprentissage automatique (machine learning)',
+    definition:
+      "Branche de l'IA où la machine n'applique pas des règles écrites à la main : elle les déduit d'exemples. Avec des exemples corrigés (supervisé), sans étiquettes (non supervisé) ou par essais et récompenses (par renforcement).",
+    voirAussi: ['parametre'],
+  },
 };
 
 export function entree(id: string): Entree {

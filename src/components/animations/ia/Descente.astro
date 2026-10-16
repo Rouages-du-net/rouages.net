@@ -1,0 +1,132 @@
+---
+// Animation « Apprendre en se trompant » (étape 4 du module « Comment
+// marche l'IA ») : la descente de gradient sur une courbe d'erreur à un seul
+// paramètre. On choisit la taille du pas (le « taux d'apprentissage ») :
+// trop petit, c'est lent ; trop grand, on rate le fond et on s'en éloigne.
+
+// Erreur(w) = (w − 3)² / 2 + 1 ; sa pente vaut (w − 3). Minimum en w = 3.
+const erreur = (w: number) => (w - 3) ** 2 / 2 + 1;
+const X = (w: number) => 20 + (w + 1) * 45;
+const Y = (e: number) => 230 - e * 18;
+const courbe = Array.from({ length: 81 }, (_, i) => -1 + i * 0.1)
+  .filter((w) => Y(erreur(w)) >= 5)
+  .map((w) => `${X(w).toFixed(1)},${Y(erreur(w)).toFixed(1)}`)
+  .join(' ');
+---
+<div class="anim descente" data-descente>
+  <div class="anim-repli">
+    <p>
+      Apprendre, pour un réseau de neurones, c'est descendre une pente : on mesure l'erreur,
+      on calcule dans quel sens elle diminue (la pente), et l'on fait un petit pas dans ce
+      sens. Avec un pas de 0,3, on part de 0 et l'on se rapproche du fond (3) en une dizaine de
+      pas. Avec un pas trop grand (2,1), on saute par-dessus le fond, de plus en plus loin.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 400 240" role="img" aria-labelledby="descente-titre">
+        <title id="descente-titre">Courbe de l'erreur selon la valeur du paramètre, avec une bille qui descend vers le fond.</title>
+        <line x1="20" y1="230" x2="390" y2="230" class="axe" />
+        <polyline points={courbe} class="courbe" />
+        <line x1={X(3)} y1="225" x2={X(3)} y2="235" class="fond" />
+        <text x={X(3)} y="222" class="etiq">le fond</text>
+        <polyline data-trace points="" class="trace" />
+        <circle data-bille r="8" cx={X(0)} cy={Y(erreur(0))} class="bille" />
+      </svg>
+      <div class="anim-commandes">
+        <label>Taille du pas
+          <select data-pas>
+            <option value="0.1">0,1 (prudent)</option>
+            <option value="0.3" selected>0,3</option>
+            <option value="1">1 (pile)</option>
+            <option value="2.1">2,1 (trop grand)</option>
+          </select>
+        </label>
+        <button type="button" class="principal" data-action="pas">⬇ Un pas</button>
+        <button type="button" data-action="dix">⬇ Dix pas</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+
+  const erreur = (w: number) => (w - 3) ** 2 / 2 + 1;
+  const pente = (w: number) => w - 3;
+  const X = (w: number) => 20 + (w + 1) * 45;
+  const Y = (e: number) => 230 - e * 18;
+  const fr = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+
+  document.querySelectorAll<HTMLElement>('[data-descente]').forEach((racine) => {
+    activerScene(racine);
+    const bille = racine.querySelector<SVGCircleElement>('[data-bille]')!;
+    const trace = racine.querySelector<SVGPolylineElement>('[data-trace]')!;
+    const pasChoisi = racine.querySelector<HTMLSelectElement>('[data-pas]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let w = 0;
+    let n = 0;
+    let chemin: string[] = [];
+    let occupe = false;
+    // Au-delà, la bille sort du dessin : on s'arrête (jamais de boucle infinie).
+    const HORS = (v: number) => v < -1 || v > 7;
+
+    function placer() {
+      const e = erreur(w);
+      bille.setAttribute('cx', String(X(Math.max(-1, Math.min(7, w)))));
+      bille.setAttribute('cy', String(Math.max(5, Y(e))));
+      chemin.push(`${X(Math.max(-1, Math.min(7, w))).toFixed(1)},${Math.max(5, Y(e)).toFixed(1)}`);
+      trace.setAttribute('points', chemin.join(' '));
+    }
+
+    function decrire(): string {
+      const e = erreur(w);
+      if (HORS(w)) return `Pas n° ${n} : la bille est sortie du dessin ! Avec un pas trop grand, on saute par-dessus le fond, de plus en plus loin : l’apprentissage « diverge ».`;
+      if (n === 0) return `Départ : paramètre = 0, erreur = ${fr(e)}. La pente est négative : il faut augmenter le paramètre.`;
+      return `Pas n° ${n} : paramètre = ${fr(w)}, erreur = ${fr(e)}, pente = ${fr(pente(w))}. ${Math.abs(w - 3) < 0.01 ? 'On est au fond : l’erreur ne peut plus baisser.' : 'On recule de « pas × pente ».'}`;
+    }
+
+    async function avancer(k: number) {
+      if (occupe) return;
+      occupe = true;
+      for (let i = 0; i < k && !HORS(w) && n < 60; i++) {
+        // La règle de la descente de gradient : nouveau = ancien − pas × pente.
+        w = w - Number(pasChoisi.value) * pente(w);
+        n++;
+        placer();
+        legende.textContent = decrire();
+        if (k > 1) await pause(250);
+      }
+      occupe = false;
+    }
+
+    function recommencer() {
+      w = 0;
+      n = 0;
+      chemin = [];
+      placer();
+      legende.textContent = decrire();
+    }
+
+    racine.querySelector('[data-action="pas"]')!.addEventListener('click', () => avancer(1));
+    racine.querySelector('[data-action="dix"]')!.addEventListener('click', () => avancer(10));
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', recommencer);
+    pasChoisi.addEventListener('change', recommencer);
+    recommencer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 40rem; height: auto; display: block; margin: 0 auto; }
+  .axe { stroke: var(--border); }
+  .courbe { fill: none; stroke: var(--ill-client); stroke-width: 3; }
+  .trace { fill: none; stroke: var(--ill-paquet); stroke-width: 1.5; stroke-dasharray: 3 3; }
+  .bille { fill: var(--ill-paquet); transition: cx 0.2s, cy 0.2s; }
+  .fond { stroke: var(--fg); stroke-width: 2; }
+  .etiq { fill: var(--muted); font: 11px var(--police); text-anchor: middle; }
+  label { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; }
+  select { font: inherit; padding: 0.25rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+</style>

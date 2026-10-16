@@ -1,0 +1,137 @@
+---
+// Animation « Découper en tokens » (étape 1 du module « Les IA qui
+// écrivent ») : 1) on regarde l'algorithme BPE apprendre ses fusions sur le
+// corpus du site, pas à pas ; 2) on tape un texte et on voit ses tokens et
+// leurs numéros. Tout est calculé pour de vrai (src/lib/minilm.ts).
+import { CORPUS, entrainerBPE, tokeniser } from '../../../lib/minilm';
+
+const fusions = entrainerBPE(CORPUS, 60);
+const exemple = tokeniser('les chattes dormaient', fusions);
+---
+<div class="anim tokeniseur" data-tokeniseur>
+  <div class="anim-repli">
+    <p>
+      L'algorithme BPE part des lettres, puis fusionne la paire de symboles voisins la plus
+      fréquente, encore et encore. Sur notre petit corpus, la première fusion colle « ▁ » (le
+      début d'un mot) et « l », la deuxième « ▁l » et « e »… Après 60 fusions, « les chattes
+      dormaient » se découpe en {exemple.length} tokens : {exemple.join(' | ')}.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <h4>1. Le tokeniseur apprend (algorithme BPE)</h4>
+      <p class="fusion" data-fusion aria-live="polite"></p>
+      <ul class="exemples" data-exemples></ul>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="fin">⏭ 60 fusions</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+
+    <div class="anim-cadre essai">
+      <h4>2. À toi : tape un texte</h4>
+      <label class="visuellement-cache" for="tokeniseur-texte">Texte à découper en tokens</label>
+      <input id="tokeniseur-texte" type="text" value="les chattes dormaient" maxlength="80" spellcheck="false" data-saisie />
+      <ol class="jetons" data-jetons aria-live="polite"></ol>
+      <p class="anim-note" data-bilan></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { CORPUS, entrainerBPE, tokeniser, mots } from '../../../lib/minilm';
+
+  const TOTAL = 60;
+  const fusions = entrainerBPE(CORPUS, TOTAL);
+  // Le vocabulaire : les caractères de départ, puis un token par fusion.
+  const lettres = [...new Set(['▁', ...mots(CORPUS).join('')])].sort((a, b) => a.localeCompare(b, 'fr'));
+  const vocabulaire = [...lettres, ...fusions.map((f) => f.gauche + f.droite)];
+  const EXEMPLES = ['le', 'chat', 'chien', 'chantent', 'jardin', 'mangent'];
+
+  document.querySelectorAll<HTMLElement>('[data-tokeniseur]').forEach((racine) => {
+    activerScene(racine);
+    const fusion = racine.querySelector<HTMLElement>('[data-fusion]')!;
+    const exemples = racine.querySelector<HTMLElement>('[data-exemples]')!;
+
+    // Étapes 1 à 21 : 0, 1, 2… 20 fusions (la dernière bouton saute à 60).
+    const etapes = [...Array.from({ length: 21 }, (_, i) => i), TOTAL];
+    const anim = pasAPas(racine, () => etapes.length, (n) => {
+      const k = etapes[n - 1];
+      const apprises = fusions.slice(0, k);
+      const f = fusions[k - 1];
+      fusion.textContent = f ? `Fusion n° ${k} : « ${(f.gauche)} » + « ${(f.droite)} » → « ${(f.gauche + f.droite)} » (paire vue ${f.frequence} fois)` : 'Au départ : chaque lettre est un token.';
+      exemples.replaceChildren(
+        ...EXEMPLES.map((m) => {
+          const li = document.createElement('li');
+          for (const t of tokeniser(m, apprises)) {
+            const s = document.createElement('span');
+            s.className = 'jeton';
+            s.textContent = (t);
+            li.append(s);
+          }
+          return li;
+        }),
+      );
+      return k === 0
+        ? 'Le texte est d’abord découpé en lettres ; « ▁ » marque le début d’un mot.'
+        : k === TOTAL
+          ? `Après ${TOTAL} fusions, les mots fréquents tiennent en un seul token ; les mots rares restent en morceaux. Les vrais modèles font des dizaines de milliers de fusions.`
+          : 'À chaque étape, la paire de voisins la plus fréquente du corpus devient un nouveau token.';
+    });
+    racine.querySelector('[data-action="fin"]')!.addEventListener('click', () => anim.aller(etapes.length));
+    anim.aller(1);
+
+    const saisie = racine.querySelector<HTMLInputElement>('[data-saisie]')!;
+    const jetons = racine.querySelector<HTMLElement>('[data-jetons]')!;
+    const bilan = racine.querySelector<HTMLElement>('[data-bilan]')!;
+    const majSaisie = () => {
+      const t = tokeniser(saisie.value, fusions);
+      jetons.replaceChildren(
+        ...t.map((x, i) => {
+          const li = document.createElement('li');
+          li.className = `jeton couleur-${i % 4}`;
+          const id = vocabulaire.indexOf(x);
+          li.innerHTML = '<span class="txt"></span><span class="id"></span>';
+          li.querySelector('.txt')!.textContent = (x);
+          li.querySelector('.id')!.textContent = id >= 0 ? String(id) : '?';
+          return li;
+        }),
+      );
+      const nbMots = mots(saisie.value).length;
+      bilan.textContent = t.length
+        ? `${nbMots} mot${nbMots > 1 ? 's' : ''} → ${t.length} tokens. Le modèle ne voit que les numéros.${t.some((x) => !vocabulaire.includes(x)) ? ' Un « ? » : caractère jamais vu pendant l’apprentissage (les vrais tokeniseurs partent des octets, pour n’avoir jamais d’inconnu).' : ''}`
+        : '';
+    };
+    saisie.addEventListener('input', majSaisie);
+    majSaisie();
+  });
+</script>
+
+<style>
+  h4 { margin: 0 0 0.6rem; font-size: 0.95rem; }
+  .essai { margin-top: 0.75rem; }
+  .fusion { font-family: var(--police-mono); font-size: 0.9rem; min-height: 1.5em; margin: 0 0 0.5rem; }
+  .exemples { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+  .exemples :global(li) { display: flex; gap: 2px; }
+  :global(.tokeniseur .jeton) {
+    font-family: var(--police-mono);
+    font-size: 0.9rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.3rem;
+    background: color-mix(in oklab, var(--ill-client) 18%, transparent);
+    border: 1px solid color-mix(in oklab, var(--ill-client) 45%, transparent);
+  }
+  input { font: inherit; font-family: var(--police-mono); width: 100%; max-width: 28rem; padding: 0.4rem 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .jetons { list-style: none; margin: 0.75rem 0 0.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .jetons :global(li) { display: grid; justify-items: center; }
+  .jetons :global(.id) { font-family: var(--police-mono); font-size: 0.7rem; color: var(--muted); }
+  :global(.tokeniseur .couleur-1) { background: color-mix(in oklab, var(--ill-paquet) 18%, transparent); border-color: color-mix(in oklab, var(--ill-paquet) 45%, transparent); }
+  :global(.tokeniseur .couleur-2) { background: color-mix(in oklab, var(--ill-secret-b) 18%, transparent); border-color: color-mix(in oklab, var(--ill-secret-b) 45%, transparent); }
+  :global(.tokeniseur .couleur-3) { background: color-mix(in oklab, var(--ill-secret-a) 18%, transparent); border-color: color-mix(in oklab, var(--ill-secret-a) 45%, transparent); }
+</style>

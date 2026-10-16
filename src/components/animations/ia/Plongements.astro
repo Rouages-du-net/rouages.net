@@ -1,0 +1,154 @@
+---
+// Animation « Les mots deviennent des points » (étape 2 du module « Comment
+// marche l'IA ») : une carte en 2 dimensions où chaque mot est un point.
+// ATTENTION : les coordonnées sont choisies à la main pour l'illustration ;
+// de vrais plongements (embeddings) sont appris et ont des centaines ou des
+// milliers de dimensions. Les calculs (distances, analogies) sont exacts.
+
+const MOTS: Record<string, [number, number]> = {
+  roi: [-0.8, 0.9], reine: [0.8, 0.9], prince: [-0.65, 0.6], princesse: [0.65, 0.6],
+  couronne: [-0.15, 1], château: [0.15, 0.75],
+  homme: [-0.8, 0.1], femme: [0.8, 0.1], garçon: [-0.55, -0.1], fille: [0.55, -0.1], enfant: [0, -0.05],
+  chien: [-0.75, -0.7], chienne: [0.75, -0.7], chat: [-0.45, -0.8], chatte: [0.45, -0.8], souris: [0.05, -0.95],
+};
+const mots = Object.keys(MOTS);
+const X = (x: number) => 200 + x * 170;
+const Y = (y: number) => 140 - y * 115;
+---
+<div class="anim plongements" data-plongements data-mots={JSON.stringify(MOTS)}>
+  <div class="anim-repli">
+    <p>
+      Sur cette carte (dessinée à la main), chaque mot est un point : à gauche le masculin, à
+      droite le féminin ; en haut la royauté, en bas les animaux. Le calcul « roi − homme +
+      femme » arrive pile sur « reine ». Mais pour « chat − chien + chienne », le point le plus
+      proche est… « chienne », un des mots de départ : il faut l'exclure pour trouver « chatte ».
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 400 280" role="img" aria-labelledby="plongements-titre" data-carte>
+        <title id="plongements-titre">Carte des mots : masculin à gauche, féminin à droite, royauté en haut, animaux en bas.</title>
+        <line x1="20" y1="140" x2="380" y2="140" class="axe" />
+        <line x1="200" y1="10" x2="200" y2="270" class="axe" />
+        <text x="22" y="156" class="axe-txt">← masculin</text>
+        <text x="378" y="156" class="axe-txt fin">féminin →</text>
+        <text x="206" y="14" class="axe-txt">↑ royauté</text>
+        <text x="206" y="270" class="axe-txt">↓ animaux</text>
+        <line class="fleche" data-fleche x1="0" y1="0" x2="0" y2="0" hidden />
+        <circle class="arrivee" data-arrivee r="9" cx="0" cy="0" hidden />
+        {mots.map((m) => (
+          <g class="point" data-point={m} tabindex="0" role="button" aria-label={`${m} : voir ses voisins`}>
+            <circle cx={X(MOTS[m][0])} cy={Y(MOTS[m][1])} r="4" />
+            <text x={X(MOTS[m][0])} y={Y(MOTS[m][1]) - 8}>{m}</text>
+          </g>
+        ))}
+      </svg>
+
+      <div class="calcul">
+        <label>Mot <select data-a>{mots.map((m) => <option selected={m === 'roi'}>{m}</option>)}</select></label>
+        <span aria-hidden="true">−</span>
+        <label><span class="visuellement-cache">moins</span><select data-b>{mots.map((m) => <option selected={m === 'homme'}>{m}</option>)}</select></label>
+        <span aria-hidden="true">+</span>
+        <label><span class="visuellement-cache">plus</span><select data-c>{mots.map((m) => <option selected={m === 'femme'}>{m}</option>)}</select></label>
+        <button type="button" class="anim-bouton principal" data-action="calculer">= ?</button>
+        <button type="button" class="anim-bouton" data-action="exemple">Essayer chat − chien + chienne</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Coordonnées choisies à la main pour l’illustration. Les vrais plongements sont appris à partir de milliards de phrases et ont des centaines de dimensions, qu’on ne sait pas dessiner.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  const X = (x: number) => 200 + x * 170;
+  const Y = (y: number) => 140 - y * 115;
+  const dist = (a: number[], b: number[]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+
+  document.querySelectorAll<HTMLElement>('[data-plongements]').forEach((racine) => {
+    activerScene(racine);
+    const MOTS: Record<string, [number, number]> = JSON.parse(racine.dataset.mots!);
+    const sel = (n: string) => racine.querySelector<HTMLSelectElement>(`[data-${n}]`)!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const fleche = racine.querySelector<SVGLineElement>('[data-fleche]')!;
+    const arrivee = racine.querySelector<SVGCircleElement>('[data-arrivee]')!;
+    const points = [...racine.querySelectorAll<SVGGElement>('[data-point]')];
+
+    const marquer = (classes: Record<string, string>) =>
+      points.forEach((p) => {
+        p.classList.remove('entree', 'trouve', 'piege');
+        const c = classes[p.dataset.point!];
+        if (c) p.classList.add(c);
+      });
+
+    function calculer() {
+      const [a, b, c] = ['a', 'b', 'c'].map((n) => sel(n).value);
+      const v: [number, number] = [MOTS[a][0] - MOTS[b][0] + MOTS[c][0], MOTS[a][1] - MOTS[b][1] + MOTS[c][1]];
+      const tries = Object.keys(MOTS).sort((m, n) => dist(MOTS[m], v) - dist(MOTS[n], v));
+      const brut = tries[0];
+      const honnete = tries.find((m) => ![a, b, c].includes(m))!;
+      fleche.setAttribute('x1', String(X(MOTS[a][0])));
+      fleche.setAttribute('y1', String(Y(MOTS[a][1])));
+      fleche.setAttribute('x2', String(X(v[0])));
+      fleche.setAttribute('y2', String(Y(v[1])));
+      fleche.hidden = false;
+      arrivee.setAttribute('cx', String(X(v[0])));
+      arrivee.setAttribute('cy', String(Y(v[1])));
+      arrivee.hidden = false;
+      marquer({ [a]: 'entree', [b]: 'entree', [c]: 'entree', [honnete]: 'trouve', ...(brut !== honnete ? { [brut]: 'piege' } : {}) });
+      const coord = `(${v[0].toFixed(2).replace('.', ',')} ; ${v[1].toFixed(2).replace('.', ',')})`;
+      legende.textContent =
+        brut === honnete
+          ? `${a} − ${b} + ${c} arrive au point ${coord} : le mot le plus proche est « ${brut} ».`
+          : `${a} − ${b} + ${c} arrive au point ${coord}. Le mot le plus proche est « ${brut} »… un des mots de départ ! En l’excluant, on trouve « ${honnete} ». Les démonstrations célèbres excluent souvent les mots de départ sans le dire.`;
+    }
+
+    racine.querySelector('[data-action="calculer"]')!.addEventListener('click', calculer);
+    racine.querySelector('[data-action="exemple"]')!.addEventListener('click', () => {
+      sel('a').value = 'chat';
+      sel('b').value = 'chien';
+      sel('c').value = 'chienne';
+      calculer();
+    });
+    points.forEach((p) => {
+      p.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          p.dispatchEvent(new Event('click'));
+        }
+      });
+      p.addEventListener('click', () => {
+        const m = p.dataset.point!;
+        const voisins = Object.keys(MOTS)
+          .filter((n) => n !== m)
+          .sort((x, y) => dist(MOTS[x], MOTS[m]) - dist(MOTS[y], MOTS[m]))
+          .slice(0, 3);
+        fleche.hidden = arrivee.hidden = true;
+        marquer({ [m]: 'entree', ...Object.fromEntries(voisins.map((v) => [v, 'trouve'])) });
+        legende.textContent = `Les plus proches voisins de « ${m} » : ${voisins.join(', ')}. Des mots proches sur la carte ont des sens proches.`;
+      });
+    });
+    calculer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 40rem; height: auto; display: block; margin: 0 auto; }
+  .axe { stroke: var(--border); stroke-width: 1.5; }
+  .axe-txt { fill: var(--muted); font: 11px var(--police); }
+  .axe-txt.fin { text-anchor: end; }
+  .point { cursor: pointer; }
+  .point:focus-visible { outline: 2px solid var(--accent); }
+  .point circle { fill: var(--ill-reseau); }
+  .point text { fill: var(--fg); font: 12px var(--police); text-anchor: middle; }
+  .point.entree circle { fill: var(--ill-client); r: 6; }
+  .point.trouve circle { fill: var(--ill-paquet); r: 7; }
+  .point.trouve text { font-weight: 700; }
+  .point.piege circle { fill: var(--ill-secret-a); r: 6; }
+  .fleche { stroke: var(--ill-paquet); stroke-width: 2; stroke-dasharray: 4 3; }
+  .arrivee { fill: none; stroke: var(--ill-paquet); stroke-width: 2; }
+  .calcul { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.75rem; }
+  .calcul select { font: inherit; padding: 0.25rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+</style>

@@ -1,0 +1,108 @@
+---
+// Animation « Choisir le mot : la température » (étape 6 du module
+// « Les IA qui écrivent ») : le modèle donne des probabilités ; on tire au
+// sort le mot suivant. La température change la forme de ces probabilités
+// (softmax(log p / T)) : basse, le modèle choisit presque toujours le même
+// mot ; haute, il prend des risques. Calcul réel, sur le modèle de l'étape 0.
+---
+<div class="anim temperature" data-temperature>
+  <div class="anim-repli">
+    <p>
+      Au début d’une phrase, après « le », notre modèle donne « chat » 32 %, « chien » 26 %, « boulanger » 11 %… À basse
+      température, il choisit presque toujours le mot le plus probable : les phrases se
+      répètent. À haute température, les mots rares ont leur chance : plus de variété, mais
+      aussi plus de phrases bizarres. Les assistants conversationnels laissent toujours une
+      part de hasard : c'est pourquoi la même question n'obtient pas deux fois la même réponse.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Température <output data-t>1,0</output>
+        <input type="range" min="0.1" max="3" step="0.1" value="1" data-temp />
+      </label>
+      <p class="anim-note" data-contexte></p>
+      <ol class="barres" data-barres></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="tirer">🎲 Écrire 5 phrases</button>
+      </div>
+      <ol class="phrases" data-phrases aria-live="polite"></ol>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { CORPUS, NGramme, hasard, softmax, tirer } from '../../../lib/minilm';
+
+  const modele = new NGramme(CORPUS);
+  const CONTEXTE = 'le';
+
+  document.querySelectorAll<HTMLElement>('[data-temperature]').forEach((racine) => {
+    activerScene(racine);
+    const curseur = racine.querySelector<HTMLInputElement>('[data-temp]')!;
+    const barres = racine.querySelector<HTMLElement>('[data-barres]')!;
+    const phrases = racine.querySelector<HTMLElement>('[data-phrases]')!;
+    let graine = 10;
+
+    // softmax(log p / T) : les probabilités « réchauffées » ou « refroidies ».
+    const avecT = (p: number[], t: number) => softmax(p.map((x) => Math.log(x)), t);
+
+    function dessiner() {
+      const t = Number(curseur.value);
+      racine.querySelector('[data-t]')!.textContent = t.toFixed(1).replace('.', ',');
+      const suite = modele.predire(CONTEXTE).suite;
+      const p = avecT(suite.map((s) => s.p), t);
+      racine.querySelector('[data-contexte]')!.textContent = `Après « ${CONTEXTE} », le modèle hésite entre ${suite.length} mots. Probabilités à la température ${t.toFixed(1).replace('.', ',')} :`;
+      barres.replaceChildren(
+        ...suite.slice(0, 8).map((s, i) => {
+          const li = document.createElement('li');
+          li.style.setProperty('--p', String(p[i]));
+          li.innerHTML = '<span class="mot"></span><span class="barre"></span><span class="pct"></span>';
+          li.querySelector('.mot')!.textContent = s.mot;
+          li.querySelector('.pct')!.textContent = `${(p[i] * 100).toFixed(p[i] < 0.1 ? 1 : 0).replace('.', ',')} %`;
+          return li;
+        }),
+      );
+    }
+
+    function ecrire() {
+      const t = Number(curseur.value);
+      const alea = hasard(graine++);
+      const lignes: string[] = [];
+      for (let k = 0; k < 5; k++) {
+        const mots = [CONTEXTE];
+        // 14 mots au plus par phrase.
+        for (let i = 0; i < 14 && mots.at(-1) !== '.'; i++) {
+          const suite = modele.predire(mots.join(' ')).suite;
+          if (!suite.length) break;
+          mots.push(suite[tirer(avecT(suite.map((s) => s.p), t), alea)].mot);
+        }
+        lignes.push(mots.join(' ').replace(/ \./g, '.'));
+      }
+      phrases.replaceChildren(
+        ...lignes.map((l) => {
+          const li = document.createElement('li');
+          li.textContent = l;
+          return li;
+        }),
+      );
+    }
+
+    curseur.addEventListener('input', dessiner);
+    racine.querySelector('[data-action="tirer"]')!.addEventListener('click', ecrire);
+    dessiner();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; grid-template-columns: 1fr auto; gap: 0.2rem 0.5rem; max-width: 24rem; font-weight: 600; }
+  .curseur input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+  .curseur output { font-family: var(--police-mono); }
+  .barres { list-style: none; margin: 0.5rem 0 0.75rem; padding: 0; display: grid; gap: 0.25rem; max-width: 28rem; }
+  .barres :global(li) { display: grid; grid-template-columns: 6rem 1fr 3.5rem; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .barres :global(.barre) { height: 0.7rem; width: calc(var(--p) * 100%); min-width: 2px; background: var(--ill-paquet); border-radius: 999px; transition: width 0.2s; }
+  .barres :global(.pct) { font-family: var(--police-mono); font-size: 0.8rem; text-align: right; }
+  .phrases { margin: 0.75rem 0 0; padding-left: 1.25rem; }
+  .phrases :global(li) { margin-bottom: 0.2rem; }
+</style>
