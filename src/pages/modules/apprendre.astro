@@ -12,7 +12,7 @@ import Couches from '../../components/animations/apprendre/Couches.astro';
 import SurApprentissage from '../../components/animations/apprendre/SurApprentissage.astro';
 import Biais from '../../components/animations/apprendre/Biais.astro';
 
-// Faits sourcés : voir docs/sources/apprendre.md et docs/sources/ia-mecanismes.md.
+// Faits sourcés : voir docs/sources/apprendre.md, ia-mecanismes.md et ia.md.
 const etapes = [
   { ancre: 'neurone', court: 'Le neurone' },
   { ancre: 'erreur', court: 'Se tromper' },
@@ -100,13 +100,25 @@ const etapes = [
       c'est la descente de gradient stochastique.
     </p>
     <div slot="histoire">
-      <p data-a-sourcer="cauchy">
-        L'idée est ancienne : en 1847, le mathématicien français Augustin-Louis Cauchy la
-        propose pour résoudre des systèmes d'équations, en astronomie. Au Japon,
-        <strong>Shun-ichi Amari</strong> décrit en 1967 l'apprentissage de réseaux de neurones
-        par gradient stochastique.
+      <p>
+        L'idée est ancienne. Le 18 octobre 1847, le mathématicien français Augustin-Louis
+        Cauchy présente à l'Académie des sciences une note de deux pages : pour résoudre des
+        équations, on part d'une valeur quelconque et l'on avance, pas à pas, dans la direction
+        où l'erreur diminue le plus vite. Il voulait calculer des orbites d'astres, pas faire
+        apprendre des machines, et le mot « gradient » n'apparaît pas encore.
+      </p>
+      <p>
+        En 1951, aux États-Unis, Herbert Robbins et Sutton Monro publient une méthode qui
+        progresse à partir de mesures bruitées : l'ancêtre de la descente de gradient
+        stochastique. Au Japon, <strong>Shun-ichi Amari</strong> décrit dès 1967 l'apprentissage de
+        réseaux de neurones par gradient stochastique.
       </p>
     </div>
+    <p slot="mythes">
+      <strong>« La descente de gradient trouve toujours la meilleure solution. »</strong> Elle
+      trouve le fond le plus proche, qui n'est pas forcément le plus bas : sur une erreur en
+      forme de paysage vallonné, elle peut s'arrêter dans un creux. L'étape suivante le montre.
+    </p>
   </Etape>
 
   <!-- Étape 2 -->
@@ -134,7 +146,11 @@ const etapes = [
       <p>
         En 1969, le livre <em>Perceptrons</em> de Marvin Minsky et Seymour Papert démontre
         qu'un perceptron à une couche ne peut pas calculer le « ou exclusif ». Des réseaux à
-        plusieurs couches le peuvent, encore faut-il savoir les entraîner.
+        plusieurs couches le peuvent, encore faut-il savoir les entraîner. En 1989, deux
+        travaux indépendants (George Cybenko ; Kurt Hornik, Maxwell Stinchcombe et Halbert
+        White) démontrent qu'une seule couche cachée suffit pour approcher n'importe quelle
+        fonction continue, avec assez de neurones. Le théorème dit que c'est possible, pas
+        qu'on saura l'apprendre.
       </p>
       <p>
         La rétropropagation a été découverte plusieurs fois. On la trouve en 1970 dans le
@@ -173,11 +189,31 @@ const etapes = [
       un polynôme ajusté par la méthode des moindres carrés. La validation croisée répète le
       découpage plusieurs fois pour ne pas dépendre d'un tirage chanceux.
     </p>
-    <div slot="histoire" data-a-sourcer="legendre-runge-stone">
+    <div slot="histoire">
       <p>
-        Ajuster une courbe à des mesures est un très vieux problème. La méthode des moindres
-        carrés est publiée en 1805 par Adrien-Marie Legendre, à Paris ; Carl Friedrich Gauss
-        affirme l'utiliser depuis 1795, ce qui déclenche une querelle de priorité.
+        Ajuster une courbe à des mesures est un très vieux problème, né en astronomie. En
+        1805, Adrien-Marie Legendre publie à Paris la méthode des moindres carrés : choisir ce
+        qui rend « minimum la somme des quarrés des erreurs ». En 1809, Carl Friedrich Gauss
+        publie la même méthode et affirme l'utiliser depuis 1795. La querelle n'est pas
+        tranchée : l'historien Stephen Stigler juge probable que Gauss l'ait eue avant, sans
+        preuve décisive.
+      </p>
+      <p>
+        En 1901, l'Allemand Carl Runge montre qu'un polynôme forcé de passer par des points
+        régulièrement espacés peut osciller violemment entre eux, surtout vers les bords, et
+        qu'ajouter des points aggrave le problème. Runge ne parlait pas d'apprentissage, mais
+        c'est une bonne image du sur-apprentissage.
+      </p>
+      <p>
+        Garder des données de côté pour l'examen se pratique depuis au moins les années 1930
+        en statistique ; Mervyn Stone formalise la validation croisée en 1974, et
+        <strong>Grace Wahba</strong>, avec Peter Craven, en tire en 1979 une méthode pour
+        régler automatiquement la souplesse d'une courbe. En URSS, Vladimir Vapnik et
+        <strong>Alexeï Tchervonenkis</strong> fondent entre 1962 et 1973 une théorie de
+        l'apprentissage qui explique quand un modèle appris sur des exemples marche sur de
+        nouveaux cas ; elle mène aux machines à vecteurs de support, publiées sous leur forme
+        actuelle en 1995 par <strong>Corinna Cortes</strong> et Vladimir Vapnik, après des
+        travaux avec <strong>Isabelle Guyon</strong> et Bernhard Boser.
       </p>
     </div>
     <p slot="verifie">
@@ -204,12 +240,41 @@ const etapes = [
       séparément pour chaque groupe. Rééquilibrer les données d'entraînement réduit l'écart,
       mais il faut d'abord savoir quels groupes regarder.
     </p>
-    <div slot="histoire" data-a-sourcer="fix-gendershades">
+    <div slot="histoire">
       <p>
-        La méthode des plus proches voisins est décrite en 1951 par la statisticienne
-        <strong>Evelyn Fix</strong> et Joseph Hodges, à Berkeley.
+        La règle des plus proches voisins est formulée en 1951 par deux statisticien·nes de
+        Berkeley, <strong>Evelyn Fix</strong> et Joseph Hodges, dans un rapport pour l'armée de
+        l'air américaine resté inédit jusqu'en 1989. Evelyn Fix, entrée au laboratoire de
+        statistique de Berkeley en 1940, y devient professeure en 1963. En 1967, Thomas Cover
+        et Peter Hart démontrent que cette règle simple se trompe au plus deux fois plus
+        souvent que la meilleure règle possible, quand les exemples sont très nombreux.
+      </p>
+      <p>
+        En 2018, <strong>Joy Buolamwini</strong> et <strong>Timnit Gebru</strong> testent trois
+        logiciels commerciaux qui devinent le genre (homme ou femme) d'une personne sur une
+        photo. Ils se trompent au plus 0,8 % du temps sur les hommes à peau claire, mais
+        jusqu'à 34,7 % du temps sur les femmes à peau foncée. Les jeux de photos de référence
+        de l'époque comptaient de 80 à 86 % de personnes à peau claire.
+      </p>
+      <p>
+        Les grandes bases d'exemples ont leurs histoires : ImageNet, lancée en 2009 par
+        l'équipe de <strong>Fei-Fei Li</strong>, compte aujourd'hui plus de 14 millions
+        d'images, étiquetées à la main par des travailleuses et travailleurs payés à la tâche
+        sur la plateforme Mechanical Turk.
       </p>
     </div>
+    <p slot="decide">
+      Selon l'agence Reuters (2018, d'après cinq sources anonymes), Amazon a abandonné un outil
+      de tri de CV qui défavorisait les candidates : il avait appris sur dix ans de CV reçus,
+      venant surtout d'hommes. Amazon n'a pas commenté l'outil. Le règlement européen sur l'IA
+      (2024) range l'IA utilisée pour l'emploi parmi les usages « à haut risque », soumis à des
+      règles renforcées à partir de décembre 2027.
+    </p>
+    <p slot="mythes">
+      <strong>« Une machine est neutre : elle ne fait que calculer. »</strong> Le calcul est
+      neutre, pas les exemples. Une IA reproduit les déséquilibres de ses données, y compris
+      ceux que personne n'a remarqués.
+    </p>
   </Etape>
 
   <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
@@ -230,7 +295,38 @@ const etapes = [
 
   <Sources
     verifie="2026-10-16"
-    sources={[]}
+    sources={[
+      { auteur: 'D. Jurafsky, J. H. Martin', titre: 'Speech and Language Processing, 3ᵉ éd. (brouillon du 19 août 2026), ch. 6 « Neural Networks »', url: 'https://web.stanford.edu/~jurafsky/slp3/6.pdf', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'W. S. McCulloch, W. Pitts', titre: 'A logical calculus of the ideas immanent in nervous activity', url: 'https://doi.org/10.1007/BF02478259', type: 'primaire', annee: 1943, langue: 'en' },
+      { auteur: 'F. Rosenblatt', titre: 'The perceptron: A probabilistic model for information storage and organization in the brain', url: 'https://doi.org/10.1037/h0042519', type: 'primaire', annee: 1958, langue: 'en' },
+      { auteur: 'K. Fukushima', titre: 'Neocognitron: A Self-organizing Neural Network Model (Biological Cybernetics)', url: 'https://www.cs.princeton.edu/courses/archive/spring08/cos598B/Readings/Fukushima1980.pdf', type: 'primaire', annee: 1980, langue: 'en' },
+      { auteur: 'A.-L. Cauchy', titre: 'Méthode générale pour la résolution des systèmes d’équations simultanées (Comptes rendus de l’Académie des sciences, t. 25, p. 536)', url: 'https://archive.org/download/comptesrendusheb25acad/comptesrendusheb25acad_djvu.txt', type: 'primaire', annee: 1847 },
+      { auteur: 'C. Lemaréchal (Documenta Mathematica)', titre: 'Cauchy and the Gradient Method', url: 'https://ems.press/content/book-chapter-files/27368', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'H. Robbins, S. Monro', titre: 'A Stochastic Approximation Method (Annals of Mathematical Statistics)', url: 'https://doi.org/10.1214/aoms/1177729586', type: 'primaire', annee: 1951, langue: 'en' },
+      { auteur: 'Fondation Inamori', titre: 'Shun-ichi Amari — 2025 Kyoto Prize', url: 'https://www.kyotoprize.org/en/laureates/shun-ichi_amari/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'D. E. Rumelhart, G. E. Hinton, R. J. Williams', titre: 'Learning representations by back-propagating errors (Nature)', url: 'https://www.nature.com/articles/323533a0', type: 'primaire', annee: 1986, langue: 'en' },
+      { auteur: 'A. Griewank', titre: 'Who invented the reverse mode of differentiation? (Documenta Mathematica)', url: 'https://doi.org/10.4171/dms/6/38', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'J. Schmidhuber', titre: 'Deep learning in neural networks: An overview (Ivakhnenko, GMDH)', url: 'https://arxiv.org/abs/1404.7828', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'I. Goodfellow, Y. Bengio, A. Courville', titre: 'Deep Learning, ch. 6 (approximation universelle)', url: 'https://www.deeplearningbook.org/contents/mlp.html', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'G. Cybenko', titre: 'Approximation by superpositions of a sigmoidal function', url: 'https://doi.org/10.1007/BF02551274', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'A.-M. Legendre', titre: 'Nouvelles méthodes pour la détermination des orbites des comètes (appendice sur les moindres carrés)', url: 'https://archive.org/download/bub_gb_FRcOAAAAQAAJ/bub_gb_FRcOAAAAQAAJ_djvu.txt', type: 'primaire', annee: 1805 },
+      { auteur: 'S. M. Stigler', titre: 'Gauss and the Invention of Least Squares (Annals of Statistics)', url: 'https://doi.org/10.1214/aos/1176345451', type: 'recherche', annee: 1981, langue: 'en' },
+      { auteur: 'C. Runge', titre: 'Über empirische Funktionen und die Interpolation zwischen äquidistanten Ordinaten (Zeitschrift für Mathematik und Physik, t. 46)', url: 'https://archive.org/download/zeitschriftfrma12runggoog/zeitschriftfrma12runggoog_djvu.txt', type: 'primaire', annee: 1901, langue: 'de' },
+      { auteur: 'M. Stone', titre: 'Cross-Validatory Choice and Assessment of Statistical Predictions', url: 'https://sites.stat.washington.edu/courses/stat527/s13/readings/Stone1974.pdf', type: 'primaire', annee: 1974, langue: 'en' },
+      { auteur: 'S. Arlot, A. Celisse', titre: 'A survey of cross-validation procedures for model selection', url: 'https://arxiv.org/abs/0907.4728', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'P. Craven, G. Wahba', titre: 'Smoothing Noisy Data with Spline Functions (Numerische Mathematik)', url: 'https://sites.stat.washington.edu/courses/stat527/s13/readings/cravenwabha79.pdf', type: 'primaire', annee: 1979, langue: 'en' },
+      { auteur: 'A. Gammerman, V. Vovk (JMLR)', titre: 'Preface to this Special Issue (Vapnik et Tchervonenkis)', url: 'https://jmlr.org/papers/volume16/gammerman15a/gammerman15a.pdf', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'C. Cortes, V. Vapnik', titre: 'Support-Vector Networks (Machine Learning)', url: 'https://link.springer.com/content/pdf/10.1007/BF00994018.pdf', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'T. M. Cover, P. E. Hart', titre: 'Nearest Neighbor Pattern Classification', url: 'https://isl.stanford.edu/~cover/papers/transIT/0021cove.pdf', type: 'primaire', annee: 1967, langue: 'en' },
+      { auteur: 'University of California', titre: 'In Memoriam : Evelyn Fix', url: 'https://statistics.berkeley.edu/node/5864', type: 'site', langue: 'en' },
+      { auteur: 'J. Buolamwini, T. Gebru', titre: 'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', url: 'https://proceedings.mlr.press/v81/buolamwini18a.html', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'J. Buolamwini (MIT)', titre: 'Gender shades (mémoire de master, résumé)', url: 'https://dspace.mit.edu/handle/1721.1/114068', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'J. Deng et al.', titre: 'ImageNet: A Large-Scale Hierarchical Image Database', url: 'https://www.image-net.org/static_files/papers/imagenet_cvpr09.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'ImageNet', titre: 'About ImageNet', url: 'https://www.image-net.org/about.php', type: 'site', langue: 'en' },
+      { auteur: 'J. Dastin (Reuters, repris par Euronews)', titre: 'Amazon scraps secret AI recruiting tool that showed bias against women', url: 'https://www.euronews.com/2018/10/10/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'AI Act — Regulatory framework for AI', url: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai', type: 'primaire', langue: 'en' },
+      { auteur: 'J. Devlin et al.', titre: 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding', url: 'https://arxiv.org/abs/1810.04805', type: 'primaire', annee: 2018, langue: 'en' },
+    ]}
   />
   </section>
 </Base>
