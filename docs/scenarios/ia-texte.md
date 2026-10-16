@@ -8,10 +8,8 @@ et [`docs/sources/ia.md`](../sources/ia.md).
 ## Place dans la famille « L'IA »
 
 Ce module traite des modèles de langage. Il fait partie d'une famille de
-modules sur l'IA (voir `docs/ROADMAP.md`, phase 5) : « L'IA, c'est quoi ? »
-(porte d'entrée : IA à règles et IA qui apprend), « Comment apprend une
-machine », « Les IA qui écrivent » (celui-ci), « Les IA qui voient », « Les IA
-qui dessinent », « Les IA qui jouent ». Quand « Comment apprend une machine »
+modules sur l'IA, rangés par but, avec un module transversal par mécanisme
+(voir `docs/ROADMAP.md`, phase 5). Quand « Comment apprend une machine »
 existera, les étapes 3 (le neurone) et 4 (apprendre) y seront déplacées.
 
 ## Intention
