@@ -182,22 +182,26 @@ export function reconnaitre(f1: number, f2: number, modeles: Modele[]): { voyell
 
 // ——— Les voix du module ———
 
-// Formants moyens (F1, F2, F3, en Hz) de cinq voyelles du français, voix
-// d'hommes adultes. Les voix de femmes et d'enfants ont des conduits
-// vocaux plus courts : formants plus hauts (facteur approximatif), et une
-// voix plus aiguë (f0). Sources : docs/sources/ia-entendre.md.
+// Formants moyens (F1, F2 en Hz) de cinq voyelles du français, voix d'hommes
+// adultes, d'après les valeurs de référence de Calliope (1989) reprises par
+// Gendrot et Adda-Decker (2005). F3 est une valeur approximative, ajoutée
+// pour que la synthèse sonne plus naturellement. Les voix de femmes et
+// d'enfants ont des conduits vocaux plus courts : formants plus hauts. Les
+// facteurs et les hauteurs de voix (f0) sont des ordres de grandeur tirés
+// de Peterson et Barney (1952, anglais américain), faute de données
+// d'enfants francophones. Sources : docs/sources/ia-entendre.md, § 2.
 export const VOYELLES: Record<string, number[]> = {
-  i: [280, 2250, 2900],
-  é: [360, 2100, 2700],
-  a: [700, 1300, 2500],
-  o: [400, 800, 2500],
-  ou: [300, 750, 2300],
+  i: [300, 2050, 2900],
+  é: [350, 1950, 2700],
+  a: [650, 1300, 2500],
+  o: [400, 900, 2500],
+  ou: [350, 850, 2300],
 };
 
 export const LOCUTEURS = [
-  { id: 'homme', nom: 'Homme', f0: 120, facteur: 1 },
-  { id: 'femme', nom: 'Femme', f0: 210, facteur: 1.15 },
-  { id: 'enfant', nom: 'Enfant', f0: 290, facteur: 1.3 },
+  { id: 'homme', nom: 'Homme', f0: 125, facteur: 1 },
+  { id: 'femme', nom: 'Femme', f0: 215, facteur: 1.15 },
+  { id: 'enfant', nom: 'Enfant', f0: 265, facteur: 1.35 },
 ] as const;
 
 export function voix(voyelle: string, locuteur: (typeof LOCUTEURS)[number]): Voix {
