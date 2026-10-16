@@ -1,0 +1,218 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Trier from '../../components/animations/classer/Trier.astro';
+import FiltreSpam from '../../components/animations/classer/FiltreSpam.astro';
+import Seuil from '../../components/animations/classer/Seuil.astro';
+import ArbreCourriel from '../../components/animations/classer/ArbreCourriel.astro';
+import TriCV from '../../components/animations/classer/TriCV.astro';
+
+// Faits sourcés : voir docs/sources/ia-classer.md.
+const etapes = [
+  { ancre: 'trier', court: 'Trier' },
+  { ancre: 'bayes', court: 'Compter les mots' },
+  { ancre: 'seuil', court: 'Le seuil' },
+  { ancre: 'arbre', court: "L'arbre" },
+  { ancre: 'personnes', court: 'Des personnes' },
+  { ancre: 'bilan', court: 'Dans ta vie', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui classent"
+  description="Filtre anti-spam, diagnostic, tri de CV : comment une machine range des cas dans des cases. Un filtre bayésien qu'on entraîne soi-même, le seuil, un arbre qui s'explique, et des classements qui touchent des personnes."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Les IA qui classent</h1>
+  <p class="chapo seulement-debut">
+    Spam ou pas ? Fraude ou pas ? Candidature retenue ou non ? Beaucoup d'IA ne font qu'une
+    chose : ranger des cas dans des cases. Entraîne toi-même un filtre anti-spam, puis regarde
+    ce qui change quand ce qu'on classe, ce sont des personnes.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Trier, c'est décider" ancre="trier">
+    <Trier slot="animation" />
+    <p slot="decouverte">
+      Avant de laisser une machine trier, trie toi-même. Pour chaque courriel, tu cherches des
+      indices : qui écrit, ce qu'on te demande, le ton du message.
+    </p>
+    <p slot="curieux">
+      Un classeur fait la même chose : il reçoit un cas, regarde des indices (on dit des
+      « caractéristiques ») et le range dans une catégorie. Les catégories sont fixées à
+      l'avance par des humains ; la machine apprend seulement à y ranger les cas, à partir
+      d'exemples déjà triés. C'est de l'apprentissage supervisé.
+    </p>
+    <p slot="ingenieur">
+      Formellement, un classeur est une fonction qui associe à un vecteur de caractéristiques
+      une étiquette parmi un ensemble fini. Ici, deux étiquettes (classement binaire). Les
+      caractéristiques d'un courriel peuvent être ses mots, son expéditeur, ses liens, ou des
+      nombres appris par un réseau de neurones.
+    </p>
+    <div slot="histoire" data-a-sourcer="spam">
+      <p>À compléter.</p>
+    </div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Compter les mots" ancre="bayes">
+    <FiltreSpam slot="animation" />
+    <p slot="decouverte">
+      Ce filtre a lu 24 courriels déjà triés. Il a compté les mots de chaque catégorie. Écris un
+      message : il te dit s'il y croit, et quels mots ont pesé. Tu peux aussi lui apprendre de
+      nouveaux exemples.
+    </p>
+    <p slot="curieux">
+      C'est un <Terme id="classifieur-bayesien">classifieur bayésien naïf</Terme>. Chaque mot
+      apporte un indice : « cliquez » est huit fois plus fréquent dans ses spams que dans ses
+      courriels normaux. Le filtre multiplie tous les indices. « Naïf », parce qu'il fait comme
+      si les mots étaient indépendants : il ignore leur ordre et ne comprend pas la négation.
+    </p>
+    <p slot="ingenieur">
+      Règle de Bayes : P(spam | mots) ∝ P(spam) × ∏ P(mot | spam). Chaque P(mot | spam) est
+      estimée en comptant, avec un lissage de Laplace (+1) pour qu'un mot jamais vu ne donne pas
+      une probabilité nulle. On additionne des logarithmes au lieu de multiplier, pour éviter
+      des nombres trop petits. Les filtres modernes combinent ces indices avec bien d'autres :
+      réputation de l'expéditeur, signatures techniques, réseaux de neurones.
+    </p>
+    <div slot="histoire" data-a-sourcer="bayes">
+      <p>À compléter.</p>
+    </div>
+    <p slot="verifie">
+      Clique sur « Une vraie banque » : le filtre la soupçonne, à cause de « mot de passe ».
+      Puis apprends-lui ce message comme normal, et réessaie.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le seuil : quelle erreur préfères-tu ?" ancre="seuil">
+    <Seuil slot="animation" />
+    <p slot="decouverte">
+      Le filtre ne dit pas « spam » ou « pas spam » : il donne une probabilité. C'est à nous de
+      choisir à partir de quand on bloque. Déplace le seuil et regarde les deux sortes
+      d'erreurs.
+    </p>
+    <p slot="curieux">
+      Un spam qui passe est un <Terme id="faux-positif">faux négatif</Terme> ; un vrai courriel
+      perdu dans les indésirables est un faux positif. On ne peut presque jamais supprimer les
+      deux : baisser l'une fait monter l'autre. Le bon réglage dépend de ce que coûte chaque
+      erreur. Pour un filtre anti-spam, perdre une convocation coûte plus cher que lire une
+      publicité.
+    </p>
+    <p slot="ingenieur">
+      Le tableau est la matrice de confusion. On en tire la sensibilité (part des spams
+      bloqués) et la spécificité (part des vrais courriels reçus). En faisant varier le seuil
+      de 0 à 1, on trace la courbe ROC : sensibilité contre taux de faux positifs. L'aire sous
+      cette courbe résume la qualité du classeur, tous seuils confondus.
+    </p>
+    <div slot="histoire" data-a-sourcer="roc">
+      <p>À compléter.</p>
+    </div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Un arbre qui s'explique" ancre="arbre">
+    <ArbreCourriel slot="animation" />
+    <p slot="decouverte">
+      Un arbre de décision classe en posant des questions, l'une après l'autre. Il choisit seul
+      ses questions, à partir des exemples. Son avantage : on peut lire tout son raisonnement.
+    </p>
+    <p slot="curieux">
+      Ici, l'arbre a trouvé un raccourci : dans ses exemples, tous les courriels normaux
+      venaient de contacts connus. Il a donc appris « inconnu = spam ». Parfait sur
+      l'entraînement, faux dans la vraie vie. Les IA prennent souvent ce genre de raccourci ;
+      avec un arbre, on le voit tout de suite.
+    </p>
+    <p slot="ingenieur">
+      À chaque nœud, l'algorithme ID3 choisit la question qui fait le plus baisser l'entropie
+      (le « désordre » des étiquettes). Pour un réseau de neurones, des millions de poids rendent
+      ce raisonnement illisible : on parle de boîte noire, et l'on essaie après coup de
+      l'expliquer, avec des méthodes qui restent des approximations.
+    </p>
+    <div slot="histoire" data-a-sourcer="arbres">
+      <p>À compléter.</p>
+    </div>
+    <p slot="mythes">
+      <strong>« Plus une IA est précise, mieux c'est. »</strong> Une IA peut obtenir un score
+      parfait pour une mauvaise raison (un raccourci présent dans ses exemples). Sans comprendre
+      comment elle décide, on ne le découvre qu'une fois l'erreur commise.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Quand on classe des personnes" ancre="personnes">
+    <TriCV slot="animation" />
+    <p slot="decouverte">
+      Une entreprise veut trier les candidatures automatiquement. Elle entraîne une IA sur ses
+      décisions passées. Mais le passé avait ses préjugés : l'IA les apprend. Essaie de retirer
+      la colonne « genre ».
+    </p>
+    <p slot="curieux">
+      Retirer le genre ne suffit pas : l'interruption de carrière, bien plus fréquente chez les
+      femmes après un congé parental, transmet le même biais. On parle de variable indirecte (ou
+      « proxy »). Le code postal, le prénom ou le club de sport peuvent jouer ce rôle pour
+      d'autres discriminations.
+    </p>
+    <p slot="ingenieur">
+      Pour détecter le problème, on compare les taux de sélection entre groupes, à
+      qualification égale. Plusieurs définitions de l'équité existent (mêmes taux, mêmes erreurs
+      pour chaque groupe…) et elles ne peuvent en général pas être satisfaites toutes en même
+      temps : le choix est politique autant que technique.
+    </p>
+    <div slot="histoire" data-a-sourcer="cas">
+      <p>À compléter.</p>
+    </div>
+    <div slot="decide" data-a-sourcer="droit">
+      <p>À compléter.</p>
+    </div>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Qui te classe, et dans quelle case ?</h2>
+    <p>
+      Des classeurs prennent chaque jour des décisions à ton sujet. Pour chacun, deux questions :
+      que coûte une erreur, et qui peut la corriger ?
+    </p>
+    <table>
+      <thead><tr><th scope="col">Classement</th><th scope="col">Faux positif</th><th scope="col">Faux négatif</th></tr></thead>
+      <tbody>
+        <tr><td>Filtre anti-spam</td><td>Un vrai courriel perdu</td><td>Une publicité ou un hameçonnage reçu</td></tr>
+        <tr><td>Paiement suspect</td><td>Ta carte bloquée à tort</td><td>Une fraude qui passe</td></tr>
+        <tr><td>Tri de CV</td><td>Un entretien inutile</td><td>Une personne compétente écartée</td></tr>
+        <tr><td>Contrôle des aides sociales</td><td>Une famille contrôlée sans raison</td><td>Une fraude non détectée</td></tr>
+        <tr><td>Dépistage médical</td><td>Une inquiétude et des examens en plus</td><td>Une maladie non vue</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Pour voir comment ces machines apprennent leurs critères, va voir « <a
+      href="/modules/apprendre/">Comment apprend une machine</a> ».
+    </p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

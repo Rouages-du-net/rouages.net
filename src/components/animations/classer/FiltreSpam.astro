@@ -1,0 +1,125 @@
+---
+// Animation « Compter les mots » (étape 1 du module « Les IA qui
+// classent ») : un vrai filtre bayésien naïf, entraîné sur 24 courriels.
+// On écrit un message, on voit la probabilité de spam et le poids de chaque
+// mot ; on peut lui apprendre de nouveaux exemples.
+import { ENTRAINEMENT } from '../../../lib/classer';
+
+const nSpam = ENTRAINEMENT.filter((c) => c.etiquette === 'spam').length;
+---
+<div class="anim filtre" data-filtre>
+  <div class="anim-repli">
+    <p>
+      Le filtre a lu {ENTRAINEMENT.length} courriels déjà triés ({nSpam} spams). Pour chaque mot,
+      il a compté dans combien de spams et de courriels normaux il apparaît. « cliquez », par
+      exemple, est huit fois plus fréquent dans ses spams : il pousse fortement vers « spam ».
+      « réunion » pousse dans l'autre sens. Pour un nouveau courriel, il combine les indices de
+      tous les mots et obtient une probabilité de spam.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="saisie">Écris (ou modifie) un courriel :
+        <textarea data-texte rows="3">Cliquez ici pour recevoir votre cadeau gratuit avant la réunion de jeudi.</textarea>
+      </label>
+      <div class="exemples" role="group" aria-label="Exemples">
+        <button type="button" class="anim-bouton" data-exemple="Urgent : confirmez votre mot de passe via ce lien.">Hameçonnage</button>
+        <button type="button" class="anim-bouton" data-exemple="On se retrouve samedi pour le match ? Apporte le dessert.">Un ami</button>
+        <button type="button" class="anim-bouton" data-exemple="Nous ne vous demanderons jamais votre mot de passe.">Une vraie banque</button>
+      </div>
+      <div class="jauge" aria-hidden="true"><span data-jauge></span></div>
+      <p class="proba" data-proba aria-live="polite"></p>
+      <ul class="indices" data-indices></ul>
+      <p class="note-indices">Chaque mot connu indique combien de fois il est plus fréquent dans les spams (×2, ×8…) ou dans les courriels normaux (÷2, ÷3…). Les mots jamais vus sont ignorés.</p>
+      <div class="anim-commandes">
+        <span class="apprendre">Apprends-lui ce message :</span>
+        <button type="button" data-apprendre="spam">🗑️ C’est un spam</button>
+        <button type="button" data-apprendre="normal">📥 C’est normal</button>
+        <button type="button" data-action="oublier">↺ Oublier mes ajouts</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { FiltreBayes, ENTRAINEMENT, type Etiquette } from '../../../lib/classer';
+
+  const pourcent = (p: number) => `${(p * 100).toFixed(p > 0.99 || p < 0.01 ? 1 : 0).replace('.', ',')} %`;
+  const facteur = (r: number) => (r >= 1 ? `×${r.toFixed(r < 10 ? 1 : 0)}` : `÷${(1 / r).toFixed(1 / r < 10 ? 1 : 0)}`).replace('.', ',').replace(/,0$/, '');
+
+  document.querySelectorAll<HTMLElement>('[data-filtre]').forEach((racine) => {
+    activerScene(racine);
+    const zone = racine.querySelector<HTMLTextAreaElement>('[data-texte]')!;
+    const jauge = racine.querySelector<HTMLElement>('[data-jauge]')!;
+    const proba = racine.querySelector<HTMLElement>('[data-proba]')!;
+    const liste = racine.querySelector<HTMLElement>('[data-indices]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let filtre = new FiltreBayes(ENTRAINEMENT);
+    let ajouts = 0;
+
+    function juger() {
+      const { p, indices } = filtre.juger({ objet: '', texte: zone.value });
+      jauge.style.width = `${p * 100}%`;
+      jauge.className = p >= 0.5 ? 'spam' : 'normal';
+      proba.textContent = indices.length
+        ? `Probabilité de spam : ${pourcent(p)} → ${p >= 0.5 ? '🗑️ classé spam' : '📥 boîte de réception'}`
+        : 'Aucun mot connu : le filtre ne sait pas (il s’en tient à la proportion de spams qu’il a vus).';
+      liste.replaceChildren(
+        ...indices.map((i) => {
+          const li = document.createElement('li');
+          li.className = i.rapport > 1.05 ? 'vers-spam' : i.rapport < 0.95 ? 'vers-normal' : 'neutre';
+          li.textContent = `${i.mot} ${facteur(i.rapport)}`;
+          return li;
+        }),
+      );
+    }
+
+    zone.addEventListener('input', juger);
+    racine.querySelectorAll<HTMLButtonElement>('[data-exemple]').forEach((b) =>
+      b.addEventListener('click', () => {
+        zone.value = b.dataset.exemple!;
+        juger();
+        legende.textContent = b.textContent === 'Une vraie banque'
+          ? 'Piège : « mot de passe » est un mot de spam pour le filtre. Il ne comprend pas la négation « ne… jamais » : il ne fait que compter des mots.'
+          : '';
+      }),
+    );
+    racine.querySelectorAll<HTMLButtonElement>('[data-apprendre]').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (!zone.value.trim()) return;
+        filtre.apprendre({ objet: '', texte: zone.value }, b.dataset.apprendre as Etiquette);
+        ajouts++;
+        juger();
+        legende.textContent = `Ajouté comme ${b.dataset.apprendre === 'spam' ? 'spam' : 'courriel normal'} : le filtre a recompté ses mots (${filtre.n.spam + filtre.n.normal} exemples, dont ${ajouts} de toi). C’est ce qui se passe quand tu cliques « Signaler comme spam ».`;
+      }),
+    );
+    racine.querySelector('[data-action="oublier"]')!.addEventListener('click', () => {
+      filtre = new FiltreBayes(ENTRAINEMENT);
+      ajouts = 0;
+      juger();
+      legende.textContent = 'Le filtre est revenu à ses 24 exemples de départ.';
+    });
+    juger();
+  });
+</script>
+
+<style>
+  .saisie { display: grid; gap: 0.35rem; font-weight: 600; }
+  textarea { font: inherit; font-weight: 400; width: 100%; box-sizing: border-box; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg); color: var(--fg); resize: vertical; }
+  .exemples { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0 0.75rem; }
+  .jauge { height: 0.75rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); overflow: hidden; }
+  .jauge span { display: block; height: 100%; transition: width 0.3s; }
+  .jauge span.spam { background: var(--ill-paquet); }
+  .jauge span.normal { background: var(--ill-client); }
+  .proba { font-weight: 700; margin: 0.4rem 0; }
+  .indices { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .indices li { font-family: var(--police-mono); font-size: 0.85rem; padding: 0.1rem 0.5rem; border-radius: 999px; border: 1px solid var(--border); }
+  .indices .vers-spam { background: color-mix(in oklab, var(--ill-paquet) 18%, transparent); border-color: var(--ill-paquet); }
+  .indices .vers-normal { background: color-mix(in oklab, var(--ill-client) 18%, transparent); border-color: var(--ill-client); }
+  .note-indices { font-size: 0.85rem; color: var(--muted); }
+  .apprendre { font-size: 0.9rem; }
+  @media (prefers-reduced-motion: reduce) { .jauge span { transition: none; } }
+</style>

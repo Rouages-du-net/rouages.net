@@ -1,0 +1,86 @@
+---
+// Animation « Trier, c'est décider » (étape 0 du module « Les IA qui
+// classent ») : on trie soi-même six courriels, spam ou pas, puis on
+// découvre la réponse et les indices qui auraient pu aider.
+import { EXAMEN } from '../../../lib/classer';
+
+const CHOIX = [0, 12, 7, 18, 1, 22].map((i) => EXAMEN[i]);
+const INDICES: string[] = [
+  'Un cadeau gratuit, « cliquez ici », une offre limitée : tous les signaux classiques.',
+  'Une vraie banque peut écrire, et parler de mot de passe… pour dire qu’elle ne le demandera jamais.',
+  'Pas de lien, pas d’argent, un ton poli : mais un inconnu qui propose une « opportunité d’affaires ». Les spams les plus habiles ressemblent à de vrais messages.',
+  'Un colis, une livraison… mais aucun frais à payer et aucun lien : c’est un vrai transporteur.',
+  'Urgence, mot de passe, carte bancaire, lien : c’est de l’hameçonnage (phishing), un spam qui vole des informations.',
+  'Le mot « urgence » ne suffit pas : c’est un collègue, dans tes contacts, qui demande une relecture.',
+];
+---
+<div class="anim trier" data-trier>
+  <div class="anim-repli">
+    <p>Six courriels à trier, spam ou normal :</p>
+    <ul>
+      {CHOIX.map((c, i) => (
+        <li><strong>{c.objet}</strong> (de {c.de}) : « {c.texte} » — réponse : {c.etiquette === 'spam' ? 'spam' : 'normal'}. {INDICES[i]}</li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <ol class="boite">
+      {CHOIX.map((c, i) => (
+        <li class="courriel" data-courriel={i} data-reponse={c.etiquette}>
+          <p class="entete"><span class="de">{c.de}</span><strong>{c.objet}</strong></p>
+          <p class="corps">{c.texte}</p>
+          <div class="choix" role="group" aria-label={`Trier « ${c.objet} »`}>
+            <button type="button" class="anim-bouton" data-choix="spam">🗑️ Spam</button>
+            <button type="button" class="anim-bouton" data-choix="normal">📥 Normal</button>
+          </div>
+          <p class="verdict" aria-live="polite" hidden>{INDICES[i]}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-trier]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const items = [...racine.querySelectorAll<HTMLElement>('[data-courriel]')];
+    let justes = 0;
+    let faits = 0;
+    legende.textContent = 'Lis chaque courriel et décide : spam ou normal ?';
+    items.forEach((li) => {
+      li.querySelectorAll<HTMLButtonElement>('[data-choix]').forEach((b) =>
+        b.addEventListener('click', () => {
+          const bon = b.dataset.choix === li.dataset.reponse;
+          justes += bon ? 1 : 0;
+          faits++;
+          li.classList.add(bon ? 'bon' : 'rate');
+          li.querySelectorAll('button').forEach((x) => (x.disabled = true));
+          const v = li.querySelector<HTMLElement>('.verdict')!;
+          v.textContent = `${bon ? '✓ Bien vu' : '✗ Raté'} : c’est ${li.dataset.reponse === 'spam' ? 'un spam' : 'un courriel normal'}. ${v.textContent}`;
+          v.hidden = false;
+          legende.textContent =
+            faits < items.length
+              ? `${justes} bonne${justes > 1 ? 's' : ''} réponse${justes > 1 ? 's' : ''} sur ${faits}.`
+              : `${justes} sur ${items.length}. Pour décider, tu as cherché des indices : des mots, l’expéditeur, le ton. Un filtre anti-spam fait pareil… avec des nombres.`;
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .boite { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+  .courriel { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.9rem; }
+  .courriel.bon { border-color: var(--ill-secret-b); }
+  .courriel.rate { border-color: var(--accent); }
+  .entete { margin: 0; display: grid; gap: 0.1rem; }
+  .de { font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+  .corps { margin: 0.35rem 0 0.5rem; font-size: 0.95rem; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .verdict { margin: 0.5rem 0 0; font-size: 0.9rem; }
+</style>

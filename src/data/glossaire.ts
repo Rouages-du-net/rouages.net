@@ -369,6 +369,18 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Défaut d'un modèle qui a appris ses exemples d'entraînement « par cœur », jusqu'à leurs détails accidentels : il réussit sur eux mais se trompe sur de nouveaux cas. On le repère en le testant sur des exemples mis de côté.",
     voirAussi: ['apprentissage-automatique'],
   },
+  'classifieur-bayesien': {
+    terme: 'Classifieur bayésien naïf',
+    definition:
+      "Méthode de classement qui compte, dans des exemples déjà triés, à quelle fréquence chaque indice (un mot, par exemple) apparaît dans chaque catégorie, puis combine ces indices avec la règle de Bayes. « Naïf » parce qu'il fait comme si les indices étaient indépendants les uns des autres.",
+    voirAussi: ['apprentissage-automatique', 'faux-positif'],
+  },
+  'faux-positif': {
+    terme: 'Faux positif, faux négatif',
+    definition:
+      "Les deux erreurs d'un classement oui/non. Faux positif : le système dit « oui » à tort (un vrai courriel classé spam). Faux négatif : il dit « non » à tort (un spam qui passe). Baisser l'une fait souvent monter l'autre.",
+    voirAussi: ['classifieur-bayesien'],
+  },
 };
 
 export function entree(id: string): Entree {
