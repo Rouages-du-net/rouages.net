@@ -1,0 +1,159 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Voisins from '../../components/animations/recommander/Voisins.astro';
+import GoutsCaches from '../../components/animations/recommander/GoutsCaches.astro';
+import Fil from '../../components/animations/recommander/Fil.astro';
+import Boucle from '../../components/animations/recommander/Boucle.astro';
+
+// Faits sourcés : voir docs/sources/ia-recommander.md.
+const etapes = [
+  { ancre: 'voisins', court: 'Qui te ressemble' },
+  { ancre: 'gouts', court: 'Goûts cachés' },
+  { ancre: 'objectif', court: 'Ce qu’on optimise' },
+  { ancre: 'boucle', court: 'La boucle' },
+  { ancre: 'bulle', court: 'Une bulle ?' },
+  { ancre: 'bilan', court: 'Reprendre la main', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui recommandent"
+  description="Fil d'actualité, vidéos, musique, achats : comment une machine choisit ce qu'on te montre. Filtrage collaboratif, goûts cachés, ce qu'on optimise, boucles de popularité, bulles de filtre et règles européennes."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui recommandent</h1>
+  <MiseAJour date="2026-10-16" evolutif="procédures européennes contre les plateformes, recherche sur les effets" />
+  <p class="chapo seulement-debut">
+    La vidéo suivante, le morceau d'après, l'article en haut du fil : quelqu'un a choisi pour
+    toi. Ce quelqu'un est un programme, qui optimise un objectif fixé par une entreprise. Note
+    des vidéos, regarde le modèle découvrir des goûts cachés, change ce qu'il optimise, et
+    observe les boucles qu'il peut créer.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Les gens qui te ressemblent" ancre="voisins">
+    <Voisins slot="animation" />
+    <p slot="decouverte">
+      Note quelques vidéos. Le système cherche les personnes qui ont noté comme toi, et te
+      propose ce qu'elles ont aimé. Il ne sait rien du contenu des vidéos.
+    </p>
+    <p slot="curieux">
+      C'est le <Terme id="filtrage-collaboratif">filtrage collaboratif</Terme> : « les personnes
+      qui ont aimé ceci ont aussi aimé cela ». Il marche sans comprendre les vidéos, mais il a
+      besoin de beaucoup de notes. Une nouvelle vidéo que personne n'a encore vue ne peut pas
+      être recommandée : c'est le problème du « démarrage à froid ».
+    </p>
+    <p slot="ingenieur">
+      La ressemblance est la corrélation de Pearson des notes sur les vidéos vues par les deux
+      personnes. La note prédite est ta moyenne, corrigée par la moyenne pondérée des écarts
+      des 3 personnes les plus proches. Avec deux vidéos seulement en commun, la corrélation
+      vaut souvent ±1 par hasard : les vrais systèmes pénalisent ces ressemblances peu sûres.
+    </p>
+    <div slot="histoire" data-a-sourcer="histoire"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Des goûts cachés" ancre="gouts">
+    <GoutsCaches slot="animation" />
+    <p slot="decouverte">
+      Le modèle place chaque vidéo et chaque personne sur une carte, puis les déplace pour que
+      les notes prédites ressemblent aux vraies. Entraîne-le et regarde les vidéos se ranger.
+    </p>
+    <p slot="curieux">
+      Personne ne lui a dit qu'il existe de la cuisine ou du sport : il découvre des « goûts
+      cachés » dans les notes. Les plateformes utilisent des centaines de ces dimensions, et
+      ajoutent tout ce qu'elles savent : ce que tu regardes jusqu'au bout, ce que tu passes,
+      l'heure, l'appareil.
+    </p>
+    <p slot="ingenieur">
+      Factorisation de matrice : note ≈ μ + b<sub>u</sub> + b<sub>i</sub> + p<sub>u</sub> · q<sub>i</sub>,
+      avec des vecteurs p et q de dimension 2, appris par descente de gradient stochastique
+      avec régularisation. La matrice des notes, presque vide, est approchée par le produit de
+      deux matrices fines. Les systèmes actuels utilisent des réseaux de neurones, mais l'idée
+      des « plongements » est la même.
+    </p>
+    <div slot="histoire" data-a-sourcer="netflix"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Ce qu'on optimise" ancre="objectif">
+    <Fil slot="animation" />
+    <p slot="decouverte">
+      Un système de recommandation ne cherche pas « ce qui est bien pour toi ». Il maximise
+      un objectif choisi par l'entreprise. Fais glisser le curseur et regarde ton fil changer.
+    </p>
+    <p slot="curieux">
+      Ce qui se mesure facilement (clics, temps passé, partages) devient l'objectif, même si ce
+      n'est qu'une approximation de ce qu'on veut vraiment. Une vidéo peut retenir l'attention
+      sans faire plaisir. Les plateformes ajustent régulièrement leurs objectifs, et disent
+      chercher un équilibre.
+    </p>
+    <p slot="ingenieur">
+      Dans la simulation, score = w · temps + (1 − w) · satisfaction, avec des modèles inventés
+      des deux. Dans la réalité, le classement combine plusieurs prédictions (probabilité de
+      clic, durée de visionnage, de partage, de signalement…) pondérées par l'entreprise. Ces
+      pondérations sont rarement publiques.
+    </p>
+    <div slot="histoire" data-a-sourcer="objectif"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="La boucle de popularité" ancre="boucle">
+    <Boucle slot="animation" />
+    <p slot="decouverte">
+      Quand on montre aux gens ce qui est déjà populaire, ça le rend encore plus populaire.
+      Compare deux mondes : avec et sans classement visible.
+    </p>
+    <p slot="curieux">
+      Un succès précoce, même dû au hasard, attire plus d'écoutes, donc plus de
+      recommandations, donc plus d'écoutes. Les écarts se creusent, et ce qui gagne dépend en
+      partie de la chance. Les systèmes de recommandation entraînés sur ce que les gens ont
+      déjà cliqué peuvent renforcer ces boucles.
+    </p>
+    <p slot="ingenieur">
+      Simulation : chaque auditeur choisit un morceau avec une probabilité proportionnelle à
+      sa qualité, mélangée (à 95 %) avec sa part des écoutes passées. L'inégalité est mesurée
+      par l'indice de Gini (0 : tous égaux ; 1 : un seul prend tout).
+    </p>
+    <div slot="histoire" data-a-sourcer="musiclab"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Une bulle autour de toi ?" ancre="bulle">
+    <p slot="decouverte" data-a-sourcer="bulle">À compléter.</p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Reprendre la main</h2>
+    <p data-a-sourcer="bilan">À compléter.</p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

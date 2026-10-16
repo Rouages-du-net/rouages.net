@@ -1,0 +1,114 @@
+---
+// Animation « Des goûts cachés » (étape 1 du module « Les IA qui
+// recommandent ») : factorisation de matrice. À partir des seules notes, le
+// modèle donne à chaque vidéo et à chaque personne deux nombres ; une fois
+// entraîné, les vidéos d'un même thème se retrouvent proches sur la carte,
+// sans que personne ne lui ait dit les thèmes.
+---
+<div class="anim gouts" data-gouts>
+  <div class="anim-repli">
+    <p>
+      On place chaque vidéo et chaque personne sur une carte, au hasard. La note prédite
+      dépend de leur position : une personne aime les vidéos qui sont « dans sa direction ».
+      À chaque erreur, on déplace un peu tout le monde. Après l'entraînement, les vidéos de
+      cuisine, de sciences et de musique se regroupent d'un côté, le sport, les jeux et
+      l'humour de l'autre : le modèle a découvert seul des « goûts cachés », à partir des notes.
+      C'est la méthode qui a dominé le prix Netflix (2006-2009).
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="-2.2 -2.2 4.4 4.4" role="img" aria-label="Carte des goûts cachés : les vidéos (icônes) et les personnes (initiales)" data-carte></svg>
+      <p class="etat" data-etat aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="entrainer">🎓 Entraîner (20 passages)</button>
+        <button type="button" data-action="recommencer">↺ Repartir du hasard</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { VIDEOS, PERSONNES, Factorisation } from '../../../lib/recommander';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const borne = (v: number) => Math.max(-2, Math.min(2, v));
+
+  document.querySelectorAll<HTMLElement>('[data-gouts]').forEach((racine) => {
+    activerScene(racine);
+    const svg = racine.querySelector<SVGSVGElement>('[data-carte]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="entrainer"]')!;
+    let graine = 1;
+    let f = new Factorisation(PERSONNES.map((p) => p.notes), hasard(graine));
+    let erreur = NaN;
+
+    function texte(x: number, y: number, contenu: string, classe: string, titre: string) {
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', borne(x).toFixed(2));
+      t.setAttribute('y', borne(-y).toFixed(2));
+      t.setAttribute('class', classe);
+      t.textContent = contenu;
+      const ti = document.createElementNS(NS, 'title');
+      ti.textContent = titre;
+      t.append(ti);
+      return t;
+    }
+
+    function dessiner() {
+      // Pour que la carte reste lisible au début, on agrandit les petites positions.
+      const echelle = Math.max(0.6, ...f.Q.flat().map(Math.abs), ...f.P.flat().map(Math.abs));
+      const k = 1.8 / echelle;
+      svg.replaceChildren(
+        Object.assign(document.createElementNS(NS, 'rect'), {}),
+        ...VIDEOS.map((v, i) => texte(f.Q[i][0] * k, f.Q[i][1] * k, v.icone, 'video', `${v.titre} (${v.theme})`)),
+        ...PERSONNES.map((p, u) => texte(f.P[u][0] * k, f.P[u][1] * k, p.nom[0], 'personne', p.nom)),
+      );
+      const r = svg.firstElementChild!;
+      ['x', 'y'].forEach((a) => r.setAttribute(a, '-2.2'));
+      ['width', 'height'].forEach((a) => r.setAttribute(a, '4.4'));
+      r.setAttribute('class', 'fond');
+      etat.textContent = f.epoques ? `${f.epoques} passages · erreur moyenne : ${erreur.toFixed(2).replace('.', ',')} étoile` : 'Positions tirées au hasard.';
+    }
+
+    async function entrainer() {
+      bouton.disabled = true;
+      for (let n = 0; n < 20; n++) {
+        erreur = f.epoque();
+        if (!mouvementReduit() && n % 2 === 1) {
+          dessiner();
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+      }
+      dessiner();
+      legende.textContent =
+        f.epoques < 40
+          ? 'Les icônes commencent à bouger : chaque note corrige un peu la position de la vidéo et de la personne. Continue.'
+          : 'Regarde les icônes : les vidéos de cuisine, de sciences et de musique se sont regroupées, loin du sport, des jeux et de l’humour. Personne n’a donné les thèmes au modèle : il les a déduits des notes. Les lettres sont les personnes, placées près de ce qu’elles aiment.';
+      bouton.disabled = false;
+    }
+
+    bouton.addEventListener('click', entrainer);
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', () => {
+      f = new Factorisation(PERSONNES.map((p) => p.notes), hasard(++graine));
+      dessiner();
+      legende.textContent = 'Nouvelles positions au hasard.';
+    });
+    dessiner();
+    legende.textContent = 'Les vidéos (icônes) et les personnes (initiales) sont placées au hasard. Clique sur « Entraîner ».';
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 24rem; aspect-ratio: 1; display: block; margin: 0 auto; }
+  svg :global(.fond) { fill: var(--bg); stroke: var(--border); stroke-width: 0.02; }
+  svg :global(.video) { font-size: 0.28px; text-anchor: middle; dominant-baseline: middle; }
+  svg :global(.personne) { font: 700 0.2px var(--police); fill: var(--ill-secret-a); text-anchor: middle; dominant-baseline: middle; }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.5rem 0 0; }
+</style>
