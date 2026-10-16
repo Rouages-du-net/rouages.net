@@ -1,0 +1,131 @@
+---
+// Animation « Du bruit à la forme » (étape 0 du module « Les IA qui
+// créent ») : la diffusion en deux dimensions. Les exemples (des points en
+// forme d'étoile) sont noyés dans le bruit pas à pas ; puis on part de
+// points tirés au hasard et on les débruite pas à pas : ils retrouvent
+// l'étoile. Avec une mémoire parfaite, ils retombent pile sur les exemples.
+---
+<div class="anim diffusion2d" data-diffusion2d>
+  <div class="anim-repli">
+    <p>
+      Un modèle de diffusion apprend en deux temps. D'abord, on abîme ses exemples : on leur
+      ajoute un peu de bruit, puis encore un peu, jusqu'à ce qu'il ne reste qu'un nuage au
+      hasard. Le modèle apprend à faire le chemin inverse : deviner, à partir d'une version
+      bruitée, à quoi ressemblait l'exemple. Pour créer, on part d'un bruit pur et on le
+      débruite pas à pas : une forme apparaît. Ici, 160 points dessinent une étoile ; partis du
+      hasard, de nouveaux points retrouvent l'étoile en 40 pas.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="-2.4 -2.4 4.8 4.8" role="img" aria-labelledby="diff2d-titre">
+        <title id="diff2d-titre">Les exemples (en gris) et les points générés (en couleur).</title>
+        <rect x="-2.4" y="-2.4" width="4.8" height="4.8" class="fond" />
+        <g data-exemples></g>
+        <g data-points></g>
+      </svg>
+      <p class="etat" data-etat aria-live="polite"></p>
+      <fieldset class="choix">
+        <legend>Mémoire du modèle</legend>
+        <label><input type="radio" name="diff2d-flou" value="0" checked /> parfaite</label>
+        <label><input type="radio" name="diff2d-flou" value="0.12" /> un peu floue</label>
+        <label><input type="radio" name="diff2d-flou" value="0.3" /> floue</label>
+      </fieldset>
+      <div class="anim-commandes">
+        <button type="button" data-action="bruiter">🌫️ Noyer les exemples dans le bruit</button>
+        <button type="button" class="principal" data-action="generer">✨ Générer 40 points</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { ETAPES, bruiter, remonter, plusProche, gauss, etoile } from '../../../lib/creer';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const pause = () => new Promise((r) => setTimeout(r, 40));
+
+  function cercles(g: SVGGElement, pts: ArrayLike<number>[], r: number) {
+    while (g.childElementCount > pts.length) g.lastElementChild!.remove();
+    while (g.childElementCount < pts.length) {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', String(r));
+      g.append(c);
+    }
+    pts.forEach((p, i) => {
+      const c = g.children[i];
+      c.setAttribute('cx', Math.max(-2.35, Math.min(2.35, p[0])).toFixed(3));
+      c.setAttribute('cy', Math.max(-2.35, Math.min(2.35, -p[1])).toFixed(3));
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-diffusion2d]').forEach((racine) => {
+    activerScene(racine);
+    const exemples = etoile(hasard(1));
+    const gEx = racine.querySelector<SVGGElement>('[data-exemples]')!;
+    const gPts = racine.querySelector<SVGGElement>('[data-points]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-action]')];
+    let graine = 2;
+    cercles(gEx, exemples, 0.03);
+
+    const occupe = (b: boolean) => boutons.forEach((x) => (x.disabled = b));
+
+    async function noyer() {
+      occupe(true);
+      const alea = hasard(graine++);
+      gPts.replaceChildren();
+      for (let t = 0; t <= ETAPES; t += 2) {
+        cercles(gEx, exemples.map((e) => bruiter(e, t, alea)), 0.03);
+        etat.textContent = `Étape ${t} sur ${ETAPES} : on ajoute du bruit.`;
+        if (!mouvementReduit()) await pause();
+      }
+      legende.textContent = 'Il ne reste qu’un nuage au hasard. Le modèle a appris à faire le chemin inverse : à chaque étape, deviner où était chaque point avant le bruit.';
+      if (!mouvementReduit()) await new Promise((r) => setTimeout(r, 600));
+      cercles(gEx, exemples, 0.03);
+      etat.textContent = '';
+      occupe(false);
+    }
+
+    async function generer() {
+      occupe(true);
+      const flou = Number(racine.querySelector<HTMLInputElement>('input:checked')!.value);
+      const alea = hasard(graine++);
+      let pts = Array.from({ length: 40 }, () => Float64Array.from([gauss(alea), gauss(alea)]));
+      for (let t = ETAPES; t >= 1; t--) {
+        pts = pts.map((p) => remonter(p, t, exemples, flou).suivant);
+        cercles(gPts, pts, 0.05);
+        etat.textContent = `Étape ${ETAPES - t + 1} sur ${ETAPES} : on enlève un peu de bruit.`;
+        if (!mouvementReduit()) await pause();
+      }
+      const copies = pts.filter((p) => plusProche(p, exemples).ecart < 0.01).length;
+      etat.textContent = `${copies} point${copies > 1 ? 's' : ''} sur 40 ${copies > 1 ? 'tombent' : 'tombe'} exactement sur un exemple.`;
+      legende.textContent =
+        flou === 0
+          ? 'Avec une mémoire parfaite, presque chaque point retombe pile sur un exemple : le modèle recopie. Essaie une mémoire plus floue.'
+          : `Les points dessinent l’étoile, mais ${copies < 20 ? 'la plupart sont nouveaux : ils tombent entre les exemples' : 'beaucoup recopient encore les exemples'}. Un vrai modèle est entre les deux : il généralise, mais peut parfois recopier ce qu’il a trop vu.`;
+      occupe(false);
+    }
+
+    racine.querySelector('[data-action="bruiter"]')!.addEventListener('click', noyer);
+    racine.querySelector('[data-action="generer"]')!.addEventListener('click', generer);
+    legende.textContent = 'En gris : 160 exemples qui dessinent une étoile. Clique sur « Générer » : 40 points partent du hasard.';
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 22rem; aspect-ratio: 1; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); stroke-width: 0.02; }
+  [data-exemples] :global(circle) { fill: var(--muted); opacity: 0.45; }
+  [data-points] :global(circle) { fill: var(--ill-paquet); }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; min-height: 1.3em; margin: 0.5rem 0 0; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0.6rem 0 0; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+</style>

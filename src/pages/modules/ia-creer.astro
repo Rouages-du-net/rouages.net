@@ -1,0 +1,329 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Diffusion2D from '../../components/animations/creer/Diffusion2D.astro';
+import DiffusionImage from '../../components/animations/creer/DiffusionImage.astro';
+import Melodie from '../../components/animations/creer/Melodie.astro';
+
+// Faits sourcés : voir docs/sources/ia-creer.md.
+const etapes = [
+  { ancre: 'bruit', court: 'Du bruit à la forme' },
+  { ancre: 'image', court: 'Une image' },
+  { ancre: 'musique', court: 'Une mélodie' },
+  { ancre: 'auteur', court: "L'auteur ?" },
+  { ancre: 'bilan', court: 'Reconnaître', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui créent"
+  description="Comment une machine fabrique une image ou une mélodie : la diffusion, du bruit à la forme, la copie et la nouveauté, et les questions de droit d'auteur que cela pose."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui créent</h1>
+  <p class="chapo seulement-debut">
+    Une phrase suffit pour obtenir une image, une voix, une chanson. Comment une machine
+    fabrique-t-elle quelque chose qui n'existait pas ? Et l'a-t-elle vraiment inventé, ou
+    l'a-t-elle recopié ? Fais sortir des formes du bruit, compose une mélodie, puis regarde à
+    qui appartient le résultat.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Du bruit à la forme" ancre="bruit">
+    <Diffusion2D slot="animation" />
+    <p slot="decouverte">
+      Les IA qui fabriquent des images partent… du bruit, comme la neige d'une vieille
+      télévision. Elles l'enlèvent pas à pas, et une forme apparaît. Ici, des points au hasard
+      retrouvent une étoile.
+    </p>
+    <p slot="curieux">
+      Pour apprendre, on abîme les exemples en leur ajoutant du bruit, un peu plus à chaque
+      étape, et le modèle s'entraîne à deviner l'exemple d'origine. C'est un
+      <Terme id="modele-de-diffusion">modèle de diffusion</Terme>. Pour créer, il part d'un bruit
+      pur et applique ce savoir à l'envers, étape par étape.
+    </p>
+    <p slot="ingenieur">
+      À l'étape t, x<sub>t</sub> = √ᾱ<sub>t</sub> · x<sub>0</sub> + √(1 − ᾱ<sub>t</sub>) · ε, avec
+      ε un bruit gaussien. Un réseau apprend à prédire ε (ou x<sub>0</sub>) à partir de x<sub>t</sub>
+      et de t. Ici, pas de réseau : on calcule le débruiteur idéal pour les 160 exemples (leur
+      moyenne pondérée par la ressemblance avec x<sub>t</sub>), et l'on remonte avec la méthode
+      déterministe DDIM, en 40 pas.
+    </p>
+    <div slot="histoire">
+      <p>
+        Des artistes font dessiner des ordinateurs depuis les années 1960 : en février 1965,
+        Georg Nees expose à Stuttgart des dessins tracés par une machine, suivi de Frieder Nake
+        et, à New York, d'A. Michael Noll. <strong>Vera Molnár</strong>, installée à Paris,
+        dessine avec un ordinateur et une table traçante dès 1968 ; <strong>Lillian
+        Schwartz</strong>, artiste en résidence aux Bell Labs, réalise en 1970 le film
+        <em>Pixillation</em>. Le peintre Harold Cohen développe pendant des décennies AARON, que
+        le Whitney Museum présente comme le plus ancien programme d'IA consacré à l'art.
+      </p>
+      <p>
+        En 2014, Ian Goodfellow et ses collègues de Montréal inventent les GAN : deux réseaux
+        qui s'affrontent, l'un fabrique des images, l'autre cherche les fausses. L'idée de la
+        diffusion, empruntée à la thermodynamique, est proposée en 2015 par Jascha
+        Sohl-Dickstein et ses collègues, et devient performante en 2019-2020. En 2022, la
+        « diffusion latente » de Robin Rombach, Björn Ommer et leurs collègues de l'université
+        de Munich, avec Runway, donne Stable Diffusion, entraîné grâce aux calculs de Stability
+        AI et aux données de LAION.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'IA colle des morceaux d'images. »</strong> Le modèle ne découpe pas d'images :
+      il apprend à prédire le bruit à enlever. Mais il n'oublie pas tout non plus : l'étape
+      suivante montre qu'il peut retenir certaines images.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Une image qui sort du bruit" ancre="image">
+    <DiffusionImage slot="animation" />
+    <p slot="decouverte">
+      Même chose avec une petite image. Ta demande, « un cercle », guide le débruitage. Compare
+      l'image produite avec les exemples du modèle : est-ce une copie ou une création ?
+    </p>
+    <p slot="curieux">
+      Un modèle qui se souvient parfaitement de ses exemples les recopie. Un modèle qui en a
+      retenu les régularités sans les détails produit des images nouvelles. Les vrais modèles,
+      entraînés sur des milliards d'images, généralisent la plupart du temps, mais recopient
+      parfois des images qu'ils ont vues souvent.
+    </p>
+    <p slot="ingenieur">
+      Le « texte » sert de condition : ici, il restreint les exemples à une catégorie ; dans
+      les vrais modèles, un encodeur de texte transforme la phrase en vecteurs que le réseau
+      prend en compte à chaque étape (le guidage). Pour aller vite, Stable Diffusion travaille
+      sur une version compressée de l'image (un « espace latent »), puis la décompresse.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2023, une équipe de chercheurs (Google, DeepMind, ETH Zurich, Princeton, Berkeley) a
+        demandé à Stable Diffusion 175 millions d'images, à partir des légendes les plus
+        répétées de ses données. Elle a retrouvé 109 images d'entraînement recopiées presque à
+        l'identique, surtout des images présentes des centaines de fois dans les données : rare,
+        mais réel. Une autre équipe (Maryland, New York) a trouvé des copies partielles (un
+        décor, un objet) dans environ 2 % des images testées.
+      </p>
+      <p>
+        Pour apprendre, ces modèles ont besoin de milliards d'images légendées. L'association
+        allemande LAION a publié en 2022 LAION-5B : 5,85 milliards de liens vers des images du
+        web, avec leur texte. Fin 2023, un rapport de l'université Stanford y a trouvé des
+        liens vers des images d'abus sexuels sur enfants ; LAION a retiré le jeu de données,
+        puis publié en 2024 une version nettoyée.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Composer une mélodie" ancre="musique">
+    <Melodie slot="animation" />
+    <p slot="decouverte">
+      La machine a appris trois comptines. Elle compose en tirant au sort chaque note selon ce
+      qu'elle a entendu après les deux notes précédentes. Écoute, et repère les passages
+      recopiés.
+    </p>
+    <p slot="curieux">
+      C'est le même principe que les IA qui écrivent : deviner la suite. Avec si peu
+      d'exemples, la machine recopie des passages entiers. Les générateurs de musique actuels
+      apprennent sur des millions de morceaux, et fabriquent directement le son.
+    </p>
+    <p slot="ingenieur">
+      Chaîne de Markov d'ordre 2 sur des couples (hauteur, durée) ; la température élève les
+      comptes à la puissance 1/T avant le tirage. On mesure la plus longue sous-suite commune
+      avec un air d'entraînement. Les systèmes récents combinent des modèles de type
+      transformeur sur des « tokens » audio et des modèles de diffusion.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1957, à l'université de l'Illinois, Lejaren Hiller et Leonard Isaacson composent avec
+        un ordinateur l'<em>Illiac Suite</em> pour quatuor à cordes, l'une des toutes premières
+        œuvres de ce genre. Dès 1981, le compositeur David Cope crée EMI, un programme qui imite
+        le style de compositeurs en recombinant leurs « signatures ».
+      </p>
+      <p>
+        Aujourd'hui, Suno et Udio fabriquent des chansons entières à partir d'un texte. En juin
+        2024, Sony, Universal et Warner les ont attaqués aux États-Unis. Depuis, Universal et
+        Warner ont signé des accords de licence avec Udio, Warner avec Suno ; Universal et Sony
+        poursuivent Suno (nouvelle plainte en septembre 2026), et Suno défend un usage
+        « loyal » (<em>fair use</em>). En Allemagne, la société d'auteurs GEMA a gagné en
+        première instance contre Suno en juillet 2026 ; Suno conteste et envisage un appel. En
+        France, la SACEM s'oppose depuis octobre 2023 à l'utilisation de son répertoire pour
+        entraîner des IA.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="À qui appartient l'œuvre ?" ancre="auteur">
+    <p slot="decouverte">
+      Une image fabriquée par une IA à partir d'une simple phrase n'appartient, en général, à
+      personne : la plupart des pays réservent le droit d'auteur aux créations humaines. Mais
+      les images, les textes et les musiques qui ont servi à entraîner l'IA, eux, ont des
+      auteurs.
+    </p>
+    <p slot="curieux">
+      Deux questions se posent. La première : à qui appartient ce qui sort de l'IA ? La seconde,
+      plus disputée : a-t-on le droit d'entraîner une IA sur des œuvres sans l'accord de leurs
+      auteurs ? Les artistes, les photographes, les journaux et les maisons de disques disent
+      non ; les entreprises d'IA invoquent des exceptions prévues par la loi. Les tribunaux
+      tranchent au cas par cas, et pas toujours dans le même sens.
+    </p>
+    <p slot="ingenieur">
+      En Europe, la « fouille de textes et de données » est permise sur des contenus
+      accessibles légalement, sauf si l'ayant droit s'y oppose « de manière appropriée,
+      notamment par des procédés lisibles par machine » (directive de 2019, art. 4). Reste à
+      savoir ce qui est « lisible par machine » : un fichier robots.txt, des métadonnées ? Une
+      phrase dans des conditions d'utilisation ne suffit pas, selon la cour d'appel de
+      Hambourg.
+    </p>
+    <div slot="histoire">
+      <p>
+        En octobre 2018, le <em>Portrait d'Edmond de Belamy</em>, produit avec un GAN par le
+        collectif parisien Obvious, est vendu 432 500 dollars chez Christie's. Le collectif a
+        reconnu avoir repris en grande partie un code publié en accès libre par un jeune
+        programmeur, Robbie Barrat.
+      </p>
+      <p>
+        Les artistes ne sont pas d'accord entre eux. L'illustratrice <strong>Karla
+        Ortiz</strong>, plaignante contre plusieurs entreprises d'IA, dénonce devant le Sénat
+        américain des œuvres utilisées « sans consentement, crédit ni rémunération ». À
+        l'université de Chicago, l'équipe de Ben Zhao a créé Glaze et Nightshade pour brouiller
+        les images aux yeux des IA ; d'autres chercheurs montrent que ces protections se
+        contournent assez facilement. D'autres artistes font de l'IA leur matériau, avec leurs
+        propres données : <strong>Sougwen Chung</strong> peint avec des robots entraînés sur ses
+        peintures, la Sénégalaise <strong>Linda Dounia Rebeiz</strong> entraîne ses modèles sur
+        ses propres images, <strong>Stephanie Dinkins</strong> travaille à une IA plus inclusive.
+      </p>
+    </div>
+    <div slot="decide">
+      <table class="proces">
+        <caption>Quelques affaires (état au 16 octobre 2026)</caption>
+        <thead><tr><th scope="col">Affaire</th><th scope="col">Où en est-on ?</th></tr></thead>
+        <tbody>
+          <tr><td>Stephen Thaler contre le Copyright Office (États-Unis)</td><td>Une image produite par une IA sans auteur humain ne peut pas être protégée (cour d'appel, mars 2025 ; la Cour suprême a refusé l'affaire en mars 2026).</td></tr>
+          <tr><td>Getty Images contre Stability AI (Royaume-Uni)</td><td>Getty a perdu l'essentiel en novembre 2025 : selon la juge, le modèle ne stocke pas les photos. Appel autorisé ; la question de l'entraînement n'a pas été jugée.</td></tr>
+          <tr><td>Robert Kneschke contre LAION (Allemagne)</td><td>LAION a gagné en appel (Hambourg, décembre 2025) : constituer le jeu de données est couvert par les exceptions. Pourvoi autorisé.</td></tr>
+          <tr><td>GEMA contre OpenAI (Allemagne)</td><td>Le tribunal de Munich a jugé en novembre 2025 que mémoriser des paroles de chansons dans le modèle est une reproduction non autorisée.</td></tr>
+          <tr><td>Artistes contre Stability AI, Midjourney, DeviantArt et Runway (États-Unis)</td><td>Procédure en cours ; audience sur le fond repoussée à février 2027.</td></tr>
+          <tr><td><em>New York Times</em> contre OpenAI et Microsoft (États-Unis)</td><td>En cours. Le journal parle de copie massive ; les entreprises, d'usage loyal. Le ministère de la Justice a soutenu OpenAI en septembre 2026 (avis non contraignant).</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Aux États-Unis, le Copyright Office estime (janvier 2025) que de simples instructions
+        écrites ne font pas de l'utilisateur l'auteur de l'image. En France, un rapport remis
+        au Conseil supérieur de la propriété littéraire et artistique (juillet 2026) conclut
+        que seule une « création hybride », où l'humain garde un rôle actif, est protégeable.
+        Depuis le 2 août 2025, le règlement européen sur l'IA oblige les fournisseurs de grands
+        modèles à respecter les oppositions des ayants droit et à publier un résumé des données
+        d'entraînement.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Si c'est sur internet, c'est libre de droits. »</strong> Une image accessible
+      en ligne a presque toujours un auteur. L'entraîner dans une IA est permis en Europe
+      seulement dans certaines conditions, et l'auteur peut s'y opposer.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Reconnaître une création d'IA</h2>
+    <p>
+      Peut-on savoir si une image, une voix ou un texte vient d'une IA ? Pas toujours. Deux
+      familles d'outils existent, et aucune n'est infaillible.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Outil</th><th scope="col">Principe</th><th scope="col">Limite</th></tr></thead>
+      <tbody>
+        <tr><td>« Content Credentials » (norme C2PA, créée en 2021 par Adobe, la BBC, Microsoft…)</td><td>Un carnet de bord signé, joint au fichier : qui l'a créé, avec quel outil, quelles retouches.</td><td>Le carnet peut être retiré ; il prouve l'histoire du fichier, pas que l'image dit vrai.</td></tr>
+        <tr><td>Filigranes invisibles (SynthID de Google DeepMind…)</td><td>Un signal caché dans l'image, le son ou le texte.</td><td>Ne détecte que son propre filigrane ; des chercheurs ont montré qu'on peut en effacer ou en imiter.</td></tr>
+        <tr><td>Détecteurs « d'images IA »</td><td>Un modèle qui devine si une image est générée.</td><td>Peu fiables : ils se trompent dans les deux sens.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Le règlement européen sur l'IA impose à partir du 2 août 2026 que les contenus générés
+      soient marqués « dans un format lisible par machine » (jusqu'au 2 décembre 2026 pour les
+      systèmes déjà sur le marché), et que les hypertrucages soient signalés. Un code de bonnes
+      pratiques publié en juin 2026 recommande plusieurs couches de marquage, en reconnaissant
+      qu'aucune technique ne suffit seule. Le meilleur réflexe reste de vérifier la source.
+    </p>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'J. Sohl-Dickstein, E. A. Weiss, N. Maheswaranathan, S. Ganguli', titre: 'Deep Unsupervised Learning using Nonequilibrium Thermodynamics', url: 'https://arxiv.org/abs/1503.03585', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'Y. Song, S. Ermon', titre: 'Generative Modeling by Estimating Gradients of the Data Distribution', url: 'https://arxiv.org/abs/1907.05600', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'J. Ho, A. Jain, P. Abbeel', titre: 'Denoising Diffusion Probabilistic Models', url: 'https://arxiv.org/abs/2006.11239', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'R. Rombach et al.', titre: 'High-Resolution Image Synthesis with Latent Diffusion Models', url: 'https://arxiv.org/abs/2112.10752', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'CompVis (LMU Munich)', titre: 'Dépôt « stable-diffusion »', url: 'https://github.com/CompVis/stable-diffusion', type: 'primaire', langue: 'en' },
+      { auteur: 'I. J. Goodfellow et al.', titre: 'Generative Adversarial Nets', url: 'https://arxiv.org/abs/1406.2661', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'Digital Art Museum', titre: 'Georg Nees', url: 'https://dam.org/museum/artists_ui/artists/nees-georg/', type: 'site', langue: 'en' },
+      { auteur: 'Centre Pompidou', titre: 'Vera Molnár. Parler à l’œil', url: 'https://www.centrepompidou.fr/fr/programme/agenda/evenement/PA7jRZ5', type: 'site', annee: 2024 },
+      { auteur: 'Whitney Museum of American Art', titre: 'Harold Cohen: AARON', url: 'https://whitney.org/exhibitions/harold-cohen-aaron', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'Boston Globe (nécrologie du New York Times)', titre: 'Lillian Schwartz, pioneer in computer-generated art, dies at 97', url: 'https://www.bostonglobe.com/2024/10/15/metro/lillian-schwartz-pioneer-computer-generated-art-dies-97', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'Hyperallergic', titre: 'Christie’s Sells « AI-Generated » Art for $432,500 As Controversy Swirls Over Creators’ Use of Copied Code', url: 'https://hyperallergic.com/468060/christies-sells-ai-generated-art-for-432500-as-controversy-swirls-over-creators-use-of-copied-code/', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'Smithsonian Magazine', titre: 'Christie’s Is First to Sell Art Made by Artificial Intelligence, But What Does That Mean?', url: 'https://www.smithsonianmag.com/smart-news/christies-first-sell-art-made-artificial-intelligence-what-does-mean-180970642/', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'N. Carlini et al.', titre: 'Extracting Training Data from Diffusion Models', url: 'https://arxiv.org/abs/2301.13188', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'G. Somepalli et al.', titre: 'Diffusion Art or Digital Forgery? Investigating Data Replication in Diffusion Models', url: 'https://arxiv.org/abs/2212.03860', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'C. Schuhmann et al.', titre: 'LAION-5B: An open large-scale dataset for training next generation image-text models', url: 'https://arxiv.org/abs/2210.08402', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'D. Thiel (Stanford Internet Observatory)', titre: 'Identifying and Eliminating CSAM in Generative ML Training Data and Models', url: 'https://purl.stanford.edu/kh752sm9123', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'LAION', titre: 'Releasing Re-LAION 5B', url: 'https://laion.ai/blog/relaion-5b/', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'University at Buffalo Libraries', titre: 'Lejaren Hiller Resources', url: 'https://research.lib.buffalo.edu/hiller/external', type: 'site', langue: 'en' },
+      { auteur: 'University of California', titre: 'In Memoriam: David Cope', url: 'https://senate.universityofcalifornia.edu/in-memoriam/files/david-cope.html', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Music Business Worldwide', titre: 'Universal Music settles Udio lawsuit, strikes deal for licensed AI music platform', url: 'https://www.musicbusinessworldwide.com/universal-music-settles-udio-lawsuit-strikes-deal-for-licensed-ai-music-platform', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Music Business Worldwide', titre: 'Warner Music Group settles with Suno', url: 'https://www.musicbusinessworldwide.com/warner-music-group-settles-with-suno-strikes-first-of-its-kind-deal-with-ai-song-generator/', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Music Business Worldwide', titre: 'Universal and Sony sue Suno for a second time', url: 'https://www.musicbusinessworldwide.com/universal-and-sony-sue-suno-for-a-second-time-claiming-platforms-v6-models-are-the-fruit-of-the-same-poisoned-tree/', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Landgericht München I', titre: 'Communiqué de presse n° 16/2026 (GEMA c. Suno)', url: 'https://www.justiz.bayern.de/gerichte-und-behoerden/landgericht/muenchen-1/presse/2026/16.php', type: 'primaire', annee: 2026, langue: 'de' },
+      { auteur: 'ZDFheute', titre: 'Gema gewinnt: Gericht stärkt Urheberrecht gegen Musik-KI', url: 'https://www.zdfheute.de/panorama/musik-gema-ki-suno-100.html', type: 'presse', annee: 2026, langue: 'de' },
+      { auteur: 'Assemblée nationale', titre: 'Question écrite n° 16057 (opposition de la SACEM, de la SACD et de la SCAM)', url: 'https://www.assemblee-nationale.fr/dyn/17/questions/QANR5L17QE16057', type: 'primaire', annee: 2026 },
+      { auteur: 'Judiciary of England and Wales', titre: 'Getty Images v Stability AI, [2025] EWHC 2863 (Ch)', url: 'https://www.judiciary.uk/judgments/getty-images-v-stability-ai/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Burges Salmon', titre: 'Getty Images v Stability AI: Getty granted permission to appeal', url: 'https://www.burges-salmon.com/articles/102lydc/getty-images-v-stability-ai-getty-granted-permission-to-appeal', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'U.S. District Court, N.D. Cal.', titre: 'Andersen et al. v. Stability AI Ltd. et al.', url: 'https://cand.uscourts.gov/cases-e-filing/cases/323-cv-00201-who/andersen-et-al-v-stability-ai-ltd-et-al', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'ChatGPT Is Eating the World', titre: 'Sarah Andersen’s copyright lawsuit gets pushed back again', url: 'https://chatgptiseatingtheworld.com/2026/02/03/sarah-andersens-copyright-lawsuit-the-1st-filed-v-ai-companies-gets-pushed-back-again-at-her-request/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Yahoo Finance (The Cool Down)', titre: 'New York Times, OpenAI, and Microsoft clash as copyright fight turns pivotal', url: 'https://finance.yahoo.com/technology/ai/articles/york-times-openai-microsoft-clash-172300022.html', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'SCOTUSblog', titre: 'Thaler v. Perlmutter (n° 25-449)', url: 'https://www.scotusblog.com/cases/case-files/thaler-v-perlmutter', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'U.S. Copyright Office', titre: 'Copyright and Artificial Intelligence, Part 2: Copyrightability', url: 'https://www.copyright.gov/ai/Copyright-and-Artificial-Intelligence-Part-2-Copyrightability-Report.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'DLA Piper', titre: 'Robert Kneschke v. LAION: Judgment of 10 December 2025', url: 'https://www.dlapiper.com/en/insights/blogs/mse-today/2025/robert-kneschke-v-laion', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'CMS', titre: 'AI and Copyright Case Tracker (GEMA c. OpenAI)', url: 'https://cms.law/en/rou/publication/artificial-intelligence-and-copyright-case-tracker/united-kingdom-getty-images-us-inc-ors-v-stability-ai-ltd2', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'CSPLA (ministère de la Culture)', titre: 'Rapport de mission relatif au statut des productions de l’intelligence artificielle', url: 'https://www.culture.gouv.fr/nous-connaitre/organisation-du-ministere/conseil-superieur-de-la-propriete-litteraire-et-artistique-cspla/travaux-et-publications-du-cspla/rapport-de-mission-sur-le-statut-des-productions-de-l-intelligence-artificielle2', type: 'primaire', annee: 2026 },
+      { auteur: 'Union européenne', titre: 'Directive (UE) 2019/790, articles 2 et 4', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32019L0790', type: 'primaire', annee: 2019 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’IA, articles 50, 53 et 113', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32024R1689', type: 'primaire', annee: 2024 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689, version consolidée (modifiée par le règlement 2026/1744)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:02024R1689-20260727', type: 'primaire', annee: 2026 },
+      { auteur: 'Commission européenne', titre: 'The General-Purpose AI Code of Practice', url: 'https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Jones Day', titre: 'European Commission Publishes Final Code of Practice on Marking and Labelling AI-Generated Content', url: 'https://www.jonesday.com/en/insights/2026/06/european-commission-publishes-final-code-of-practice-on-marking-and-labelling-aigenerated-content', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'C2PA', titre: 'Founding press release', url: 'https://c2pa.org/c2pa-founding-press-release/', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'C2PA', titre: 'Explainer (spécification 2.2)', url: 'https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Google DeepMind', titre: 'SynthID', url: 'https://deepmind.google/models/synthid/', type: 'primaire', langue: 'en' },
+      { auteur: 'M. Saberi et al.', titre: 'Robustness of AI-Image Detectors: Fundamental Limits and Practical Attacks', url: 'https://arxiv.org/abs/2310.00076', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'S. Shan et al.', titre: 'Glaze: Protecting Artists from Style Mimicry by Text-to-Image Models', url: 'https://arxiv.org/abs/2302.04222', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'S. Shan et al.', titre: 'Nightshade: Prompt-Specific Poisoning Attacks on Text-to-Image Generative Models', url: 'https://arxiv.org/abs/2310.13828', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'R. Hönig, J. Rando, N. Carlini, F. Tramèr', titre: 'Adversarial Perturbations Cannot Reliably Protect Artists From Generative AI', url: 'https://arxiv.org/abs/2406.12027', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'K. Ortiz', titre: 'Témoignage devant la sous-commission de la propriété intellectuelle du Sénat américain', url: 'https://www.judiciary.senate.gov/imo/media/doc/2023-07-12_pm_-_testimony_-_ortiz.pdf', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'TIME', titre: 'TIME100 AI : Sougwen Chung', url: 'https://time.com/collections/time100-ai/6309455/sougwen-chung/', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'TIME', titre: 'TIME100 AI : Linda Dounia Rebeiz', url: 'https://time.com/collections/time100-ai/6309451/linda-dounia-rebeiz/', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'LG', titre: 'LG Guggenheim Award : Stephanie Dinkins', url: 'https://www.lg.com/global/newsroom/news/media-entertainment-solution/lg-guggenheim-award-recipient-stephanie-dinkins-presents-demo-of-latest-ai-artwork-in-progress/', type: 'site', annee: 2023, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

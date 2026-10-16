@@ -85,7 +85,7 @@ flowchart TB
 - [x] **Les IA qui cherchent et optimisent** *(`/modules/ia-chercher/`, relecture humaine à faire)* — GPS, tournées, emplois du temps : recherche A* ; IA inspirées de la nature : algorithmes génétiques, colonies de fourmis, essaims
 - [x] **Les IA qui voient** *(`/modules/ia-voir/`, relecture humaine à faire)* — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
 - [x] **Les IA qui entendent et parlent** *(`/modules/ia-entendre/`, relecture humaine à faire)* — reconnaissance vocale, synthèse de la voix, sous-titres automatiques
-- [ ] **Les IA qui créent** — images (diffusion : le débruitage), musique ; droit d'auteur
+- [x] **Les IA qui créent** *(`/modules/ia-creer/`, relecture humaine à faire ; état des procès à mettre à jour)* — images (diffusion : le débruitage), musique ; droit d'auteur
 - [ ] **Les IA qui recommandent** — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)
 - [ ] **Les IA qui prédisent** — météo, consommation, police prédictive : séries temporelles, corrélation et causalité
 - [ ] **Les IA qui décident pour nous** — crédit, aides sociales, justice : boîte noire ou modèle explicable (réseaux bayésiens, arbres, systèmes experts), droit à l'explication, biais

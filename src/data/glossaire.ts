@@ -404,6 +404,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Fréquence que la bouche, la langue et la gorge renforcent quand on parle, comme une caisse de résonance. Les deux premiers formants suffisent presque à reconnaître une voyelle, que la voix soit grave ou aiguë.",
   },
+  'modele-de-diffusion': {
+    terme: 'Modèle de diffusion',
+    definition:
+      "Type de modèle qui fabrique des images (ou des sons) en partant d'un bruit au hasard et en l'enlevant pas à pas. Il a appris en faisant l'inverse : deviner l'image d'origine à partir de versions de plus en plus bruitées.",
+    voirAussi: ['neurone-artificiel'],
+  },
 };
 
 export function entree(id: string): Entree {

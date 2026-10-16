@@ -79,3 +79,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Les IA qui cherchent et optimisent » (Dijkstra, A*, voyageur de commerce, fourmis, évolution)](sources/ia-chercher.md)
 - [Module « Les IA qui voient » (image numérique, Hubel et Wiesel, réseaux convolutifs, reconnaissance faciale, droit)](sources/ia-voir.md)
 - [Module « Les IA qui entendent et parlent » (échantillonnage, formants, reconnaissance et synthèse de la parole, voix clonées)](sources/ia-entendre.md)
+- [Module « Les IA qui créent » (diffusion, mémorisation, LAION, procès, droit d'auteur, traçabilité)](sources/ia-creer.md)
