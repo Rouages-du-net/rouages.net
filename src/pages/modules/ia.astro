@@ -1,0 +1,327 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import MotSuivant from '../../components/animations/ia/MotSuivant.astro';
+import Tokeniseur from '../../components/animations/ia/Tokeniseur.astro';
+import Plongements from '../../components/animations/ia/Plongements.astro';
+import Neurone from '../../components/animations/ia/Neurone.astro';
+import Descente from '../../components/animations/ia/Descente.astro';
+import Attention from '../../components/animations/ia/Attention.astro';
+import Temperature from '../../components/animations/ia/Temperature.astro';
+import Fabrication from '../../components/animations/ia/Fabrication.astro';
+
+// Chiffres sourcés : voir docs/sources/ia-mecanismes.md.
+const maillons = [
+  {
+    icone: '📚',
+    titre: 'Rassembler des textes',
+    texte: "On collecte d'immenses quantités de textes : pages web, livres, code, articles. Puis on les nettoie : doublons, pages vides, contenus indésirables.",
+    qui: 'Des robots d’indexation, des équipes d’ingénierie… et les autrices et auteurs de tous ces textes, rarement consulté·es.',
+  },
+  {
+    icone: '🔥',
+    titre: 'Pré-entraîner',
+    texte: "Le modèle lit ces textes et s'entraîne à deviner le token suivant, des milliers de milliards de fois. À chaque erreur, la descente de gradient ajuste un peu ses milliards de paramètres.",
+    qui: 'Des milliers de processeurs graphiques qui tournent pendant des semaines, dans des centres de données qui consomment de l’électricité et de l’eau.',
+  },
+  {
+    icone: '🧑‍🏫',
+    titre: 'Ajuster avec des humains',
+    texte: "Un modèle qui ne fait que prolonger des textes n'est pas un assistant. Des personnes écrivent des exemples de bonnes réponses et classent les réponses du modèle ; on l'entraîne encore pour qu'il préfère celles qui sont jugées meilleures.",
+    qui: 'Des annotatrices et annotateurs, souvent sous-traité·es, parfois dans des pays où ce travail est très mal payé.',
+  },
+  {
+    icone: '🛡️',
+    titre: 'Filtrer',
+    texte: "On ajoute des garde-fous : refuser certaines demandes, repérer les contenus violents ou illégaux. Pour apprendre à les reconnaître, des humains doivent d'abord les lire et les étiqueter.",
+    qui: 'Des modératrices et modérateurs, exposé·es à des contenus parfois traumatisants.',
+  },
+  {
+    icone: '💬',
+    titre: 'Répondre',
+    texte: "Quand tu poses une question, ton texte est découpé en tokens, et le modèle calcule le token suivant, puis le suivant… Chaque token demande un calcul qui fait intervenir tous ses paramètres.",
+    qui: 'Encore des processeurs graphiques, dans un centre de données, pour chacune des questions posées dans le monde.',
+  },
+];
+
+const etapes = [
+  { ancre: 'prediction', court: 'Le mot suivant' },
+  { ancre: 'tokens', court: 'Les tokens' },
+  { ancre: 'plongements', court: 'Les plongements' },
+  { ancre: 'neurone', court: 'Le neurone' },
+  { ancre: 'apprentissage', court: 'Apprendre' },
+  { ancre: 'attention', court: "L'attention" },
+  { ancre: 'generation', court: 'Écrire' },
+  { ancre: 'fabrication', court: 'Les coulisses' },
+  { ancre: 'bilan', court: 'Ton assistant', pastille: '✓' },
+];
+---
+<Base
+  title="Comment marche l'IA"
+  description="Les grands modèles de langage, démontés pièce par pièce : prédire le mot suivant, tokens, plongements, neurones, attention, température, et les humains derrière la machine."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>Comment marche l'IA</h1>
+  <p class="chapo seulement-debut">
+    Les assistants comme ChatGPT, Gemini ou Le Chat semblent penser. En réalité, ils font
+    une seule chose, très bien : deviner la suite d'un texte. Démontons la machine, pièce par
+    pièce, avec un vrai petit modèle qui tourne dans ton navigateur.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Deviner le mot suivant" ancre="prediction">
+    <MotSuivant slot="animation" />
+    <p slot="decouverte">
+      Un assistant d'IA n'a pas de réponse toute faite. Il écrit sa réponse un morceau après
+      l'autre, en devinant à chaque fois ce qui vient le plus probablement après. Le petit
+      modèle ci-dessus fait exactement cela, après avoir lu seulement quelques dizaines de
+      phrases.
+    </p>
+    <p slot="curieux">
+      C'est un <Terme id="modele-de-langage">modèle de langage</Terme> : pour un début de texte,
+      il donne une probabilité à chaque suite possible. Le nôtre se contente de compter quel mot
+      suit quels deux mots dans ses lectures. Les grands modèles, eux, calculent ces
+      probabilités avec des milliards de nombres réglés pendant l'entraînement, et tiennent
+      compte de tout ce qui précède, pas seulement des deux derniers mots.
+    </p>
+    <p slot="ingenieur">
+      Notre modèle est un « n-gramme » (ici n = 3 : deux mots de contexte, avec repli sur un
+      seul mot quand le contexte n'a jamais été vu). Un grand modèle de langage calcule, à
+      partir de toute la séquence, une distribution de probabilités sur son vocabulaire de
+      tokens, en tire un, l'ajoute à la séquence, et recommence : on dit qu'il est
+      autorégressif.
+    </p>
+    <p slot="verifie">Tape un début de phrase avec un mot que le modèle n'a jamais lu (« le dragon ») : il ne sait plus rien prédire. Il ne connaît que ce qu'il a lu.</p>
+    <p slot="mythes">
+      <strong>« L'IA comprend ce qu'elle dit. »</strong> Elle calcule ce qui vient le plus
+      probablement après. Le résultat peut être juste, utile, impressionnant… ou faux avec
+      aplomb : rien dans ce calcul ne vérifie que c'est vrai.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Découper le texte en tokens" ancre="tokens">
+    <Tokeniseur slot="animation" />
+    <p slot="decouverte">
+      Un ordinateur ne calcule qu'avec des nombres. Avant tout, le texte est donc découpé en
+      petits morceaux, les <Terme id="token">tokens</Terme>, et chaque morceau reçoit un
+      numéro. Un token, c'est souvent un mot courant, ou un bout de mot rare.
+    </p>
+    <p slot="curieux">
+      Le découpage est appris à l'avance : on part des lettres, et l'on fusionne les paires
+      les plus fréquentes, jusqu'à obtenir un vocabulaire de quelques dizaines de milliers de
+      tokens. Les mots fréquents tiennent en un token ; les mots rares, en plusieurs.
+    </p>
+    <p slot="ingenieur">
+      L'algorithme s'appelle BPE (<em>byte pair encoding</em>). Les vrais tokeniseurs partent
+      des octets du texte encodé en UTF-8 plutôt que des lettres : ainsi, aucun caractère n'est
+      jamais inconnu. Le modèle ne voit jamais les lettres, seulement des numéros de tokens.
+    </p>
+    <p slot="verifie">Tape « anticonstitutionnellement » : notre petit tokeniseur le découpe en nombreux morceaux, parce qu'il ne l'a jamais lu.</p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Les mots deviennent des points" ancre="plongements">
+    <Plongements slot="animation" />
+    <p slot="decouverte">
+      Chaque token est ensuite transformé en une liste de nombres, comme des coordonnées sur
+      une carte. Les mots de sens proche se retrouvent près les uns des autres.
+    </p>
+    <p slot="curieux">
+      Ces coordonnées s'appellent des <Terme id="plongement">plongements</Terme>
+      (<em>embeddings</em>). Personne ne les choisit à la main : elles sont apprises en
+      observant quels mots apparaissent dans les mêmes contextes. Mais une carte apprise sur
+      des textes humains reproduit aussi leurs stéréotypes.
+    </p>
+    <p slot="ingenieur">
+      Un plongement est un vecteur de quelques centaines à quelques milliers de dimensions. La
+      proximité se mesure souvent par le cosinus de l'angle entre deux vecteurs. Les célèbres
+      analogies (« roi − homme + femme ≈ reine ») marchent parfois, mais les démonstrations
+      excluent souvent les mots de départ du résultat, ce qui embellit le tableau.
+    </p>
+    <p slot="verifie">Clique sur un mot de la carte pour voir ses voisins, puis essaie « chat − chien + chienne ».</p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Un neurone artificiel" ancre="neurone">
+    <Neurone slot="animation" />
+    <p slot="decouverte">
+      Les calculs du modèle sont faits par des milliards de <Terme id="neurone-artificiel">neurones
+      artificiels</Terme>. Un neurone, c'est une petite formule : il multiplie chaque entrée par
+      un « poids », additionne, et décide.
+    </p>
+    <p slot="curieux">
+      Les poids sont les <Terme id="parametre">paramètres</Terme> du modèle. Apprendre, c'est
+      trouver de bons poids. Un neurone seul ne sait tracer qu'une ligne droite ; en
+      empilant des couches de neurones, on obtient des frontières aussi compliquées qu'on veut.
+    </p>
+    <p slot="ingenieur">
+      Sortie = f(w₁x₁ + w₂x₂ + b). Le perceptron utilise un seuil ; les réseaux modernes, des
+      fonctions continues, pour pouvoir calculer des pentes (étape suivante). Un grand modèle de
+      langage, ce sont surtout d'immenses multiplications de matrices.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1957-1958, aux États-Unis, Frank Rosenblatt invente le perceptron, l'un des premiers
+        réseaux de neurones capables d'apprendre à partir d'exemples. Au Japon,
+        <strong>Kunihiko Fukushima</strong> conçoit en 1979-1980 le néocognitron, inspiré du
+        cortex visuel, précurseur des réseaux qui reconnaissent les images.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Un réseau de neurones fonctionne comme un cerveau. »</strong> Le neurone
+      artificiel est une formule très simplifiée, à peine inspirée des neurones biologiques.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Apprendre en se trompant" ancre="apprentissage">
+    <Descente slot="animation" />
+    <p slot="decouverte">
+      Au début, les poids sont pris au hasard et le modèle dit n'importe quoi. On lui montre
+      un texte, il devine le mot suivant, on mesure son erreur, et l'on corrige un peu tous
+      ses poids dans le bon sens. Puis on recommence, des milliards de fois.
+    </p>
+    <p slot="curieux">
+      Pour savoir dans quel sens corriger, on calcule la pente de l'erreur : c'est la
+      <Terme id="descente-de-gradient">descente de gradient</Terme>. La taille de chaque pas
+      compte : trop petite, l'apprentissage traîne ; trop grande, il s'emballe.
+    </p>
+    <p slot="ingenieur">
+      L'erreur est mesurée par l'entropie croisée entre la prédiction et le vrai token suivant.
+      La rétropropagation calcule la pente par rapport à chacun des milliards de paramètres,
+      couche par couche, de la sortie vers l'entrée. On ajuste par petits paquets d'exemples :
+      c'est la descente de gradient stochastique.
+    </p>
+    <div slot="histoire">
+      <p>
+        Au Japon, <strong>Shun-ichi Amari</strong> décrit dès 1967 l'apprentissage de réseaux
+        de neurones par gradient stochastique. La rétropropagation a plusieurs inventeurs ;
+        elle devient célèbre en 1986.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="L'attention" ancre="attention">
+    <Attention slot="animation" />
+    <p slot="decouverte">
+      Pour bien deviner la suite, il faut savoir de quoi parle chaque mot. « Il », c'est qui ?
+      L'<Terme id="attention">attention</Terme> permet à chaque mot de regarder les autres mots
+      de la phrase et d'y prendre ce qui l'aide à se comprendre.
+    </p>
+    <p slot="curieux">
+      Chaque mot pose une question (sa « requête ») et chaque mot affiche une étiquette (sa
+      « clé ») : plus elles se ressemblent, plus l'attention est forte. Le mot récupère alors un
+      mélange des informations des mots qu'il regarde. C'est la pièce maîtresse des
+      <Terme id="transformeur">transformeurs</Terme>, l'architecture de tous les grands modèles
+      de langage actuels.
+    </p>
+    <p slot="ingenieur">
+      Attention(Q, K, V) = softmax(QKᵀ / √d) V. Chaque couche contient plusieurs « têtes »
+      d'attention en parallèle, et un modèle empile des dizaines de couches. Dans un modèle
+      qui génère du texte, chaque token ne peut regarder que les tokens qui le précèdent.
+    </p>
+    <p slot="verifie">Change le dernier mot de la phrase : « fatigué » ou « étroit ». Le même « il » ne regarde plus le même mot.</p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Écrire : un peu de hasard" ancre="generation">
+    <Temperature slot="animation" />
+    <p slot="decouverte">
+      Le modèle ne choisit pas toujours le mot le plus probable : il tire au sort, en
+      favorisant les mots probables. C'est pour cela qu'une même question n'obtient pas deux
+      fois exactement la même réponse.
+    </p>
+    <p slot="curieux">
+      La <Terme id="temperature">température</Terme> règle la dose de hasard. Basse : le
+      modèle est prévisible et se répète. Haute : il est plus inventif, mais déraille plus
+      facilement.
+    </p>
+    <p slot="ingenieur">
+      On divise les scores (les « logits ») par la température T avant le softmax :
+      p = softmax(z / T). T → 0 revient à toujours prendre le plus probable. D'autres réglages
+      limitent le tirage aux k mots les plus probables (top-k) ou à ceux qui totalisent une
+      probabilité p (top-p).
+    </p>
+    <p slot="mythes">
+      <strong>« Quand l'IA invente, c'est un bug qu'on va bientôt corriger. »</strong> Le modèle
+      produit toujours le texte le plus vraisemblable, pas le plus vrai. Une réponse inventée
+      mais plausible, ce qu'on appelle une <Terme id="hallucination">hallucination</Terme>, est
+      une conséquence directe de ce fonctionnement. On peut la rendre plus rare, pas la
+      supprimer à coup sûr.
+    </p>
+  </Etape>
+
+  <!-- Étape 7 -->
+  <Etape numero={7} titre="Les coulisses : des humains et des machines" ancre="fabrication">
+    <Fabrication slot="animation" maillons={maillons} />
+    <p slot="decouverte">
+      Derrière chaque réponse, il y a des textes écrits par des millions de personnes, des
+      centres de données pleins de processeurs, et des travailleuses et travailleurs qui
+      annotent et modèrent, souvent loin des projecteurs.
+    </p>
+    <p slot="curieux">
+      Après le pré-entraînement, le modèle est ajusté avec l'aide d'humains, qui montrent de
+      bonnes réponses et classent celles du modèle. C'est ce qui le transforme en assistant qui
+      répond aux questions, plutôt qu'en machine qui prolonge n'importe quel texte.
+    </p>
+    <p slot="ingenieur">
+      Cette étape s'appelle souvent RLHF (<em>reinforcement learning from human feedback</em>) :
+      un second modèle apprend à prédire les préférences humaines, et sert à affiner le premier.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2009, <strong>Fei-Fei Li</strong> et son équipe publient ImageNet, une base d'images
+        annotées à la main par des milliers de travailleurs et travailleuses en ligne. En 2018,
+        <strong>Joy Buolamwini</strong> et <strong>Timnit Gebru</strong> montrent que des
+        systèmes commerciaux d'analyse de visages se trompent bien plus souvent pour les femmes
+        à peau foncée que pour les hommes à peau claire.
+      </p>
+    </div>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Et quand tu parles à un assistant ?</h2>
+    <p>Chaque moment d'une conversation correspond à une étape que tu connais maintenant.</p>
+    <table>
+      <thead><tr><th scope="col">Ce qui se passe</th><th scope="col">L'étape</th></tr></thead>
+      <tbody>
+        <tr><td>Ta question est découpée en morceaux numérotés</td><td><a href="#tokens">1 — Les tokens</a></td></tr>
+        <tr><td>Chaque morceau devient une liste de nombres</td><td><a href="#plongements">2 — Les plongements</a></td></tr>
+        <tr><td>Chaque mot regarde les autres pour se comprendre</td><td><a href="#attention">5 — L'attention</a></td></tr>
+        <tr><td>Des milliards de neurones calculent les probabilités du token suivant</td><td><a href="#neurone">3 — Le neurone</a> et <a href="#prediction">0 — Le mot suivant</a></td></tr>
+        <tr><td>Un token est tiré au sort, ajouté, et l'on recommence</td><td><a href="#generation">6 — Écrire</a></td></tr>
+        <tr><td>La réponse a l'air serviable et polie</td><td><a href="#fabrication">7 — Les coulisses</a> : l'ajustement par des humains</td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

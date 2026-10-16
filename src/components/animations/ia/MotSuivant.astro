@@ -1,0 +1,152 @@
+---
+// Animation « Deviner le mot suivant » (étape 0 du module « Comment marche
+// l'IA ») : un vrai petit modèle n-gramme, entraîné dans le navigateur sur le
+// corpus de src/lib/minilm.ts, propose les mots suivants avec leur
+// probabilité. On clique pour ajouter un mot ; on peut le laisser écrire seul.
+import { CORPUS, NGramme } from '../../../lib/minilm';
+
+// Le repli sans JavaScript est calculé à la construction avec le même modèle.
+const modele = new NGramme(CORPUS);
+const exemple = modele.predire('le chat').suite;
+const pct = (p: number) => `${Math.round(p * 100)} %`;
+const phrases = CORPUS.split('\n').length;
+---
+<div class="anim mot-suivant" data-mot-suivant>
+  <div class="anim-repli">
+    <p>
+      Notre petit modèle a lu {phrases} phrases. Après « le chat », il a vu :
+      {exemple.map((s, i) => `${i ? ', ' : ''}« ${s.mot} » ${s.n} fois (${pct(s.p)})`).join('')}.
+      Il prédit donc « {exemple[0].mot} » le plus souvent, mais pas toujours.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="debut">Écris un début de phrase, ou clique sur les mots proposés
+        <input type="text" value="le chat" maxlength="80" spellcheck="false" data-debut />
+      </label>
+      <p class="phrase" aria-live="polite"><span data-texte>le chat</span><span class="curseur" aria-hidden="true">▌</span></p>
+      <p class="anim-note" data-contexte></p>
+      <ol class="choix" data-choix></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="ecrire">✍ Laisser le modèle finir la phrase</button>
+        <button type="button" data-action="effacer">⌫ Retirer un mot</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+    <details class="corpus">
+      <summary>Voir les {phrases} phrases que le modèle a lues</summary>
+      <pre>{CORPUS}</pre>
+    </details>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+  import { CORPUS, NGramme, hasard, tirer, mots as decouper } from '../../../lib/minilm';
+
+  const modele = new NGramme(CORPUS);
+  document.querySelectorAll<HTMLElement>('[data-mot-suivant]').forEach((racine) => {
+    activerScene(racine);
+    const texte = racine.querySelector<HTMLElement>('[data-texte]')!;
+    const choix = racine.querySelector<HTMLElement>('[data-choix]')!;
+    const contexte = racine.querySelector<HTMLElement>('[data-contexte]')!;
+    const ecrire = racine.querySelector<HTMLButtonElement>('[data-action="ecrire"]')!;
+    const debut = racine.querySelector<HTMLInputElement>('[data-debut]')!;
+    debut.addEventListener('input', () => {
+      if (occupe) return;
+      mots = decouper(debut.value);
+      dessiner();
+    });
+    let mots = ['le', 'chat'];
+    let graine = 1;
+    let occupe = false;
+
+    const fini = () => mots.at(-1) === '.';
+
+    function dessiner() {
+      texte.textContent = mots.join(' ').replace(/ \./g, '.');
+      choix.replaceChildren();
+      if (fini()) {
+        contexte.textContent = 'Phrase terminée (le point est un « mot » comme un autre pour le modèle).';
+        return;
+      }
+      const { contexte: vu, suite } = modele.predire(mots.join(' '));
+      contexte.textContent = suite.length
+        ? `Le modèle regarde les derniers mots : « ${vu} ». Voici ce qui les suivait dans ses lectures :`
+        : 'Ces mots ne sont jamais apparus dans ses lectures : il ne sait rien prédire.';
+      for (const s of suite.slice(0, 6)) {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'mot';
+        b.innerHTML = `<span class="libelle"></span><span class="barre" style="--p:${s.p}"></span><span class="pct">${Math.round(s.p * 100)} %</span>`;
+        b.querySelector('.libelle')!.textContent = s.mot;
+        b.setAttribute('aria-label', `${s.mot} : ${Math.round(s.p * 100)} pour cent`);
+        b.addEventListener('click', () => {
+          if (occupe) return;
+          mots.push(s.mot);
+          dessiner();
+        });
+        li.append(b);
+        choix.append(li);
+      }
+    }
+
+    ecrire.addEventListener('click', async () => {
+      if (occupe) return;
+      occupe = true;
+      ecrire.disabled = true;
+      const alea = hasard(graine++);
+      // Au plus 12 mots : jamais de boucle infinie.
+      for (let i = 0; i < 12 && !fini(); i++) {
+        const suite = modele.predire(mots.join(' ')).suite;
+        if (!suite.length) break;
+        mots.push(suite[tirer(suite.map((s) => s.p), alea)].mot);
+        dessiner();
+        await pause(450);
+      }
+      occupe = false;
+      ecrire.disabled = false;
+    });
+    racine.querySelector('[data-action="effacer"]')!.addEventListener('click', () => {
+      if (!occupe && mots.length) mots.pop();
+      dessiner();
+    });
+    racine.querySelector('[data-action="recommencer"]')!.addEventListener('click', () => {
+      if (occupe) return;
+      mots = ['le', 'chat'];
+      debut.value = 'le chat';
+      dessiner();
+    });
+    dessiner();
+  });
+</script>
+
+<style>
+  .debut { display: grid; gap: 0.25rem; font-size: 0.9rem; margin-bottom: 0.75rem; max-width: 28rem; }
+  .debut input { font: inherit; padding: 0.4rem 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .phrase { font-size: 1.3rem; font-weight: 600; margin: 0 0 0.5rem; min-height: 1.6em; }
+  .curseur { color: var(--accent); margin-left: 0.1em; }
+  .choix { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; gap: 0.35rem; max-width: 28rem; }
+  .choix :global(.mot) {
+    display: grid;
+    grid-template-columns: 7rem 1fr 3.5rem;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  .choix :global(.mot:hover) { border-color: var(--accent); }
+  .choix :global(.barre) { height: 0.7rem; width: calc(var(--p) * 100%); min-width: 2px; background: var(--ill-paquet); border-radius: 999px; }
+  .choix :global(.pct) { font-family: var(--police-mono); font-size: 0.85rem; text-align: right; }
+  .corpus { margin-top: 0.75rem; font-size: 0.9rem; }
+  .corpus pre { max-height: 12rem; overflow: auto; background: var(--card); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.8rem; }
+</style>

@@ -1,0 +1,87 @@
+---
+// Animation « La chaîne de fabrication d'un modèle » (étape 7 du module
+// « Comment marche l'IA ») : de la collecte des textes à la réponse, pas à
+// pas, avec les humains et les machines de chaque étape. Les textes (et
+// leurs chiffres, sourcés) sont fournis par la page.
+interface Maillon {
+  icone: string;
+  titre: string;
+  texte: string;
+  qui: string;
+}
+interface Props {
+  maillons: Maillon[];
+}
+const { maillons } = Astro.props;
+---
+<div class="anim fabrication" data-fabrication data-maillons={JSON.stringify(maillons)}>
+  <div class="anim-repli">
+    <ol>
+      {maillons.map((m) => <li><strong>{m.titre}.</strong> {m.texte} <em>Qui ?</em> {m.qui}</li>)}
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="chaine" aria-hidden="true">
+        {maillons.map((m, i) => (
+          <li data-maillon={i}><span class="icone">{m.icone}</span><span class="nom">{m.titre}</span></li>
+        ))}
+      </ol>
+      <div class="detail" data-detail>
+        <h4 data-titre></h4>
+        <p data-texte></p>
+        <p class="qui"><strong>Qui ?</strong> <span data-qui></span></p>
+      </div>
+      <p class="anim-legende visuellement-cache" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-fabrication]').forEach((racine) => {
+    activerScene(racine);
+    const maillons: { icone: string; titre: string; texte: string; qui: string }[] = JSON.parse(racine.dataset.maillons!);
+    pasAPas(racine, () => maillons.length, (n) => {
+      const m = maillons[n - 1];
+      racine.querySelectorAll<HTMLElement>('[data-maillon]').forEach((li) => {
+        const k = Number(li.dataset.maillon);
+        li.classList.toggle('fait', k < n - 1);
+        li.classList.toggle('courant', k === n - 1);
+      });
+      racine.querySelector('[data-titre]')!.textContent = `${m.icone} ${m.titre}`;
+      racine.querySelector('[data-texte]')!.textContent = m.texte;
+      racine.querySelector('[data-qui]')!.textContent = m.qui;
+      return `${m.titre}. ${m.texte} Qui ? ${m.qui}`;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .chaine { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chaine li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    opacity: 0.5;
+  }
+  .chaine li + li::before { content: '→'; margin-right: 0.35rem; color: var(--muted); }
+  .chaine li.fait { opacity: 0.8; }
+  .chaine li.courant { opacity: 1; border-color: var(--ill-paquet); border-width: 2px; font-weight: 600; }
+  .detail { min-height: 9rem; }
+  .detail h4 { margin: 0 0 0.4rem; }
+  .detail p { margin: 0 0 0.5rem; max-width: var(--mesure); }
+  .qui { color: var(--muted); }
+</style>
