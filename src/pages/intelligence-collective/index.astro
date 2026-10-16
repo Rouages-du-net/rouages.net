@@ -1,0 +1,99 @@
+---
+// Page d'entrée de la section « L'intelligence collective » (voir
+// docs/ROADMAP.md). Quand un module paraît, renseigner son lien et son résumé
+// dans MODULES.
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+
+const MODULES: { titre: string; idee: string; lien?: string; resume?: string }[] = [
+  { titre: 'La sagesse des foules', idee: 'le bœuf de Galton, le jury de Condorcet, les cascades et les effets moutons' },
+  { titre: 'Construire ensemble', idee: 'logiciel libre, Wikipédia, OpenStreetMap, sciences participatives, Ushahidi, les communs d’Elinor Ostrom' },
+  { titre: 'Délibérer avec des algorithmes', idee: 'Polis et vTaiwan, les notes de la communauté, conventions citoyennes, budget participatif' },
+  { titre: 'L’IA, fruit d’une intelligence collective', idee: 'textes du web, annotation des données, retours humains, et l’IA comme aide à la délibération' },
+];
+const disponibles = MODULES.filter((m) => m.lien);
+const aVenir = MODULES.filter((m) => !m.lien);
+---
+<Base
+  title="L'intelligence collective"
+  description="Quand un groupe en sait plus que chacun de ses membres, et quand il se trompe ensemble : foules, communs numériques, délibération, avec ou sans IA."
+>
+  <p class="tag">Comment ça marche</p>
+  <h1>L'intelligence collective</h1>
+  <MiseAJour date="2026-10-16" />
+
+  <div class="intro">
+    <p>
+      En 1907, le statisticien Francis Galton analyse 787 estimations du poids d'un bœuf,
+      faites par les visiteur·ses d'une foire anglaise. Aucune n'est parfaite, mais la
+      valeur du milieu tombe à moins de 1 % du vrai poids, et la moyenne, d'après une
+      relecture de ses archives, tombe pile dessus. Les erreurs, nombreuses et indépendantes,
+      se compensent. Dès 1785, Condorcet avait montré une idée voisine pour les votes… à
+      condition que chacun·e ait un peu plus d'une chance sur deux d'avoir raison, et ne
+      copie pas son voisin.
+    </p>
+    <p>
+      L'intelligence collective, ce n'est pas seulement additionner des avis. C'est aussi
+      construire ensemble ce que personne ne possède seul (un logiciel libre, une
+      encyclopédie, une carte), et se donner des règles pour que ça tienne : la politologue
+      Elinor Ostrom a reçu le prix Nobel d'économie en 2009 pour avoir montré comment des
+      communautés gèrent durablement des ressources partagées. Les algorithmes peuvent aider
+      un groupe à penser ensemble, ou au contraire le pousser à se copier. Et les IA
+      actuelles sont elles-mêmes faites du travail de millions de personnes.
+    </p>
+  </div>
+
+  {disponibles.length > 0 && (
+    <section aria-labelledby="modules">
+      <h2 id="modules">Les modules</h2>
+      <div class="grid">
+        {disponibles.map((m) => (
+          <article class="card">
+            <h3><a href={m.lien}>{m.titre}</a></h3>
+            <p>{m.resume}</p>
+            <span class="tag">Disponible</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section aria-labelledby="bientot">
+    <h2 id="bientot">{disponibles.length > 0 ? 'Bientôt' : 'Les modules prévus'}</h2>
+    <ul class="a-venir">
+      {aVenir.map((m) => <li><strong>{m.titre}</strong> <span>({m.idee})</span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="ailleurs">
+    <h2 id="ailleurs">Déjà sur le site</h2>
+    <div class="grid">
+      <article class="card">
+        <h3><a href="/modules/ia-chercher/#fourmis">Les IA qui cherchent et optimisent</a></h3>
+        <p>Des fourmis sans chef qui trouvent le chemin le plus court, et les algorithmes qui les imitent.</p>
+      </article>
+      <article class="card">
+        <h3><a href="/modules/ia-recommander/#boucle">Les IA qui recommandent</a></h3>
+        <p>Quand voir ce que les autres écoutent rend les succès plus inégaux et plus imprévisibles.</p>
+      </article>
+    </div>
+  </section>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'K. F. Wallis', titre: 'Revisiting Francis Galton’s Forecasting Competition', url: 'https://arxiv.org/abs/1410.3989', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'F. Dietrich, K. Spiekermann (Stanford Encyclopedia of Philosophy)', titre: 'Jury Theorems', url: 'https://plato.stanford.edu/entries/jury-theorems/', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'Fondation Nobel', titre: 'Elinor Ostrom, Facts', url: 'https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/facts/', type: 'primaire', annee: 2009, langue: 'en' },
+    ]}
+  />
+</Base>
+
+<style>
+  .intro { max-width: var(--mesure); font-size: 1.1rem; }
+  section { margin-top: 3rem; }
+  .a-venir { max-width: var(--mesure); padding-left: 1.2rem; }
+  .a-venir li { margin-bottom: 0.35rem; }
+  .a-venir span { color: var(--muted); }
+</style>
