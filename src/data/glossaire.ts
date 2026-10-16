@@ -351,6 +351,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Réponse fausse mais formulée de façon plausible et assurée, produite par un modèle d'IA. Elle découle du fonctionnement même du modèle, qui produit du vraisemblable, pas du vérifié.",
   },
+  'apprentissage-automatique': {
+    terme: 'Apprentissage automatique (machine learning)',
+    definition:
+      "Branche de l'IA où la machine n'applique pas des règles écrites à la main : elle les déduit d'exemples. Avec des exemples corrigés (supervisé), sans étiquettes (non supervisé) ou par essais et récompenses (par renforcement).",
+    voirAussi: ['parametre'],
+  },
 };
 
 export function entree(id: string): Entree {

@@ -1,0 +1,122 @@
+---
+// Animation « Trouver des groupes tout seul » (étape 2 du module « L'IA,
+// c'est quoi ? ») : l'algorithme des k-moyennes, pas à pas. Personne ne dit
+// à la machine quels groupes existent : elle les trouve dans les données.
+---
+<div class="anim kmoyennes" data-kmoyennes>
+  <div class="anim-repli">
+    <p>
+      On place au hasard trois « centres ». Chaque point rejoint le centre le plus proche ;
+      puis chaque centre se déplace au milieu de ses points. On recommence jusqu'à ce que plus
+      rien ne bouge : trois groupes sont apparus, sans que personne ne les ait définis.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 220" role="img" aria-labelledby="kmoyennes-titre" data-plan>
+        <title id="kmoyennes-titre">Des points, regroupés par couleur autour de trois centres.</title>
+        <rect x="0" y="0" width="320" height="220" class="fond" />
+        <g data-points></g>
+        <g data-centres></g>
+      </svg>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="etape">Étape suivante</button>
+        <button type="button" data-action="nouveau">🎲 Nouveaux points</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { etapeKMoyennes, type Pt } from '../../../lib/apprendre';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const COULEURS = ['g0', 'g1', 'g2'];
+
+  document.querySelectorAll<HTMLElement>('[data-kmoyennes]').forEach((racine) => {
+    activerScene(racine);
+    const gPoints = racine.querySelector<SVGGElement>('[data-points]')!;
+    const gCentres = racine.querySelector<SVGGElement>('[data-centres]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="etape"]')!;
+    let graine = 5;
+    let points: Pt[] = [];
+    let centres: Pt[] = [];
+    let groupes: number[] = [];
+    let n = 0;
+    let fini = false;
+
+    function tirer() {
+      const alea = hasard(graine++);
+      // Trois « nuages » cachés : la machine ne les connaît pas.
+      const nuages = [0, 1, 2].map(() => ({ x: 50 + alea() * 220, y: 40 + alea() * 140 }));
+      points = Array.from({ length: 45 }, (_, i) => {
+        const c = nuages[i % 3];
+        return { x: Math.min(312, Math.max(8, c.x + (alea() - 0.5) * 80)), y: Math.min(212, Math.max(8, c.y + (alea() - 0.5) * 70)) };
+      });
+      centres = [0, 1, 2].map(() => ({ x: 20 + alea() * 280, y: 20 + alea() * 180 }));
+      groupes = points.map(() => -1);
+      n = 0;
+      fini = false;
+      bouton.disabled = false;
+      dessiner();
+      legende.textContent = 'Voici des points, sans étiquette. On pose trois centres au hasard (les croix). Clique sur « Étape suivante ».';
+    }
+
+    function dessiner() {
+      gPoints.replaceChildren(
+        ...points.map((p, i) => {
+          const c = document.createElementNS(NS, 'circle');
+          c.setAttribute('cx', String(p.x));
+          c.setAttribute('cy', String(p.y));
+          c.setAttribute('r', '4.5');
+          c.setAttribute('class', groupes[i] >= 0 ? COULEURS[groupes[i]] : 'sans');
+          return c;
+        }),
+      );
+      gCentres.replaceChildren(
+        ...centres.map((c, k) => {
+          const t = document.createElementNS(NS, 'text');
+          t.setAttribute('x', String(c.x));
+          t.setAttribute('y', String(c.y + 6));
+          t.setAttribute('class', `centre ${COULEURS[k]}`);
+          t.textContent = '✚';
+          return t;
+        }),
+      );
+    }
+
+    bouton.addEventListener('click', () => {
+      if (fini) return;
+      const r = etapeKMoyennes(points, centres);
+      n++;
+      groupes = r.groupes;
+      centres = r.centres;
+      fini = !r.bouge || n >= 20;
+      dessiner();
+      legende.textContent = fini
+        ? `Étape ${n} : plus rien ne bouge. Trois groupes sont apparus, sans que personne ne les ait définis. Mais c’est à nous de dire ce qu’ils signifient… et de choisir combien en chercher.`
+        : `Étape ${n} : chaque point a rejoint le centre le plus proche (sa couleur), puis chaque centre s’est placé au milieu de ses points.`;
+      bouton.disabled = fini;
+    });
+    racine.querySelector('[data-action="nouveau"]')!.addEventListener('click', tirer);
+    tirer();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  svg :global(.sans) { fill: var(--ill-reseau); opacity: 0.6; }
+  svg :global(circle.g0) { fill: var(--ill-client); }
+  svg :global(circle.g1) { fill: var(--ill-paquet); }
+  svg :global(circle.g2) { fill: var(--ill-secret-a); }
+  svg :global(.centre) { font: 700 18px var(--police); text-anchor: middle; stroke: var(--bg); stroke-width: 1; }
+  svg :global(text.g0) { fill: var(--ill-client); }
+  svg :global(text.g1) { fill: var(--ill-paquet); }
+  svg :global(text.g2) { fill: var(--ill-secret-a); }
+</style>

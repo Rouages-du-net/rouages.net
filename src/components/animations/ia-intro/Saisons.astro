@@ -1,0 +1,57 @@
+---
+// « Des printemps et des hivers » (étape 4 du module « L'IA, c'est quoi ? ») :
+// la frise des grands moments de l'IA, avec ses périodes d'enthousiasme
+// (printemps) et de désillusion (hivers). Les jalons (sourcés) viennent de
+// la page. Lisible sans JavaScript ; les boutons filtrent par saison.
+interface Jalon {
+  annee: string;
+  titre: string;
+  texte: string;
+  saison: 'printemps' | 'hiver';
+}
+interface Props {
+  jalons: Jalon[];
+}
+const { jalons } = Astro.props;
+---
+<div class="anim saisons" data-saisons>
+  <div class="filtres" hidden data-filtres role="group" aria-label="Filtrer la frise">
+    <button type="button" class="anim-bouton" data-filtre="tout" aria-pressed="true">Tout</button>
+    <button type="button" class="anim-bouton" data-filtre="printemps" aria-pressed="false">🌱 Printemps</button>
+    <button type="button" class="anim-bouton" data-filtre="hiver" aria-pressed="false">❄️ Hivers</button>
+  </div>
+  <ol class="frise-ia">
+    {jalons.map((j) => (
+      <li class={j.saison} data-saison={j.saison}>
+        <span class="annee">{j.annee}</span>
+        <span class="icone" aria-hidden="true">{j.saison === 'hiver' ? '❄️' : '🌱'}</span>
+        <div><strong>{j.titre}</strong> <span>{j.texte}</span></div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-saisons]').forEach((racine) => {
+    const filtres = racine.querySelector<HTMLElement>('[data-filtres]')!;
+    filtres.hidden = false;
+    filtres.querySelectorAll<HTMLButtonElement>('[data-filtre]').forEach((b) =>
+      b.addEventListener('click', () => {
+        filtres.querySelectorAll('[data-filtre]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        racine.querySelectorAll<HTMLElement>('[data-saison]').forEach((li) => {
+          li.hidden = b.dataset.filtre !== 'tout' && li.dataset.saison !== b.dataset.filtre;
+        });
+      }),
+    );
+  });
+</script>
+
+<style>
+  .filtres { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .filtres [aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .frise-ia { list-style: none; margin: 0; padding: 0; border-left: 3px solid var(--border); }
+  .frise-ia li { display: grid; grid-template-columns: 4.5rem 1.6rem 1fr; gap: 0.4rem; padding: 0.45rem 0 0.45rem 0.6rem; font-size: 0.93rem; }
+  .frise-ia li.hiver { background: color-mix(in oklab, var(--ill-client) 8%, transparent); }
+  .annee { font-family: var(--police-mono); font-weight: 700; }
+  @media (max-width: 40rem) { .frise-ia li { grid-template-columns: 3.8rem 1.4rem 1fr; } }
+</style>

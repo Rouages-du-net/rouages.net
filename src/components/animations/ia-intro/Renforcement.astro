@@ -1,0 +1,107 @@
+---
+// Animation « Apprendre par essais et erreurs » (étape 2 du module « L'IA,
+// c'est quoi ? ») : une souris apprend à trouver le fromage par Q-learning.
+// Personne ne lui montre le chemin : elle reçoit des récompenses (+10 pour
+// le fromage, −10 pour le piège, −1 par pas) et en déduit quoi faire.
+const GRILLE = ['S..#.', '.#...', '.#.#P', '...#.', '##..F'];
+---
+<div class="anim renforcement" data-renforcement data-grille={JSON.stringify(GRILLE)}>
+  <div class="anim-repli">
+    <p>
+      Au début, la souris erre au hasard : elle se cogne aux murs et tombe parfois dans le
+      piège. Mais à chaque pas, elle note ce que ce choix lui a rapporté. Après une centaine
+      de parties, elle va droit au fromage, par le chemin le plus court. Personne ne lui a
+      montré le chemin : elle l'a appris par essais et erreurs.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre grille-cadre">
+      <ol class="grille" data-cases style={`--larg:${GRILLE[0].length}`} aria-label="Le labyrinthe et ce que la souris a appris"></ol>
+      <div class="infos">
+        <p class="score" data-score aria-live="polite"></p>
+        <div class="anim-commandes">
+          <button type="button" class="principal" data-parties="1">▶ 1 partie</button>
+          <button type="button" data-parties="20">▶▶ 20 parties</button>
+          <button type="button" data-action="oublier">↺ Tout oublier</button>
+        </div>
+        <p class="anim-note">🐭 départ · 🧀 +10 · 🪤 −10 · chaque pas −1. Les flèches montrent ce que la souris ferait dans chaque case.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+  import { Labyrinthe, ACTIONS } from '../../../lib/apprendre';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-renforcement]').forEach((racine) => {
+    activerScene(racine);
+    const grille: string[] = JSON.parse(racine.dataset.grille!);
+    const ol = racine.querySelector<HTMLElement>('[data-cases]')!;
+    const score = racine.querySelector<HTMLElement>('[data-score]')!;
+    let lab = new Labyrinthe(grille);
+    let alea = hasard(11);
+    let parties = 0;
+    let occupe = false;
+
+    function dessiner(souris = -1) {
+      ol.replaceChildren(
+        ...grille.join('').split('').map((c, i) => {
+          const li = document.createElement('li');
+          li.className = c === '#' ? 'mur' : 'libre';
+          const appris = lab.q[i].some((v) => v !== 0);
+          li.textContent =
+            i === souris ? '🐭' : c === 'F' ? '🧀' : c === 'P' ? '🪤' : c === '#' ? '' : appris ? ACTIONS[lab.meilleure(i)].fleche : '·';
+          if (c === 'S' && i !== souris) li.classList.add('depart');
+          return li;
+        }),
+      );
+    }
+
+    async function jouer(k: number) {
+      if (occupe) return;
+      occupe = true;
+      let dernier = { chemin: [] as number[], total: 0 };
+      for (let p = 0; p < k; p++) {
+        dernier = lab.partie(alea, parties < 60 ? 0.3 : 0.05);
+        parties++;
+      }
+      // On rejoue la dernière partie, case par case (sauf mouvement réduit).
+      for (const i of dernier.chemin.slice(0, 40)) {
+        dessiner(i);
+        await pause(k === 1 ? 160 : 40);
+      }
+      dessiner();
+      const fin = lab.case(dernier.chemin.at(-1)!);
+      score.textContent = `Partie n° ${parties} : ${fin === 'F' ? 'fromage trouvé' : fin === 'P' ? 'tombée dans le piège' : 'perdue en route'} en ${dernier.chemin.length - 1} pas, score ${dernier.total}. ${
+        parties < 30 ? 'Elle explore encore beaucoup au hasard.' : 'Au fil des parties, elle suit de plus en plus ce qu’elle a appris.'
+      }`;
+      occupe = false;
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-parties]').forEach((b) => b.addEventListener('click', () => jouer(Number(b.dataset.parties))));
+    racine.querySelector('[data-action="oublier"]')!.addEventListener('click', () => {
+      if (occupe) return;
+      lab = new Labyrinthe(grille);
+      alea = hasard(11);
+      parties = 0;
+      dessiner();
+      score.textContent = 'La souris ne sait rien. Lance une partie.';
+    });
+    dessiner();
+    score.textContent = 'La souris ne sait rien. Lance une partie.';
+  });
+</script>
+
+<style>
+  .grille-cadre { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; }
+  .grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--larg), 2.6rem); gap: 3px; }
+  .grille :global(li) { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: 0.3rem; font-size: 1.2rem; }
+  .grille :global(.libre) { background: var(--bg); border: 1px solid var(--border); color: var(--ill-client); font-weight: 700; }
+  .grille :global(.mur) { background: var(--ill-reseau); }
+  .grille :global(.depart) { outline: 2px dashed var(--ill-client); }
+  .score { font-weight: 600; margin: 0 0 0.5rem; }
+  @media (max-width: 40rem) { .grille-cadre { grid-template-columns: 1fr; justify-items: center; } }
+</style>

@@ -1,0 +1,85 @@
+---
+// Animation « IA ou pas ? » (étape 0 du module « L'IA, c'est quoi ? ») : on
+// classe des objets du quotidien, puis on découvre ce qu'en disent les
+// définitions. Les verdicts et explications (sourcés) sont fournis par la page.
+interface Objet {
+  nom: string;
+  icone: string;
+  verdict: 'oui' | 'non' | 'debat';
+  explication: string;
+}
+interface Props {
+  objets: Objet[];
+}
+const { objets } = Astro.props;
+const libelle = { oui: 'Oui, c’est de l’IA', non: 'Non, pas vraiment', debat: 'Ça se discute' };
+---
+<div class="anim ia-ou-pas" data-ia-ou-pas>
+  <div class="anim-repli">
+    <ul>
+      {objets.map((o) => <li><strong>{o.nom}</strong> — {libelle[o.verdict]}. {o.explication}</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <ol class="cartes">
+      {objets.map((o, i) => (
+        <li class="carte" data-objet={i} data-verdict={o.verdict}>
+          <p class="nom"><span aria-hidden="true">{o.icone}</span> {o.nom}</p>
+          <div class="choix" role="group" aria-label={`${o.nom} : est-ce de l'IA ?`}>
+            <button type="button" class="anim-bouton" data-reponse="oui">IA</button>
+            <button type="button" class="anim-bouton" data-reponse="non">Pas IA</button>
+          </div>
+          <p class="verdict" hidden><strong>{libelle[o.verdict]}.</strong> {o.explication}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-ia-ou-pas]').forEach((racine) => {
+    activerScene(racine);
+    const cartes = [...racine.querySelectorAll<HTMLElement>('.carte')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const reponses = new Map<number, string>();
+
+    function bilan() {
+      const debats = cartes.filter((c) => c.dataset.verdict === 'debat').length;
+      if (reponses.size < cartes.length) {
+        legende.textContent = `${reponses.size} sur ${cartes.length}. Continue !`;
+        return;
+      }
+      const accord = [...reponses.entries()].filter(([i, r]) => cartes[i].dataset.verdict === r).length;
+      legende.textContent = `Tu es d’accord avec nos réponses sur ${accord} objet${accord > 1 ? 's' : ''}, et ${debats} se discutent vraiment. Il n’y a pas de frontière nette : tout dépend de la définition de l’IA qu’on choisit.`;
+    }
+
+    cartes.forEach((c, i) =>
+      c.querySelectorAll<HTMLButtonElement>('[data-reponse]').forEach((b) =>
+        b.addEventListener('click', () => {
+          reponses.set(i, b.dataset.reponse!);
+          c.querySelectorAll('[data-reponse]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+          c.querySelector<HTMLElement>('.verdict')!.hidden = false;
+          c.classList.add('revele');
+          bilan();
+        }),
+      ),
+    );
+    legende.textContent = 'Pour chaque objet, choisis : IA ou pas IA ?';
+  });
+</script>
+
+<style>
+  .cartes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  .carte { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.9rem; }
+  .carte.revele[data-verdict='oui'] { border-left: 4px solid var(--ill-secret-b); }
+  .carte.revele[data-verdict='non'] { border-left: 4px solid var(--ill-reseau); }
+  .carte.revele[data-verdict='debat'] { border-left: 4px solid var(--ill-commun); }
+  .nom { margin: 0 0 0.5rem; font-weight: 700; }
+  .choix { display: flex; gap: 0.4rem; }
+  .choix [aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .verdict { margin: 0.6rem 0 0; font-size: 0.9rem; }
+</style>

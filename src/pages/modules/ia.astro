@@ -1,0 +1,235 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import IaOuPas from '../../components/animations/ia-intro/IaOuPas.astro';
+import ReglesOuExemples from '../../components/animations/ia-intro/ReglesOuExemples.astro';
+import KMoyennes from '../../components/animations/ia-intro/KMoyennes.astro';
+import Renforcement from '../../components/animations/ia-intro/Renforcement.astro';
+import CarteIA from '../../components/animations/ia-intro/CarteIA.astro';
+import Saisons from '../../components/animations/ia-intro/Saisons.astro';
+
+// Faits sourcés : voir docs/sources/ia-intro.md.
+const objets = [
+  { nom: 'Une calculatrice', icone: '🧮', verdict: 'non', explication: 'Elle applique des règles de calcul fixes, sans rien apprendre ni rien déduire de neuf.' },
+  { nom: 'Un thermostat programmable', icone: '🌡️', verdict: 'non', explication: 'Il suit une consigne écrite à l’avance : « au-dessous de 19 °C, chauffer ».' },
+  { nom: 'Un tableur', icone: '📊', verdict: 'non', explication: 'Il calcule exactement ce que ses formules lui disent de calculer.' },
+  { nom: 'Le calcul d’itinéraire du GPS', icone: '🗺️', verdict: 'debat', explication: 'Chercher le plus court chemin a longtemps été un problème d’IA ; maintenant que ça marche, on parle plutôt d’« algorithme ». C’est l’« effet IA ».' },
+  { nom: 'Un programme d’échecs', icone: '♟️', verdict: 'debat', explication: 'Battre un champion était un grand défi de l’IA. Les programmes classiques explorent des millions de coups avec des règles écrites à la main ; les plus récents apprennent en jouant.' },
+  { nom: 'Le correcteur orthographique', icone: '✍️', verdict: 'debat', explication: 'Les plus simples comparent les mots à un dictionnaire ; d’autres utilisent des modèles appris sur d’immenses quantités de textes.' },
+  { nom: 'Le filtre anti-spam', icone: '📧', verdict: 'oui', explication: 'Il apprend, à partir de messages déjà classés, à reconnaître les indésirables, et s’adapte quand tu en signales.' },
+  { nom: 'Le déverrouillage par le visage', icone: '🙂', verdict: 'oui', explication: 'Un réseau de neurones, entraîné sur des millions de visages, compare le tien à celui qu’il a enregistré.' },
+  { nom: 'Les vidéos qu’on te recommande', icone: '📺', verdict: 'oui', explication: 'Un système apprend de tes clics, et de ceux de millions d’autres personnes, ce qui retiendra ton attention.' },
+  { nom: 'Un assistant comme ChatGPT', icone: '💬', verdict: 'oui', explication: 'Un grand modèle de langage, entraîné sur d’immenses quantités de textes.' },
+] as const;
+
+const jalons = [
+  { annee: '1956', saison: 'printemps', titre: 'Le nom « intelligence artificielle ».', texte: 'Un atelier d’été au Dartmouth College (États-Unis) lance le domaine sous ce nom.' },
+  { annee: '1958', saison: 'printemps', titre: 'Le perceptron.', texte: 'Frank Rosenblatt présente l’un des premiers réseaux de neurones qui apprennent.' },
+  { annee: '1966', saison: 'printemps', titre: 'ELIZA.', texte: 'Joseph Weizenbaum montre qu’un programme simple peut donner l’illusion de comprendre.' },
+  { annee: '1973', saison: 'hiver', titre: 'Le rapport Lighthill.', texte: 'Au Royaume-Uni, un rapport très critique sur les promesses de l’IA entraîne des coupes dans les financements.' },
+  { annee: '1980', saison: 'printemps', titre: 'Les systèmes experts.', texte: 'Des programmes à règles écrites par des spécialistes entrent dans les entreprises.' },
+  { annee: '1982', saison: 'printemps', titre: 'La « cinquième génération ».', texte: 'Le Japon lance un grand programme national d’ordinateurs pour l’IA, qui inquiète le monde entier.' },
+  { annee: '1987', saison: 'hiver', titre: 'Fin du boom des systèmes experts.', texte: 'Trop coûteux à entretenir, trop fragiles hors de leur domaine : le marché s’effondre.' },
+  { annee: '1997', saison: 'printemps', titre: 'Deep Blue bat Kasparov.', texte: 'Un ordinateur d’IBM bat le champion du monde d’échecs en match.' },
+  { annee: '2012', saison: 'printemps', titre: 'AlexNet.', texte: 'Un réseau de neurones profond écrase la concurrence en reconnaissance d’images : l’apprentissage profond décolle.' },
+  { annee: '2016', saison: 'printemps', titre: 'AlphaGo bat Lee Sedol.', texte: 'Un programme qui a appris en partie en jouant contre lui-même bat l’un des meilleurs joueurs de go.' },
+  { annee: '2022', saison: 'printemps', titre: 'ChatGPT.', texte: 'Un assistant conversationnel grand public fait découvrir les modèles de langage à des centaines de millions de personnes.' },
+] as const;
+
+const etapes = [
+  { ancre: 'definir', court: 'IA ou pas ?' },
+  { ancre: 'regles', court: 'Règles ou exemples' },
+  { ancre: 'groupes', court: 'Sans professeur' },
+  { ancre: 'recompenses', court: 'Essais et erreurs' },
+  { ancre: 'carte', court: 'La carte' },
+  { ancre: 'saisons', court: 'Printemps et hivers' },
+  { ancre: 'bilan', court: 'Et toi ?', pastille: '✓' },
+];
+---
+<Base
+  title="L'IA, c'est quoi ?"
+  description="La porte d'entrée sur l'intelligence artificielle : ce qu'on appelle IA, les règles et l'apprentissage, trois façons d'apprendre, la carte des IA et leur histoire."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>L'IA, c'est quoi ?</h1>
+  <p class="chapo seulement-debut">
+    On met le mot « IA » partout : dans les téléphones, les voitures, les frigos… Mais de quoi
+    parle-t-on ? Ce module est la porte d'entrée : il démêle les définitions, montre les grandes
+    façons de faire, et dessine la carte de toutes les IA que tu croises.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="IA ou pas ?" ancre="definir">
+    <IaOuPas slot="animation" objets={objets} />
+    <p slot="decouverte">
+      Il n'existe pas une définition unique de l'intelligence artificielle. En gros, on parle
+      d'IA quand une machine fait quelque chose qu'on croyait réservé à l'intelligence humaine :
+      reconnaître un visage, comprendre une phrase, choisir un coup aux échecs.
+    </p>
+    <p slot="curieux">
+      Le mot date de 1956. Depuis, la frontière bouge sans cesse : dès qu'une tâche est bien
+      maîtrisée par les machines (calculer un itinéraire, jouer aux échecs), on cesse souvent de
+      l'appeler « IA ». C'est ce qu'on appelle l'effet IA.
+    </p>
+    <p slot="ingenieur">
+      Les définitions juridiques insistent aujourd'hui sur deux points : le système
+      <em>déduit</em> de ses données d'entrée comment produire ses résultats (prédictions,
+      contenus, recommandations, décisions), et il fonctionne avec un certain degré
+      d'autonomie. Un programme qui applique seulement des règles fixées par des humains en est
+      en principe exclu.
+    </p>
+    <p slot="mythes">
+      <strong>« Aujourd'hui, tout est de l'IA. »</strong> Le mot fait vendre : certaines
+      entreprises l'emploient pour des produits qui n'en contiennent pas, ou très peu. C'est ce
+      qu'on appelle l'<em>AI washing</em>.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Deux façons de faire : des règles ou des exemples" ancre="regles">
+    <ReglesOuExemples slot="animation" />
+    <p slot="decouverte">
+      Pour qu'une machine reconnaisse un animal, on peut lui écrire des règles (« s'il a des
+      plumes, c'est un oiseau »). Ou lui montrer des exemples d'animaux déjà classés, et la
+      laisser trouver seule ses règles. C'est la grande différence entre l'IA à règles et
+      l'IA qui <Terme id="apprentissage-automatique">apprend</Terme>.
+    </p>
+    <p slot="curieux">
+      L'IA à règles sait expliquer son raisonnement, mais il faut tout lui écrire, et elle se
+      trompe dès qu'on sort de ses règles. L'IA qui apprend s'adapte à des cas que personne
+      n'a prévus, mais elle ne sait que ce que disent ses exemples, et ne sait pas toujours
+      dire pourquoi elle répond ce qu'elle répond.
+    </p>
+    <p slot="ingenieur">
+      À gauche, un système expert en chaînage avant : il applique ses règles tant qu'elles
+      ajoutent des faits, et garde la trace de chaque déduction. À droite, un arbre de décision
+      appris avec l'algorithme ID3 : à chaque nœud, il choisit la question qui fait le plus
+      baisser l'entropie (le « désordre ») des classes d'exemples. C'est de l'apprentissage
+      <em>supervisé</em> : chaque exemple vient avec la bonne réponse.
+    </p>
+    <p slot="verifie">Coche « nage » et « allaite ses petits », puis « nage » seul : le système expert hésite, l'arbre tranche… à partir de seulement 8 exemples.</p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Apprendre sans professeur" ancre="groupes">
+    <KMoyennes slot="animation" />
+    <p slot="decouverte">
+      On peut aussi donner à la machine des données sans aucune étiquette, et lui demander d'y
+      trouver des groupes. Personne ne lui dit lesquels existent.
+    </p>
+    <p slot="curieux">
+      C'est l'apprentissage <em>non supervisé</em>. On s'en sert pour regrouper des clients aux
+      habitudes proches, des articles qui parlent du même sujet, des cellules qui se
+      ressemblent. Mais c'est à nous de donner un sens aux groupes trouvés.
+    </p>
+    <p slot="ingenieur">
+      L'algorithme des k-moyennes alterne deux étapes : chaque point rejoint le centre le plus
+      proche, puis chaque centre se place à la moyenne de ses points. Il s'arrête quand plus
+      rien ne bouge. Le résultat dépend du nombre de groupes choisi (k) et de la position de
+      départ des centres.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Apprendre par essais et erreurs" ancre="recompenses">
+    <Renforcement slot="animation" />
+    <p slot="decouverte">
+      Troisième façon d'apprendre : essayer, et noter ce qui rapporte. Personne ne montre le
+      chemin à la souris ; elle reçoit seulement des récompenses et des punitions.
+    </p>
+    <p slot="curieux">
+      C'est l'apprentissage <em>par renforcement</em>. Il sert aux programmes qui jouent, aux
+      robots qui apprennent à marcher, et à l'ajustement des assistants conversationnels par des
+      humains qui notent leurs réponses.
+    </p>
+    <p slot="ingenieur">
+      Ici, du Q-learning : la souris tient un tableau Q(case, action) et, après chaque pas, le
+      corrige : Q ← Q + α (récompense + γ · max Q(case suivante) − Q). Pour ne pas rester
+      enfermée dans ses premières habitudes, elle joue parfois au hasard (exploration).
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="La carte des IA" ancre="carte">
+    <CarteIA slot="animation" />
+    <p slot="decouverte">
+      Il y a deux façons de ranger les IA : selon ce qu'elles font pour nous (écrire, voir,
+      classer, jouer…) et selon comment elles le font (règles, probabilités, réseaux de
+      neurones…). La carte croise les deux.
+    </p>
+    <p slot="curieux">
+      Un même but peut être atteint de plusieurs façons : un filtre anti-spam peut utiliser des
+      probabilités, un arbre de décision ou un réseau de neurones. Et un même mécanisme sert à
+      des buts très différents. Chaque ligne de la carte aura son module.
+    </p>
+    <p slot="ingenieur">
+      Les réseaux de neurones dominent aujourd'hui la perception (images, sons) et le langage.
+      Mais les méthodes plus anciennes restent partout : recherche dans un graphe pour les
+      itinéraires, modèles statistiques simples quand il faut expliquer une décision, règles
+      quand il faut une garantie.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Des printemps et des hivers" ancre="saisons">
+    <Saisons slot="animation" jalons={jalons} />
+    <p slot="decouverte">
+      L'histoire de l'IA n'est pas une ligne droite : des périodes d'enthousiasme, où l'on
+      promet tout, alternent avec des « hivers », où les déceptions font fuir l'argent.
+    </p>
+    <p slot="curieux">
+      Les promesses trop grandes ont souvent précédé les hivers. L'histoire invite donc à la
+      prudence face aux annonces d'aujourd'hui, dans un sens comme dans l'autre.
+    </p>
+    <p slot="ingenieur">
+      Les deux grandes familles se sont relayées : l'IA « symbolique » (règles, logique,
+      recherche) a dominé jusqu'aux années 1980 ; l'IA « connexionniste » (réseaux de neurones),
+      née en même temps, ne s'impose qu'à partir des années 2010, avec les grandes quantités de
+      données et les processeurs graphiques.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Et toi, quelles IA croises-tu dans ta journée ?</h2>
+    <p>Chaque moment de la journée correspond à une ligne de la carte.</p>
+    <table>
+      <thead><tr><th scope="col">Dans ta journée</th><th scope="col">Les IA…</th></tr></thead>
+      <tbody>
+        <tr><td>Tu déverrouilles ton téléphone avec ton visage</td><td>qui voient</td></tr>
+        <tr><td>Ta messagerie range un courriel dans les indésirables</td><td>qui classent</td></tr>
+        <tr><td>Le GPS calcule ton trajet</td><td>qui cherchent et optimisent</td></tr>
+        <tr><td>Une plateforme te propose une vidéo</td><td>qui recommandent</td></tr>
+        <tr><td>Tu poses une question à un assistant</td><td><a href="/modules/ia-texte/">qui écrivent</a></td></tr>
+        <tr><td>Ta banque bloque un paiement suspect</td><td>qui surveillent</td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

@@ -1,0 +1,98 @@
+---
+// Animation « La carte des IA » (étape 3 du module « L'IA, c'est quoi ? ») :
+// un tableau qui croise les buts et les mécanismes. On clique sur un but
+// pour voir ses mécanismes, ou sur un mécanisme pour voir où il sert. Sans
+// JavaScript, le tableau se lit tel quel.
+import { BUTS, MECANISMES } from '../../../lib/carte-ia';
+---
+<div class="anim carte-ia" data-carte-ia>
+  <div class="anim-cadre defile">
+    <table>
+      <caption class="visuellement-cache">Les IA, par but (lignes) et par mécanisme (colonnes)</caption>
+      <thead>
+        <tr>
+          <th scope="col">Les IA…</th>
+          {MECANISMES.map((m) => (
+            <th scope="col" class="meca" data-meca={m.id}>
+              <button type="button" class="titre-col" data-choix-meca={m.id} title={m.exemple}>{m.nom}</button>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {BUTS.map((b, i) => (
+          <tr data-but={i} data-mecas={b.mecanismes.join(' ')}>
+            <th scope="row">
+              <button type="button" class="titre-ligne" data-choix-but={i}>{b.nom}</button>
+              <span class="ex">{b.exemples}</span>
+              {b.lien ? <a href={b.lien} class="lien">module →</a> : <span class="bientot">à venir</span>}
+            </th>
+            {MECANISMES.map((m) => (
+              <td data-meca={m.id} class={b.mecanismes.includes(m.id) ? 'oui' : ''}>
+                {b.mecanismes.includes(m.id) ? <span aria-label="oui">●</span> : ''}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="anim-legende" aria-live="polite">Clique sur un but (une ligne) ou sur un mécanisme (une colonne).</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carte-ia]').forEach((racine) => {
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const lignes = [...racine.querySelectorAll<HTMLTableRowElement>('[data-but]')];
+    const nettoyer = () => racine.querySelectorAll('.choisi, .eclaire, .terne').forEach((e) => e.classList.remove('choisi', 'eclaire', 'terne'));
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-choix-but]').forEach((b) =>
+      b.addEventListener('click', () => {
+        nettoyer();
+        const tr = lignes[Number(b.dataset.choixBut)];
+        const mecas = tr.dataset.mecas!.split(' ');
+        tr.classList.add('choisi');
+        lignes.filter((l) => l !== tr).forEach((l) => l.classList.add('terne'));
+        racine.querySelectorAll<HTMLElement>('th.meca').forEach((th) => th.classList.toggle('eclaire', mecas.includes(th.dataset.meca!)));
+        const noms = mecas.map((m) => racine.querySelector(`[data-choix-meca="${m}"]`)!.textContent!.toLowerCase());
+        legende.textContent = `Les IA ${b.textContent} s’appuient sur : ${noms.join(', ')}.`;
+      }),
+    );
+    racine.querySelectorAll<HTMLButtonElement>('[data-choix-meca]').forEach((b) =>
+      b.addEventListener('click', () => {
+        nettoyer();
+        const m = b.dataset.choixMeca!;
+        b.closest('th')!.classList.add('choisi');
+        const buts = lignes.filter((l) => l.dataset.mecas!.split(' ').includes(m));
+        lignes.forEach((l) => l.classList.toggle(buts.includes(l) ? 'eclaire' : 'terne', true));
+        legende.textContent = `« ${b.textContent} » sert aux IA ${buts.map((l) => l.querySelector('.titre-ligne')!.textContent).join(', ')}.`;
+      }),
+    );
+  });
+</script>
+
+<style>
+  .defile { overflow-x: auto; padding: 0.5rem; }
+  table { border-collapse: collapse; font-size: 0.85rem; min-width: 40rem; }
+  th, td { border-bottom: 1px solid var(--border); padding: 0.35rem 0.4rem; }
+  thead th { vertical-align: bottom; }
+  td { text-align: center; color: var(--ill-paquet); font-size: 1.1rem; }
+  th[scope='row'], thead th:first-child {
+    text-align: left;
+    min-width: 11rem;
+    position: sticky;
+    left: 0;
+    background: var(--card);
+    z-index: 1;
+  }
+  @media (max-width: 40rem) { th[scope='row'], thead th:first-child { min-width: 8.5rem; max-width: 8.5rem; } }
+  .titre-col, .titre-ligne { font: inherit; font-weight: 700; background: none; border: none; padding: 0; color: var(--fg); cursor: pointer; text-align: inherit; }
+  .titre-col { font-size: 0.78rem; max-width: 6.5rem; }
+  .titre-col:hover, .titre-ligne:hover { color: var(--accent); }
+  .ex { display: block; font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+  .lien, .bientot { font-size: 0.75rem; font-weight: 400; }
+  .bientot { color: var(--muted); }
+  tr.terne td, tr.terne th > * { opacity: 0.35; }
+  tr.choisi th, tr.eclaire th { color: var(--accent); }
+  th.eclaire, th.choisi { background: color-mix(in oklab, var(--ill-paquet) 14%, transparent); }
+</style>
