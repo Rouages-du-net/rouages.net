@@ -1,0 +1,129 @@
+---
+// Animation « Les fourmis » (étape 3 du module « Les IA qui cherchent et
+// optimisent ») : une colonie de fourmis virtuelles (Ant System) cherche une
+// bonne tournée entre 20 villes. L'épaisseur des traits montre la
+// phéromone : les bonnes routes se renforcent, les autres s'évaporent.
+---
+<div class="anim fourmis" data-fourmis>
+  <div class="anim-repli">
+    <p>
+      Douze fourmis virtuelles parcourent 20 villes. Chacune choisit sa route au hasard, avec
+      une préférence pour les liaisons courtes et pour celles qui portent beaucoup de
+      phéromone. À chaque génération, la phéromone s'évapore un peu, puis chaque fourmi en
+      dépose sur son trajet, d'autant plus que sa tournée est courte. Au bout de quelques
+      générations, les traces se concentrent sur une très bonne tournée. Aucune fourmi ne
+      connaît la solution : elle émerge du groupe.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 220" role="img" aria-labelledby="fourmis-titre">
+        <title id="fourmis-titre">Vingt villes ; plus un trait est épais, plus il porte de phéromone.</title>
+        <rect x="0" y="0" width="320" height="220" class="fond" />
+        <g data-traces></g>
+        <polyline data-meilleure class="meilleure" points="" />
+        <g data-villes></g>
+      </svg>
+      <label class="voir"><input type="checkbox" data-voir-meilleure /> Montrer la meilleure tournée trouvée</label>
+      <p class="etat" data-etat aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="un">🐜 Une génération</button>
+        <button type="button" data-action="dix">10 générations</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { Fourmilliere, plusProcheVoisin, deuxOpt, longueur, type Ville } from '../../../lib/chercher';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const fr = (v: number) => Math.round(v).toLocaleString('fr-FR');
+
+  document.querySelectorAll<HTMLElement>('[data-fourmis]').forEach((racine) => {
+    activerScene(racine);
+    const b = hasard(5);
+    const villes: Ville[] = Array.from({ length: 20 }, (_, i) => ({ nom: String(i + 1), x: 15 + b() * 290, y: 15 + b() * 190 }));
+    const reference = longueur(villes, deuxOpt(villes, plusProcheVoisin(villes)));
+    const gTraces = racine.querySelector<SVGGElement>('[data-traces]')!;
+    const meilleure = racine.querySelector<SVGPolylineElement>('[data-meilleure]')!;
+    const voir = racine.querySelector<HTMLInputElement>('[data-voir-meilleure]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    racine.querySelector('[data-villes]')!.append(
+      ...villes.map((v) => {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', String(v.x));
+        c.setAttribute('cy', String(v.y));
+        c.setAttribute('r', '4');
+        return c;
+      }),
+    );
+    // Une ligne par paire de villes, dont l'épaisseur suit la phéromone.
+    const lignes: { i: number; j: number; el: SVGLineElement }[] = [];
+    for (let i = 0; i < villes.length; i++)
+      for (let j = i + 1; j < villes.length; j++) {
+        const el = document.createElementNS(NS, 'line');
+        el.setAttribute('x1', String(villes[i].x));
+        el.setAttribute('y1', String(villes[i].y));
+        el.setAttribute('x2', String(villes[j].x));
+        el.setAttribute('y2', String(villes[j].y));
+        gTraces.append(el);
+        lignes.push({ i, j, el });
+      }
+    let colonie = new Fourmilliere(villes, hasard(7));
+
+    function dessiner() {
+      const max = Math.max(...lignes.map((l) => colonie.pheromone[l.i][l.j]));
+      lignes.forEach((l) => {
+        const p = colonie.pheromone[l.i][l.j] / max;
+        l.el.setAttribute('stroke-width', (0.3 + p * 4).toFixed(2));
+        l.el.setAttribute('opacity', (p < 0.08 ? 0 : 0.15 + p * 0.75).toFixed(2));
+      });
+      const t = colonie.meilleure;
+      meilleure.setAttribute('points', voir.checked && t.length ? [...t, t[0]].map((k) => `${villes[k].x},${villes[k].y}`).join(' ') : '');
+      etat.textContent = colonie.iterations
+        ? `Génération ${colonie.iterations} · meilleure tournée : ${fr(colonie.meilleureLongueur)} km (référence 2-opt : ${fr(reference)} km)`
+        : 'Génération 0 · toutes les routes ont autant de phéromone.';
+    }
+
+    function avancer(n: number) {
+      for (let k = 0; k < n; k++) colonie.iteration();
+      dessiner();
+      const ecart = (colonie.meilleureLongueur / reference - 1) * 100;
+      legende.textContent =
+        colonie.iterations < 3
+          ? 'Les fourmis explorent : la phéromone est encore répandue un peu partout.'
+          : ecart < 0.5
+            ? `Les traces se sont concentrées : la colonie a trouvé une tournée aussi bonne que la référence. Aucune fourmi ne « connaît » la solution : elle émerge des traces laissées par toutes.`
+            : `Les bonnes liaisons se renforcent, les autres s’évaporent. Meilleure tournée : ${ecart.toFixed(0)} % au-dessus de la référence.`;
+    }
+
+    const act = (nom: string, f: () => void) => racine.querySelector(`[data-action="${nom}"]`)!.addEventListener('click', f);
+    act('un', () => avancer(1));
+    act('dix', () => avancer(10));
+    act('recommencer', () => {
+      colonie = new Fourmilliere(villes, hasard(7 + Math.floor(Math.random() * 1000)));
+      dessiner();
+      legende.textContent = 'Nouvelle colonie : clique sur « Une génération ».';
+    });
+    voir.addEventListener('change', dessiner);
+    dessiner();
+    legende.textContent = 'Clique sur « Une génération » : douze fourmis vont chacune faire le tour des 20 villes.';
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  svg :global(line) { stroke: var(--ill-serveur); stroke-linecap: round; }
+  .meilleure { fill: none; stroke: var(--ill-paquet); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  svg :global(circle) { fill: var(--ill-client); stroke: var(--bg); stroke-width: 1.5; }
+  .voir { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; margin-top: 0.5rem; }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; min-height: 1.3em; }
+</style>

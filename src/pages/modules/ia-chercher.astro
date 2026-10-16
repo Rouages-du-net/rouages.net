@@ -1,0 +1,203 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Itineraire from '../../components/animations/chercher/Itineraire.astro';
+import Tournee from '../../components/animations/chercher/Tournee.astro';
+import Fourmis from '../../components/animations/chercher/Fourmis.astro';
+import Evolution from '../../components/animations/chercher/Evolution.astro';
+
+// Faits sourcés : voir docs/sources/ia-chercher.md.
+const etapes = [
+  { ancre: 'chemin', court: 'Le plus court chemin' },
+  { ancre: 'astar', court: 'Chercher malin' },
+  { ancre: 'tournee', court: 'Trop de tournées' },
+  { ancre: 'fourmis', court: 'Les fourmis' },
+  { ancre: 'evolution', court: 'Évoluer' },
+  { ancre: 'bilan', court: 'Qui choisit ?', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui cherchent et optimisent"
+  description="GPS, tournées de livraison, emplois du temps : comment une machine cherche la meilleure solution parmi des milliards. Dijkstra, A*, le voyageur de commerce, les fourmis et l'évolution."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Les IA qui cherchent et optimisent</h1>
+  <p class="chapo seulement-debut">
+    Ton GPS trouve un trajet en une fraction de seconde parmi des millions possibles. Ces IA
+    n'apprennent rien : elles cherchent. Elles explorent intelligemment les possibilités, et
+    parfois s'inspirent des fourmis ou de l'évolution des espèces.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le plus court chemin" ancre="chemin">
+    <Itineraire slot="animation" modes={['dijkstra']} />
+    <p slot="decouverte">
+      Pour aller de D à A, il y a des millions de trajets possibles. L'algorithme de Dijkstra
+      ne les essaie pas tous : il avance en onde, en calculant le temps pour atteindre chaque
+      carrefour, des plus proches aux plus lointains. L'avenue du milieu est embouteillée.
+    </p>
+    <p slot="curieux">
+      La carte devient un « graphe » : des carrefours (les nœuds) reliés par des rues (les
+      arêtes), chacune avec un coût, ici des minutes. Dijkstra garde toujours le meilleur temps
+      connu pour chaque carrefour. Quand il atteint l'arrivée, il est sûr d'avoir le meilleur
+      trajet. Ce n'est pas de l'apprentissage : c'est de la recherche, l'une des plus vieilles
+      branches de l'IA.
+    </p>
+    <p slot="ingenieur">
+      À chaque tour, on retire de la liste des carrefours « ouverts » celui qui a le plus petit
+      temps depuis le départ, puis on met à jour ses voisins : si passer par lui est plus
+      rapide, on retient ce nouveau temps et d'où l'on vient. Avec une file de priorité, le
+      coût est de l'ordre de (A + N) log N pour N carrefours et A rues. Cela ne marche que si
+      aucune rue n'a un coût négatif.
+    </p>
+    <div slot="histoire" data-a-sourcer="dijkstra"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Chercher malin : A*" ancre="astar">
+    <Itineraire slot="animation" />
+    <p slot="decouverte">
+      Dijkstra explore même les rues qui partent à l'opposé de l'arrivée. A* (« A étoile »)
+      ajoute une estimation : la distance à vol d'oiseau qui reste. Compare le nombre de
+      carrefours examinés. Puis essaie de foncer vers l'arrivée sans réfléchir.
+    </p>
+    <p slot="curieux">
+      L'estimation est une <Terme id="heuristique">heuristique</Terme> : une règle approximative
+      qui guide la recherche. Si elle ne surestime jamais le temps restant, A* trouve toujours
+      le meilleur trajet. Si on lui fait trop confiance, on va plus vite… mais on peut se jeter
+      dans le bouchon.
+    </p>
+    <p slot="ingenieur">
+      A* classe les carrefours ouverts selon f = g + h : g est le temps depuis le départ, h
+      l'estimation du temps restant (ici la distance de Manhattan, à 1 minute par pâté de
+      maisons). Une heuristique « admissible » (h ≤ vrai coût) garantit l'optimalité. La
+      troisième méthode prend f = g + 5h : beaucoup moins de carrefours examinés, mais plus de
+      garantie. Les calculateurs d'itinéraires réels prétraitent en plus le réseau routier pour
+      répondre en quelques millisecondes.
+    </p>
+    <div slot="histoire" data-a-sourcer="astar"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Trop de tournées" ancre="tournee">
+    <Tournee slot="animation" />
+    <p slot="decouverte">
+      Un livreur doit passer par 8 hameaux et revenir au départ, par le chemin le plus court.
+      Trace ta tournée, puis compare avec l'ordinateur. Pour 8 hameaux, il peut tout essayer.
+      Pour 30, plus du tout.
+    </p>
+    <p slot="curieux">
+      C'est le problème du voyageur de commerce. Le nombre de tournées explose avec le nombre
+      de villes : on dit que le problème est « combinatoire ». Personne ne connaît de méthode
+      rapide qui garantisse la meilleure tournée pour un grand nombre de villes. En pratique,
+      on se contente de très bonnes tournées, trouvées par des méthodes approchées : les
+      heuristiques.
+    </p>
+    <p slot="ingenieur">
+      Pour n villes, il y a (n − 1)!/2 tournées. Le problème est NP-difficile. Les méthodes
+      exactes (séparation et évaluation, plans de coupe) savent pourtant résoudre des
+      instances de dizaines de milliers de villes, au prix d'énormes calculs. « Au plus
+      proche » est glouton ; 2-opt est une recherche locale : on améliore une solution par
+      petites modifications jusqu'à ne plus pouvoir.
+    </p>
+    <div slot="histoire" data-a-sourcer="voyageur"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="S'inspirer des fourmis" ancre="fourmis">
+    <Fourmis slot="animation" />
+    <p slot="decouverte">
+      Une fourmi seule ne sait pas trouver le plus court chemin. Une colonie, si : chaque
+      fourmi laisse une trace chimique, la phéromone, et préfère suivre les traces les plus
+      fortes. Des fourmis virtuelles font la même chose sur 20 villes.
+    </p>
+    <p slot="curieux">
+      Les routes courtes sont parcourues plus vite, donc renforcées plus souvent ; la
+      phéromone des autres s'évapore. La bonne solution émerge sans chef. On parle
+      d'intelligence collective, ou « en essaim ». D'autres méthodes imitent les vols
+      d'oiseaux ou les bancs de poissons.
+    </p>
+    <p slot="ingenieur">
+      Ant System : la fourmi en i choisit j avec une probabilité proportionnelle à τᵢⱼ^α ·
+      (1/dᵢⱼ)^β (ici α = 1, β = 3) ; après chaque génération, τ ← (1 − ρ)·τ (évaporation,
+      ρ = 0,3), puis chaque fourmi dépose une quantité inversement proportionnelle à la
+      longueur de sa tournée. C'est une méthode « métaheuristique » : elle ne garantit pas
+      l'optimum.
+    </p>
+    <div slot="histoire" data-a-sourcer="fourmis"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="S'inspirer de l'évolution" ancre="evolution">
+    <Evolution slot="animation" />
+    <p slot="decouverte">
+      Quoi emporter en randonnée, sans dépasser 9 kg ? Un <Terme
+      id="algorithme-genetique">algorithme génétique</Terme> fait « évoluer » une population de
+      sacs : les meilleurs se reproduisent, se mélangent, et mutent un peu.
+    </p>
+    <p slot="curieux">
+      Chaque sac est une suite de 0 et de 1 (un objet emporté ou non), comme un petit
+      « génome ». La sélection favorise les sacs utiles et pas trop lourds ; le croisement
+      mélange deux bons sacs ; la mutation apporte de la nouveauté. Sur 32 768 sacs possibles,
+      l'algorithme n'en examine que quelques centaines.
+    </p>
+    <p slot="ingenieur">
+      Population de 24, sélection par tournoi entre deux individus, croisement en un point,
+      mutation de chaque gène avec une probabilité de 5 %, élitisme (les deux meilleurs sont
+      gardés). Un sac trop lourd est pénalisé de 50 points par kilo en trop. Ici, on peut
+      vérifier le résultat en essayant les 2¹⁵ sacs ; pour 100 objets, ce serait impossible.
+    </p>
+    <div slot="histoire" data-a-sourcer="genetique"><p>À compléter.</p></div>
+    <p slot="mythes">
+      <strong>« Les IA qui imitent la nature sont plus intelligentes. »</strong> Fourmis et
+      évolution sont des images utiles, pas des garanties. Sur beaucoup de problèmes, une
+      méthode mathématique classique fait mieux. Elles servent surtout quand le problème est
+      trop irrégulier pour les méthodes exactes.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Qui choisit ce qu'on optimise ?</h2>
+    <p>
+      Un algorithme d'optimisation trouve « le meilleur »… selon un critère choisi par des
+      humains. Changer de critère, c'est changer de résultat.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Problème</th><th scope="col">On peut optimiser…</th><th scope="col">… ou plutôt</th></tr></thead>
+      <tbody>
+        <tr><td>Itinéraire</td><td>le temps de trajet</td><td>la distance, la consommation, la tranquillité des quartiers traversés</td></tr>
+        <tr><td>Tournée de livraison</td><td>les kilomètres</td><td>les horaires et les pauses des livreur·ses</td></tr>
+        <tr><td>Emploi du temps</td><td>le nombre de salles utilisées</td><td>les trous dans la journée des élèves</td></tr>
+        <tr><td>Planning d'hôpital</td><td>le coût</td><td>la fatigue des équipes, la continuité des soins</td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
