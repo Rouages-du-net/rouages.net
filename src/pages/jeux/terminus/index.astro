@@ -1,7 +1,10 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Sources from '../../../components/Sources.astro';
-import { CHAPITRES } from '../../../scripts/terminus/chapitres';
+import { HISTOIRES } from '../../../scripts/terminus/chapitres';
+
+// Espaces insécables de la typographie française (avant : ; ! ? », après «).
+const typo = (t: string) => t.replace(/« /g, '«\u00a0').replace(/ ([:;!?»])/g, '\u00a0$1');
 ---
 <Base
   title="Terminus"
@@ -10,30 +13,45 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
   <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
   <h1>Terminus <small class="tag">en français</small></h1>
   <p class="intro">
-    Un jeu d'aventure où l'on se déplace avec de <strong>vraies commandes Linux</strong>.
-    Chaque lieu est un dossier, chaque objet un fichier. L'Effaceur ravage le royaume :
-    à toi de réparer ce qu'il a détruit, une commande après l'autre.
+    Des jeux d'aventure où l'on agit avec de <strong>vraies commandes Linux</strong>. Chaque
+    lieu est un dossier, chaque objet un fichier. Cinq histoires indépendantes : commence par
+    l'Effaceur si tu n'as jamais ouvert un terminal.
   </p>
 
   <noscript>
     <p class="anim-cadre">Ce jeu a besoin de JavaScript pour simuler un terminal dans ton navigateur.</p>
   </noscript>
 
-  <nav class="chapitres" aria-label="Chapitres" hidden>
+  <nav class="histoires" aria-label="Histoires" hidden>
     <ol>
-      {CHAPITRES.map((c, i) => (
+      {HISTOIRES.map((h, i) => (
         <li>
-          <button type="button" data-chapitre={i}>
-            <span class="num">Chapitre {c.numero}</span>
-            <span class="titre">{c.titre}</span>
-            <span class="resume">{c.resume}</span>
+          <button type="button" data-histoire={i}>
+            <span class="titre">{h.titre}</span>
+            <span class="resume">{typo(h.resume)}</span>
             <span class="etat"></span>
           </button>
         </li>
       ))}
-      <li class="bientot"><span class="num">Chapitre 3</span><span class="titre">Le Noyau</span><span class="resume">Bientôt : sudo, les permissions, et l'Effaceur en personne.</span></li>
     </ol>
   </nav>
+
+  {HISTOIRES.map((h, i) => h.chapitres.length > 1 && (
+    <nav class="chapitres" aria-label={`Chapitres de « ${h.titre} »`} data-chapitres={i} hidden>
+      <ol>
+        {h.chapitres.map((c, j) => (
+          <li>
+            <button type="button" data-chapitre={j}>
+              <span class="num">Chapitre {c.numero}</span>
+              <span class="titre">{c.titre}</span>
+              <span class="resume">{typo(c.resume)}</span>
+              <span class="etat"></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  ))}
 
   <div class="terminal" id="terminal">
     <div id="sortie" role="log" aria-live="polite"></div>
@@ -54,9 +72,11 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
   </p>
 
   <p class="tag">
-    Inspiré de <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>,
+    L'Effaceur s'inspire de <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>,
     créé au MIT par Shawn Conrad et Michele Pratusevich (en anglais) : même progression des
-    commandes, histoire et textes réécrits en français pour Les rouages du net.
+    commandes, histoire et textes réécrits en français pour Les rouages du net. Les autres
+    histoires sont originales. Les commandes répondent souvent en anglais, comme sur un vrai
+    système ; les adresses et les noms de domaine utilisés sont réservés aux exemples.
   </p>
 
   <Sources
@@ -69,6 +89,12 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
         auteur: 'Shawn Conrad, Michele Pratusevich (MIT)',
         langue: 'en',
       },
+      { auteur: 'RFC Editor', titre: 'RFC 5737 — adresses IPv4 réservées à la documentation', url: 'https://www.rfc-editor.org/rfc/rfc5737', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6761 — noms de domaine réservés (.example…)', url: 'https://www.rfc-editor.org/rfc/rfc6761', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'nginx', titre: 'Module ngx_http_access_module (directive deny)', url: 'https://nginx.org/en/docs/http/ngx_http_access_module.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Git', titre: 'Documentation de git (git-restore, git-log, git-diff…)', url: 'https://git-scm.com/docs', type: 'primaire', langue: 'en' },
+      { auteur: 'S. Chacon, B. Straub', titre: 'Pro Git — A Short History of Git', url: 'https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git', type: 'site', langue: 'en' },
+      { auteur: 'Quad9', titre: 'Le résolveur DNS public 9.9.9.9', url: 'https://www.quad9.net/', type: 'site', langue: 'en' },
     ]}
   />
 </Base>
@@ -100,7 +126,7 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     caret-color: var(--terminal-fg);
   }
   .intro { max-width: var(--mesure); }
-  .chapitres ol {
+  .histoires ol, .chapitres ol {
     list-style: none;
     margin: 1.5rem 0;
     padding: 0;
@@ -108,7 +134,7 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     gap: 0.75rem;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   }
-  .chapitres button, .bientot {
+  .histoires button, .chapitres button {
     display: grid;
     gap: 0.15rem;
     width: 100%;
@@ -121,18 +147,20 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     background: var(--card);
     color: var(--fg);
   }
-  .chapitres button { cursor: pointer; }
+  .histoires button, .chapitres button { cursor: pointer; }
   .chapitres button:disabled { cursor: default; opacity: 0.6; }
-  .chapitres button[aria-current='true'] { border: 2px solid var(--accent); }
-  .bientot { border-style: dashed; color: var(--muted); }
+  .histoires button[aria-current='true'], .chapitres button[aria-current='true'] { border: 2px solid var(--accent); }
+  .chapitres ol { margin-top: -0.5rem; }
+  .histoires ol { grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); }
+  .chapitres button { background: var(--bg); }
   .num { font-size: 0.8rem; color: var(--muted); }
   .titre { font-weight: 700; }
   .resume { font-size: 0.9rem; color: var(--muted); }
   .etat { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
   .fin { margin-top: 1rem; }
   @media (max-width: 40rem) {
-    .chapitres ol { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-    .chapitres .resume { display: none; }
+    .histoires ol, .chapitres ol { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .histoires .resume, .chapitres .resume { display: none; }
   }
   .astuces { margin-top: 1rem; }
   .lien { font: inherit; background: none; border: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; }
@@ -141,7 +169,7 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
 
 <script>
   import { Shell } from '../../../scripts/terminus/shell';
-  import { CHAPITRES } from '../../../scripts/terminus/chapitres';
+  import { HISTOIRES } from '../../../scripts/terminus/chapitres';
 
   const CLE = 'rouages-terminus';
   const terminal = document.getElementById('terminal')!;
@@ -150,20 +178,24 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
   const saisie = document.getElementById('saisie') as HTMLInputElement;
   const invite = document.getElementById('invite')!;
   const fin = document.getElementById('fin')!;
-  const nav = document.querySelector<HTMLElement>('.chapitres')!;
-  const boutons = [...nav.querySelectorAll<HTMLButtonElement>('[data-chapitre]')];
+  const navHistoires = document.querySelector<HTMLElement>('.histoires')!;
+  const boutonsHistoires = [...navHistoires.querySelectorAll<HTMLButtonElement>('[data-histoire]')];
 
-  // Progression : la liste des chapitres terminés, gardée dans ce navigateur.
+  // Progression gardée dans ce navigateur : chapitres terminés, histoire en cours.
   let termines: string[] = [];
+  let histoire = 0;
   try {
-    termines = JSON.parse(localStorage.getItem(CLE) ?? '[]').termines ?? [];
+    const sauve = JSON.parse(localStorage.getItem(CLE) ?? '{}');
+    termines = sauve.termines ?? [];
+    histoire = Math.max(0, HISTOIRES.findIndex((h) => h.id === sauve.histoire));
   } catch {}
   const sauver = () => {
     try {
-      localStorage.setItem(CLE, JSON.stringify({ termines }));
+      localStorage.setItem(CLE, JSON.stringify({ termines, histoire: HISTOIRES[histoire].id }));
     } catch {}
   };
-  const ouvert = (i: number) => i === 0 || termines.includes(CHAPITRES[i - 1].id);
+  const chapitres = (h: number) => HISTOIRES[h].chapitres;
+  const ouvert = (h: number, c: number) => c === 0 || termines.includes(chapitres(h)[c - 1].id);
 
   let shell: Shell;
   let courant = 0;
@@ -178,52 +210,81 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
     sortie.appendChild(pre);
   };
 
+  const majInvite = () => {
+    invite.textContent = shell.invite();
+    saisie.type = shell.attente ? 'password' : 'text';
+  };
+
   const majNav = () => {
-    boutons.forEach((b, i) => {
-      b.disabled = !ouvert(i);
-      b.setAttribute('aria-current', String(i === courant));
-      b.querySelector('.etat')!.textContent = termines.includes(CHAPITRES[i].id)
-        ? '✓ Terminé'
-        : ouvert(i)
-          ? ''
-          : '🔒 Termine le chapitre précédent';
+    boutonsHistoires.forEach((b, h) => {
+      b.setAttribute('aria-current', String(h === histoire));
+      const faits = chapitres(h).filter((c) => termines.includes(c.id)).length;
+      const total = chapitres(h).length;
+      b.querySelector('.etat')!.textContent =
+        faits === total ? '✓ Terminée' : total > 1 ? `${faits} chapitre${faits > 1 ? 's' : ''} sur ${total}` : '';
+    });
+    document.querySelectorAll<HTMLElement>('[data-chapitres]').forEach((nav) => {
+      const h = Number(nav.dataset.chapitres);
+      nav.hidden = h !== histoire;
+      nav.querySelectorAll<HTMLButtonElement>('[data-chapitre]').forEach((b, c) => {
+        b.disabled = !ouvert(h, c);
+        b.setAttribute('aria-current', String(h === histoire && c === courant));
+        b.querySelector('.etat')!.textContent = termines.includes(chapitres(h)[c].id)
+          ? '✓ Terminé'
+          : ouvert(h, c)
+            ? ''
+            : '🔒 Termine le chapitre précédent';
+      });
     });
   };
 
-  const demarrer = (i: number) => {
-    courant = i;
-    shell = new Shell(CHAPITRES[i]);
+  const demarrer = (h: number, c: number) => {
+    histoire = h;
+    courant = c;
+    const chapitre = chapitres(h)[c];
+    shell = new Shell(chapitre);
     sortie.replaceChildren();
     fin.hidden = true;
-    afficher(`— Chapitre ${CHAPITRES[i].numero} : ${CHAPITRES[i].titre} —`);
-    afficher(shell.executer(`cat ${CHAPITRES[i].accueil}`) ?? '');
-    invite.textContent = shell.invite();
+    const titre = chapitres(h).length > 1 ? `${HISTOIRES[h].titre} — chapitre ${chapitre.numero} : ${chapitre.titre}` : HISTOIRES[h].titre;
+    afficher(`— ${titre} —`);
+    afficher(shell.executer(`cat ${chapitre.accueil}`) ?? '');
+    majInvite();
     majNav();
+    sauver();
+  };
+
+  // Reprend une histoire à son premier chapitre pas encore terminé.
+  const reprendre = (h: number) => {
+    const c = chapitres(h).findIndex((ch) => !termines.includes(ch.id));
+    demarrer(h, c === -1 ? chapitres(h).length - 1 : c);
   };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const ligne = saisie.value;
-    afficher(`${invite.textContent} ${ligne}`, 'cmd');
-    if (ligne.trim()) historique.push(ligne);
+    // Un mot de passe ne s'affiche pas et ne va pas dans l'historique.
+    const secret = shell.attente !== null;
+    afficher(secret ? (invite.textContent ?? '') : `${invite.textContent} ${ligne}`, 'cmd');
+    if (ligne.trim() && !secret) historique.push(ligne);
     position = historique.length;
     const dejaFini = shell.termine;
     const resultat = shell.executer(ligne);
     if (resultat === null) sortie.replaceChildren();
     else afficher(resultat);
     if (shell.termine && !dejaFini) {
-      const id = CHAPITRES[courant].id;
+      const id = chapitres(histoire)[courant].id;
       if (!termines.includes(id)) termines.push(id);
       sauver();
       majNav();
-      fin.hidden = courant >= CHAPITRES.length - 1;
+      fin.hidden = courant >= chapitres(histoire).length - 1;
     }
     saisie.value = '';
-    invite.textContent = shell.invite();
+    majInvite();
     terminal.scrollTop = terminal.scrollHeight;
   });
 
   saisie.addEventListener('keydown', (e) => {
+    if (shell.attente) return;
     if (e.key === 'Tab') {
       e.preventDefault();
       saisie.value = shell.completer(saisie.value);
@@ -240,21 +301,30 @@ import { CHAPITRES } from '../../../scripts/terminus/chapitres';
   terminal.addEventListener('click', () => {
     if (!window.getSelection()?.toString()) saisie.focus();
   });
-  boutons.forEach((b, i) => b.addEventListener('click', () => {
-    demarrer(i);
-    saisie.focus();
-  }));
+  boutonsHistoires.forEach((b, h) =>
+    b.addEventListener('click', () => {
+      reprendre(h);
+      saisie.focus();
+    }),
+  );
+  document.querySelectorAll<HTMLElement>('[data-chapitres]').forEach((nav) => {
+    const h = Number(nav.dataset.chapitres);
+    nav.querySelectorAll<HTMLButtonElement>('[data-chapitre]').forEach((b, c) =>
+      b.addEventListener('click', () => {
+        demarrer(h, c);
+        saisie.focus();
+      }),
+    );
+  });
   document.getElementById('suivant')!.addEventListener('click', () => {
-    demarrer(courant + 1);
+    demarrer(histoire, courant + 1);
     saisie.focus();
   });
   document.getElementById('recommencer')!.addEventListener('click', () => {
-    demarrer(courant);
+    demarrer(histoire, courant);
     saisie.focus();
   });
 
-  nav.hidden = false;
-  // On reprend au premier chapitre pas encore terminé.
-  const reprise = CHAPITRES.findIndex((c) => !termines.includes(c.id));
-  demarrer(reprise === -1 ? CHAPITRES.length - 1 : reprise);
+  navHistoires.hidden = false;
+  reprendre(histoire);
 </script>

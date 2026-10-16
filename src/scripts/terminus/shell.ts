@@ -1,50 +1,72 @@
 // Un mini-shell qui interprète de vraies commandes Linux sur le monde d'un
 // chapitre. Les comportements suivent ceux de Linux (messages simplifiés et
-// traduits) ; les écarts volontaires sont signalés en commentaire.
+// traduits) ; les écarts volontaires sont signalés en commentaire et listés
+// dans docs/scenarios/terminus.md.
+//
+// Comme un vrai shell : la ligne est découpée en mots (guillemets compris),
+// les jokers * et ? sont développés, les commandes reliées par des tubes |
+// (la sortie de l'une devient l'entrée de la suivante), et la sortie finale
+// peut être redirigée dans un fichier (> écrase, >> ajoute). Les messages
+// d'erreur ne passent pas dans les tubes (sortie d'erreur séparée).
 
-import { nettoyer, type Chapitre, type Dossier, type Fichier, type Noeud } from './monde';
+import { nettoyer, type Chapitre, type Dossier, type Noeud } from './monde';
+import { COMMANDES, type Commande } from './commandes';
 
-export const MANUEL: Record<string, string> = {
-  ls: 'ls [-a] [lieu] — liste le contenu d’un lieu (list). -a montre aussi les fichiers cachés, dont le nom commence par un point.',
-  cd: 'cd lieu — change de lieu (change directory). « cd .. » remonte d’un cran, « cd ~ » ou « cd » seul ramène à la maison, « cd / » à la racine.',
-  pwd: 'pwd — affiche le chemin complet du lieu où tu es (print working directory).',
-  cat: 'cat fichier — affiche le contenu d’un fichier (concatenate : il peut en coller plusieurs bout à bout).',
-  less: 'less fichier — affiche un fichier page par page. Ici, les fichiers sont courts : less fait comme cat.',
-  mv: 'mv source destination — déplace un fichier dans un lieu (move), ou le renomme si la destination est un nouveau nom.',
-  rm: 'rm fichier — efface un fichier (remove). Attention : sous Linux, il n’y a pas de corbeille, c’est définitif.',
-  touch: 'touch fichier — crée un fichier vide (ou met à jour sa date s’il existe déjà).',
-  cp: 'cp source destination — copie un fichier (copy). L’original reste en place.',
-  mkdir: 'mkdir lieu — crée un nouveau lieu, c’est-à-dire un dossier (make directory).',
-  grep: 'grep [-i] motif fichier... — affiche les lignes qui contiennent le motif. -i ignore les majuscules. « grep mot * » cherche dans tous les fichiers du lieu.',
-  man: 'man commande — affiche le manuel d’une commande (manual).',
-  clear: 'clear — efface l’écran.',
-  aide: 'aide — liste les commandes que tu connais.',
-};
+export { decouper, appliquerMode } from './outils';
+import { contenu, decouper, joker, tailleDe, type Mot } from './outils';
 
-// Ce que le jeu (et les chapitres) peuvent consulter ou modifier.
+// Ce que le jeu (les chapitres et les commandes) peut consulter ou modifier.
 export interface Jeu {
   racine: Dossier;
   cwd: string;
   drapeaux: Set<string>;
   maison: string;
+  etat: Record<string, any>;
+  // Utilisateur qui agit pour la commande en cours : « vous », ou « root » sous sudo.
+  qui: string;
+  // La dernière ligne exécutée (pour les événements) : commandes du tube,
+  // sortie produite (avant redirection), fichier de redirection.
+  derniere: { ligne: string; commandes: string[][]; sortie: string; erreurs: string[]; redirection: string | null };
   trouver(chemin: string): Noeud | null;
   existe(chemin: string): boolean;
+  lire(chemin: string): string | null;
   compter(lieu: string, prefixe: string): number;
   effacer(chemin: string): void;
+  peut(n: Noeud, droit: 'r' | 'w' | 'x', utilisateur?: string): boolean;
 }
+
+// Message que sudo affiche la première fois qu'on l'utilise (traduit).
+const SERMON = `Nous espérons que vous avez reçu les instructions habituelles de l'administrateur système local. Cela se résume généralement à ces trois choses :
+
+    #1) Respectez la vie privée des autres.
+    #2) Réfléchissez avant de taper.
+    #3) De grands pouvoirs confèrent de grandes responsabilités.`;
+
 
 export class Shell implements Jeu {
   racine: Dossier;
   cwd: string;
   maison: string;
   drapeaux = new Set<string>();
+  etat: Record<string, any>;
   termine = false;
+  qui = 'vous';
+  derniere: Jeu['derniere'] = { ligne: '', commandes: [], sortie: '', erreurs: [], redirection: null };
+  // sudo : mot de passe déjà donné ? ligne en attente du mot de passe ?
+  private authentifie = false;
+  private sermonFait = false;
+  attente: { ligne: string; essais: number } | null = null;
+  // Sortie d'erreur et remarques de la ligne en cours.
+  private erreurs: string[] = [];
 
   constructor(public chapitre: Chapitre) {
     this.racine = chapitre.creerMonde();
     this.maison = chapitre.maison;
     this.cwd = chapitre.maison;
+    this.etat = chapitre.etat?.() ?? {};
   }
+
+  // ——— Chemins et fichiers ———
 
   // Chemin (relatif, absolu, ~, ..) → chemin absolu normalisé.
   resoudre(chemin: string): string {
@@ -72,6 +94,11 @@ export class Shell implements Jeu {
     return this.trouver(chemin) !== null;
   }
 
+  lire(chemin: string): string | null {
+    const n = this.trouver(chemin);
+    return n?.type === 'fichier' ? contenu(n, this) : null;
+  }
+
   compter(lieu: string, prefixe: string): number {
     const n = this.trouver(lieu);
     return n?.type === 'dossier' ? Object.keys(n.enfants).filter((k) => k.startsWith(prefixe)).length : 0;
@@ -81,6 +108,39 @@ export class Shell implements Jeu {
     const absolu = this.resoudre(chemin);
     const parent = this.trouver(absolu + '/..');
     if (parent?.type === 'dossier') delete parent.enfants[absolu.split('/').pop()!];
+  }
+
+  nom(chemin: string): string {
+    return this.resoudre(chemin).split('/').pop()!;
+  }
+
+  // ——— Permissions ———
+
+  // Permissions Unix simplifiées : on ne gère pas les groupes (tu n'es dans
+  // le groupe de personne), seulement le propriétaire et « les autres ».
+  // root a tous les droits.
+  peut(n: Noeud, droit: 'r' | 'w' | 'x', utilisateur = this.qui): boolean {
+    if (utilisateur === 'root') return true;
+    const mode = n.mode ?? (n.type === 'dossier' ? 'rwxr-xr-x' : 'rw-r--r--');
+    const triplet = (n.proprio ?? 'vous') === utilisateur ? mode.slice(0, 3) : mode.slice(6, 9);
+    return triplet.includes(droit);
+  }
+
+  // Droit de traverser (x) chaque lieu qui mène à ce chemin (sans le dernier).
+  traverse(chemin: string): boolean {
+    let n: Noeud | undefined = this.racine;
+    for (const p of this.resoudre(chemin).split('/').filter(Boolean)) {
+      if (!n || n.type !== 'dossier') return true;
+      if (!this.peut(n, 'x')) return false;
+      n = n.enfants[p];
+    }
+    return true;
+  }
+
+  // Droit d'écrire dans le lieu qui contient ce chemin (créer, effacer, déplacer).
+  ecritDans(chemin: string): boolean {
+    const parent = this.trouver(chemin + '/..');
+    return !!parent && this.traverse(chemin + '/..') && this.peut(parent, 'x') && this.peut(parent, 'w');
   }
 
   // Raison du premier lieu bloqué traversé par ce chemin, sinon null.
@@ -95,8 +155,65 @@ export class Shell implements Jeu {
     return null;
   }
 
+  // Lit un fichier pour une commande, avec les vérifications d'usage ; en
+  // cas de problème, écrit l'erreur et renvoie null.
+  lirePour(cmd: string, cible: string): string | null {
+    const n = this.trouver(cible);
+    if (!n) return this.erreur(`${cmd} : ${cible} : aucun fichier ou dossier de ce nom`), null;
+    if (n.type === 'dossier') return this.erreur(`${cmd} : ${cible} : est un dossier`), null;
+    const raison = this.blocage(cible);
+    if (raison) return this.erreur(raison), null;
+    if (!this.traverse(cible) || !this.peut(n, 'r')) return this.erreur(`${cmd} : ${cible} : Permission non accordée`), null;
+    if (n.archive) return this.erreur(`${cmd} : ${cible} : fichier binaire (une archive : pour voir ce qu'elle contient, tar -tf ${cible})`), null;
+    return contenu(n, this);
+  }
+
+  // Place un nœud dans un lieu (création, copie, déplacement), en vérifiant
+  // les droits et la place disponible sur le support. Renvoie une erreur.
+  placer(cmd: string, chemin: string, n: Noeud): string | null {
+    const parent = this.trouver(chemin + '/..');
+    if (parent?.type !== 'dossier') return `${cmd} : ${chemin} : aucun fichier ou dossier de ce nom`;
+    const raison = this.blocage(chemin + '/..');
+    if (raison) return raison;
+    if (!this.ecritDans(chemin)) return `${cmd} : impossible de créer '${chemin}' : Permission non accordée`;
+    const nom = this.nom(chemin);
+    const ancien = parent.enfants[nom];
+    if (this.placeManquante(this.resoudre(chemin), n, ancien)) return `${cmd} : erreur d'écriture : Aucun espace disponible sur le périphérique`;
+    parent.enfants[nom] = n;
+    return null;
+  }
+
+  // Taille d'un nœud en octets (un lieu : la somme de son contenu).
+  taille(n: Noeud): number {
+    if (n.type === 'fichier') return tailleDe(n, this);
+    return Object.values(n.enfants).reduce((t, e) => t + this.taille(e), 0);
+  }
+
+  // Les supports montés (clé USB…) ont une capacité : etat.montages.
+  montage(absolu: string): { chemin: string; capacite: number } | null {
+    const montages: { chemin: string; capacite: number }[] = this.etat.montages ?? [];
+    return montages.find((m) => absolu === m.chemin || absolu.startsWith(m.chemin + '/')) ?? null;
+  }
+
+  private placeManquante(absolu: string, n: Noeud, ancien?: Noeud): boolean {
+    const m = this.montage(absolu);
+    if (!m) return false;
+    const lieu = this.trouver(m.chemin);
+    const utilise = lieu ? this.taille(lieu) : 0;
+    return utilise - (ancien ? this.taille(ancien) : 0) + this.taille(n) > m.capacite;
+  }
+
+  // ——— Sorties ———
+
+  erreur(message: string): '' {
+    this.erreurs.push(message);
+    return '';
+  }
+
   invite(): string {
-    const ici = this.cwd === this.maison ? '~' : this.cwd.startsWith(this.maison + '/') ? '~' + this.cwd.slice(this.maison.length) : this.cwd;
+    if (this.attente) return '[sudo] Mot de passe de vous :';
+    const ici =
+      this.cwd === this.maison ? '~' : this.cwd.startsWith(this.maison + '/') ? '~' + this.cwd.slice(this.maison.length) : this.cwd;
     return `vous@rouages:${ici}$`;
   }
 
@@ -108,8 +225,8 @@ export class Shell implements Jeu {
     const base = i >= 0 ? mot.slice(0, i + 1) : '';
     const motif = mot.slice(i + 1);
     const lieu = this.trouver(base || '.');
-    if (lieu?.type !== 'dossier' || this.blocage(base || '.')) return [mot];
-    const re = new RegExp('^' + motif.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+    if (lieu?.type !== 'dossier' || this.blocage(base || '.') || !this.peut(lieu, 'r')) return [mot];
+    const re = joker(motif);
     const trouves = Object.keys(lieu.enfants)
       .filter((n) => re.test(n) && (motif.startsWith('.') || !n.startsWith('.')))
       .sort((a, b) => a.localeCompare(b, 'fr'))
@@ -121,9 +238,10 @@ export class Shell implements Jeu {
   completer(ligne: string): string {
     const mots = ligne.split(' ');
     const dernier = mots.pop() ?? '';
-    if (mots.length === 0) {
+    const avant = mots.filter(Boolean);
+    if (avant.length === 0 || avant.at(-1) === 'sudo' || avant.at(-1) === '|') {
       const cmds = this.connues().filter((c) => c.startsWith(dernier));
-      return cmds.length === 1 ? cmds[0] + ' ' : ligne;
+      return cmds.length === 1 ? [...mots, cmds[0] + ' '].join(' ') : ligne;
     }
     const i = dernier.lastIndexOf('/');
     const base = i >= 0 ? dernier.slice(0, i + 1) : '';
@@ -148,56 +266,143 @@ export class Shell implements Jeu {
     return [...this.chapitre.commandes, 'man', 'clear', 'aide'];
   }
 
-  // Exécute une ligne ; renvoie le texte à afficher, ou null pour « clear ».
-  executer(ligne: string): string | null {
-    const [cmd, ...bruts] = ligne.trim().split(/\s+/);
-    const args = bruts.flatMap((a) => this.developper(a));
-    let sortie: string | null;
-    if (cmd && cmd !== 'help' && !this.connues().includes(cmd)) {
-      sortie = MANUEL[cmd] || cmd === 'sudo'
-        ? `${cmd} : tu ne connais pas encore cette commande. Tu l’apprendras plus loin dans l’aventure.`
-        : `${cmd} : commande introuvable. Tape « aide » pour la liste.`;
-    } else sortie = this.lancer(cmd, args);
-    if (sortie === null) return null;
-    return [sortie, ...this.verifierEvenements()].filter(Boolean).join('\n\n');
+  manuel(cmd: string): string | null {
+    return this.connues().includes(cmd) ? (COMMANDES[cmd]?.manuel ?? null) : null;
   }
 
-  private lancer(cmd: string, args: string[]): string | null {
-    switch (cmd) {
-      case '':
-        return '';
-      case 'aide':
-      case 'help':
-        return `Commandes connues : ${this.connues().join(', ')}.\nTape « man commande » pour en savoir plus.`;
-      case 'man':
-        return args[0] && MANUEL[args[0]] && this.connues().includes(args[0])
-          ? MANUEL[args[0]]
-          : 'Usage : man commande (ex. : man ls)';
-      case 'clear':
-        return null;
-      case 'pwd':
-        return this.cwd;
-      case 'ls':
-        return this.ls(args);
-      case 'cd':
-        return this.cd(args[0] ?? '~');
-      case 'cat':
-      case 'less':
-        return this.cat(cmd, args);
-      case 'mv':
-        return this.mv(args);
-      case 'cp':
-        return this.cp(args);
-      case 'rm':
-        return this.rm(args);
-      case 'touch':
-        return this.touch(args);
-      case 'mkdir':
-        return this.mkdir(args);
-      case 'grep':
-        return this.grep(args);
-      default:
-        return '';
+  // ——— Exécution ———
+
+  // Exécute une ligne ; renvoie le texte à afficher, ou null pour « clear ».
+  // Si sudo attend un mot de passe, la ligne est ce mot de passe.
+  executer(ligne: string): string | null {
+    if (this.attente) return this.motDePasse(ligne);
+    const mots = decouper(ligne);
+    if (!mots.length) return '';
+    if (mots.length === 1 && mots[0].texte === 'clear' && !mots[0].cite) return null;
+    // sudo demande le mot de passe avant de lancer quoi que ce soit.
+    const avecSudo = mots.some((m, i) => !m.cite && m.texte === 'sudo' && (i === 0 || mots[i - 1].op === '|'));
+    if (avecSudo && this.connues().includes('sudo') && !this.authentifie) {
+      this.attente = { ligne, essais: 0 };
+      const sermon = this.sermonFait ? '' : SERMON;
+      this.sermonFait = true;
+      return sermon;
+    }
+    return this.conclure(this.tube(ligne, mots), true);
+  }
+
+  private motDePasse(saisie: string): string {
+    const attente = this.attente!;
+    if (saisie === this.chapitre.motDePasse) {
+      this.attente = null;
+      this.authentifie = true;
+      return this.conclure(this.tube(attente.ligne, decouper(attente.ligne)), true);
+    }
+    attente.essais++;
+    if (attente.essais < 3) return 'Désolé, essayez de nouveau.';
+    this.attente = null;
+    return 'sudo : 3 saisies de mots de passe incorrectes';
+  }
+
+  private conclure(sortie: string, compte: boolean): string {
+    const suite = compte ? this.chapitre.apresCommande?.(this) : undefined;
+    return [sortie, suite ? nettoyer(suite) : '', ...this.verifierEvenements()].filter(Boolean).join('\n\n');
+  }
+
+  // Une ligne complète : commandes reliées par des tubes, redirection finale.
+  private tube(ligne: string, mots: Mot[]): string {
+    this.erreurs = [];
+    const segments: Mot[][] = [[]];
+    let redirection: { fichier: string; ajout: boolean } | null = null;
+    for (let i = 0; i < mots.length; i++) {
+      const m = mots[i];
+      if (m.op === '|') segments.push([]);
+      else if (m.op === '>' || m.op === '>>') {
+        const cible = mots[i + 1];
+        if (!cible || cible.op) return 'erreur de syntaxe : il manque un nom de fichier après ' + m.op;
+        redirection = { fichier: cible.texte, ajout: m.op === '>>' };
+        i++;
+      } else segments.at(-1)!.push(m);
+    }
+    if (segments.some((s) => !s.length)) return 'erreur de syntaxe près du symbole « | »';
+
+    let entree: string | null = null;
+    const commandes: string[][] = [];
+    segments.forEach((segment, i) => {
+      // Comme le shell : les jokers ne sont pas développés entre guillemets.
+      let args = segment.flatMap((m) => (m.cite ? [m.texte] : this.developper(m.texte)));
+      let root = false;
+      if (args[0] === 'sudo') {
+        args = args.slice(1);
+        root = true;
+      }
+      commandes.push(args);
+      const dernier = i === segments.length - 1 && !redirection;
+      entree = this.lancer(args, entree, root, dernier);
+    });
+    let sortie: string = entree ?? '';
+    this.derniere = { ligne, commandes, sortie, erreurs: this.erreurs, redirection: redirection ? this.resoudre(redirection.fichier) : null };
+
+    if (redirection) {
+      // La redirection est faite par TON shell, avant sudo : même avec sudo
+      // devant la commande, c'est « vous » qui écrit dans le fichier.
+      const erreur = this.rediriger(redirection.fichier, sortie, redirection.ajout);
+      if (erreur) {
+        this.erreur(erreur);
+        if (/(^|\|)\s*sudo\s/.test(ligne))
+          this.erreur(
+            '(La redirection > est faite par ton propre shell, pas par sudo. Astuce : envoie le texte dans « sudo tee -a fichier », qui écrit en tant que root.)',
+          );
+      }
+      sortie = '';
+    }
+    return [...this.erreurs, sortie].filter(Boolean).join('\n');
+  }
+
+  private rediriger(fichier: string, texte: string, ajout: boolean): string | null {
+    const n = this.trouver(fichier);
+    if (n?.type === 'dossier') return `${fichier} : est un dossier`;
+    if (n) {
+      if (!this.traverse(fichier) || !this.peut(n, 'w')) return `${fichier} : Permission non accordée`;
+      const avant = contenu(n, this);
+      n.contenu = ajout && avant ? `${avant}\n${texte}` : texte;
+      n.lignes = true;
+      delete n.taille;
+      return null;
+    }
+    const erreur = this.placer('bash', fichier, { type: 'fichier', contenu: texte, proprio: this.qui, lignes: true });
+    return erreur ? erreur.replace(/^bash : impossible de créer '[^']*' : /, `${fichier} : `) : null;
+  }
+
+  // Lance une commande. `dernier` : sa sortie s'affiche à l'écran (sinon elle
+  // part dans un tube ou un fichier).
+  private lancer(args: string[], entree: string | null, root: boolean, dernier: boolean): string {
+    const [cmd, ...reste] = args;
+    if (!cmd) return '';
+    if (root && !this.connues().includes('sudo')) return this.erreur(`sudo : tu n’as pas encore cette commande dans ce chapitre.`);
+    // Vrai comportement : cd est intégré au shell, ce n'est pas un programme.
+    if (root && cmd === 'cd')
+      return this.erreur(
+        'sudo : cd : commande introuvable\n(cd fait partie du shell lui-même, sudo ne peut pas le lancer. Avec sudo, on regarde et on agit à distance : sudo ls lieu, sudo cat fichier…)',
+      );
+    if (cmd === 'help' || cmd === 'aide')
+      return `Commandes connues : ${this.connues().join(', ')}.\nTape « man commande » pour en savoir plus.`;
+    if (cmd === 'man') {
+      const m = reste[0] && this.manuel(reste[0]);
+      return m || this.erreur('Usage : man commande (ex. : man ls)');
+    }
+    const commande: Commande | undefined = COMMANDES[cmd];
+    if (!this.connues().includes(cmd) || !commande)
+      return this.erreur(
+        commande || cmd === 'sudo'
+          ? `${cmd} : tu n’as pas encore cette commande dans ce chapitre. Tape « aide » pour la liste.`
+          : `${cmd} : commande introuvable. Tape « aide » pour la liste.`,
+      );
+    const avant = this.qui;
+    if (root) this.qui = 'root';
+    try {
+      return commande.lancer({ args: reste, entree, jeu: this, dernier });
+    } finally {
+      this.qui = avant;
     }
   }
 
@@ -207,168 +412,9 @@ export class Shell implements Jeu {
       if (this.drapeaux.has(e.id) || !e.condition(this)) continue;
       this.drapeaux.add(e.id);
       e.action?.(this);
-      messages.push(nettoyer(e.message));
+      messages.push(nettoyer(typeof e.message === 'function' ? e.message(this) : e.message));
       if (e.id === this.chapitre.final) this.termine = true;
     }
     return messages;
-  }
-
-  private ls(args: string[]): string {
-    const tous = args.includes('-a');
-    const cibles = args.filter((a) => !a.startsWith('-'));
-    const cible = cibles[0] ?? '.';
-    const n = this.trouver(cible);
-    if (!n) return `ls : ${cible} : aucun lieu ou objet de ce nom`;
-    const raison = this.blocage(cible);
-    if (raison) return raison;
-    if (n.type === 'fichier') return cible;
-    const noms = Object.entries(n.enfants)
-      .filter(([nom]) => tous || !nom.startsWith('.'))
-      .sort(([a], [b]) => a.localeCompare(b, 'fr'))
-      .map(([nom, e]) => (e.type === 'dossier' ? nom + '/' : nom));
-    if (!noms.length && !tous) return '(rien ici… à première vue)';
-    return (tous ? ['./', '../', ...noms] : noms).join('    ');
-  }
-
-  private cd(cible: string): string {
-    const n = this.trouver(cible);
-    if (!n) return `cd : ${cible} : aucun lieu de ce nom`;
-    if (n.type !== 'dossier') return `cd : ${cible} : ce n’est pas un lieu, c’est un objet (essaie cat)`;
-    const raison = this.blocage(cible);
-    if (raison) return raison;
-    this.cwd = this.resoudre(cible);
-    return '';
-  }
-
-  private cat(cmd: string, args: string[]): string {
-    if (!args.length) return `Usage : ${cmd} fichier`;
-    return args
-      .map((cible) => {
-        const n = this.trouver(cible);
-        if (!n) return `${cmd} : ${cible} : aucun objet de ce nom`;
-        if (n.type === 'dossier') return `${cmd} : ${cible} : c’est un lieu (essaie cd ou ls)`;
-        const raison = this.blocage(cible);
-        if (raison) return raison;
-        const texte = typeof n.contenu === 'function' ? n.contenu(this) : n.contenu;
-        const effet = n.lu?.(this);
-        return [texte || '(fichier vide)', effet].filter(Boolean).join('\n\n');
-      })
-      .join('\n\n');
-  }
-
-  // Source → (lieu de destination, nom final), comme mv et cp sous Linux :
-  // si la destination est un lieu, l'objet y garde son nom ; sinon, c'est
-  // un nouveau nom dans un lieu existant.
-  private destination(source: string, dest: string): { lieu: Dossier; chemin: string; nom: string } | string {
-    const nomSrc = this.resoudre(source).split('/').pop()!;
-    const cible = this.trouver(dest);
-    if (cible?.type === 'dossier') return { lieu: cible, chemin: this.resoudre(dest), nom: nomSrc };
-    const parent = this.trouver(dest + '/..');
-    if (parent?.type !== 'dossier') return `${dest} : destination introuvable`;
-    return { lieu: parent, chemin: this.resoudre(dest + '/..'), nom: this.resoudre(dest).split('/').pop()! };
-  }
-
-  private mv(args: string[]): string {
-    const [source, dest] = args;
-    if (!source || !dest) return 'Usage : mv source destination';
-    const n = this.trouver(source);
-    if (!n) return `mv : ${source} : aucun objet de ce nom`;
-    // Simplification du jeu : on déplace des objets, jamais des lieux.
-    if (n.type === 'dossier') return `mv : ${source} est un lieu ; dans ce monde, on ne déplace que des objets`;
-    if (n.protege?.mv) return n.protege.mv;
-    const cible = this.destination(source, dest);
-    if (typeof cible === 'string') return `mv : ${cible}`;
-    const raison = this.blocage(source) ?? this.blocage(cible.chemin);
-    if (raison) return raison;
-    if (this.resoudre(source) === `${cible.chemin}/${cible.nom}`.replace('//', '/')) return '';
-    this.effacer(source);
-    cible.lieu.enfants[cible.nom] = n;
-    return '';
-  }
-
-  private cp(args: string[]): string {
-    const [source, dest] = args;
-    if (!source || !dest) return 'Usage : cp source destination';
-    const n = this.trouver(source);
-    if (!n) return `cp : ${source} : aucun objet de ce nom`;
-    if (n.type === 'dossier') return `cp : ${source} est un lieu (il faudrait cp -r, que tu ne connais pas encore)`;
-    const cible = this.destination(source, dest);
-    if (typeof cible === 'string') return `cp : ${cible}`;
-    const raison = this.blocage(source) ?? this.blocage(cible.chemin);
-    if (raison) return raison;
-    if (this.resoudre(source) === `${cible.chemin}/${cible.nom}`.replace('//', '/'))
-      return `cp : ${source} et ${dest} sont le même fichier`;
-    const copie: Fichier = { type: 'fichier', contenu: n.contenu };
-    cible.lieu.enfants[cible.nom] = copie;
-    return '';
-  }
-
-  private rm(args: string[]): string {
-    if (!args.length) return 'Usage : rm fichier';
-    return args
-      .map((cible) => {
-        const n = this.trouver(cible);
-        if (!n) return `rm : ${cible} : aucun objet de ce nom`;
-        if (n.type === 'dossier') return `rm : ${cible} est un lieu (il faudrait rm -r, et c’est dangereux : on ne l’utilisera pas ici)`;
-        if (n.protege?.rm) return n.protege.rm;
-        const raison = this.blocage(cible);
-        if (raison) return raison;
-        this.effacer(cible);
-        return '';
-      })
-      .filter(Boolean)
-      .join('\n');
-  }
-
-  private creer(cmd: string, args: string[], fabriquer: () => Noeud): string {
-    if (!args.length) return `Usage : ${cmd} nom`;
-    return args
-      .map((cible) => {
-        const parent = this.trouver(cible + '/..');
-        if (parent?.type !== 'dossier') return `${cmd} : ${cible} : lieu introuvable`;
-        const raison = this.blocage(cible + '/..');
-        if (raison) return raison;
-        const nom = this.resoudre(cible).split('/').pop()!;
-        if (Object.hasOwn(parent.enfants, nom)) return cmd === 'mkdir' ? `mkdir : ${cible} existe déjà` : '';
-        parent.enfants[nom] = fabriquer();
-        return '';
-      })
-      .filter(Boolean)
-      .join('\n');
-  }
-
-  private touch(args: string[]): string {
-    return this.creer('touch', args, () => ({ type: 'fichier', contenu: '' }));
-  }
-
-  private mkdir(args: string[]): string {
-    return this.creer('mkdir', args, () => ({ type: 'dossier', enfants: {} }));
-  }
-
-  private grep(args: string[]): string {
-    const options = args.filter((a) => a.startsWith('-'));
-    const [motif, ...fichiers] = args.filter((a) => !a.startsWith('-'));
-    if (!motif || !fichiers.length) return 'Usage : grep motif fichier (ex. : grep poivre livre.txt)';
-    const casse = options.includes('-i');
-    const cherche = casse ? motif.toLowerCase() : motif;
-    const lignes: string[] = [];
-    for (const cible of fichiers) {
-      const n = this.trouver(cible);
-      if (!n) {
-        lignes.push(`grep : ${cible} : aucun objet de ce nom`);
-        continue;
-      }
-      if (n.type === 'dossier') {
-        lignes.push(`grep : ${cible} est un lieu`);
-        continue;
-      }
-      const texte = typeof n.contenu === 'function' ? n.contenu(this) : n.contenu;
-      for (const l of texte.split('\n')) {
-        if ((casse ? l.toLowerCase() : l).includes(cherche)) lignes.push(fichiers.length > 1 ? `${cible}:${l}` : l);
-      }
-    }
-    // Écart volontaire : le vrai grep ne dit rien quand il ne trouve rien ;
-    // ici, on le précise pour ne pas laisser croire que la commande a échoué.
-    return lignes.length ? lignes.join('\n') : `(aucune ligne ne contient « ${motif} »)`;
   }
 }

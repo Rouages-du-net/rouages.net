@@ -125,10 +125,9 @@ Apprendre en jouant, avec de **vrais** outils et de vraies commandes.
 
 | Jeu | Ce qu'on apprend | État |
 |---|---|---|
-| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins, puis `grep`, `touch`, `cp`, `mkdir`, `rm` | Lien vers l'original du MIT (en anglais) + version française en chapitres sur `/jeux/terminus/` (voir `docs/scenarios/terminus.md`) |
+| **Terminus** | La ligne de commande Linux : `ls`, `cd`, `pwd`, `cat`, `mv`, fichiers cachés, chemins, puis `grep`, `touch`, `cp`, `mkdir`, `rm`, enfin les permissions (`ls -l`, `chmod`) et `sudo` | Lien vers l'original du MIT (en anglais) + cinq histoires en français sur `/jeux/terminus/` : l'Effaceur, le Datacenter (tubes, processus), le Paquet perdu (réseau), la Machine à remonter le temps (git), les Archives (find, tar) — voir `docs/scenarios/terminus.md` |
 | *Le routeur* (idée) | Router des paquets dans un réseau qui tombe en panne | — |
 | *Casse le code* (idée) | Du chiffre de César au chiffrement moderne | — |
-| *Le paquet perdu* (idée) | Retrouver un paquet avec `ping`, `traceroute`, `dig` | — |
 | *Entraîne ton neurone* (idée) | Régler les poids d'un perceptron à la main | — |
 
 Terminus s'inspire du jeu du même nom créé au MIT, mais il est réécrit en

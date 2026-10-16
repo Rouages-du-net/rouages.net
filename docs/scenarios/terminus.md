@@ -1,8 +1,17 @@
 # Scénario — Terminus en français
 
 *Apprendre la ligne de commande Linux en jouant.* Jeu de la section Jeux
-(`/jeux/terminus/`). Code : `src/scripts/terminus/` (moteur `shell.ts`,
-briques `monde.ts`, un fichier par chapitre dans `chapitres/`).
+(`/jeux/terminus/`). Code : `src/scripts/terminus/` :
+
+- `shell.ts` : le moteur (chemins, permissions, tubes `|`, redirections `>`
+  et `>>`, `sudo`, événements) ;
+- `commandes/` : les commandes, par famille (`fichiers`, `texte`, `systeme`,
+  `reseau`, `git`) ; chacune lit ses arguments et l'entrée du tube, renvoie
+  sa sortie et signale ses erreurs à part (elles ne passent pas dans les
+  tubes, comme la sortie d'erreur d'un vrai shell) ;
+- `monde.ts` : les briques d'un monde (lieux, objets, droits, événements) ;
+- `chapitres/` : un fichier par chapitre, et `index.ts` qui les range en
+  histoires.
 
 ## Principes
 
@@ -16,12 +25,18 @@ briques `monde.ts`, un fichier par chapitre dans `chapitres/`).
   `/`), mêmes règles (`mv` renomme, `cp` copie, `rm` est définitif, les
   jokers `*` sont développés avant la commande, comme le fait le shell). Les
   écarts volontaires sont signalés dans le code et listés ci-dessous.
-- **Chapitres séparés** : chacun a son monde, ses commandes et sa fin. La
-  progression est gardée dans le navigateur (`localStorage`, clé
-  `rouages-terminus`), chapitre par chapitre. Un chapitre s'ouvre quand le
-  précédent est terminé.
-- **Plusieurs histoires possibles** : le moteur ne dépend d'aucune histoire.
-  Une nouvelle histoire = une nouvelle série de chapitres.
+- **Histoires et chapitres** : cinq histoires indépendantes ; dans une
+  histoire, chaque chapitre a son monde, ses commandes et sa fin, et s'ouvre
+  quand le précédent est terminé. La progression est gardée dans le
+  navigateur (`localStorage`, clé `rouages-terminus`), chapitre par chapitre.
+- **Des exemples sans danger** : adresses IP privées (RFC 1918), de
+  collecte d'opérateur (RFC 6598) ou réservées à la documentation (RFC 5737),
+  noms de domaine en `.example` (RFC 6761). Seule exception : 9.9.9.9, le
+  vrai résolveur DNS public de Quad9.
+- **Sorties authentiques** : `ping`, `dig`, `traceroute`, `curl`, `ps`,
+  `systemctl` répondent en anglais, comme sur un vrai système ; `git` et
+  les messages d'erreur de base (« Permission non accordée ») en français,
+  comme avec un système réglé en français.
 
 ### Écarts volontaires avec un vrai Linux
 
@@ -32,18 +47,32 @@ briques `monde.ts`, un fichier par chapitre dans `chapitres/`).
 | `rm -r`, `cp -r` | refusés | effacent / copient des dossiers entiers |
 | `grep` sans résultat | « (aucune ligne ne contient …) » | n'affiche rien |
 | `man` | une ligne de résumé | une longue page de manuel |
+| `ls -l` | type et droits, propriétaire, groupe (= propriétaire), taille, nom | ajoute le nombre de liens et la date |
+| permissions | propriétaire et « les autres » ; pas de groupes | le groupe a ses propres droits |
+| `chmod -w` (sans u/g/o) | agit sur tout le monde | tient compte du masque `umask` |
+| `rm` d'un fichier protégé en écriture | efface sans demander | demande confirmation |
+| `sudo` | redemande le mot de passe seulement au premier usage du chapitre | s'en souvient environ 15 minutes |
+| `cat` d'une archive | message d'erreur | affiche des octets illisibles |
+| `ping` | 4 envois par défaut | continue jusqu'à Ctrl+C |
+| `traceroute` | s'arrête 3 sauts après le dernier qui répond | continue jusqu'à 30 sauts |
+| `ps aux` | utilisateur, PID, %CPU, %MEM, commande | ajoute VSZ, RSS, TTY, STAT, START, TIME |
+| `systemctl` sans être root | « Access denied », il faut `sudo` | demande le mot de passe (polkit) |
+| `tar` | taille calculée (texte compressé au tiers, médias à 98 %) ; s'il n'y a pas la place, rien n'est écrit | vraie compression ; une archive partielle peut rester |
+| `git` | une seule branche (`main`), fichiers à la racine du dépôt seulement, identifiants calculés par le jeu, `commit` exige `-m` | branches, sous-dossiers, SHA-1/SHA-256, éditeur de texte |
+| journal nginx | format « combined » sans la page d'origine ni le navigateur | deux champs de plus en fin de ligne |
 
 ## Histoire 1 : l'Effaceur
 
 Une créature, l'Effaceur, parcourt le royaume et efface tout ce qu'elle
 touche. On découvrira qu'elle n'est pas méchante : c'est un programme qui
-obéit à un ordre ancien, « tout effacer », écrit par erreur dans le Noyau.
+obéit à un ordre ancien, écrit par erreur dans sa configuration, à la
+Racine (`/`).
 Morale technique : un programme fait ce qu'on lui a dit, pas ce qu'on voulait.
 
 ```mermaid
 flowchart LR
   C1["Chapitre 1 · L'Éveil<br/>ls, cd, pwd, cat, less, ls -a, mv"] --> C2["Chapitre 2 · Le Bourg<br/>grep, touch, cp, mkdir, rm"]
-  C2 --> C3["Chapitre 3 · Le Noyau (à venir)<br/>sudo, ls -l, chmod"]
+  C2 --> C3["Chapitre 3 · La Racine<br/>ls -l, chmod, whoami, sudo"]
 ```
 
 ### Chapitre 1 — L'Éveil (fait)
@@ -77,34 +106,93 @@ clairière, ronces, trolls).
 | GrotteDesTrolls | nourrir le troll sans retourner à la ferme | `cp ~/…/epi .` (chemin complet, `.`) |
 | Cage | libérer Nour | — |
 
-### Chapitre 3 — Le Noyau (proposition)
+### Chapitre 3 — La Racine (fait)
 
 Correspond à la fin de l'original (toboggan, fichiers du noyau, `sudo`).
+Pourquoi « La Racine » et pas « Le Noyau » : sous Linux, le noyau (*kernel*)
+est le programme central du système ; l'arborescence des fichiers, elle,
+part de la racine `/`, et l'administrateur s'appelle `root`.
 
-- **Le Toboggan** mène au Noyau : un lieu où presque tout appartient à
-  `root`, la « racine ». `ls -l` révèle les permissions (`rwx`) et les
-  propriétaires.
-- **Permission refusée** : on ne peut ni lire ni effacer certains fichiers.
-  Un ancien manuel explique `sudo` (« fais-le en tant que root ») et ses
-  dangers. Le mot de passe se trouve avec `grep` dans des journaux.
-- **Protéger le Bourg** : sous Linux, effacer un fichier dépend du droit
-  d'écriture **sur le dossier**. `chmod -w` sur un lieu empêche l'Effaceur d'y
-  effacer quoi que ce soit (vrai comportement, bonne leçon).
-- **Le dénouement** : l'Effaceur est un *démon* (le vrai nom des programmes
-  qui tournent en arrière-plan sous Unix). Son ordre est dans un fichier
-  `ordres` appartenant à root. On le renomme ou le corrige avec `sudo`, et
-  l'Effaceur redevient ce qu'il était au début : un rangeur.
+Le Toboggan dépose le personnage dans sa vraie maison, `/home/vous`. Le
+monde ressemble enfin à un vrai Linux : `/home`, `/etc`, `/var/log`, `/root`.
 
-## Autres histoires (idées)
+| Lieu | Énigme | Commande apprise |
+|---|---|---|
+| `/home/vous` | l'Effaceur efface un souvenir à chaque commande : le lieu `souvenirs` est en `rwxrwxrwx` | `ls -l`, `chmod o-w` (effacer = écrire dans le lieu) |
+| `/var/log` | le journal du démon montre deux cibles au lieu d'une | `cat`, `grep cible` |
+| `/etc/effaceur.conf` | « cible = /Royaume /Corbeille » : une espace en trop ; le fichier appartient à root | Permission non accordée |
+| `journal.txt` | retrouver son mot de passe (noté, « très mauvaise idée ») | `grep "mot de passe"` (guillemets) |
+| `/etc` | installer la version corrigée | `sudo cp ~/effaceur.conf.corrige /etc/effaceur.conf` |
+| bonus | `/root`, `/etc/sudoers`, `/home/nour` (journal intime : on ne le lit pas, même root) | `sudo ls`, `sudo cat`, `whoami`, `sudo cd` (introuvable : `cd` est intégré au shell) |
 
-Chaque histoire est indépendante : on peut y jouer sans avoir fini l'Effaceur.
+Le dénouement : le personnage était l'administrateur·ice du royaume. C'est
+lui ou elle qui avait écrit la configuration, avec une espace de trop.
+L'Effaceur n'était pas méchant : il faisait exactement ce qu'on lui avait
+écrit. Le message de `sudo` (« Réfléchissez avant de taper ») est le vrai.
 
-| Histoire | Pitch | Commandes | Lien avec le site |
-|---|---|---|---|
-| **Le Datacenter** | Premier jour de stage dans une salle de serveurs : un site est en panne, il faut comprendre pourquoi en lisant les journaux. | `head`, `tail`, `wc`, `sort`, `uniq`, tubes `\|`, redirections `>` `>>`, `ps`, `kill` | Module « De l'Entrée à la page » (le serveur répond, erreurs 404/500/503) |
-| **Le Paquet perdu** | Un message n'arrive pas : on suit sa trace de machine en machine. | `ping`, `traceroute`, `dig`, `curl -I` (simulés) | Module « De l'Entrée à la page » (DNS, voyage des paquets) |
-| **La Machine à remonter le temps** | Une autrice voit son manuscrit abîmé ; on voyage dans ses versions pour le sauver. | `git init`, `add`, `commit`, `log`, `diff`, `checkout`, `branch` | Histoire de l'informatique (logiciel libre, travail collectif) |
-| **Les Archives** | Une bibliothèque menacée de fermeture : retrouver, empaqueter et mettre à l'abri des documents. | `find`, `tar`, `gzip`, `chmod`, `du` | Module « Savoirs » (libre accès, préservation) |
+## Histoire 2 : Le Datacenter (faite)
+
+Premier jour de stage : le site de la médiathèque répond par des erreurs 503.
+Awa, responsable d'exploitation, est en réunion ; ses notes guident.
+
+| Étape | Commande apprise |
+|---|---|
+| Lire le journal `/var/log/nginx/access.log` | `head`, `tail`, `wc -l` |
+| Compter les erreurs 503 | `grep " 503 " … \| wc -l` (tube) |
+| Trouver qui envoie autant de demandes | `cut -d " " -f 1 … \| sort \| uniq -c \| sort -n \| tail -3` |
+| Voir la surcharge | `ps aux` |
+| Bloquer le robot dans un fichier de root | `echo "deny …;" \| sudo tee -a /etc/nginx/bloques.conf` (et pourquoi `sudo echo … >>` échoue) |
+| Faire relire la configuration | `sudo systemctl reload nginx` |
+| Relancer le service bloqué | `sudo kill PID` (systemd le relance) |
+| Écrire le rapport | `… > rapport.txt`, `echo … >> rapport.txt` |
+
+Pièges prévus : `kill` avant de bloquer (le service repart à 99 %), `tee`
+sans `-a` ou `>` qui écrase `bloques.conf` (une sauvegarde `.bak` existe).
+
+## Histoire 3 : Le Paquet perdu (faite)
+
+« Internet ne marche plus » au café associatif. Le carnet de Kofi donne la
+méthode : tester de proche en proche. Prolonge le module « De l'Entrée à la
+page ».
+
+| Étape | Ce qu'on découvre |
+|---|---|
+| `ping 192.168.1.1` | le réseau local marche |
+| `ping 9.9.9.9` | internet marche |
+| `ping lettres.example` | « Temporary failure in name resolution » : le DNS |
+| `dig lettres.example`, `cat /etc/resolv.conf` | l'ordinateur interroge l'ancienne box, disparue |
+| `dig @9.9.9.9 lettres.example` | le nom existe bien |
+| `sudo cp /etc/resolv.conf.box /etc/resolv.conf` | DNS réparé |
+| `ping lettres.example` | 100 % de pertes… |
+| `traceroute lettres.example` | box, opérateur, point d'échange, hébergeur, puis silence |
+| `curl -I https://lettres.example` | `HTTP/2 200` : le serveur ignorait juste le ping |
+
+## Histoire 4 : La Machine à remonter le temps (faite)
+
+Le chat d'Inès, romancière, a marché sur le clavier ; elle a enregistré et
+fait un commit. `git log`, `git show HEAD`, `git diff HEAD~1 roman.txt`,
+`git restore --source=HEAD~1 roman.txt`, puis `git add` et `git commit`
+pour enregistrer la version réparée (sans effacer l'histoire). Ensuite,
+mettre ses poèmes à l'abri : `git init`, `git add .`, `git commit -m`.
+
+## Histoire 5 : Les Archives (faite)
+
+Le serveur de la bibliothèque du quartier s'éteint à minuit ; Rosa n'a
+qu'une clé USB de 64 Mo. `du -sh` et `df -h` montrent que le fonds (174 Mo)
+ne tient pas ; `tar` échoue (« Aucun espace disponible sur le
+périphérique »). `find fonds -name "*.tmp"` trouve 120 Mo de fichiers
+temporaires, effacés avec `-delete`. L'archive compressée (`tar -czf`)
+fait alors 48 Mo ; `tar -tzf` la vérifie. Morale d'archiviste : une seule
+copie n'est pas une sauvegarde.
+
+## Idées pour la suite
+
+- L'Effaceur, chapitre 4 : les sauvegardes (`rsync`, `cron`) pour que plus
+  rien ne se perde.
+- Le Datacenter, chapitre 2 : les certificats TLS et `openssl`, en lien avec
+  « Le cadenas » du module 1.
+- Le Paquet perdu, chapitre 2 : le réseau local (`ip a`, adresses privées,
+  NAT), en lien avec « La box ».
 
 ## Pour ajouter un chapitre
 
@@ -112,6 +200,10 @@ Chaque histoire est indépendante : on peut y jouer sans avoir fini l'Effaceur.
    `Chapitre` (voir `monde.ts`) : commandes connues, monde (`d()` pour un
    lieu, `f()` pour un objet), événements (condition → message, une seule
    fois) et l'événement final.
-2. L'ajouter à `CHAPITRES` dans `chapitres/index.ts`.
+   Si l'histoire a besoin de processus, d'un réseau ou de dépôts git, les
+   décrire dans `etat()` (voir l'en-tête de chaque fichier de `commandes/`).
+2. L'ajouter à une histoire de `HISTOIRES` dans `chapitres/index.ts` (ou
+   créer une nouvelle histoire).
 3. Vérifier qu'on peut le finir : une partie complète jouée par un script
-   (voir la PR du chapitre 2), puis dans Chromium à 1000 et 375 px.
+   (le moteur se compile avec esbuild pour Node), puis dans Chromium à 1000
+   et 375 px.
