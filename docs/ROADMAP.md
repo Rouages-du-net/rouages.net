@@ -73,6 +73,10 @@ flowchart TB
 - [ ] Relecture humaine finale
 - [x] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » : règlement (UE) 2026/1744 du 8 juillet 2026 (JO du 24.7.2026), obligations à haut risque de l'annexe III au 2 décembre 2027 (voir `docs/sources/ia-classer.md`, § 8)
 
+### Page d'entrée
+
+- [x] Page `/ia/` : introduction, parcours conseillé, modules par but (générés depuis `src/lib/carte-ia.ts`) ; une seule carte « L'IA » sur l'accueil et un lien dans le menu
+
 ### À venir (ordre prévu)
 
 - [x] **L'IA, c'est quoi ?** (`/modules/ia/`, relecture humaine à faire) — définitions (et pourquoi elles changent), IA à règles et IA qui apprend, trois façons d'apprendre, carte buts × mécanismes, hivers et printemps de l'IA, idée reçue « tout est de l'IA »

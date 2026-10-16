@@ -1,0 +1,103 @@
+---
+// Page d'entrée de la famille de modules « L'IA » (voir docs/ROADMAP.md,
+// phase 5). Les modules par but viennent de src/lib/carte-ia.ts : quand un
+// module paraît, il suffit d'y renseigner son lien et son résumé.
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import { BUTS } from '../../lib/carte-ia';
+
+const disponibles = BUTS.filter((b) => b.lien);
+const aVenir = BUTS.filter((b) => !b.lien);
+const titre = (nom: string) => `Les IA ${nom}`;
+---
+<Base
+  title="L'IA"
+  description="Ce qu'on appelle intelligence artificielle, comment une machine apprend, et ce que font vraiment les IA qui écrivent, voient, classent ou cherchent : des modules animés, avec de vrais petits modèles qui tournent dans ton navigateur."
+>
+  <p class="tag">Comment ça marche</p>
+  <h1>L'IA</h1>
+
+  <div class="intro">
+    <p>
+      On dit « IA » pour un filtre anti-spam, un GPS, une voiture qui freine seule ou un
+      assistant qui écrit des poèmes. Ces machines n'ont presque rien en commun, sinon qu'elles
+      font des choses qu'on croyait réservées à l'intelligence humaine. Le mot lui-même date de
+      1955, quand quatre chercheurs américains ont proposé d'étudier, l'été suivant, comment
+      une machine pourrait « simuler » l'apprentissage et l'intelligence.
+    </p>
+    <p>
+      Aujourd'hui, le règlement européen sur l'IA retient une idée simple : un système d'IA
+      <em>déduit</em>, à partir de ce qu'il reçoit, comment produire des prédictions, des
+      contenus, des recommandations ou des décisions. Certaines IA suivent des règles écrites à
+      la main, d'autres cherchent dans un très grand nombre de possibilités, beaucoup apprennent
+      à partir d'exemples. Ici, on les démonte une à une, avec de vrais petits modèles qui
+      tournent dans ton navigateur.
+    </p>
+  </div>
+
+  <section aria-labelledby="commencer">
+    <h2 id="commencer">Par où commencer</h2>
+    <div class="grid">
+      <article class="card etape">
+        <span class="numero" aria-hidden="true">1</span>
+        <h3><a href="/modules/ia/">L'IA, c'est quoi ?</a></h3>
+        <p>La porte d'entrée : ce qu'on appelle IA (ou pas), règles ou exemples, trois façons d'apprendre, la carte de toutes les IA et leur histoire.</p>
+      </article>
+      <article class="card etape">
+        <span class="numero" aria-hidden="true">2</span>
+        <h3><a href="/modules/apprendre/">Comment apprend une machine</a></h3>
+        <p>Un neurone, une descente de gradient, un réseau qui apprend sous tes yeux, et des données qui font le modèle. Utile pour tous les modules suivants.</p>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="par-but">
+    <h2 id="par-but">Les IA, par ce qu'elles font</h2>
+    <p class="chapeau">Chaque module se lit seul. Choisis selon ta curiosité.</p>
+    <div class="grid">
+      {disponibles.map((b) => (
+        <article class="card">
+          <h3><a href={b.lien}>{titre(b.nom)}</a></h3>
+          <p>{b.resume}</p>
+          <span class="tag">Disponible</span>
+        </article>
+      ))}
+    </div>
+    <h3 class="sous-titre">Bientôt</h3>
+    <ul class="a-venir">
+      {aVenir.map((b) => <li><strong>{titre(b.nom)}</strong> <span>({b.exemples})</span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="plus-loin">
+    <h2 id="plus-loin">Pour aller plus loin</h2>
+    <ul class="a-venir">
+      <li><a href="/glossaire/">Le glossaire</a> : les mots de l'IA, expliqués simplement.</li>
+      <li>L'histoire de l'IA, du perceptron aux grands modèles de langage (bientôt).</li>
+      <li>Vrai ou faux ? Les idées reçues sur l'IA, vérifiées (bientôt).</li>
+    </ul>
+  </section>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'J. McCarthy, M. Minsky, N. Rochester, C. Shannon', titre: 'A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence', url: 'https://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html', type: 'primaire', annee: 1955, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’intelligence artificielle, article 3', url: 'http://publications.europa.eu/resource/celex/32024R1689', type: 'primaire', annee: 2024 },
+    ]}
+  />
+</Base>
+
+<style>
+  .intro { max-width: var(--mesure); font-size: 1.1rem; }
+  section { margin-top: 3rem; }
+  .chapeau { color: var(--muted); max-width: var(--mesure); }
+  .etape { position: relative; }
+  .numero {
+    display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px;
+    background: var(--accent); color: var(--bg); font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .sous-titre { margin: 2rem 0 0.5rem; font-size: 1.05rem; }
+  .a-venir { max-width: var(--mesure); padding-left: 1.2rem; }
+  .a-venir li { margin-bottom: 0.35rem; }
+  .a-venir span { color: var(--muted); }
+</style>
