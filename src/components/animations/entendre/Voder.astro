@@ -1,0 +1,75 @@
+---
+// Animation « Faire parler une machine » (étape 3 du module « Les IA qui
+// entendent et parlent ») : un petit synthétiseur à formants, dans
+// l'esprit du Voder (1939) et des synthétiseurs de Klatt : on règle la
+// hauteur de la voix et les deux premiers formants, et l'on écoute.
+import { VOYELLES } from '../../../lib/son';
+---
+<div class="anim voder" data-voder>
+  <div class="anim-repli">
+    <p>
+      Pour fabriquer une voyelle, on n'a besoin que de trois réglages : la hauteur de la voix
+      (la vibration des cordes vocales) et les deux premiers formants, qui donnent la couleur
+      de la voyelle. Avec F1 bas et F2 haut, on entend « i » ; avec F1 haut, « a » ; avec les
+      deux bas, « ou ». Les premières voix de synthèse électroniques, puis les synthétiseurs à
+      formants comme DECtalk, reposaient sur ce principe.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Hauteur de la voix : <output data-sortie="f0"></output>
+        <input type="range" min="80" max="320" step="5" value="120" data-r="f0" />
+      </label>
+      <label class="curseur">Formant F1 (ouverture de la bouche) : <output data-sortie="f1"></output>
+        <input type="range" min="220" max="900" step="10" value="700" data-r="f1" />
+      </label>
+      <label class="curseur">Formant F2 (langue en avant ou en arrière) : <output data-sortie="f2"></output>
+        <input type="range" min="600" max="2600" step="20" value="1300" data-r="f2" />
+      </label>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="ecouter">🔊 Écouter</button>
+        {Object.entries(VOYELLES).map(([v, f]) => <button type="button" data-f1={f[0]} data-f2={f[1]}>{v}</button>)}
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { synthetiser, reconnaitre, jouer, VOYELLES, TAUX } from '../../../lib/son';
+
+  const modeles = Object.entries(VOYELLES).map(([voyelle, f]) => ({ voyelle, f1: f[0], f2: f[1] }));
+
+  document.querySelectorAll<HTMLElement>('[data-voder]').forEach((racine) => {
+    activerScene(racine);
+    const r = (n: string) => racine.querySelector<HTMLInputElement>(`[data-r="${n}"]`)!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      for (const n of ['f0', 'f1', 'f2']) racine.querySelector<HTMLOutputElement>(`[data-sortie="${n}"]`)!.value = `${Number(r(n).value).toLocaleString('fr-FR')} Hz`;
+      const { voyelle, distances } = reconnaitre(Number(r('f1').value), Number(r('f2').value), modeles);
+      legende.textContent = distances[0].d < 0.15 ? `Ces réglages correspondent à un « ${voyelle} » de voix d’homme.` : `Entre deux voyelles : le plus proche est « ${voyelle} ». Écoute ce que donne ce mélange.`;
+    }
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="ecouter"]')!.addEventListener('click', () =>
+      jouer(synthetiser({ f0: Number(r('f0').value), formants: [Number(r('f1').value), Number(r('f2').value), 2500] }, 0.7, TAUX)),
+    );
+    racine.querySelectorAll<HTMLButtonElement>('[data-f1]').forEach((b) =>
+      b.addEventListener('click', () => {
+        r('f1').value = b.dataset.f1!;
+        r('f2').value = b.dataset.f2!;
+        maj();
+        jouer(synthetiser({ f0: Number(r('f0').value), formants: [Number(b.dataset.f1), Number(b.dataset.f2), 2500] }, 0.7, TAUX));
+      }),
+    );
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; margin-bottom: 0.6rem; font-size: 0.95rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-family: var(--police-mono); font-weight: 700; }
+</style>

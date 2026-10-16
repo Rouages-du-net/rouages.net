@@ -1,0 +1,337 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Echantillons from '../../components/animations/entendre/Echantillons.astro';
+import Spectrogramme from '../../components/animations/entendre/Spectrogramme.astro';
+import Voyelles from '../../components/animations/entendre/Voyelles.astro';
+import Voder from '../../components/animations/entendre/Voder.astro';
+
+// Faits sourcés : voir docs/sources/ia-entendre.md.
+const etapes = [
+  { ancre: 'nombres', court: 'Le son en nombres' },
+  { ancre: 'spectre', court: 'Voir le son' },
+  { ancre: 'reconnaitre', court: 'Reconnaître' },
+  { ancre: 'parler', court: 'Parler' },
+  { ancre: 'voix', court: 'Ta voix' },
+  { ancre: 'bilan', court: 'Autour de toi', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui entendent et parlent"
+  description="Comment une machine transforme ta voix en texte, et un texte en voix : échantillonnage, spectrogramme, formants, reconnaissance et synthèse de la parole, voix clonées."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui entendent et parlent</h1>
+  <p class="chapo seulement-debut">
+    Tu dictes un message, ton téléphone l'écrit ; une vidéo affiche des sous-titres ; un GPS
+    te parle. Pour une machine, une voix n'est qu'une suite de nombres. Mesure un son, regarde
+    sa forme, apprends à une machine à reconnaître des voyelles, puis fais-la parler. Monte le
+    son : cette page fait du bruit, seulement quand tu cliques.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le son en nombres" ancre="nombres">
+    <Echantillons slot="animation" />
+    <p slot="decouverte">
+      Un son est une vibration de l'air. Pour le numériser, on le mesure très souvent : chaque
+      mesure est un nombre. Change la hauteur du son et le nombre de mesures par seconde.
+    </p>
+    <p slot="curieux">
+      Il faut au moins deux mesures par vibration. Un CD en prend 44 100 par seconde, assez pour les sons les plus aigus que
+      l'oreille humaine perçoit, vers 20 000 vibrations par seconde. En dessous, on fabrique de
+      faux sons graves : le repliement.
+    </p>
+    <p slot="ingenieur">
+      Un signal dont les fréquences restent sous f<sub>max</sub> est entièrement déterminé par
+      ses échantillons si la fréquence d'échantillonnage dépasse 2 f<sub>max</sub>. Sinon, une
+      fréquence f est vue comme |f − k·f<sub>e</sub>|. On filtre donc les aigus avant de
+      numériser. Chaque mesure est ensuite arrondie, par exemple sur 16 bits pour un CD.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le résultat « deux mesures par vibration suffisent » a été trouvé plusieurs fois, de
+        façon indépendante : par le Britannique Edmund Whittaker (1915), le Soviétique
+        <strong>Vladimir Kotelnikov</strong> (1933), l'Allemand Herbert Raabe (1939), le Japonais
+        Isao Someya et l'Américain Claude Shannon (1949), qui l'a fait connaître en écrivant
+        lui-même que c'était un fait « bien connu » des ingénieurs. Harry Nyquist avait souligné
+        dès 1928 l'importance de cet intervalle pour le télégraphe.
+      </p>
+      <p>
+        Les 44 100 mesures par seconde du CD (Sony et Philips, 1980) viennent des magnétoscopes
+        qui servaient alors à enregistrer le son numérique : il fallait un chiffre compatible
+        avec la vidéo. Selon Kees Immink, ingénieur de Philips, on a préféré 44,1 kHz à
+        44,056 kHz « parce que c'était plus facile à retenir ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La durée du CD a été choisie pour la 9ᵉ symphonie de Beethoven. »</strong> Une
+      légende tenace, que Kees Immink, ingénieur du projet chez Philips, conteste : « il ne faut
+      pas y croire ».
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Voir le son" ancre="spectre">
+    <Spectrogramme slot="animation" />
+    <p slot="decouverte">
+      Ce dessin s'appelle un spectrogramme : le temps de gauche à droite, les sons graves en bas,
+      les aigus en haut. Chaque voyelle laisse sa signature : des bandes sombres à des hauteurs
+      différentes.
+    </p>
+    <p slot="curieux">
+      Les cordes vocales vibrent (c'est la hauteur de la voix), et la bouche, la langue et les
+      lèvres forment une caisse de résonance qui renforce certaines fréquences : les
+      <Terme id="formant">formants</Terme>. On reconnaît un « a » par ses formants, que la voix
+      soit grave ou aiguë.
+    </p>
+    <p slot="ingenieur">
+      On découpe le son en fenêtres de 32 ms (512 échantillons à 16 kHz), décalées de 7,5 ms, et
+      l'on calcule le spectre de chacune par une transformée de Fourier rapide. C'est le modèle
+      « source-filtre » : une source (impulsions des cordes vocales) passe dans un filtre (le
+      conduit vocal). Les systèmes de reconnaissance reçoivent en entrée ce genre d'image.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le modèle source-filtre doit beaucoup aux Japonais Tsutomu Chiba et Masato Kajiyama
+        (<em>The Vowel</em>, 1941-1942), puis au Suédois Gunnar Fant, qui en fait une théorie
+        quantitative en 1960. Le spectrographe des Bell Labs, proposé par Ralph Potter, est
+        décrit en 1946 : il enregistrait 2,4 secondes de son sur une boucle magnétique et
+        l'analysait bande par bande. L'un de ses buts affichés : rendre la parole visible pour
+        les personnes sourdes. En 1947, Potter, George Kopp et <strong>Harriet C. Green</strong>
+        publient <em>Visible Speech</em>, un manuel pour apprendre à lire les spectrogrammes.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Reconnaître une voyelle" ancre="reconnaitre">
+    <Voyelles slot="animation" />
+    <p slot="decouverte">
+      L'ordinateur mesure les deux premiers formants de la voyelle et la place sur une carte.
+      Il répond avec le modèle le plus proche. Essaie avec une voix d'enfant, puis change les
+      modèles.
+    </p>
+    <p slot="curieux">
+      Une machine reconnaît mieux les voix qui ressemblent à celles qu'elle a entendues en
+      apprenant. Des modèles tirés de voix d'hommes adultes se trompent davantage avec des
+      enfants. Pour les systèmes réels, c'est pareil avec les accents, les langues rares, les
+      voix âgées ou les troubles de la parole.
+    </p>
+    <p slot="ingenieur">
+      Les formants sont estimés par prédiction linéaire (LPC, ordre 12, après réduction à
+      8 kHz) : on prédit chaque échantillon à partir des 12 précédents, et les pics du filtre
+      obtenu sont les formants. La reconnaissance est un plus proche voisin dans le plan
+      (log F1, log F2). Les systèmes actuels transforment directement le spectrogramme en mots
+      avec des réseaux de neurones entraînés sur des centaines de milliers d'heures.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1952, trois chercheurs des Bell Labs, Davis, Biddulph et Balashek, construisent une
+        machine (surnommée plus tard « Audrey ») qui reconnaît les chiffres dits par une seule
+        personne, en suivant ses formants, comme l'animation. Dans les années 1960, des équipes
+        japonaises (Kyoto, NEC), soviétiques et britanniques progressent ; IBM montre en 1962 la
+        « Shoebox », qui comprend 16 mots. Le programme de la DARPA (1971-1976) donne Harpy, à
+        Carnegie Mellon, dans le groupe de <strong>Raj Reddy</strong> : 1 011 mots.
+      </p>
+      <p>
+        Les méthodes statistiques (modèles de Markov cachés) s'imposent ensuite, avec
+        <strong>Janet Baker</strong> et James Baker, qui fondent Dragon Systems en 1982, et
+        l'équipe de Frederick Jelinek chez IBM. À partir de 2012, les réseaux de neurones
+        profonds prennent le relais. En 2022, le système Whisper est entraîné sur
+        680 000 heures d'audio, dont 117 000 heures dans 96 langues autres que l'anglais.
+      </p>
+      <p>
+        En 2020, une équipe de Stanford menée par <strong>Allison Koenecke</strong> a fait
+        transcrire par cinq systèmes commerciaux des entretiens avec des personnes noires et
+        blanches aux États-Unis : 35 mots sur 100 mal reconnus en moyenne pour les personnes
+        noires, contre 19 pour les personnes blanches, même sur des phrases identiques. Pour
+        les langues peu dotées, le projet ouvert Common Voice collecte des voix de volontaires
+        dans 295 langues ; <strong>Kathleen Siminyu</strong>, Britone Mwasaru et Rebecca
+        Ryakitimbo Mwimbi y ont développé le swahili.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Chaque fois que je renvoie un linguiste, la reconnaissance s'améliore. »</strong>
+      La phrase attribuée à Frederick Jelinek circule sous cette forme ; lui-même cite une
+      boutade un peu différente, lancée en 1988, et intitule en 2004 une conférence « Certains
+      de mes meilleurs amis sont linguistes ».
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Faire parler une machine" ancre="parler">
+    <Voder slot="animation" />
+    <p slot="decouverte">
+      À l'inverse, pour faire parler une machine, on fabrique le son : une vibration de base,
+      et des formants. Bouge les curseurs et écoute la voyelle changer.
+    </p>
+    <p slot="curieux">
+      Les premières voix de synthèse étaient réglées à la main, comme ici. Ensuite, on a
+      assemblé des morceaux de voix enregistrées. Aujourd'hui, des réseaux de neurones
+      fabriquent le son échantillon par échantillon, à partir de très nombreux
+      enregistrements : la voix devient très naturelle.
+    </p>
+    <p slot="ingenieur">
+      Le synthétiseur de la page envoie un train d'impulsions à f0 dans une cascade de
+      résonateurs du second ordre centrés sur F1, F2 et F3 (comme les synthétiseurs à formants
+      de Klatt). Les synthèses neuronales prédisent plutôt un spectrogramme à partir du texte,
+      puis un « vocodeur » neuronal en tire les échantillons.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1791, à Vienne, Wolfgang von Kempelen publie la description de sa machine parlante
+        mécanique (soufflet, anche, « bouche » souple) pour que d'autres la reconstruisent ;
+        d'autres inventeurs l'avaient précédé. En 1939, le Voder de Homer Dudley, aux Bell Labs,
+        fabrique une voix électrique : des opératrices, souvent venues du téléphone, la « jouent »
+        au clavier et au pédalier après environ un an d'entraînement. <strong>Helen
+        Harper</strong> était réputée la meilleure.
+      </p>
+      <p>
+        Au MIT, Dennis Klatt met au point des synthétiseurs à formants dont descend DECtalk
+        (1984), présenté comme un outil pour les personnes aveugles ; la voix de Stephen Hawking
+        venait d'un appareil de la même famille. En 2016, WaveNet (DeepMind) fabrique le son
+        échantillon par échantillon avec un réseau de neurones, 16 000 fois par seconde.
+      </p>
+    </div>
+    <p slot="verifie">
+      Les lecteurs d'écran, comme le logiciel libre NVDA, lisent à voix haute tout ce qui
+      s'affiche, pour les personnes aveugles et malvoyantes. Et les personnes qui risquent de
+      perdre la parole peuvent enregistrer leur voix à l'avance : une « banque de voix » permet
+      ensuite de fabriquer une voix de synthèse qui leur ressemble.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Ta voix, une donnée sensible" ancre="voix">
+    <p slot="decouverte">
+      Ta voix permet de t'identifier, comme ton visage. Quand tu parles à un assistant vocal,
+      l'enregistrement part souvent sur un serveur. Et quelques enregistrements suffisent
+      aujourd'hui pour imiter une voix.
+    </p>
+    <p slot="curieux">
+      En 2019, des journalistes ont révélé que des humains, souvent des sous-traitants,
+      écoutaient une petite partie des enregistrements des assistants d'Amazon, de Google et
+      d'Apple, y compris des déclenchements accidentels. Google parlait d'environ 0,2 % des
+      extraits, Apple de moins de 1 % : il s'agissait d'améliorer la reconnaissance. Apple a
+      suspendu l'écoute, puis l'a rendue facultative. La CNIL rappelle que la voix est une
+      caractéristique biométrique.
+    </p>
+    <p slot="ingenieur">
+      Les voix clonées reposent sur la même synthèse neuronale que les voix de GPS, entraînée
+      ou ajustée sur les enregistrements d'une personne. Pour s'en protéger, on peut convenir
+      avec ses proches d'une question ou d'un mot de passe, et rappeler soi-même la personne
+      sur un numéro connu.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2024, à Hong Kong, une personne employée par l'entreprise d'ingénierie Arup a viré
+        l'équivalent d'environ 25 millions de dollars après une visioconférence où les
+        « dirigeants » étaient fabriqués par IA ; l'entreprise a confirmé l'usage de fausses
+        voix et de fausses images. La même année, des appels automatiques imitant la voix de
+        Joe Biden ont incité des électeurs du New Hampshire à ne pas voter.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Aux États-Unis, le régulateur des télécommunications (FCC) a confirmé en février 2024
+        que les voix générées par IA comptent comme des voix « artificielles » : les appels
+        automatiques qui les utilisent demandent un consentement préalable. Son amende de
+        6 millions de dollars dans l'affaire du New Hampshire sanctionnait l'usurpation du
+        numéro d'appel ; au pénal, le consultant a été acquitté en 2025.
+      </p>
+      <p>
+        En Europe, le règlement sur l'IA impose, à partir du 2 août 2026, d'indiquer qu'un
+        « hypertrucage » audio ou vidéo a été « généré ou manipulé par une IA », et de prévenir
+        les personnes qu'elles « interagissent avec un système d'IA ». La CNIL a consacré en
+        2020 un livre blanc aux assistants vocaux, <em>À votre écoute</em>.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Une voix au téléphone, c'est une preuve. »</strong> Plus maintenant : une voix
+      peut être imitée. En cas de demande urgente d'argent, on raccroche et on rappelle.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Les IA qui entendent et parlent, autour de toi</h2>
+    <table>
+      <thead><tr><th scope="col">Usage</th><th scope="col">Ce qu'elle fait</th><th scope="col">La question à se poser</th></tr></thead>
+      <tbody>
+        <tr><td>Dictée, assistant vocal</td><td>transforme ta voix en texte</td><td>L'enregistrement part-il sur un serveur ? Qui peut l'écouter ?</td></tr>
+        <tr><td>Sous-titres automatiques</td><td>écrit ce qui se dit dans une vidéo</td><td>Reconnaît-elle aussi bien tous les accents ?</td></tr>
+        <tr><td>GPS, lecteur d'écran</td><td>lit un texte à voix haute</td><td>Quelle voix, et de qui vient-elle ?</td></tr>
+        <tr><td>Voix de synthèse personnalisée</td><td>redonne une voix à une personne qui la perd</td><td>Qui contrôle cette voix ?</td></tr>
+        <tr><td>Appel d'un proche qui demande de l'argent</td><td>peut être une voix clonée</td><td>Comment vérifier que c'est bien lui ou elle ?</td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'C. E. Shannon', titre: 'Communication in the Presence of Noise', url: 'https://fab.cba.mit.edu/classes/S62.12/docs/Shannon_noise.pdf', type: 'primaire', annee: 1949, langue: 'en' },
+      { auteur: 'H. D. Lüke (IEEE Communications Magazine)', titre: 'The Origins of the Sampling Theorem', url: 'https://www.cse.iitd.ac.in/~pkalra/sil801/OLD/read/sampling.pdf', type: 'recherche', annee: 1999, langue: 'en' },
+      { auteur: 'Eduard-Rhein-Stiftung', titre: 'Vladimir A. Kotelnikov, prix 1999', url: 'https://eduard-rhein-stiftung.de/en/?p=1727', type: 'site', annee: 1999, langue: 'en' },
+      { auteur: 'K. A. Schouhamer Immink (J. Audio Eng. Soc.)', titre: 'The CD Story', url: 'https://hagenbeuk.nl/wp-content/uploads/2021/07/Immink.pdf', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'C. Gendrot, M. Adda-Decker', titre: 'Impact of duration on F1/F2 formant values of oral vowels (valeurs de référence)', url: 'https://www.isca-archive.org/interspeech_2005/gendrot05_interspeech.pdf', type: 'primaire', annee: 2005, langue: 'en' },
+      { auteur: 'L. Georgeton et al.', titre: 'Analyse formantique des voyelles orales du français en contexte isolé', url: 'https://aclanthology.org/F12-1019.pdf', type: 'primaire', annee: 2012 },
+      { auteur: 'P. Boersma, D. Weenink (manuel de Praat)', titre: 'Peterson & Barney (1952) : description du jeu de données', url: 'https://www.fon.hum.uva.nl/praat/manual/Peterson___Barney__1952_.html', type: 'primaire', langue: 'en' },
+      { auteur: 'R. D. Kent, H. K. Vorperian', titre: 'Static measurements of vowel formant frequencies and bandwidths: A review', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6002811/', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'National Academy of Engineering', titre: 'Gunnar Fant 1919-2009 (Memorial Tributes)', url: 'https://www.nationalacademies.org/read/12884/chapter/15', type: 'site', annee: 2011, langue: 'en' },
+      { auteur: 'T. Arai', titre: 'History of Chiba and Kajiyama and their influence in modern speech science', url: 'https://splab.net/papers/paper2004_16.html', type: 'recherche', annee: 2004, langue: 'en' },
+      { auteur: 'W. Koenig, H. K. Dunn, L. Y. Lacy', titre: 'The Sound Spectrograph', url: 'https://languagelog.ldc.upenn.edu/myl/koenig1946.pdf', type: 'primaire', annee: 1946, langue: 'en' },
+      { auteur: 'B. H. Juang, L. R. Rabiner', titre: 'Automatic Speech Recognition – A Brief History of the Technology Development', url: 'https://web.ece.ucsb.edu/Faculty/Rabiner/ece259/Reprints/354_LALI-ASRHistory-final-10-8.pdf', type: 'recherche', annee: 2004, langue: 'en' },
+      { auteur: 'IBM Archives', titre: '(1961) Shoebox', url: 'https://mediacenter.ibm.com/media/(1961)+Shoebox+-+IBM+Archives+(78-013)/0_4m2ynnkk', type: 'primaire', langue: 'en' },
+      { auteur: 'Carnegie Mellon University', titre: 'Bruce Lowerre (thèse sur Harpy, 1976)', url: 'https://csd.cs.cmu.edu/academics/doctoral/degrees-conferred/bruce-lowerre', type: 'site', langue: 'en' },
+      { auteur: 'X. Huang, J. Baker, R. Reddy (CACM)', titre: 'A Historical Perspective of Speech Recognition', url: 'https://kk.org/reCCearch/(2014)%20A%20historical%20perspective%20of%20speech%20recognition.pdf', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'S. Garfinkel (MIT Technology Review)', titre: 'Enter the Dragon', url: 'https://simson.net/clips/1998/1998.TR.09.EnterTheDragon.pdf', type: 'presse', annee: 1998, langue: 'en' },
+      { auteur: 'F. Jelinek', titre: 'Some of my Best Friends are Linguists (LREC 2004)', url: 'http://www.lrec-conf.org/lrec2004/doc/jelinek.pdf', type: 'primaire', annee: 2004, langue: 'en' },
+      { auteur: 'D. Jurafsky, J. H. Martin', titre: 'Speech and Language Processing, ch. 16 « Automatic Speech Recognition » (brouillon du 19 août 2026)', url: 'https://web.stanford.edu/~jurafsky/slp3/16.pdf', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'A. Radford et al.', titre: 'Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)', url: 'https://arxiv.org/abs/2212.04356', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'A. Koenecke et al. (PNAS)', titre: 'Racial disparities in automated speech recognition', url: 'https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7149386/fullTextXML', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Mozilla Common Voice', titre: 'Jeux de données : versions et langues', url: 'https://raw.githubusercontent.com/common-voice/cv-dataset/main/datasets/scripted-speech/README.md', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Fondation Mozilla', titre: 'Announcing 3 new Common Voice Fellows', url: 'https://www.mozillafoundation.org/en/blog/announcing-3-new-common-voice-fellows-2021/', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'S. Berdux (Deutsches Museum)', titre: '« Eine Kempelensche Sprechmaschine ». New insights in speaking machines', url: 'https://www.isca-archive.org/hscr_2015/berdux15_hscr.pdf', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'MIT Technology Review', titre: 'Vocal codes (le Voder)', url: 'https://www.technologyreview.com/2003/11/01/274977/vocal-codes', type: 'presse', annee: 2003, langue: 'en' },
+      { auteur: 'Hackaday', titre: 'Retrotechtacular: The Voder From Bell Labs', url: 'https://hackaday.com/2014/08/12/retrotechtacular-the-voder-from-bell-labs/', type: 'presse', annee: 2014, langue: 'en' },
+      { auteur: 'C. Garcia (Computer History Museum)', titre: 'Bringing A New Voice to Genius — MITalk, the CallText 5010, and Stephen Hawking’s Wheelchair', url: 'https://computerhistory.org/blog/how-dectalk-gave-voice-to-a-genius-engineering-stephen-hawkings-wheelchair/', type: 'site', annee: 2018, langue: 'en' },
+      { auteur: 'A. van den Oord, S. Dieleman (DeepMind)', titre: 'WaveNet: A generative model for raw audio', url: 'https://deepmind.google/discover/blog/wavenet-a-generative-model-for-raw-audio/', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'NV Access', titre: 'About NVDA', url: 'https://www.nvaccess.org/about-nvda/', type: 'primaire', langue: 'en' },
+      { auteur: 'MND Association', titre: 'Voice banking and message banking', url: 'https://www.mndassociation.org/sites/default/files/public/2026-01/7D-Voice-banking-and-message-banking.pdf', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Association des malentendants canadiens', titre: 'COVID-19 et communication accessible pour les Canadiens malentendants', url: 'https://oldsite.chha.ca/wp-content/uploads/2020/04/Government-Broadcasters-Captions-Letter-fr.pdf', type: 'site', annee: 2020 },
+      { auteur: 'A. Hern (The Guardian)', titre: 'Apple contractors « regularly hear confidential details » on Siri recordings', url: 'https://www.theguardian.com/technology/2019/jul/26/apple-contractors-regularly-hear-confidential-details-on-siri-recordings', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'Google', titre: 'More information about our processes to safeguard speech data', url: 'https://blog.google/products/assistant/more-information-about-our-processes-safeguard-speech-data/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'Apple', titre: 'Improving Siri’s privacy protections', url: 'https://www.apple.com/newsroom/2019/08/improving-siris-privacy-protections/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'CNIL', titre: 'À votre écoute : enjeux éthiques, techniques et juridiques des assistants vocaux', url: 'https://www.cnil.fr/sites/cnil/files/atoms/files/cnil_livre-blanc-assistants-vocaux.pdf', type: 'site', annee: 2020 },
+      { auteur: 'CNN', titre: 'British engineering giant Arup revealed as $25 million deepfake scam victim', url: 'https://edition.cnn.com/2024/05/16/tech/arup-deepfake-scam-loss-hong-kong-intl-hnk/index.html', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'The Guardian', titre: 'Arup et l’escroquerie par hypertrucage à Hong Kong (17 mai 2024)', url: 'https://www.theguardian.com/technology/article/2024/may/17/uk-engineering-arup-deepfake-scam-hong-kong-ai-video', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'FCC', titre: 'FCC makes AI-generated voices in robocalls illegal', url: 'https://docs.fcc.gov/public/attachments/DOC-400393A1.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'FCC', titre: 'Forfeiture Order FCC 24-104', url: 'https://docs.fcc.gov/public/attachments/FCC-24-104A1_Rcd.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Associated Press', titre: 'New Hampshire jury acquits consultant behind AI robocalls mimicking Biden', url: 'https://www.ksat.com/news/politics/2025/06/13/new-hampshire-jury-acquits-consultant-behind-ai-robocalls-mimicking-biden-on-all-charges/', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’IA, articles 3 (60), 50 et 113', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202401689', type: 'primaire', annee: 2024 },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

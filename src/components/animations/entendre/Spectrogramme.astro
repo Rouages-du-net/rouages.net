@@ -1,0 +1,101 @@
+---
+// Animation « Voir le son » (étape 1 du module « Les IA qui entendent et
+// parlent ») : le spectrogramme d'une suite de voyelles synthétisées. On y
+// voit les harmoniques de la voix et, plus sombres, les bandes des formants
+// qui changent d'une voyelle à l'autre.
+import { LOCUTEURS } from '../../../lib/son';
+---
+<div class="anim spectro" data-spectro>
+  <div class="anim-repli">
+    <p>
+      Un spectrogramme montre le son comme une image : le temps de gauche à droite, les
+      fréquences de bas en haut, l'intensité en couleur. Pour la voyelle « a », deux bandes
+      sombres se dessinent vers 650 et 1 300 Hz chez un homme ; pour « i », l'une descend vers
+      300 Hz et l'autre monte vers 2 050 Hz. Ces bandes, les formants, viennent de la forme de
+      la bouche : ce sont elles qui permettent de reconnaître les voyelles, quelle que soit la
+      hauteur de la voix.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Voix</legend>
+        {LOCUTEURS.map((l, k) => <label><input type="radio" name="spectro-voix" value={l.id} checked={k === 0} /> {l.nom}</label>)}
+      </fieldset>
+      <div class="graphe">
+        <div class="axe-y" aria-hidden="true"><span>4 000 Hz</span><span>2 000 Hz</span><span>0</span></div>
+        <canvas width="360" height="200" data-canvas role="img" aria-label="Spectrogramme des voyelles a, i, ou"></canvas>
+      </div>
+      <p class="voyelles" aria-hidden="true"><span>a</span><span>i</span><span>ou</span></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="ecouter">🔊 Écouter « a… i… ou »</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { synthetiser, spectrogramme, jouer, voix, LOCUTEURS, TAUX } from '../../../lib/son';
+  import { hasard } from '../../../lib/minilm';
+
+  const SEQUENCE = ['a', 'i', 'ou'];
+
+  document.querySelectorAll<HTMLElement>('[data-spectro]').forEach((racine) => {
+    activerScene(racine);
+    const canvas = racine.querySelector<HTMLCanvasElement>('[data-canvas]')!;
+    const ctx = canvas.getContext('2d')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let signal = new Float32Array(0);
+
+    function calculer() {
+      const loc = LOCUTEURS.find((l) => l.id === racine.querySelector<HTMLInputElement>('input:checked')!.value)!;
+      const morceaux = SEQUENCE.map((v, k) => synthetiser(voix(v, loc), 0.45, TAUX, hasard(10 + k)));
+      signal = new Float32Array(morceaux.reduce((n, m) => n + m.length, 0));
+      let pos = 0;
+      for (const m of morceaux) {
+        signal.set(m, pos);
+        pos += m.length;
+      }
+      // Comme sur les spectrogrammes de phonéticien, on relève les aigus
+      // (pré-accentuation), sinon les formants hauts restent pâles.
+      const accentue = signal.map((v, i) => v - 0.95 * (signal[i - 1] ?? 0));
+      const cols = spectrogramme(accentue, 512, 120);
+      const bins = 128; // 0 à 4 000 Hz (512 points à 16 000 Hz : 31,25 Hz par case)
+      const style = getComputedStyle(racine);
+      const encre = style.getPropertyValue('--fg').trim() || '#000';
+      ctx.fillStyle = style.getPropertyValue('--bg').trim() || '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = encre;
+      const max = Math.max(...cols.map((c) => Math.max(...c.slice(0, bins))));
+      const w = canvas.width / cols.length;
+      const h = canvas.height / bins;
+      cols.forEach((c, x) => {
+        for (let b = 0; b < bins; b++) {
+          const v = Math.max(0, (c[b] - (max - 45)) / 45); // 45 dB de dynamique
+          ctx.globalAlpha = v;
+          ctx.fillRect(x * w, canvas.height - (b + 1) * h, w + 0.5, h + 0.5);
+        }
+      });
+      ctx.globalAlpha = 1;
+      legende.textContent = `Voix ${loc.nom.toLowerCase()} : les fines lignes horizontales sont les harmoniques, tous les ${loc.f0} Hz (la hauteur de la voix). Les zones les plus sombres sont les formants : ils changent quand on passe de « a » à « i » à « ou ». ${loc.id === 'homme' ? 'Change de voix : les formants montent un peu, les harmoniques s’écartent.' : 'Les formants sont un peu plus hauts que chez un homme : le conduit vocal est plus court.'}`;
+    }
+
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('change', calculer));
+    racine.querySelector('[data-action="ecouter"]')!.addEventListener('click', () => jouer(signal));
+    calculer();
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', calculer);
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.5rem 0.9rem; margin: 0 0 0.75rem; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .graphe { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem; }
+  .axe-y { display: flex; flex-direction: column; justify-content: space-between; font-size: 0.7rem; color: var(--muted); text-align: right; }
+  canvas { width: 100%; height: auto; display: block; border: 1px solid var(--border); }
+  .voyelles { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0.2rem 0 0 3.6rem; text-align: center; font-weight: 700; }
+</style>

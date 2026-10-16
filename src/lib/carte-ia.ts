@@ -1,6 +1,7 @@
 // La carte des IA : les buts (ce que l'IA fait pour nous) croisés avec les
 // mécanismes (comment elle le fait). Voir docs/ROADMAP.md, phase 5.
-// lien : adresse du module s'il existe déjà.
+// lien : adresse du module s'il existe déjà ; resume : sa présentation sur
+// la page « L'IA » (src/pages/ia/index.astro).
 
 export const MECANISMES = [
   { id: 'regles', nom: 'Règles écrites à la main', exemple: 'systèmes experts' },
@@ -14,16 +15,16 @@ export const MECANISMES = [
 
 export type Mecanisme = (typeof MECANISMES)[number]['id'];
 
-export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lien?: string }[] = [
-  { nom: 'qui écrivent', exemples: 'assistants, traduction', mecanismes: ['neurones', 'probas'], lien: '/modules/ia-texte/' },
-  { nom: 'qui voient', exemples: 'visages, tri postal', mecanismes: ['neurones', 'stats'] },
-  { nom: 'qui entendent et parlent', exemples: 'assistants vocaux, sous-titres', mecanismes: ['neurones', 'probas'] },
+export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lien?: string; resume?: string }[] = [
+  { nom: 'qui écrivent', exemples: 'assistants, traduction', mecanismes: ['neurones', 'probas'], lien: '/modules/ia-texte/', resume: 'Comment marche un ChatGPT : tokens, plongements, attention, et les humains derrière.' },
+  { nom: 'qui voient', exemples: 'visages, tri postal', mecanismes: ['neurones', 'stats'], lien: '/modules/ia-voir/', resume: 'Des pixels aux réseaux convolutifs : dessine, filtre, entraîne un petit réseau, et regarde ce que pose la reconnaissance faciale.' },
+  { nom: 'qui entendent et parlent', exemples: 'assistants vocaux, sous-titres', mecanismes: ['neurones', 'probas'], lien: '/modules/ia-entendre/', resume: 'Le son en nombres, le spectrogramme, une machine qui reconnaît des voyelles et une autre qui parle ; et ta voix, une donnée à protéger.' },
   { nom: 'qui créent', exemples: 'images, musique', mecanismes: ['neurones'] },
-  { nom: 'qui classent', exemples: 'spam, diagnostic, tri de CV', mecanismes: ['probas', 'stats', 'neurones', 'regles'], lien: '/modules/ia-classer/' },
+  { nom: 'qui classent', exemples: 'spam, diagnostic, tri de CV', mecanismes: ['probas', 'stats', 'neurones', 'regles'], lien: '/modules/ia-classer/', resume: 'Spam, fraude, tri de CV : entraîne un filtre anti-spam, choisis ton seuil, et vois ce qui change quand on classe des personnes.' },
   { nom: 'qui recommandent', exemples: 'vidéos, fil d’actualité', mecanismes: ['stats', 'neurones'] },
   { nom: 'qui prédisent', exemples: 'météo, consommation', mecanismes: ['stats', 'neurones', 'probas'] },
   { nom: 'qui décident pour nous', exemples: 'crédit, aides sociales', mecanismes: ['regles', 'stats', 'probas', 'neurones'] },
-  { nom: 'qui cherchent et optimisent', exemples: 'GPS, tournées, horaires', mecanismes: ['recherche', 'nature'], lien: '/modules/ia-chercher/' },
+  { nom: 'qui cherchent et optimisent', exemples: 'GPS, tournées, horaires', mecanismes: ['recherche', 'nature'], lien: '/modules/ia-chercher/', resume: 'GPS, tournées, sacs à dos : Dijkstra, A*, le voyageur de commerce, des fourmis et l’évolution.' },
   { nom: 'qui jouent', exemples: 'échecs, go', mecanismes: ['recherche', 'renforcement', 'neurones'] },
   { nom: 'qui agissent', exemples: 'robots, voitures autonomes', mecanismes: ['neurones', 'renforcement', 'recherche', 'regles'] },
   { nom: 'qui surveillent', exemples: 'fraude, vidéosurveillance', mecanismes: ['stats', 'neurones', 'regles'] },

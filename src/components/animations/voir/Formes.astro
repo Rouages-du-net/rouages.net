@@ -1,0 +1,176 @@
+---
+// Animation « Un réseau qui apprend ses filtres » (étape 2 du module « Les
+// IA qui voient ») : un petit réseau convolutif (4 filtres 3 × 3, un
+// regroupement, une couche de sortie) s'entraîne sous nos yeux sur 400
+// formes dessinées au hasard, puis reconnaît les formes qu'on dessine. On
+// voit ses filtres appris et ce qu'ils détectent dans notre dessin.
+import { FORMES } from '../../../lib/voir';
+---
+<div class="anim formes" data-formes>
+  <div class="anim-repli">
+    <p>
+      Un petit réseau convolutif s'entraîne sur 400 formes dessinées au hasard (cercles,
+      carrés, triangles, croix) de 16 × 16 pixels. Il commence avec 4 filtres de 3 × 3
+      coefficients pris au hasard ; à chaque erreur, la rétropropagation corrige les filtres et
+      la couche de sortie. Après quelques passages, il reconnaît environ 95 % de formes qu'il
+      n'a jamais vues. Personne ne lui a dit de chercher des coins ou des diagonales : ses
+      filtres l'ont appris.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="entrainement">
+        <p class="etat" data-etat aria-live="polite">Le réseau n'a encore rien appris : ses filtres sont pris au hasard.</p>
+        <div class="anim-commandes">
+          <button type="button" class="principal" data-action="entrainer">🎓 Entraîner sur 400 formes</button>
+          <button type="button" data-action="oublier">↺ Tout oublier</button>
+        </div>
+        <div class="exemples" aria-hidden="true" data-exemples></div>
+      </div>
+      <div class="deux">
+        <div>
+          <h4>Dessine une forme</h4>
+          <svg class="dessin" role="img" aria-label="Grille de dessin de 16 × 16 pixels" data-dessin></svg>
+          <div class="anim-commandes">
+            <button type="button" data-action="effacer">↺ Effacer</button>
+            {FORMES.map((f) => <button type="button" data-modele={f}>{f}</button>)}
+          </div>
+        </div>
+        <div>
+          <h4>Ce que répond le réseau</h4>
+          <ul class="probas" data-probas>
+            {FORMES.map((f) => (
+              <li><span>{f}</span><span class="barre"><span data-barre={f}></span></span><strong data-p={f}></strong></li>
+            ))}
+          </ul>
+          <h4>Ses 4 filtres, et ce qu'ils voient dans ton dessin</h4>
+          <div class="filtres" data-filtres aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { grilleDessin } from '../../../lib/grille-dessin';
+  import { ReseauConvolutif, jeuDeFormes, forme, FORMES, type Forme } from '../../../lib/voir';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function mini(n: number, valeurs: ArrayLike<number>, signe = false) {
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${n} ${n}`);
+    const max = Math.max(...Array.from(valeurs, Math.abs), 1e-9);
+    for (let i = 0; i < n * n; i++) {
+      const v = valeurs[i] / max;
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', String(i % n));
+      r.setAttribute('y', String(Math.floor(i / n)));
+      r.setAttribute('width', '1.02');
+      r.setAttribute('height', '1.02');
+      r.setAttribute('class', signe ? (v >= 0 ? 'pos' : 'neg') : 'gris');
+      r.setAttribute('fill-opacity', Math.abs(v).toFixed(2));
+      svg.append(r);
+    }
+    return svg;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-formes]').forEach((racine) => {
+    activerScene(racine);
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="entrainer"]')!;
+    const filtresEl = racine.querySelector<HTMLElement>('[data-filtres]')!;
+    const exemples = jeuDeFormes(hasard(1), 400);
+    const examen = jeuDeFormes(hasard(99), 200);
+    racine.querySelector('[data-exemples]')!.append(...exemples.slice(0, 12).map((e) => mini(16, e.im.px)));
+    let reseau = new ReseauConvolutif(hasard(3));
+    let epoques = 0;
+    let modele = 0;
+
+    const g = grilleDessin(racine.querySelector<SVGSVGElement>('[data-dessin]')!, 16, () => juger());
+
+    function juger() {
+      const a = reseau.avant(g.image);
+      FORMES.forEach((f, n) => {
+        racine.querySelector<HTMLElement>(`[data-barre="${f}"]`)!.style.width = `${a.probas[n] * 100}%`;
+        racine.querySelector(`[data-p="${f}"]`)!.textContent = `${Math.round(a.probas[n] * 100)} %`;
+      });
+      filtresEl.replaceChildren(
+        ...reseau.filtres.map((f, k) => {
+          const d = document.createElement('div');
+          d.className = 'filtre';
+          d.append(mini(3, f, true), mini(14, a.cartes[k]));
+          return d;
+        }),
+      );
+      const n = a.probas.indexOf(Math.max(...a.probas));
+      const vide = !g.image.px.some((v) => v > 0.2);
+      legende.textContent = vide
+        ? 'Dessine une forme dans la grille, ou clique sur un modèle.'
+        : epoques
+          ? `Le réseau répond « ${FORMES[n]} » à ${Math.round(a.probas[n] * 100)} %. Sous « Ses 4 filtres », chaque petit carré coloré est un filtre appris (orange : coefficients positifs, bleu : négatifs), et l’image grise montre où il réagit dans ton dessin.`
+          : 'Sans entraînement, le réseau répond presque au hasard. Clique sur « Entraîner ».';
+    }
+
+    function score() {
+      return examen.filter((e) => {
+        const p = reseau.avant(e.im).probas;
+        return p.indexOf(Math.max(...p)) === e.classe;
+      }).length;
+    }
+
+    async function entrainer() {
+      bouton.disabled = true;
+      const alea = hasard(5 + epoques);
+      for (let k = 0; k < 4; k++) {
+        const ordre = [...exemples].sort(() => alea() - 0.5);
+        for (let i = 0; i < ordre.length; i += 20) reseau.apprendre(ordre.slice(i, i + 20), 0.08);
+        epoques++;
+        etat.textContent = `${epoques} passage${epoques > 1 ? 's' : ''} sur les 400 formes · examen : ${score()} formes jamais vues sur 200 bien reconnues`;
+        juger();
+        if (!mouvementReduit()) await new Promise((r) => setTimeout(r, 150));
+      }
+      bouton.disabled = false;
+    }
+
+    bouton.addEventListener('click', entrainer);
+    racine.querySelector('[data-action="oublier"]')!.addEventListener('click', () => {
+      reseau = new ReseauConvolutif(hasard(3));
+      epoques = 0;
+      etat.textContent = 'Le réseau n’a encore rien appris : ses filtres sont pris au hasard.';
+      juger();
+    });
+    racine.querySelector('[data-action="effacer"]')!.addEventListener('click', () => g.effacer());
+    racine.querySelectorAll<HTMLButtonElement>('[data-modele]').forEach((b) =>
+      b.addEventListener('click', () => g.charger(forme(b.dataset.modele as Forme, hasard(1000 + modele++)))),
+    );
+    g.charger(forme('triangle', hasard(8)));
+  });
+</script>
+
+<style>
+  .deux { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); align-items: start; margin-top: 1rem; }
+  h4 { margin: 0.5rem 0; font-size: 0.95rem; }
+  .etat { font-family: var(--police-mono); font-size: 0.85rem; margin: 0; }
+  .exemples { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; margin-top: 0.6rem; max-width: 30rem; }
+  .exemples :global(svg), .filtres :global(svg) { width: 100%; aspect-ratio: 1; display: block; background: var(--bg); border: 1px solid var(--border); }
+  .dessin { width: 100%; max-width: 16rem; aspect-ratio: 1; display: block; background: var(--bg); border: 1px solid var(--border); cursor: crosshair; }
+  .dessin :global(rect), :global(.formes svg rect.gris) { fill: var(--fg); }
+  :global(.formes svg rect.pos) { fill: var(--ill-paquet); }
+  :global(.formes svg rect.neg) { fill: var(--ill-client); }
+  .probas { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .probas li { display: grid; grid-template-columns: 5rem 1fr 3rem; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .probas strong { font-family: var(--police-mono); text-align: right; }
+  .barre { height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .barre span { display: block; height: 100%; background: var(--ill-secret-a); transition: width 0.2s; }
+  .filtres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+  .filtres :global(.filtre) { display: grid; gap: 0.3rem; }
+  .filtres :global(.filtre svg:first-child) { width: 60%; margin: 0 auto; }
+  @media (prefers-reduced-motion: reduce) { .barre span { transition: none; } }
+</style>

@@ -1,0 +1,164 @@
+---
+// Animation « Reconnaître une voyelle » (étape 2 du module « Les IA qui
+// entendent et parlent ») : on synthétise une voyelle, l'ordinateur estime
+// ses deux premiers formants (prédiction linéaire), place le point dans le
+// plan (F1, F2) et choisit le modèle le plus proche. Avec des modèles tirés
+// de voix d'hommes seulement, les voix d'enfants sont moins bien reconnues.
+import { LOCUTEURS, VOYELLES } from '../../../lib/son';
+---
+<div class="anim voyelles" data-voyelles>
+  <div class="anim-repli">
+    <p>
+      Pour reconnaître une voyelle, l'ordinateur estime dans le son ses deux premiers formants,
+      F1 et F2, puis cherche le modèle le plus proche : « i » a un F1 bas et un F2 haut, « a »
+      un F1 haut, « ou » les deux bas. Si les modèles ont été appris seulement sur des voix
+      d'hommes, une voix d'enfant, aux formants plus hauts, est parfois confondue : un « o »
+      d'enfant ressemble à un « a » d'homme. Avec des modèles appris sur des voix variées, les
+      erreurs diminuent.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="reglages">
+        <fieldset class="choix">
+          <legend>Voix</legend>
+          {LOCUTEURS.map((l, k) => <label><input type="radio" name="voy-loc" value={l.id} checked={k === 2} /> {l.nom}</label>)}
+        </fieldset>
+        <fieldset class="choix">
+          <legend>Voyelle prononcée</legend>
+          {Object.keys(VOYELLES).map((v) => <label><input type="radio" name="voy-v" value={v} checked={v === 'o'} /> {v}</label>)}
+        </fieldset>
+        <fieldset class="choix">
+          <legend>Modèles appris sur</legend>
+          <label><input type="radio" name="voy-modeles" value="hommes" checked /> des voix d'hommes</label>
+          <label><input type="radio" name="voy-modeles" value="tous" /> des voix variées</label>
+        </fieldset>
+      </div>
+      <div class="deux">
+        <figure>
+          <svg viewBox="0 0 300 180" role="img" aria-label="Enveloppe du spectre de la voyelle et ses formants" data-env></svg>
+          <figcaption>Ce que l'ordinateur estime : la forme du spectre, et ses pics (les formants)</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 300 220" role="img" aria-label="Plan F1 F2 : modèles des voyelles et point mesuré" data-plan></svg>
+          <figcaption>Le plan (F2, F1) : la voyelle mesurée (✚) et les modèles</figcaption>
+        </figure>
+      </div>
+      <p class="verdict" data-verdict aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="ecouter">🔊 Écouter</button>
+      </div>
+      <p class="score" data-score></p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { synthetiser, enveloppe, reconnaitre, jouer, voix, LOCUTEURS, VOYELLES, TAUX, type Modele } from '../../../lib/son';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  // Plan (F2 de 2 800 à 600 Hz de gauche à droite, F1 de 200 à 1 000 Hz de
+  // haut en bas), comme les phonéticiens le dessinent : la position de la
+  // langue dans la bouche.
+  const PX = (f2: number) => 20 + ((Math.log(3200) - Math.log(f2)) / (Math.log(3200) - Math.log(600))) * 260;
+  const PY = (f1: number) => 15 + ((Math.log(f1) - Math.log(220)) / (Math.log(1100) - Math.log(220))) * 190;
+
+  function modeles(type: string): Modele[] {
+    const locs = type === 'hommes' ? LOCUTEURS.filter((l) => l.id === 'homme') : LOCUTEURS;
+    return locs.flatMap((l) => Object.keys(VOYELLES).map((v) => ({ voyelle: v, f1: VOYELLES[v][0] * l.facteur, f2: VOYELLES[v][1] * l.facteur })));
+  }
+  const choix = (r: HTMLElement, nom: string) => r.querySelector<HTMLInputElement>(`input[name="${nom}"]:checked`)!.value;
+  const el = (nom: string, attrs: Record<string, string | number>, texte?: string) => {
+    const e = document.createElementNS(NS, nom);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    if (texte) e.textContent = texte;
+    return e;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-voyelles]').forEach((racine) => {
+    activerScene(racine);
+    const env = racine.querySelector<SVGSVGElement>('[data-env]')!;
+    const plan = racine.querySelector<SVGSVGElement>('[data-plan]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let signal = new Float32Array(0);
+
+    // Score sur les 15 combinaisons (5 voyelles × 3 voix).
+    function score(type: string) {
+      const m = modeles(type);
+      const res = LOCUTEURS.map((l) => ({
+        l,
+        ok: Object.keys(VOYELLES).filter((v) => {
+          const { pics } = enveloppe(synthetiser(voix(v, l), 0.4, TAUX, hasard(1)));
+          return pics.length >= 2 && reconnaitre(pics[0], pics[1], m).voyelle === v;
+        }).length,
+      }));
+      return res.map((r) => `${r.l.nom.toLowerCase()} ${r.ok}/5`).join(' · ');
+    }
+    const scores = { hommes: score('hommes'), tous: score('tous') };
+
+    function maj() {
+      const loc = LOCUTEURS.find((l) => l.id === choix(racine, 'voy-loc'))!;
+      const v = choix(racine, 'voy-v');
+      const type = choix(racine, 'voy-modeles');
+      signal = synthetiser(voix(v, loc), 0.4, TAUX, hasard(1));
+      const { db, pics } = enveloppe(signal);
+      // Enveloppe.
+      const max = Math.max(...db), min = max - 50;
+      const pts = Array.from(db, (d, i) => `${(i / db.length) * 280 + 10},${(150 - (Math.max(min, d) - min) / 50 * 130).toFixed(1)}`);
+      env.replaceChildren(
+        el('rect', { x: 0, y: 0, width: 300, height: 180, class: 'fond' }),
+        el('polyline', { points: pts.join(' '), class: 'courbe' }),
+        ...pics.slice(0, 2).flatMap((f, k) => [
+          el('line', { x1: (f / 4000) * 280 + 10, x2: (f / 4000) * 280 + 10, y1: 15, y2: 150, class: 'pic' }),
+          el('text', { x: (f / 4000) * 280 + 12, y: 26 + k * 14, class: 'etiquette' }, `F${k + 1} ≈ ${Math.round(f)} Hz`),
+        ]),
+        el('text', { x: 10, y: 172, class: 'axe' }, '0 Hz'),
+        el('text', { x: 255, y: 172, class: 'axe' }, '4 000 Hz'),
+      );
+      // Plan F1/F2.
+      const m = modeles(type);
+      const r = pics.length >= 2 ? reconnaitre(pics[0], pics[1], m) : null;
+      plan.replaceChildren(
+        el('rect', { x: 0, y: 0, width: 300, height: 220, class: 'fond' }),
+        el('text', { x: 150, y: 214, class: 'axe' }, '← F2 plus aigu · F2 plus grave →'),
+        ...m.map((mo) => el('text', { x: PX(mo.f2), y: PY(mo.f1) + 4, class: `modele${r && mo.voyelle === r.voyelle ? ' choisi' : ''}` }, mo.voyelle)),
+        ...(r ? [el('text', { x: PX(pics[1]), y: PY(pics[0]) + 5, class: 'mesure' }, '✚')] : []),
+      );
+      const bon = r?.voyelle === v;
+      racine.querySelector('[data-verdict]')!.textContent = r ? `Reconnu : « ${r.voyelle} » ${bon ? '✓' : `✗ (c’était « ${v} »)`}` : 'Formants introuvables : pas de réponse.';
+      racine.querySelector('[data-score]')!.textContent = `Sur les 15 essais (5 voyelles × 3 voix), avec ces modèles : ${scores[type as 'hommes' | 'tous']}.`;
+      legende.textContent =
+        type === 'hommes'
+          ? 'Les modèles viennent de voix d’hommes seulement. Les voix de femmes et surtout d’enfants ont des formants plus hauts : leurs voyelles tombent parfois plus près d’un autre modèle.'
+          : 'Avec des modèles appris sur des voix d’hommes, de femmes et d’enfants, les erreurs disparaissent ici. Avec de vraies voix, bien plus variées (accents, âges, bruit), le problème est le même en plus grand : un système reconnaît mieux les voix qui ressemblent à celles de son entraînement.';
+    }
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('change', maj));
+    racine.querySelector('[data-action="ecouter"]')!.addEventListener('click', () => jouer(signal));
+    maj();
+  });
+</script>
+
+<style>
+  .reglages { display: grid; gap: 0.5rem; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .deux { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin-top: 0.75rem; }
+  figure { margin: 0; }
+  figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+  svg { width: 100%; height: auto; display: block; }
+  svg :global(.fond) { fill: var(--bg); stroke: var(--border); }
+  svg :global(.courbe) { fill: none; stroke: var(--ill-client); stroke-width: 2; }
+  svg :global(.pic) { stroke: var(--ill-paquet); stroke-dasharray: 3 3; }
+  svg :global(.etiquette) { font: 700 10px var(--police); fill: var(--ill-paquet); }
+  svg :global(.axe) { font: 10px var(--police); fill: var(--muted); text-anchor: middle; }
+  svg :global(.modele) { font: 700 13px var(--police); fill: var(--muted); text-anchor: middle; opacity: 0.6; }
+  svg :global(.modele.choisi) { fill: var(--ill-secret-a); opacity: 1; }
+  svg :global(.mesure) { font: 700 16px var(--police); fill: var(--ill-paquet); text-anchor: middle; }
+  .verdict { font-weight: 700; font-size: 1.05rem; margin: 0.75rem 0 0; }
+  .score { font-family: var(--police-mono); font-size: 0.85rem; }
+</style>

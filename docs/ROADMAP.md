@@ -73,14 +73,18 @@ flowchart TB
 - [ ] Relecture humaine finale
 - [x] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » : règlement (UE) 2026/1744 du 8 juillet 2026 (JO du 24.7.2026), obligations à haut risque de l'annexe III au 2 décembre 2027 (voir `docs/sources/ia-classer.md`, § 8)
 
+### Page d'entrée
+
+- [x] Page `/ia/` : introduction, parcours conseillé, modules par but (générés depuis `src/lib/carte-ia.ts`) ; une seule carte « L'IA » sur l'accueil et un lien dans le menu
+
 ### À venir (ordre prévu)
 
 - [x] **L'IA, c'est quoi ?** (`/modules/ia/`, relecture humaine à faire) — définitions (et pourquoi elles changent), IA à règles et IA qui apprend, trois façons d'apprendre, carte buts × mécanismes, hivers et printemps de l'IA, idée reçue « tout est de l'IA »
 - [x] **Comment apprend une machine** *(transversal, `/modules/apprendre/`, relecture humaine à faire)* — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage, apprentissage supervisé, non supervisé, par renforcement
 - [x] **Les IA qui classent** *(`/modules/ia-classer/`, relecture humaine à faire)* — spam, diagnostic, tri de CV : Bayes naïf (un filtre anti-spam qu'on entraîne soi-même), arbres de décision, plus proches voisins
 - [x] **Les IA qui cherchent et optimisent** *(`/modules/ia-chercher/`, relecture humaine à faire)* — GPS, tournées, emplois du temps : recherche A* ; IA inspirées de la nature : algorithmes génétiques, colonies de fourmis, essaims
-- [ ] **Les IA qui voient** — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
-- [ ] **Les IA qui entendent et parlent** — reconnaissance vocale, synthèse de la voix, sous-titres automatiques
+- [x] **Les IA qui voient** *(`/modules/ia-voir/`, relecture humaine à faire)* — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
+- [x] **Les IA qui entendent et parlent** *(`/modules/ia-entendre/`, relecture humaine à faire)* — reconnaissance vocale, synthèse de la voix, sous-titres automatiques
 - [ ] **Les IA qui créent** — images (diffusion : le débruitage), musique ; droit d'auteur
 - [ ] **Les IA qui recommandent** — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)
 - [ ] **Les IA qui prédisent** — météo, consommation, police prédictive : séries temporelles, corrélation et causalité

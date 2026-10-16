@@ -1,0 +1,95 @@
+---
+// Animation « Quand l'image est un visage » (étape 3 du module « Les IA qui
+// voient ») : les taux d'erreur de trois services commerciaux de
+// classification du genre, mesurés par Joy Buolamwini et Timnit Gebru
+// (« Gender Shades », 2018, tableau 4, jeu de test de 1 270 parlementaires).
+// Chiffres exacts de l'article (docs/sources/ia-voir.md, § 8).
+
+const GROUPES = ['Femmes à peau foncée', 'Hommes à peau foncée', 'Femmes à peau claire', 'Hommes à peau claire'];
+const DONNEES = [
+  { nom: 'Microsoft', toutes: 6.3, erreurs: [20.8, 6.0, 1.7, 0.0] },
+  { nom: 'Face++', toutes: 10.0, erreurs: [34.5, 0.7, 9.8, 0.8] },
+  { nom: 'IBM', toutes: 12.1, erreurs: [34.7, 12.0, 7.1, 0.3] },
+];
+const fr = (v: number) => v.toFixed(1).replace('.', ',');
+---
+<div class="anim visages" data-visages data-donnees={JSON.stringify(DONNEES)}>
+  <table class="tableau">
+    <caption>Taux d'erreur (en %) de trois services qui devinent le genre d'après une photo, en 2017-2018</caption>
+    <thead>
+      <tr><th scope="col">Groupe</th>{DONNEES.map((d) => <th scope="col">{d.nom}</th>)}</tr>
+    </thead>
+    <tbody>
+      {GROUPES.map((g, i) => (
+        <tr><th scope="row">{g}</th>{DONNEES.map((d) => <td>{fr(d.erreurs[i])}</td>)}</tr>
+      ))}
+      <tr class="moyenne"><th scope="row">Tout le monde</th>{DONNEES.map((d) => <td>{fr(d.toutes)}</td>)}</tr>
+    </tbody>
+  </table>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Service testé</legend>
+        {DONNEES.map((d, k) => (
+          <label><input type="radio" name="visages-service" value={k} checked={k === 2} /> {d.nom}</label>
+        ))}
+      </fieldset>
+      <ul class="barres">
+        {GROUPES.map((g, i) => (
+          <li><span class="nom">{g}</span><span class="barre"><span data-barre={i}></span></span><strong data-val={i}></strong></li>
+        ))}
+        <li class="moyenne"><span class="nom">Tout le monde</span><span class="barre"><span data-barre="moy"></span></span><strong data-val="moy"></strong></li>
+      </ul>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  const fr = (v: number) => v.toFixed(1).replace('.', ',');
+
+  document.querySelectorAll<HTMLElement>('[data-visages]').forEach((racine) => {
+    activerScene(racine);
+    racine.querySelector<HTMLElement>('.tableau')!.classList.add('replie');
+    const donnees: { nom: string; toutes: number; erreurs: number[] }[] = JSON.parse(racine.dataset.donnees!);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const ECHELLE = 40; // % : la barre pleine
+
+    function maj() {
+      const d = donnees[Number(racine.querySelector<HTMLInputElement>('input:checked')!.value)];
+      const poser = (cle: string, v: number) => {
+        racine.querySelector<HTMLElement>(`[data-barre="${cle}"]`)!.style.width = `${(v / ECHELLE) * 100}%`;
+        racine.querySelector(`[data-val="${cle}"]`)!.textContent = `${fr(v)} %`;
+      };
+      d.erreurs.forEach((v, i) => poser(String(i), v));
+      poser('moy', d.toutes);
+      const [fpf, , , hpc] = d.erreurs;
+      legende.textContent = `${d.nom} : ${fr(d.toutes)} % d’erreurs en moyenne. Mais ${fr(fpf)} % pour les femmes à peau foncée, contre ${fr(hpc)} % pour les hommes à peau claire. La moyenne cache l’écart.`;
+    }
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('change', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .tableau { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .tableau.replie { display: none; }
+  .tableau caption { text-align: left; font-weight: 600; margin-bottom: 0.3rem; }
+  .tableau th, .tableau td { border-bottom: 1px solid var(--border); padding: 0.3rem 0.5rem; text-align: left; }
+  .tableau td { font-family: var(--police-mono); }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.5rem 0.9rem; margin: 0 0 0.75rem; }
+  .choix legend { font-weight: 600; padding: 0 0.3rem; }
+  .choix label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .barres { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+  .barres li { display: grid; grid-template-columns: minmax(8rem, 11rem) 1fr 3.5rem; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .barres li.moyenne { border-top: 1px solid var(--border); padding-top: 0.45rem; font-weight: 600; }
+  .barres strong { font-family: var(--police-mono); text-align: right; }
+  .barre { height: 0.9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .barre span { display: block; height: 100%; background: var(--ill-paquet); transition: width 0.3s; }
+  .moyenne .barre span { background: var(--muted); }
+  @media (max-width: 30rem) { .barres li { grid-template-columns: 1fr 3.5rem; } .barres .barre { grid-column: 1 / -1; grid-row: 2; } }
+  @media (prefers-reduced-motion: reduce) { .barre span { transition: none; } }
+</style>

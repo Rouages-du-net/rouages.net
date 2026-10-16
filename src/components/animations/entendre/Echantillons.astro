@@ -1,0 +1,131 @@
+---
+// Animation « Le son en nombres » (étape 0 du module « Les IA qui entendent
+// et parlent ») : un son pur est une vibration ; pour le numériser, on le
+// mesure à intervalles réguliers. Trop peu de mesures par seconde, et l'on
+// reconstruit un autre son, plus grave : c'est le repliement.
+---
+<div class="anim echantillons" data-echantillons>
+  <div class="anim-repli">
+    <p>
+      Un son est une vibration de l'air. Un micro la transforme en une tension électrique qui
+      monte et descend ; pour la numériser, on la mesure à intervalles réguliers, des milliers
+      de fois par seconde. Il faut au moins deux mesures par vibration : un son de 1 000 Hz
+      demande plus de 2 000 mesures par seconde. Avec moins, les mesures dessinent une
+      vibration plus lente, un son plus grave qui n'existait pas. Les CD mesurent le son
+      44 100 fois par seconde, assez pour tout ce que l'oreille humaine entend.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 320 140" role="img" aria-labelledby="echantillons-titre">
+        <title id="echantillons-titre">La vibration du son, les mesures prises, et la vibration qu'on reconstruit à partir des mesures.</title>
+        <rect x="0" y="0" width="320" height="140" class="fond" />
+        <line x1="0" y1="70" x2="320" y2="70" class="axe" />
+        <path data-vrai class="vrai" d="" />
+        <path data-reconstruit class="reconstruit" d="" />
+        <g data-points></g>
+      </svg>
+      <p class="cle"><span class="k vrai"></span> le vrai son <span class="k reconstruit"></span> ce qu'on reconstruit <span class="k point"></span> les mesures</p>
+      <label class="curseur">Son : <output data-sortie="f"></output>
+        <input type="range" min="100" max="1500" step="50" value="500" data-f />
+      </label>
+      <label class="curseur">Mesures par seconde : <output data-sortie="taux"></output>
+        <input type="range" min="400" max="8000" step="100" value="4000" data-taux />
+      </label>
+      <div class="anim-commandes">
+        <button type="button" data-action="ecouter">🔊 Écouter le vrai son</button>
+        <button type="button" data-action="ecouter-mesure">🔊 Écouter ce qu'on a mesuré</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { jouer } from '../../../lib/son';
+
+  // On montre 10 millisecondes de son.
+  const DUREE = 0.01;
+  const X = (t: number) => (t / DUREE) * 320;
+  const Y = (v: number) => 70 - v * 55;
+  const NS = 'http://www.w3.org/2000/svg';
+  const nb = (v: number) => v.toLocaleString('fr-FR');
+
+  // Fréquence apparente après échantillonnage (repliement).
+  const apparente = (f: number, taux: number) => {
+    const r = f % taux;
+    return Math.min(r, taux - r);
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-echantillons]').forEach((racine) => {
+    activerScene(racine);
+    const fIn = racine.querySelector<HTMLInputElement>('[data-f]')!;
+    const tIn = racine.querySelector<HTMLInputElement>('[data-taux]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const points = racine.querySelector<SVGGElement>('[data-points]')!;
+
+    function maj() {
+      const f = Number(fIn.value);
+      const taux = Number(tIn.value);
+      racine.querySelector<HTMLOutputElement>('[data-sortie="f"]')!.value = `${nb(f)} vibrations par seconde (Hz)`;
+      racine.querySelector<HTMLOutputElement>('[data-sortie="taux"]')!.value = nb(taux);
+      const vrai = Array.from({ length: 401 }, (_, i) => {
+        const t = (i / 400) * DUREE;
+        return `${i ? 'L' : 'M'}${X(t).toFixed(1)},${Y(Math.sin(2 * Math.PI * f * t)).toFixed(1)}`;
+      }).join('');
+      racine.querySelector('[data-vrai]')!.setAttribute('d', vrai);
+      const mesures = Array.from({ length: Math.floor(DUREE * taux) + 1 }, (_, k) => k / taux);
+      points.replaceChildren(
+        ...mesures.map((t) => {
+          const c = document.createElementNS(NS, 'circle');
+          c.setAttribute('cx', X(t).toFixed(1));
+          c.setAttribute('cy', Y(Math.sin(2 * Math.PI * f * t)).toFixed(1));
+          c.setAttribute('r', '2.6');
+          return c;
+        }),
+      );
+      // Ce qu'on reconstruit : la vibration la plus lente qui passe par les mesures.
+      const fa = apparente(f, taux);
+      const signe = f % taux > taux / 2 ? -1 : 1;
+      const rec = Array.from({ length: 401 }, (_, i) => {
+        const t = (i / 400) * DUREE;
+        return `${i ? 'L' : 'M'}${X(t).toFixed(1)},${Y(signe * Math.sin(2 * Math.PI * fa * t)).toFixed(1)}`;
+      }).join('');
+      racine.querySelector('[data-reconstruit]')!.setAttribute('d', rec);
+      legende.textContent =
+        taux > 2 * f
+          ? `${nb(taux)} mesures par seconde, plus du double de ${nb(f)} Hz : les mesures suffisent pour retrouver exactement le son de départ.`
+          : `Trop peu de mesures (il en faudrait plus de ${nb(2 * f)} par seconde) : elles dessinent une vibration plus lente, à ${nb(Math.round(fa))} Hz. On entendrait un son plus grave, qui n’existait pas. C’est le repliement.`;
+    }
+
+    const ton = (f: number, taux: number) => {
+      const n = Math.round(0.8 * 16000);
+      const fa = taux > 2 * f ? f : apparente(f, taux);
+      jouer(Float32Array.from({ length: n }, (_, i) => Math.sin((2 * Math.PI * fa * i) / 16000) * Math.min(1, i / 400, (n - i) / 400)), 16000, 0.25);
+    };
+    racine.querySelector('[data-action="ecouter"]')!.addEventListener('click', () => ton(Number(fIn.value), 1e9));
+    racine.querySelector('[data-action="ecouter-mesure"]')!.addEventListener('click', () => ton(Number(fIn.value), Number(tIn.value)));
+    fIn.addEventListener('input', maj);
+    tIn.addEventListener('input', maj);
+    maj();
+  });
+</script>
+
+<style>
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  .axe { stroke: var(--border); }
+  .vrai { fill: none; stroke: var(--ill-client); stroke-width: 1.5; }
+  .reconstruit { fill: none; stroke: var(--ill-paquet); stroke-width: 2; stroke-dasharray: 5 3; }
+  svg :global(circle) { fill: var(--fg); }
+  .cle { font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; align-items: center; margin: 0.5rem 0; }
+  .k { display: inline-block; width: 1.2rem; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 0.2rem; }
+  .k.vrai { border-color: var(--ill-client); }
+  .k.reconstruit { border-color: var(--ill-paquet); border-top-style: dashed; }
+  .k.point { width: 0.5rem; height: 0.5rem; border: none; border-radius: 999px; background: var(--fg); }
+  .curseur { display: grid; gap: 0.25rem; margin-top: 0.5rem; font-size: 0.95rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-family: var(--police-mono); font-weight: 700; }
+</style>
