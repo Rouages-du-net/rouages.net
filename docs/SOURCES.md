@@ -73,3 +73,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « De l'Entrée à la page » (faits techniques)](sources/entree-a-la-page.md)
 - [Module « Comment marche un ordinateur » (matériel et logiciel)](sources/ordinateur.md)
 - [Module « Les IA qui écrivent » (mécanismes, histoire, acteurs, coûts)](sources/ia-mecanismes.md)
+- [Module « L'IA, c'est quoi ? » (définitions, systèmes experts, apprentissage, saisons de l'IA)](sources/ia-intro.md)
