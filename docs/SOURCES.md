@@ -81,6 +81,8 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Les IA qui entendent et parlent » (échantillonnage, formants, reconnaissance et synthèse de la parole, voix clonées)](sources/ia-entendre.md)
 - [Module « Les IA qui créent » (diffusion, mémorisation, LAION, procès, droit d'auteur, traçabilité)](sources/ia-creer.md)
 - [Module « Les IA qui recommandent » (filtrage collaboratif, prix Netflix, objectifs, popularité, bulles de filtre, santé, DSA)](sources/ia-recommander.md)
+- [Section « Recommander » (classifications de bibliothèque, guides, palmarès, payola, tri par les notes, faux avis, PageRank, antitrust)](sources/recommander-sans-ia.md)
+- [Section « L'intelligence collective » (Galton, Condorcet, cascades, communs numériques, sciences participatives, Polis, Community Notes, travail des données)](sources/intelligence-collective.md)
 
 ## Dater ce qui bouge vite
 
