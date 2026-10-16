@@ -416,6 +416,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Méthode de recommandation fondée sur les goûts d'autres personnes : on te propose ce qu'ont aimé celles et ceux qui ont aimé les mêmes choses que toi, sans analyser le contenu lui-même.",
     voirAussi: ['apprentissage-automatique'],
   },
+  'bulle-de-filtre': {
+    terme: 'Bulle de filtre',
+    definition:
+      "Expression d'Eli Pariser (2011) : à force de personnaliser ce qu'elles montrent, les plateformes ne nous présenteraient que ce qui nous ressemble. Les recherches discutent de l'ampleur de l'effet et de la part de l'algorithme par rapport à nos propres choix.",
+    voirAussi: ['filtrage-collaboratif'],
+  },
 };
 
 export function entree(id: string): Entree {

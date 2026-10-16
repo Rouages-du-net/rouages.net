@@ -63,7 +63,30 @@ const etapes = [
       des 3 personnes les plus proches. Avec deux vidéos seulement en commun, la corrélation
       vaut souvent ±1 par hasard : les vrais systèmes pénalisent ces ressemblances peu sûres.
     </p>
-    <div slot="histoire" data-a-sourcer="histoire"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 1992, chez Xerox PARC, le système <strong>Tapestry</strong> laisse chaque membre d'une
+        équipe annoter les messages lus ; les filtres des autres s'en servent. Ses auteurs
+        appellent cela « filtrage collaboratif » : des gens qui s'aident à trier en notant ce
+        qu'ils lisent. En 1994, <strong>GroupLens</strong> (MIT et université du Minnesota, avec
+        Paul Resnick, John Riedl et leurs collègues) calcule automatiquement des notes
+        prédites pour les messages des forums Usenet, en partant d'une idée simple : les
+        personnes qui étaient d'accord hier le seront probablement demain.
+      </p>
+      <p>
+        Au MIT Media Lab, <strong>Pattie Maes</strong> et Upendra Shardanand lancent
+        <strong>Ringo</strong>, ouvert au public le 1<sup>er</sup> juillet 1994. On lui écrit
+        par e-mail, et il recommande des albums et des artistes. Plus de 2 000 personnes l'ont
+        utilisé. En 2003, Amazon décrit sa variante, qui compare les produits entre eux plutôt
+        que les client·es : « les gens qui ont acheté ceci ont aussi acheté cela ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le système sait de quoi parle la vidéo. »</strong> Pas forcément. Le filtrage
+      collaboratif ne regarde que les notes et les clics. Les plateformes y ajoutent aujourd'hui
+      des informations sur les contenus (sons, hashtags, légendes), mais ce qui compte le plus,
+      selon elles, reste ce que les gens <em>font</em>.
+    </p>
   </Etape>
 
   <!-- Étape 1 -->
@@ -86,7 +109,29 @@ const etapes = [
       deux matrices fines. Les systèmes actuels utilisent des réseaux de neurones, mais l'idée
       des « plongements » est la même.
     </p>
-    <div slot="histoire" data-a-sourcer="netflix"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 2006, Netflix publie plus de 100 millions de notes de films, données par environ
+        500 000 abonné·es rendu·es anonymes, et promet un million de dollars à qui réduira de
+        10 % l'erreur de son propre algorithme. Plus de 48 000 équipes de 182 pays téléchargent
+        les données. Le prix est remis le 21 septembre 2009 à l'équipe BellKor's Pragmatic
+        Chaos, qui mélange plus de cent méthodes ; au cœur de la solution, la factorisation de
+        matrice, défendue notamment par <strong>Yehuda Koren</strong>.
+      </p>
+      <p>
+        Mais deux chercheurs, Arvind Narayanan et Vitaly Shmatikov, montrent que ces données
+        « anonymes » ne le sont pas : avec huit notes et leurs dates approximatives, on
+        reconnaît 99 % des abonné·es. En croisant avec des critiques publiées sous leur nom sur
+        un autre site, ils retrouvent des personnes et devinent leurs opinions politiques.
+        Après une action en justice et des échanges avec l'autorité américaine de protection
+        des consommateur·rices (FTC), Netflix renonce en 2010 à un second concours.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Mes notes de films, ce n'est pas une donnée personnelle. »</strong> Le prix
+      Netflix a montré le contraire : quelques notes et leurs dates suffisent souvent à
+      reconnaître quelqu'un, et elles en disent long sur ses goûts et ses opinions.
+    </p>
   </Etape>
 
   <!-- Étape 2 -->
@@ -108,7 +153,36 @@ const etapes = [
       clic, durée de visionnage, de partage, de signalement…) pondérées par l'entreprise. Ces
       pondérations sont rarement publiques.
     </p>
-    <div slot="histoire" data-a-sourcer="objectif"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 2016, des ingénieurs de YouTube expliquent que leur modèle classe les vidéos selon
+        le <strong>temps de visionnage attendu</strong>, et non selon la probabilité de clic :
+        classer par clics favorise les vidéos trompeuses qu'on ne regarde pas jusqu'au bout,
+        les « pièges à clics ». En 2021, YouTube dit tenir compte aussi de sondages (« cette
+        vidéo valait-elle le temps passé ? ») et avoir réduit en 2019 la recommandation de
+        contenus « limites ».
+      </p>
+      <p>
+        En janvier 2018, Facebook annonce favoriser les messages qui suscitent des
+        « interactions significatives » entre les gens. En 2021, le <em>Wall Street
+        Journal</em> publie des documents internes : un « j'aime » valait 1 point, une
+        réaction 5, un commentaire ou un partage 30, et une note interne parle d'« effets
+        secondaires malsains » sur l'actualité et la politique. Pour la lanceuse d'alerte
+        Frances Haugen, ces choix « attisent la division ». Meta répond que le journal a choisi
+        des citations hors contexte et que le classement n'est pas la source des divisions du
+        monde.
+      </p>
+      <p>
+        Chez Netflix, environ 80 % des heures regardées viennent d'une recommandation, selon
+        un article de l'entreprise (2015), qui estime qu'elles lui évitent plus d'un milliard
+        de dollars de désabonnements par an.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'algorithme veut nous rendre accros. »</strong> Un programme ne veut rien : il
+      maximise l'objectif chiffré qu'on lui a donné. C'est le choix de cet objectif, fait par
+      l'entreprise, qui compte, et c'est lui que les autorités examinent.
+    </p>
   </Etape>
 
   <!-- Étape 3 -->
@@ -129,21 +203,203 @@ const etapes = [
       sa qualité, mélangée (à 95 %) avec sa part des écoutes passées. L'inégalité est mesurée
       par l'indice de Gini (0 : tous égaux ; 1 : un seul prend tout).
     </p>
-    <div slot="histoire" data-a-sourcer="musiclab"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 2006, les sociologues Matthew Salganik, Peter Dodds et Duncan Watts créent
+        « MusicLab », un faux site de musique : 14 341 participant·es écoutent et téléchargent
+        des chansons inconnues. Certain·es voient combien de fois chaque chanson a été
+        téléchargée, d'autres non, et chaque groupe forme un « monde » séparé. Résultat : plus
+        l'influence sociale est forte, plus le succès est inégal et imprévisible. Les
+        meilleures chansons font rarement un flop, les pires rarement un tube, mais entre les
+        deux, tout est possible.
+      </p>
+      <p>
+        MusicLab n'est pas un système de recommandation, mais il montre le mécanisme qu'un tel
+        système peut amplifier. Des chercheur·ses parlent de « biais de popularité » : ce qui a
+        déjà été beaucoup noté reçoit beaucoup d'exposition, et les goûts minoritaires sont
+        moins bien servis.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Si c'est en tête, c'est que c'est le meilleur. »</strong> Pas forcément : un
+      classement mesure aussi ce qui a eu de la chance au début, et ce que le classement
+      lui-même a déjà mis en avant.
+    </p>
   </Etape>
 
   <!-- Étape 4 -->
   <Etape numero={4} titre="Une bulle autour de toi ?" ancre="bulle">
-    <p slot="decouverte" data-a-sourcer="bulle">À compléter.</p>
+    <p slot="decouverte">
+      Si le fil ne te montre que ce qui te ressemble, finis-tu enfermé·e dans une
+      <Terme id="bulle-de-filtre">bulle de filtre</Terme> ? La question est sérieuse, et les
+      recherches ne donnent pas une réponse simple. Elles distinguent ce que l'algorithme
+      choisit, ce que nous choisissons nous-mêmes, et l'effet sur nos opinions.
+    </p>
+    <div slot="curieux">
+      <p>
+        L'expression vient du militant américain Eli Pariser (2011). Sur Facebook, plusieurs
+        grandes études trouvent que nos propres choix (amis, clics) limitent la diversité de
+        ce qu'on lit plus que l'algorithme (2015). En 2023, des expériences sur plusieurs
+        dizaines de milliers de volontaires, pendant l'élection américaine de 2020, ont
+        remplacé le fil classé par un fil chronologique, ou réduit les contenus « de son
+        camp » : sur trois mois, aucun effet mesurable sur la polarisation. Mais une autre
+        étude du même projet montre une forte séparation des informations politiques selon le
+        camp, et la plupart des fausses informations repérées circulent dans un coin lu
+        presque uniquement par des conservateur·rices.
+      </p>
+      <p>
+        Ces études ont des limites : elles ont été menées <strong>avec Meta</strong>, qui
+        fournissait les données (dans <em>Science</em>, le politiste Michael W. Wagner parle d'« indépendance sur autorisation ») ;
+        elles portent sur les États-Unis et sur trois mois ; et des chercheur·ses ont relevé que
+        Facebook avait changé son algorithme en urgence pendant l'étude. Sur YouTube, une
+        équipe dont fait partie l'informaticien brésilien <strong>Virgílio Almeida</strong>
+        (université fédérale du Minas Gerais) a observé en 2019 des glissements de public vers des
+        chaînes de plus en plus extrêmes ; des études plus récentes trouvent que, depuis les
+        changements de 2019, les recommandations seules poussent plutôt vers des contenus moins
+        partisans, et que les contenus extrémistes sont surtout recherchés par un petit groupe
+        déjà convaincu.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Mesurer l'effet d'un algorithme est difficile : on ne peut pas comparer la même personne
+      avec et sans lui. D'où les expériences contrôlées (fil modifié pour un groupe tiré au
+      sort, comme en 2023) et les « robots contrefactuels » : des comptes automatiques qui
+      suivent exactement les recommandations, comparés à des comptes qui imitent un vrai
+      historique (YouTube, 2024). Chaque méthode a ses angles morts : durée courte,
+      volontaires, accès accordé par l'entreprise, algorithme qui change entre deux études.
+    </p>
+    <div slot="histoire">
+      <p>
+        Recommandation et santé mentale des jeunes : le débat n'est pas tranché. En mai 2023,
+        le médecin-chef des États-Unis estime qu'on ne peut pas conclure que les réseaux
+        sociaux sont suffisamment sûrs pour les enfants. D'autres chercheuses et chercheurs,
+        comme <strong>Candice Odgers</strong> ou Amy Orben et Andrew Przybylski, trouvent
+        surtout des liens faibles : chez plus de 350 000 jeunes, l'usage du numérique
+        expliquerait au plus 0,4 % des différences de bien-être, et ce sont peut-être les
+        jeunes qui vont déjà mal qui utilisent davantage ces plateformes.
+      </p>
+      <p>
+        En France, la commission « Enfants et écrans » (avril 2024) présente les deux camps.
+        Elle juge les réseaux sociaux un facteur de risque supplémentaire chez les jeunes déjà
+        vulnérables, rappelle que l'« addiction aux écrans » n'est pas reconnue comme telle par
+        la science, et demande que les risques d'enfermement des « bulles algorithmiques »
+        soient davantage pris en compte.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        En Europe, le règlement sur les services numériques (DSA, 2022) encadre les
+        recommandations :
+      </p>
+      <ul>
+        <li>toute plateforme doit expliquer, « dans un langage simple et compréhensible », les
+          principaux critères de ses recommandations, et les options pour les modifier
+          (art. 27) ;</li>
+        <li>elle doit protéger les mineur·es, et ne peut pas leur montrer de publicité fondée
+          sur le profilage (art. 28) ;</li>
+        <li>les très grandes plateformes doivent proposer au moins une option « qui ne repose
+          pas sur du profilage » (art. 38), et évaluer les risques liés à la conception de leurs
+          recommandations (art. 34 et 35).</li>
+      </ul>
+      <p>
+        <em>État au 16 octobre 2026.</em> La Commission européenne a publié des
+        <strong>conclusions préliminaires</strong> sur la « conception addictive » de TikTok
+        (6 février 2026), puis d'Instagram et de Facebook (10 juillet 2026), en visant
+        notamment leurs systèmes de recommandation très personnalisés. Les entreprises peuvent
+        répondre : aucune décision finale n'a été prise.
+      </p>
+      <p>
+        En France, la loi du 7 juillet 2023 sur la « majorité numérique » n'a jamais été
+        appliquée : la Commission européenne l'a jugée contraire au droit de l'Union. En 2026,
+        le Parlement a voté l'interdiction des réseaux sociaux avant 15 ans, mais le Conseil
+        constitutionnel a censuré cet article le 14 août 2026 (atteinte disproportionnée à la
+        liberté d'expression, vérification d'âge sans garanties suffisantes pour la vie
+        privée). Les associations de défense des libertés, comme La Quadrature du Net,
+        s'opposaient à cette interdiction ; ses partisan·es y voyaient une protection
+        nécessaire. Le gouvernement prépare une nouvelle rédaction.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les bulles de filtre, c'est prouvé » / « C'est un mythe. »</strong> Ni l'un
+      ni l'autre. La séparation des informations selon les opinions existe ; ce qu'on discute,
+      c'est la part de l'algorithme et son effet sur ce que pensent les gens. Les études
+      récentes trouvent peu d'effet de l'algorithme seul, sur des périodes courtes et surtout
+      aux États-Unis.
+    </p>
   </Etape>
 
   <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
     <h2 id="titre-final">Reprendre la main</h2>
-    <p data-a-sourcer="bilan">À compléter.</p>
+    <p>
+      Tu ne peux pas lire le code des plateformes, mais tu peux agir sur ce qu'elles savent de
+      toi et sur ce qu'elles optimisent.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Ce que tu peux faire</th><th scope="col">Pourquoi ça marche</th></tr></thead>
+      <tbody>
+        <tr><td>Choisir le fil « non personnalisé » ou « abonnements » quand il existe</td><td>En Europe, les très grandes plateformes doivent proposer une option sans profilage (DSA, art. 38). Chez TikTok, selon l'entreprise, ce fil montre des vidéos populaires près de chez toi et dans le monde, et le fil des abonnements est chronologique.</td></tr>
+        <tr><td>Lire « Pourquoi je vois ceci ? » et les conditions</td><td>Les plateformes doivent expliquer les principaux critères de leurs recommandations (art. 27). Ce sont leurs explications : elles disent ce qu'elles veulent bien dire.</td></tr>
+        <tr><td>Mettre en pause ou effacer ton historique</td><td>Le filtrage collaboratif se nourrit de ce que tu regardes. YouTube permet de suspendre, modifier ou supprimer l'historique de visionnage et de recherche.</td></tr>
+        <tr><td>Signaler « pas intéressé·e », chercher toi-même, t'abonner</td><td>Selon TikTok (2020), aimer, partager, suivre et regarder jusqu'au bout sont les signaux qui comptent le plus. Tes gestes sont le seul « réglage » que le modèle voit.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Les recommandations reproduisent aussi les déséquilibres de leurs données. En 2021,
+      Andrés Ferraro, Xavier Serra et <strong>Christine Bauer</strong> ont étudié un algorithme
+      classique de recommandation musicale, sur les écoutes publiques du site Last.fm : un quart
+      des artistes écouté·es étaient des femmes, et la première femme n'apparaissait en moyenne
+      qu'en 7<sup>e</sup> ou 8<sup>e</sup> position des recommandations. En simulation, faire
+      remonter un peu les artistes femmes suffisait à inverser la boucle : l'algorithme se
+      mettait à les recommander de lui-même. Ce qu'on optimise, et pour qui, reste un choix.
+    </p>
 
   <Sources
     verifie="2026-10-16"
-    sources={[]}
+    sources={[
+      { auteur: 'D. Goldberg, D. Nichols, B. Oki, D. Terry (Xerox PARC)', titre: 'Using Collaborative Filtering to Weave an Information Tapestry (rapport CSL-92-10)', url: 'https://ftp.mirrorservice.org/sites/www.bitsavers.org/pdf/xerox/parc/techReports/CSL-92-10_Using_Collaborative_Filtering_to_Weave_an_Information_Tapestry.pdf', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'P. Resnick, N. Iacovou, M. Suchak, P. Bergstrom, J. Riedl', titre: 'GroupLens: An Open Architecture for Collaborative Filtering of Netnews', url: 'https://presnick.people.si.umich.edu/papers/cscw94/GroupLens.htm', type: 'primaire', annee: 1994, langue: 'en' },
+      { auteur: 'U. Shardanand, P. Maes', titre: 'Social Information Filtering: Algorithms for Automating « Word of Mouth »', url: 'https://www.stat.cmu.edu/~cshalizi/dm/19/readings/shardanand-and-maes-1995.pdf', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'G. Linden, B. Smith, J. York', titre: 'Amazon.com Recommendations: Item-to-Item Collaborative Filtering', url: 'https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf', type: 'primaire', annee: 2003, langue: 'en' },
+      { auteur: 'Y. Koren, R. Bell, C. Volinsky', titre: 'Matrix Factorization Techniques for Recommender Systems', url: 'https://datajobs.com/data-science-repo/Recommender-Systems-%5BNetflix%5D.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'Y. Koren', titre: 'The BellKor Solution to the Netflix Grand Prize', url: 'https://www2.seas.gwu.edu/~simhaweb/champalg/cf/papers/KorenBellKor2009.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'A. Narayanan, V. Shmatikov', titre: 'Robust De-anonymization of Large Sparse Datasets', url: 'https://arxiv.org/abs/cs/0610105', type: 'primaire', annee: 2008, langue: 'en' },
+      { auteur: 'Federal Trade Commission', titre: 'Lettre de clôture à Netflix (12 mars 2010)', url: 'https://www.ftc.gov/sites/default/files/documents/closing_letters/netflix-inc./100312netflixletter.pdf', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'P. Covington, J. Adams, E. Sargin (Google)', titre: 'Deep Neural Networks for YouTube Recommendations', url: 'https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'C. Goodrow (YouTube)', titre: 'On YouTube’s recommendation system', url: 'https://blog.youtube/inside-youtube/on-youtubes-recommendation-system/', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'A. Mosseri (Facebook)', titre: 'Bringing People Closer Together', url: 'https://about.fb.com/news/2018/01/news-feed-fyi-bringing-people-closer-together/', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'K. Hagey, J. Horwitz (Wall Street Journal, copie versée au Congrès)', titre: 'Facebook Tried to Make Its Platform a Healthier Place. It Got Angrier Instead', url: 'https://www.congress.gov/117/meeting/house/114268/documents/HHRG-117-IF16-20211201-SD012.pdf', type: 'presse', annee: 2021, langue: 'en' },
+      { auteur: 'N. Clegg (Meta)', titre: 'What the Wall Street Journal Got Wrong', url: 'https://about.fb.com/news/2021/09/what-the-wall-street-journal-got-wrong/', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'F. Haugen', titre: 'Déclaration écrite devant la sous-commission du Commerce du Sénat américain', url: 'https://www.commerce.senate.gov/services/files/FC8A558E-824E-4914-BEDB-3A7B1190BD49', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'C. A. Gomez-Uribe, N. Hunt (Netflix)', titre: 'The Netflix Recommender System: Algorithms, Business Value, and Innovation', url: 'https://doi.org/10.1145/2843948', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'M. J. Salganik, P. S. Dodds, D. J. Watts', titre: 'Experimental study of inequality and unpredictability in an artificial cultural market', url: 'https://doi.org/10.1126/science.1121066', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'H. Abdollahpouri, M. Mansoury, R. Burke, B. Mobasher', titre: 'The Unfairness of Popularity Bias in Recommendation', url: 'https://arxiv.org/abs/1907.13286', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'Penguin Random House', titre: 'E. Pariser, The Filter Bubble', url: 'https://www.penguinrandomhouse.com/books/309214/the-filter-bubble-by-eli-pariser/', type: 'site', annee: 2011, langue: 'en' },
+      { auteur: 'E. Bakshy, S. Messing, L. Adamic', titre: 'Exposure to ideologically diverse news and opinion on Facebook', url: 'https://doi.org/10.1126/science.aaa1160', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'A. M. Guess et al.', titre: 'How do social media feed algorithms affect attitudes and behavior in an election campaign?', url: 'https://doi.org/10.1126/science.abp9364', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'B. Nyhan et al.', titre: 'Like-minded sources on Facebook are prevalent but not polarizing', url: 'https://doi.org/10.1038/s41586-023-06297-w', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'S. González-Bailón et al.', titre: 'Asymmetric ideological segregation in exposure to political news on Facebook', url: 'https://doi.org/10.1126/science.ade7138', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'M. W. Wagner', titre: 'Independence by permission', url: 'https://doi.org/10.1126/science.adi2430', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'C. Bagchi et al.', titre: 'Social media algorithms can curb misinformation, but do they?', url: 'https://arxiv.org/abs/2409.18393', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'M. Horta Ribeiro, R. Ottoni, R. West, V. Almeida, W. Meira Jr.', titre: 'Auditing Radicalization Pathways on YouTube', url: 'https://arxiv.org/abs/1908.08313', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'H. Hosseinmardi et al.', titre: 'Causally estimating the effect of YouTube’s recommender system using counterfactual bots', url: 'https://doi.org/10.1073/pnas.2313377121', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'A. Y. Chen, B. Nyhan, J. Reifler, R. E. Robertson, C. Wilson', titre: 'Subscriptions and external links help drive resentful users to alternative and extremist YouTube channels', url: 'https://doi.org/10.1126/sciadv.add8080', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'NPR (via HPPR)', titre: 'Social media can put young people in danger, U.S. surgeon general warns', url: 'https://www.hppr.org/2023-05-23/social-media-can-put-young-people-in-danger-u-s-surgeon-general-warns', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'A. Orben, A. K. Przybylski', titre: 'The association between adolescent well-being and digital technology use', url: 'https://doi.org/10.1038/s41562-018-0506-1', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'C. L. Odgers', titre: 'The great rewiring: is social media really behind an epidemic of teenage mental illness?', url: 'https://www.nature.com/articles/d41586-024-00902-2', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'Commission d’expert·es sur l’exposition des jeunes aux écrans', titre: 'Enfants et écrans. À la recherche du temps perdu', url: 'https://www.vie-publique.fr/files/rapport/pdf/293978.pdf', type: 'primaire', annee: 2024 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2022/2065 sur les services numériques (DSA)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32022R2065', type: 'primaire', annee: 2022 },
+      { auteur: 'Commission européenne', titre: 'Commission preliminarily finds TikTok’s addictive design in breach of the Digital Services Act', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-preliminarily-finds-tiktoks-addictive-design-breach-digital-services-act', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Commission opens formal proceedings against Meta under the DSA related to the protection of minors', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-opens-formal-proceedings-against-meta-under-digital-services-act-related-protection', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Commission preliminarily finds the addictive design of Instagram and Facebook in breach of the DSA', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-preliminarily-finds-addictive-design-instagram-and-facebook-breach-digital-services-act', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Assemblée nationale', titre: 'Question écrite n° 5149 et réponse du Gouvernement (loi n° 2023-566)', url: 'https://www.assemblee-nationale.fr/dyn/17/questions/QANR5L17QE5149.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2026-911 DC du 14 août 2026 (communiqué)', url: 'https://www.conseil-constitutionnel.fr/actualites/communique/decision-n-2026-911-dc-du-14-aout-2026-communique-de-presse', type: 'primaire', annee: 2026 },
+      { auteur: 'La Quadrature du Net (association opposée à la loi)', titre: 'Le Parlement vote l’interdiction des réseaux sociaux aux jeunes de moins de 15 ans', url: 'https://www.laquadrature.net/2026/07/22/le-parlement-vote-linterdiction-des-reseaux-sociaux-aux-jeunes-de-moins-de-15-ans/', type: 'site', annee: 2026 },
+      { auteur: 'TikTok', titre: 'How TikTok recommends videos #ForYou', url: 'https://newsroom.tiktok.com/en-us/how-tiktok-recommends-videos-for-you', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'TikTok', titre: 'Fulfilling our commitments under the Digital Services Act', url: 'https://newsroom.tiktok.com/en-eu/fulfilling-commitments-dsa-update', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'C. Bauer, A. Ferraro (Universiteit Utrecht)', titre: 'Music recommendation algorithms are unfair to female artists, but we can change that', url: 'https://uu.nl/en/news/music-recommendation-algorithms-are-unfair-to-female-artists-but-we-can-change-that', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'A. Ferraro, X. Serra, C. Bauer', titre: 'Break the Loop: Gender Imbalance in Music Recommenders', url: 'https://doi.org/10.1145/3406522.3446033', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'MIT Media Lab', titre: 'Pattie Maes', url: 'https://www.media.mit.edu/people/pattie/overview/', type: 'site', langue: 'en' },
+    ]}
   />
   </section>
 </Base>

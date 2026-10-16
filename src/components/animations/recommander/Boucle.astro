@@ -10,8 +10,8 @@
   <div class="anim-repli">
     <p>
       Douze morceaux, de qualités voisines (le n° 1 est un peu meilleur que le n° 2, et ainsi de
-      suite). Quand chaque auditeur choisit sans voir ce que les autres écoutent, le meilleur
-      morceau gagne presque toujours, et les écarts restent modérés. Quand le classement des
+      suite). Quand chaque auditeur choisit sans voir ce que les autres écoutent, l'un des
+      meilleurs morceaux gagne presque toujours, et les écarts restent modérés. Quand le classement des
       plus écoutés est affiché et influence les choix, les premiers succès attirent encore plus
       d'écoutes : les écarts deviennent énormes, et le gagnant change d'une fois à l'autre,
       selon les hasards du début.
@@ -77,7 +77,7 @@
       legende.textContent =
         monde < 3
           ? 'Les barres montrent les écoutes de chaque morceau (le n° 1 est le meilleur). Rejoue plusieurs mondes et compare les gagnants.'
-          : 'Sans classement visible, le meilleur morceau gagne presque toujours. Avec le classement, les écarts explosent (indice de Gini bien plus haut) et le gagnant dépend des hasards du début. Les recommandations fondées sur la popularité peuvent amplifier ces boucles.';
+          : 'Sans classement visible, l’un des deux meilleurs morceaux gagne presque toujours. Avec le classement, les écarts explosent (indice de Gini bien plus haut) et le gagnant dépend des hasards du début. Les recommandations fondées sur la popularité peuvent amplifier ces boucles.';
     }
     racine.querySelector('[data-action="rejouer"]')!.addEventListener('click', jouer);
     jouer();
