@@ -9,8 +9,6 @@ import ModeLecture from '../../components/ModeLecture.astro';
 import MotSuivant from '../../components/animations/ia/MotSuivant.astro';
 import Tokeniseur from '../../components/animations/ia/Tokeniseur.astro';
 import Plongements from '../../components/animations/ia/Plongements.astro';
-import Neurone from '../../components/animations/ia/Neurone.astro';
-import Descente from '../../components/animations/ia/Descente.astro';
 import Attention from '../../components/animations/ia/Attention.astro';
 import Temperature from '../../components/animations/ia/Temperature.astro';
 import Fabrication from '../../components/animations/ia/Fabrication.astro';
@@ -53,7 +51,6 @@ const etapes = [
   { ancre: 'prediction', court: 'Le mot suivant' },
   { ancre: 'tokens', court: 'Les tokens' },
   { ancre: 'plongements', court: 'Les plongements' },
-  { ancre: 'neurone', court: 'Le neurone' },
   { ancre: 'apprentissage', court: 'Apprendre' },
   { ancre: 'attention', court: "L'attention" },
   { ancre: 'generation', court: 'Écrire' },
@@ -212,33 +209,29 @@ const etapes = [
   </Etape>
 
   <!-- Étape 3 -->
-  <Etape numero={3} titre="Un neurone artificiel" ancre="neurone">
-    <Neurone slot="animation" />
+  <Etape numero={3} titre="Apprendre : des milliards de réglages" ancre="apprentissage">
     <p slot="decouverte">
       Les calculs du modèle sont faits par des milliards de <Terme id="neurone-artificiel">neurones
-      artificiels</Terme>. Un neurone, c'est une petite formule : il multiplie chaque entrée par
-      un « poids », additionne, et décide.
+      artificiels</Terme> : de petites formules qui multiplient des nombres par des « poids ».
+      Au début, les poids sont pris au hasard et le modèle dit n'importe quoi. On lui montre un
+      texte, il devine le mot suivant, on mesure son erreur, et l'on corrige un peu tous ses
+      poids dans le bon sens. Puis on recommence, des milliards de fois.
     </p>
     <p slot="curieux">
-      Les poids sont les <Terme id="parametre">paramètres</Terme> du modèle. Apprendre, c'est
-      trouver de bons poids. Un neurone seul ne sait tracer qu'une ligne droite (il échoue,
-      par exemple, sur le « ou exclusif ») ; en empilant des couches de neurones, on obtient
-      des frontières aussi compliquées qu'on veut.
+      Les poids sont les <Terme id="parametre">paramètres</Terme> du modèle. Pour savoir dans
+      quel sens les corriger, on calcule la pente de l'erreur : c'est la <Terme
+      id="descente-de-gradient">descente de gradient</Terme>. Le module « <a
+      href="/modules/apprendre/">Comment apprend une machine</a> » montre tout cela en
+      détail : un neurone qu'on règle à la main, une descente de gradient, un réseau qui
+      apprend sous tes yeux.
     </p>
     <p slot="ingenieur">
-      Sortie = f(w₁x₁ + w₂x₂ + b). Le perceptron utilise un seuil ; les réseaux modernes, des
-      fonctions continues, pour pouvoir calculer des pentes (étape suivante). Un grand modèle de
-      langage, ce sont surtout d'immenses multiplications de matrices.
+      L'erreur est mesurée par l'entropie croisée entre la prédiction et le vrai token suivant.
+      La rétropropagation calcule la pente par rapport à chacun des milliards de paramètres,
+      couche par couche, de la sortie vers l'entrée. On ajuste par petits paquets d'exemples :
+      c'est la descente de gradient stochastique. Un grand modèle de langage, ce sont surtout
+      d'immenses multiplications de matrices.
     </p>
-    <div slot="histoire">
-      <p>
-        En 1957-1958, aux États-Unis, Frank Rosenblatt invente le perceptron, l'un des premiers
-        réseaux de neurones capables d'apprendre à partir d'exemples (article de 1958 dans la
-        <em>Psychological Review</em>). Au Japon,
-        <strong>Kunihiko Fukushima</strong> conçoit en 1979-1980 le néocognitron, inspiré du
-        cortex visuel, précurseur des réseaux qui reconnaissent les images.
-      </p>
-    </div>
     <p slot="mythes">
       <strong>« Un réseau de neurones fonctionne comme un cerveau. »</strong> Le neurone
       artificiel est une formule très simplifiée, à peine inspirée des neurones biologiques.
@@ -246,42 +239,7 @@ const etapes = [
   </Etape>
 
   <!-- Étape 4 -->
-  <Etape numero={4} titre="Apprendre en se trompant" ancre="apprentissage">
-    <Descente slot="animation" />
-    <p slot="decouverte">
-      Au début, les poids sont pris au hasard et le modèle dit n'importe quoi. On lui montre
-      un texte, il devine le mot suivant, on mesure son erreur, et l'on corrige un peu tous
-      ses poids dans le bon sens. Puis on recommence, des milliards de fois.
-    </p>
-    <p slot="curieux">
-      Pour savoir dans quel sens corriger, on calcule la pente de l'erreur : c'est la
-      <Terme id="descente-de-gradient">descente de gradient</Terme>. La taille de chaque pas
-      compte : trop petite, l'apprentissage traîne ; trop grande, il s'emballe.
-    </p>
-    <p slot="ingenieur">
-      L'erreur est mesurée par l'entropie croisée entre la prédiction et le vrai token suivant.
-      La rétropropagation calcule la pente par rapport à chacun des milliards de paramètres,
-      couche par couche, de la sortie vers l'entrée. On ajuste par petits paquets d'exemples :
-      c'est la descente de gradient stochastique.
-    </p>
-    <div slot="histoire">
-      <p>
-        Au Japon, <strong>Shun-ichi Amari</strong> décrit dès 1967 l'apprentissage de réseaux
-        de neurones par gradient stochastique. La rétropropagation a été découverte plusieurs
-        fois : on la trouve en 1970 dans le mémoire de master du Finlandais Seppo Linnainmaa
-        (pour calculer des erreurs d'arrondi, sans lien avec les neurones) ; l'Américain Paul
-        Werbos l'applique aux réseaux de neurones ; David Rumelhart, Geoffrey Hinton et Ronald
-        Williams la rendent célèbre en 1986, dans la revue <em>Nature</em>. À Kyiv, en Ukraine
-        soviétique, <strong>Oleksiï Ivakhnenko</strong> et Valentin Lapa entraînent dès le milieu
-        des années 1960 des réseaux à plusieurs couches (la méthode GMDH) ; en 1971, Ivakhnenko
-        en décrit un à 8 couches. Le chercheur Jürgen Schmidhuber y voit « peut-être » les
-        premiers systèmes d'apprentissage profond.
-      </p>
-    </div>
-  </Etape>
-
-  <!-- Étape 5 -->
-  <Etape numero={5} titre="L'attention" ancre="attention">
+  <Etape numero={4} titre="L'attention" ancre="attention">
     <Attention slot="animation" />
     <p slot="decouverte">
       Pour bien deviner la suite, il faut savoir de quoi parle chaque mot. « Il », c'est qui ?
@@ -318,8 +276,8 @@ const etapes = [
     <p slot="verifie">Change le dernier mot de la phrase : « fatigué » ou « étroit ». Le même « il » ne regarde plus le même mot.</p>
   </Etape>
 
-  <!-- Étape 6 -->
-  <Etape numero={6} titre="Écrire : un peu de hasard" ancre="generation">
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Écrire : un peu de hasard" ancre="generation">
     <Temperature slot="animation" />
     <p slot="decouverte">
       Le modèle ne choisit pas toujours le mot le plus probable : il tire au sort, en
@@ -361,8 +319,8 @@ const etapes = [
     </div>
   </Etape>
 
-  <!-- Étape 7 -->
-  <Etape numero={7} titre="Les coulisses : des humains et des machines" ancre="fabrication">
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Les coulisses : des humains et des machines" ancre="fabrication">
     <Fabrication slot="animation" maillons={maillons} />
     <p slot="decouverte">
       Derrière chaque réponse, il y a des textes écrits par des millions de personnes, des

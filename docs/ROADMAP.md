@@ -66,7 +66,7 @@ flowchart TB
 
 ### Les IA qui écrivent (`/modules/ia-texte/`)
 
-- [x] Scénario en 8 étapes (`docs/scenarios/ia-texte.md`) et dossier de sources (`docs/sources/ia-mecanismes.md`)
+- [x] Scénario (`docs/scenarios/ia-texte.md`), 7 étapes depuis le déplacement du neurone et de la descente de gradient, et dossier de sources (`docs/sources/ia-mecanismes.md`)
 - [x] Mini-modèle dans le navigateur (`src/lib/minilm.ts`) : n-gramme, BPE, softmax et température, perceptron
 - [x] Mot suivant, tokens, plongements, neurone, descente de gradient, attention, température, chaîne de fabrication
 - [x] Glossaire : 10 termes (token, plongement, attention, transformeur, hallucination…)
@@ -75,8 +75,8 @@ flowchart TB
 
 ### À venir (ordre prévu)
 
-- [ ] **L'IA, c'est quoi ?** — définitions (et pourquoi elles changent), IA à règles et IA qui apprend, trois façons d'apprendre, carte buts × mécanismes, hivers et printemps de l'IA, idée reçue « tout est de l'IA »
-- [ ] **Comment apprend une machine** *(transversal)* — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage, apprentissage supervisé, non supervisé, par renforcement
+- [x] **L'IA, c'est quoi ?** (`/modules/ia/`, relecture humaine à faire) — définitions (et pourquoi elles changent), IA à règles et IA qui apprend, trois façons d'apprendre, carte buts × mécanismes, hivers et printemps de l'IA, idée reçue « tout est de l'IA »
+- [x] **Comment apprend une machine** *(transversal, `/modules/apprendre/`, relecture humaine à faire)* — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage, apprentissage supervisé, non supervisé, par renforcement
 - [ ] **Les IA qui classent** — spam, diagnostic, tri de CV : Bayes naïf (un filtre anti-spam qu'on entraîne soi-même), arbres de décision, plus proches voisins
 - [ ] **Les IA qui cherchent et optimisent** — GPS, tournées, emplois du temps : recherche A* ; IA inspirées de la nature : algorithmes génétiques, colonies de fourmis, essaims
 - [ ] **Les IA qui voient** — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais

@@ -1,0 +1,342 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Neurone from '../../components/animations/apprendre/Neurone.astro';
+import Descente from '../../components/animations/apprendre/Descente.astro';
+import Couches from '../../components/animations/apprendre/Couches.astro';
+import SurApprentissage from '../../components/animations/apprendre/SurApprentissage.astro';
+import Biais from '../../components/animations/apprendre/Biais.astro';
+
+// Faits sourcés : voir docs/sources/apprendre.md, ia-mecanismes.md et ia.md.
+const etapes = [
+  { ancre: 'neurone', court: 'Le neurone' },
+  { ancre: 'erreur', court: 'Se tromper' },
+  { ancre: 'couches', court: 'Les couches' },
+  { ancre: 'examen', court: "L'examen" },
+  { ancre: 'donnees', court: 'Les données' },
+  { ancre: 'bilan', court: 'Trois façons', pastille: '✓' },
+];
+---
+<Base
+  title="Comment apprend une machine"
+  description="Ce que veut dire « apprendre » pour une machine : un neurone et ses poids, la descente de gradient, les réseaux à plusieurs couches, le sur-apprentissage, et des données qui font le modèle."
+>
+  <p class="tag">Comment ça marche · L'IA · module en construction</p>
+  <h1>Comment apprend une machine</h1>
+  <p class="chapo seulement-debut">
+    On dit qu'une IA « apprend ». Mais une machine n'a ni cahier ni professeur : elle ajuste
+    des nombres. Ce module ouvre la boîte, avec de vrais petits modèles qui apprennent sous tes
+    yeux, dans ton navigateur. Il sert à toutes les IA qui apprennent : celles qui écrivent,
+    qui voient, qui classent, qui recommandent…
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Un neurone artificiel" ancre="neurone">
+    <Neurone slot="animation" />
+    <p slot="decouverte">
+      La pièce de base de beaucoup d'IA est le <Terme id="neurone-artificiel">neurone
+      artificiel</Terme>. C'est une petite formule : il multiplie chaque entrée par un
+      « poids », additionne, et décide. Ici, il doit dire si un fruit est mûr d'après sa couleur
+      et sa fermeté. Règle ses poids à la main, ou laisse-le apprendre.
+    </p>
+    <p slot="curieux">
+      Les poids sont les <Terme id="parametre">paramètres</Terme> du modèle. Apprendre, c'est
+      trouver de bons poids, à partir d'exemples dont on connaît la réponse. Un neurone seul ne
+      sait tracer qu'une ligne droite entre deux catégories.
+    </p>
+    <p slot="ingenieur">
+      Sortie = f(w₁x₁ + w₂x₂ + b). Ici, f est un seuil (1 si positif, 0 sinon) : c'est le
+      perceptron. Sa règle d'apprentissage : pour chaque exemple mal classé, ajouter (ou
+      retirer) un peu de l'entrée à chaque poids. Si une droite peut séparer les exemples,
+      cette règle finit par la trouver.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1943, Warren McCulloch et Walter Pitts décrivent un neurone « logique », simple
+        interrupteur à seuil. En 1957-1958, Frank Rosenblatt, à Cornell, invente le perceptron,
+        l'un des premiers réseaux de neurones capables d'apprendre à partir d'exemples. Au
+        Japon, <strong>Kunihiko Fukushima</strong> conçoit en 1979-1980 le néocognitron,
+        inspiré du cortex visuel, précurseur des réseaux qui reconnaissent les images.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Un réseau de neurones fonctionne comme un cerveau. »</strong> Le neurone
+      artificiel est une formule très simplifiée, à peine inspirée des neurones biologiques.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Apprendre en se trompant" ancre="erreur">
+    <Descente slot="animation" />
+    <p slot="decouverte">
+      Au début, les poids sont pris au hasard et le modèle répond n'importe quoi. On mesure son
+      erreur, puis on corrige un peu les poids dans le sens qui la diminue. Et on recommence,
+      encore et encore.
+    </p>
+    <p slot="curieux">
+      Pour savoir dans quel sens corriger, on calcule la pente de l'erreur : c'est la
+      <Terme id="descente-de-gradient">descente de gradient</Terme>. Imagine que tu descends une
+      colline dans le brouillard : tu tâtes le sol et tu fais un pas vers le bas. La taille du
+      pas compte : trop petite, l'apprentissage traîne ; trop grande, il saute par-dessus le
+      fond et s'emballe.
+    </p>
+    <p slot="ingenieur">
+      À chaque pas : w ← w − η · ∂E/∂w, où E est l'erreur et η le taux d'apprentissage. Avec des
+      millions de poids, la « colline » a des millions de dimensions, mais le principe est le
+      même. En pratique, on calcule la pente sur de petits paquets d'exemples tirés au hasard :
+      c'est la descente de gradient stochastique.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'idée est ancienne. Le 18 octobre 1847, le mathématicien français Augustin-Louis
+        Cauchy présente à l'Académie des sciences une note de deux pages : pour résoudre des
+        équations, on part d'une valeur quelconque et l'on avance, pas à pas, dans la direction
+        où l'erreur diminue le plus vite. Il voulait calculer des orbites d'astres, pas faire
+        apprendre des machines, et le mot « gradient » n'apparaît pas encore.
+      </p>
+      <p>
+        En 1951, aux États-Unis, Herbert Robbins et Sutton Monro publient une méthode qui
+        progresse à partir de mesures bruitées : l'ancêtre de la descente de gradient
+        stochastique. Au Japon, <strong>Shun-ichi Amari</strong> décrit dès 1967 l'apprentissage de
+        réseaux de neurones par gradient stochastique.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La descente de gradient trouve toujours la meilleure solution. »</strong> Elle
+      trouve le fond le plus proche, qui n'est pas forcément le plus bas : sur une erreur en
+      forme de paysage vallonné, elle peut s'arrêter dans un creux. L'étape suivante le montre.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Plusieurs couches" ancre="couches">
+    <Couches slot="animation" />
+    <p slot="decouverte">
+      Un neurone seul ne trace qu'une droite. Pour séparer des points disposés en damier, ou en
+      cercle, il en faut plusieurs, rangés en couches. Choisis le nombre de neurones « cachés »
+      et entraîne le réseau : le fond montre sa réponse en chaque endroit.
+    </p>
+    <p slot="curieux">
+      Chaque neurone caché trace sa propre droite ; le neurone de sortie les combine en une
+      frontière courbe. Tous les poids sont réglés en même temps, par descente de gradient.
+      Parfois, le réseau reste coincé dans un « creux » qui n'est pas le fond : on relance avec
+      d'autres poids de départ.
+    </p>
+    <p slot="ingenieur">
+      Pour connaître la pente de l'erreur par rapport à chaque poids, on utilise la
+      <Terme id="retropropagation">rétropropagation</Terme> : on part de l'erreur à la sortie
+      et on remonte, couche par couche, grâce à la règle de dérivation des fonctions composées.
+      Ici : 2 entrées, des neurones cachés à tangente hyperbolique, une sortie sigmoïde, erreur
+      mesurée par l'entropie croisée. Les réseaux « profonds » empilent des dizaines de couches.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1969, le livre <em>Perceptrons</em> de Marvin Minsky et Seymour Papert démontre
+        qu'un perceptron à une couche ne peut pas calculer le « ou exclusif ». Des réseaux à
+        plusieurs couches le peuvent, encore faut-il savoir les entraîner. En 1989, deux
+        travaux indépendants (George Cybenko ; Kurt Hornik, Maxwell Stinchcombe et Halbert
+        White) démontrent qu'une seule couche cachée suffit pour approcher n'importe quelle
+        fonction continue, avec assez de neurones. Le théorème dit que c'est possible, pas
+        qu'on saura l'apprendre.
+      </p>
+      <p>
+        La rétropropagation a été découverte plusieurs fois. On la trouve en 1970 dans le
+        mémoire de master du Finlandais Seppo Linnainmaa (pour calculer des erreurs d'arrondi,
+        sans lien avec les neurones) ; l'Américain Paul Werbos l'applique aux réseaux de
+        neurones ; David Rumelhart, Geoffrey Hinton et Ronald Williams la rendent célèbre en
+        1986, dans la revue <em>Nature</em>. À Kyiv, en Ukraine soviétique,
+        <strong>Oleksiï Ivakhnenko</strong> et Valentin Lapa entraînent dès le milieu des années
+        1960 des réseaux à plusieurs couches, par une autre méthode (GMDH).
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Rumelhart, Hinton et Williams ont inventé la rétropropagation. »</strong> Ils
+      l'ont popularisée pour les réseaux de neurones ; la méthode mathématique existait avant
+      eux, découverte indépendamment par plusieurs chercheurs.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Par cœur ou compris ?" ancre="examen">
+    <SurApprentissage slot="animation" />
+    <p slot="decouverte">
+      Une machine qui a appris ses exemples par cœur n'a rien compris. Pour le savoir, on garde
+      des exemples de côté et on lui fait passer un examen dessus. Fais varier la complexité du
+      modèle : regarde l'erreur à l'entraînement, puis à l'examen.
+    </p>
+    <p slot="curieux">
+      Trop simple, le modèle rate la forme : c'est le sous-apprentissage. Trop complexe, il
+      colle à chaque point, bruit de mesure compris, et se trompe sur les nouveaux : c'est le
+      <Terme id="sur-apprentissage">sur-apprentissage</Terme>. Le bon modèle est entre les
+      deux, et seul l'examen permet de le trouver.
+    </p>
+    <p slot="ingenieur">
+      On découpe les données en trois : entraînement (pour régler les poids), validation (pour
+      choisir la complexité) et test (pour la note finale, une seule fois). Ici, le modèle est
+      un polynôme ajusté par la méthode des moindres carrés. La validation croisée répète le
+      découpage plusieurs fois pour ne pas dépendre d'un tirage chanceux.
+    </p>
+    <div slot="histoire">
+      <p>
+        Ajuster une courbe à des mesures est un très vieux problème, né en astronomie. En
+        1805, Adrien-Marie Legendre publie à Paris la méthode des moindres carrés : choisir ce
+        qui rend « minimum la somme des quarrés des erreurs ». En 1809, Carl Friedrich Gauss
+        publie la même méthode et affirme l'utiliser depuis 1795. La querelle n'est pas
+        tranchée : l'historien Stephen Stigler juge probable que Gauss l'ait eue avant, sans
+        preuve décisive.
+      </p>
+      <p>
+        En 1901, l'Allemand Carl Runge montre qu'un polynôme forcé de passer par des points
+        régulièrement espacés peut osciller violemment entre eux, surtout vers les bords, et
+        qu'ajouter des points aggrave le problème. Runge ne parlait pas d'apprentissage, mais
+        c'est une bonne image du sur-apprentissage.
+      </p>
+      <p>
+        Garder des données de côté pour l'examen se pratique depuis au moins les années 1930
+        en statistique ; Mervyn Stone formalise la validation croisée en 1974, et
+        <strong>Grace Wahba</strong>, avec Peter Craven, en tire en 1979 une méthode pour
+        régler automatiquement la souplesse d'une courbe. En URSS, Vladimir Vapnik et
+        <strong>Alexeï Tchervonenkis</strong> fondent entre 1962 et 1973 une théorie de
+        l'apprentissage qui explique quand un modèle appris sur des exemples marche sur de
+        nouveaux cas ; elle mène aux machines à vecteurs de support, publiées sous leur forme
+        actuelle en 1995 par <strong>Corinna Cortes</strong> et Vladimir Vapnik, après des
+        travaux avec <strong>Isabelle Guyon</strong> et Bernhard Boser.
+      </p>
+    </div>
+    <p slot="verifie">
+      Mets le degré au maximum, puis clique plusieurs fois sur « Autres mesures » : la courbe
+      change complètement d'un tirage à l'autre. Un modèle qui sur-apprend est instable.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Les données font le modèle" ancre="donnees">
+    <Biais slot="animation" />
+    <p slot="decouverte">
+      Une machine n'apprend que ce que montrent ses exemples. Si un cas est rare dans ses
+      données, elle se trompera surtout sur lui. Compare : presque toutes les photos au soleil,
+      ou autant au soleil qu'à l'ombre.
+    </p>
+    <p slot="curieux">
+      L'algorithme est le même dans les deux cas : il cherche les 5 exemples les plus proches et
+      suit la majorité. Seules les données changent, et donc le résultat. Une IA peut ainsi
+      bien marcher « en moyenne » et mal pour un groupe, sans que personne l'ait voulu.
+    </p>
+    <p slot="ingenieur">
+      Mesurer une seule précision globale cache ces écarts : il faut évaluer le modèle
+      séparément pour chaque groupe. Rééquilibrer les données d'entraînement réduit l'écart,
+      mais il faut d'abord savoir quels groupes regarder.
+    </p>
+    <div slot="histoire">
+      <p>
+        La règle des plus proches voisins est formulée en 1951 par deux statisticien·nes de
+        Berkeley, <strong>Evelyn Fix</strong> et Joseph Hodges, dans un rapport pour l'armée de
+        l'air américaine resté inédit jusqu'en 1989. Evelyn Fix, entrée au laboratoire de
+        statistique de Berkeley en 1940, y devient professeure en 1963. En 1967, Thomas Cover
+        et Peter Hart démontrent que cette règle simple se trompe au plus deux fois plus
+        souvent que la meilleure règle possible, quand les exemples sont très nombreux.
+      </p>
+      <p>
+        En 2018, <strong>Joy Buolamwini</strong> et <strong>Timnit Gebru</strong> testent trois
+        logiciels commerciaux qui devinent le genre (homme ou femme) d'une personne sur une
+        photo. Ils se trompent au plus 0,8 % du temps sur les hommes à peau claire, mais
+        jusqu'à 34,7 % du temps sur les femmes à peau foncée. Les jeux de photos de référence
+        de l'époque comptaient de 80 à 86 % de personnes à peau claire.
+      </p>
+      <p>
+        Les grandes bases d'exemples ont leurs histoires : ImageNet, lancée en 2009 par
+        l'équipe de <strong>Fei-Fei Li</strong>, compte aujourd'hui plus de 14 millions
+        d'images, étiquetées à la main par des travailleuses et travailleurs payés à la tâche
+        sur la plateforme Mechanical Turk.
+      </p>
+    </div>
+    <p slot="decide">
+      Selon l'agence Reuters (2018, d'après cinq sources anonymes), Amazon a abandonné un outil
+      de tri de CV qui défavorisait les candidates : il avait appris sur dix ans de CV reçus,
+      venant surtout d'hommes. Amazon n'a pas commenté l'outil. Le règlement européen sur l'IA
+      (2024) range l'IA utilisée pour l'emploi parmi les usages « à haut risque », soumis à des
+      règles renforcées à partir de décembre 2027.
+    </p>
+    <p slot="mythes">
+      <strong>« Une machine est neutre : elle ne fait que calculer. »</strong> Le calcul est
+      neutre, pas les exemples. Une IA reproduit les déséquilibres de ses données, y compris
+      ceux que personne n'a remarqués.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Trois (et demie) façons d'apprendre</h2>
+    <p>
+      Toutes les IA qui apprennent ajustent des paramètres pour réduire une erreur. Ce qui
+      change, c'est d'où vient l'information sur l'erreur.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Façon d'apprendre</th><th scope="col">D'où vient la correction</th><th scope="col">Exemple</th></tr></thead>
+      <tbody>
+        <tr><td>Supervisé</td><td>Des exemples avec la bonne réponse, donnée par des humains</td><td>Le neurone et les fruits, ce module</td></tr>
+        <tr><td>Non supervisé</td><td>Aucune réponse : la machine cherche des régularités</td><td><a href="/modules/ia/#groupes">Les k-moyennes</a></td></tr>
+        <tr><td>Par renforcement</td><td>Des récompenses et des pénalités, après coup</td><td><a href="/modules/ia/#recompenses">La souris dans le labyrinthe</a></td></tr>
+        <tr><td>Auto-supervisé</td><td>Les données elles-mêmes : on cache un morceau et on le fait deviner</td><td><a href="/modules/ia-texte/#prediction">Deviner le mot suivant</a></td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'D. Jurafsky, J. H. Martin', titre: 'Speech and Language Processing, 3ᵉ éd. (brouillon du 19 août 2026), ch. 6 « Neural Networks »', url: 'https://web.stanford.edu/~jurafsky/slp3/6.pdf', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'W. S. McCulloch, W. Pitts', titre: 'A logical calculus of the ideas immanent in nervous activity', url: 'https://doi.org/10.1007/BF02478259', type: 'primaire', annee: 1943, langue: 'en' },
+      { auteur: 'F. Rosenblatt', titre: 'The perceptron: A probabilistic model for information storage and organization in the brain', url: 'https://doi.org/10.1037/h0042519', type: 'primaire', annee: 1958, langue: 'en' },
+      { auteur: 'K. Fukushima', titre: 'Neocognitron: A Self-organizing Neural Network Model (Biological Cybernetics)', url: 'https://www.cs.princeton.edu/courses/archive/spring08/cos598B/Readings/Fukushima1980.pdf', type: 'primaire', annee: 1980, langue: 'en' },
+      { auteur: 'A.-L. Cauchy', titre: 'Méthode générale pour la résolution des systèmes d’équations simultanées (Comptes rendus de l’Académie des sciences, t. 25, p. 536)', url: 'https://archive.org/download/comptesrendusheb25acad/comptesrendusheb25acad_djvu.txt', type: 'primaire', annee: 1847 },
+      { auteur: 'C. Lemaréchal (Documenta Mathematica)', titre: 'Cauchy and the Gradient Method', url: 'https://ems.press/content/book-chapter-files/27368', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'H. Robbins, S. Monro', titre: 'A Stochastic Approximation Method (Annals of Mathematical Statistics)', url: 'https://doi.org/10.1214/aoms/1177729586', type: 'primaire', annee: 1951, langue: 'en' },
+      { auteur: 'Fondation Inamori', titre: 'Shun-ichi Amari — 2025 Kyoto Prize', url: 'https://www.kyotoprize.org/en/laureates/shun-ichi_amari/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'D. E. Rumelhart, G. E. Hinton, R. J. Williams', titre: 'Learning representations by back-propagating errors (Nature)', url: 'https://www.nature.com/articles/323533a0', type: 'primaire', annee: 1986, langue: 'en' },
+      { auteur: 'A. Griewank', titre: 'Who invented the reverse mode of differentiation? (Documenta Mathematica)', url: 'https://doi.org/10.4171/dms/6/38', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'J. Schmidhuber', titre: 'Deep learning in neural networks: An overview (Ivakhnenko, GMDH)', url: 'https://arxiv.org/abs/1404.7828', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'I. Goodfellow, Y. Bengio, A. Courville', titre: 'Deep Learning, ch. 6 (approximation universelle)', url: 'https://www.deeplearningbook.org/contents/mlp.html', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'G. Cybenko', titre: 'Approximation by superpositions of a sigmoidal function', url: 'https://doi.org/10.1007/BF02551274', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'A.-M. Legendre', titre: 'Nouvelles méthodes pour la détermination des orbites des comètes (appendice sur les moindres carrés)', url: 'https://archive.org/download/bub_gb_FRcOAAAAQAAJ/bub_gb_FRcOAAAAQAAJ_djvu.txt', type: 'primaire', annee: 1805 },
+      { auteur: 'S. M. Stigler', titre: 'Gauss and the Invention of Least Squares (Annals of Statistics)', url: 'https://doi.org/10.1214/aos/1176345451', type: 'recherche', annee: 1981, langue: 'en' },
+      { auteur: 'C. Runge', titre: 'Über empirische Funktionen und die Interpolation zwischen äquidistanten Ordinaten (Zeitschrift für Mathematik und Physik, t. 46)', url: 'https://archive.org/download/zeitschriftfrma12runggoog/zeitschriftfrma12runggoog_djvu.txt', type: 'primaire', annee: 1901, langue: 'de' },
+      { auteur: 'M. Stone', titre: 'Cross-Validatory Choice and Assessment of Statistical Predictions', url: 'https://sites.stat.washington.edu/courses/stat527/s13/readings/Stone1974.pdf', type: 'primaire', annee: 1974, langue: 'en' },
+      { auteur: 'S. Arlot, A. Celisse', titre: 'A survey of cross-validation procedures for model selection', url: 'https://arxiv.org/abs/0907.4728', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'P. Craven, G. Wahba', titre: 'Smoothing Noisy Data with Spline Functions (Numerische Mathematik)', url: 'https://sites.stat.washington.edu/courses/stat527/s13/readings/cravenwabha79.pdf', type: 'primaire', annee: 1979, langue: 'en' },
+      { auteur: 'A. Gammerman, V. Vovk (JMLR)', titre: 'Preface to this Special Issue (Vapnik et Tchervonenkis)', url: 'https://jmlr.org/papers/volume16/gammerman15a/gammerman15a.pdf', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'C. Cortes, V. Vapnik', titre: 'Support-Vector Networks (Machine Learning)', url: 'https://link.springer.com/content/pdf/10.1007/BF00994018.pdf', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'T. M. Cover, P. E. Hart', titre: 'Nearest Neighbor Pattern Classification', url: 'https://isl.stanford.edu/~cover/papers/transIT/0021cove.pdf', type: 'primaire', annee: 1967, langue: 'en' },
+      { auteur: 'University of California', titre: 'In Memoriam : Evelyn Fix', url: 'https://statistics.berkeley.edu/node/5864', type: 'site', langue: 'en' },
+      { auteur: 'J. Buolamwini, T. Gebru', titre: 'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', url: 'https://proceedings.mlr.press/v81/buolamwini18a.html', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'J. Buolamwini (MIT)', titre: 'Gender shades (mémoire de master, résumé)', url: 'https://dspace.mit.edu/handle/1721.1/114068', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'J. Deng et al.', titre: 'ImageNet: A Large-Scale Hierarchical Image Database', url: 'https://www.image-net.org/static_files/papers/imagenet_cvpr09.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'ImageNet', titre: 'About ImageNet', url: 'https://www.image-net.org/about.php', type: 'site', langue: 'en' },
+      { auteur: 'J. Dastin (Reuters, repris par Euronews)', titre: 'Amazon scraps secret AI recruiting tool that showed bias against women', url: 'https://www.euronews.com/2018/10/10/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'AI Act — Regulatory framework for AI', url: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai', type: 'primaire', langue: 'en' },
+      { auteur: 'J. Devlin et al.', titre: 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding', url: 'https://arxiv.org/abs/1810.04805', type: 'primaire', annee: 2018, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
