@@ -4,6 +4,7 @@ import Etape from '../../components/Etape.astro';
 import Terme from '../../components/Terme.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
 import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
 import Frise from '../../components/Frise.astro';
 import ModeLecture from '../../components/ModeLecture.astro';
 import Pixels from '../../components/animations/voir/Pixels.astro';
@@ -26,6 +27,7 @@ const etapes = [
 >
   <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
   <h1>Les IA qui voient</h1>
+  <MiseAJour date="2026-10-16" evolutif="règles sur la reconnaissance faciale et la vidéoprotection" />
   <p class="chapo seulement-debut">
     Ton téléphone reconnaît ton visage, une application trouve le nom d'une plante, une
     voiture repère un piéton. Pourtant, une machine ne voit que des nombres. Dessine, filtre,
@@ -199,6 +201,7 @@ const etapes = [
       </p>
     </div>
     <div slot="decide">
+      <p><em>État au 16 octobre 2026.</em></p>
       <p>
         Depuis le 2 février 2025, le règlement européen sur l'IA interdit de constituer des
         bases de reconnaissance faciale « par le moissonnage non ciblé d'images faciales

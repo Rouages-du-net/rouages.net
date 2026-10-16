@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Sources from '../../../components/Sources.astro';
+import MiseAJour from '../../../components/MiseAJour.astro';
 import { HISTOIRES } from '../../../scripts/terminus/chapitres';
 
 // Espaces insécables de la typographie française (avant : ; ! ? », après «).
@@ -12,6 +13,7 @@ const typo = (t: string) => t.replace(/« /g, '«\u00a0').replace(/ ([:;!?»])/g
 >
   <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
   <h1>Terminus <small class="tag">en français</small></h1>
+  <MiseAJour date="2026-10-15" />
   <p class="intro">
     Des jeux d'aventure où l'on agit avec de <strong>vraies commandes Linux</strong>. Chaque
     lieu est un dossier, chaque objet un fichier. Cinq histoires indépendantes : commence par
