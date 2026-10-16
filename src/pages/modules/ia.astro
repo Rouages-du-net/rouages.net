@@ -20,19 +20,19 @@ const maillons = [
   {
     icone: '📚',
     titre: 'Rassembler des textes',
-    texte: "On collecte d'immenses quantités de textes : pages web, livres, code, articles. Puis on les nettoie : doublons, pages vides, contenus indésirables.",
+    texte: "On collecte d'immenses quantités de textes : pages web, livres, code, articles, puis on les nettoie. GPT-2 (2019) a appris sur environ 40 Go de texte tiré de 8 millions de pages web ; pour Llama 3 (2024), Meta annonce plus de 15 000 milliards de tokens, dont à peine plus de 5 % dans une autre langue que l'anglais. La liste exacte des textes n'est en général pas publiée.",
     qui: 'Des robots d’indexation, des équipes d’ingénierie… et les autrices et auteurs de tous ces textes, rarement consulté·es.',
   },
   {
     icone: '🔥',
     titre: 'Pré-entraîner',
-    texte: "Le modèle lit ces textes et s'entraîne à deviner le token suivant, des milliers de milliards de fois. À chaque erreur, la descente de gradient ajuste un peu ses milliards de paramètres.",
+    texte: "Le modèle lit ces textes et s'entraîne à deviner le token suivant, des milliers de milliards de fois. À chaque erreur, la descente de gradient ajuste un peu ses paramètres : 1,5 milliard pour GPT-2 (2019), 175 milliards pour GPT-3 (2020), entraîné sur 300 milliards de tokens.",
     qui: 'Des milliers de processeurs graphiques qui tournent pendant des semaines, dans des centres de données qui consomment de l’électricité et de l’eau.',
   },
   {
     icone: '🧑‍🏫',
     titre: 'Ajuster avec des humains',
-    texte: "Un modèle qui ne fait que prolonger des textes n'est pas un assistant. Des personnes écrivent des exemples de bonnes réponses et classent les réponses du modèle ; on l'entraîne encore pour qu'il préfère celles qui sont jugées meilleures.",
+    texte: "Un modèle qui ne fait que prolonger des textes n'est pas un assistant. Des personnes écrivent des exemples de bonnes réponses et classent les réponses du modèle ; on l'entraîne encore pour qu'il préfère celles qui sont jugées meilleures. Pour InstructGPT (2022), ces préférences étaient celles d'une quarantaine d'annotatrices et d'annotateurs.",
     qui: 'Des annotatrices et annotateurs, souvent sous-traité·es, parfois dans des pays où ce travail est très mal payé.',
   },
   {
@@ -122,13 +122,25 @@ const etapes = [
     </p>
     <p slot="curieux">
       Le découpage est appris à l'avance : on part des lettres, et l'on fusionne les paires
-      les plus fréquentes, jusqu'à obtenir un vocabulaire de quelques dizaines de milliers de
-      tokens. Les mots fréquents tiennent en un token ; les mots rares, en plusieurs.
+      les plus fréquentes, jusqu'à obtenir un vocabulaire de quelques dizaines à quelques
+      centaines de milliers de tokens (50 257 pour GPT-2, environ 128 000 pour Llama 3). Les
+      mots fréquents tiennent en un token ; les mots rares, en plusieurs.
     </p>
     <p slot="ingenieur">
       L'algorithme s'appelle BPE (<em>byte pair encoding</em>). Les vrais tokeniseurs partent
       des octets du texte encodé en UTF-8 plutôt que des lettres : ainsi, aucun caractère n'est
       jamais inconnu. Le modèle ne voit jamais les lettres, seulement des numéros de tokens.
+    </p>
+    <p slot="histoire">
+      L'algorithme BPE est d'abord une méthode de compression de données, publiée par Philip
+      Gage en 1994. En 2016, Rico Sennrich, Barry Haddow et Alexandra Birch l'adaptent au
+      découpage des mots pour la traduction automatique.
+    </p>
+    <p slot="decide">
+      Chaque entreprise construit le tokeniseur de ses modèles, surtout à partir de textes en
+      anglais. Résultat, mesuré en 2023 : un même texte demande environ 1,6 fois plus de tokens
+      en français qu'en anglais avec le tokeniseur de ChatGPT et GPT-4, et jusqu'à 15 fois plus
+      pour certaines langues. Plus de tokens, c'est plus de calcul, et souvent plus cher.
     </p>
     <p slot="verifie">Tape « anticonstitutionnellement » : notre petit tokeniseur le découpe en nombreux morceaux, parce qu'il ne l'a jamais lu.</p>
   </Etape>
@@ -149,9 +161,20 @@ const etapes = [
     <p slot="ingenieur">
       Un plongement est un vecteur de quelques centaines à quelques milliers de dimensions. La
       proximité se mesure souvent par le cosinus de l'angle entre deux vecteurs. Les célèbres
-      analogies (« roi − homme + femme ≈ reine ») marchent parfois, mais les démonstrations
-      excluent souvent les mots de départ du résultat, ce qui embellit le tableau.
+      analogies (« roi − homme + femme ≈ reine ») marchent bien pour certaines relations
+      (pays et capitales, conjugaisons), beaucoup moins pour d'autres. Et les programmes
+      d'évaluation excluent d'office les mots de la question : sans cette règle, le point le
+      plus proche est le plus souvent… « roi » lui-même.
     </p>
+    <div slot="histoire">
+      <p>
+        En 2013, chez Google, Tomas Mikolov et ses collègues publient word2vec, qui apprend des
+        plongements à partir de milliards de mots, et montrent l'exemple « king − man + woman ≈
+        queen ». En 2016 et 2017, plusieurs équipes mesurent les stéréotypes que ces
+        plongements ont appris : l'une titre « Man is to Computer Programmer as Woman is to
+        Homemaker? ». Les corriger les atténue, sans les supprimer.
+      </p>
+    </div>
     <p slot="verifie">Clique sur un mot de la carte pour voir ses voisins, puis essaie « chat − chien + chienne ».</p>
   </Etape>
 
@@ -165,8 +188,9 @@ const etapes = [
     </p>
     <p slot="curieux">
       Les poids sont les <Terme id="parametre">paramètres</Terme> du modèle. Apprendre, c'est
-      trouver de bons poids. Un neurone seul ne sait tracer qu'une ligne droite ; en
-      empilant des couches de neurones, on obtient des frontières aussi compliquées qu'on veut.
+      trouver de bons poids. Un neurone seul ne sait tracer qu'une ligne droite (il échoue,
+      par exemple, sur le « ou exclusif ») ; en empilant des couches de neurones, on obtient
+      des frontières aussi compliquées qu'on veut.
     </p>
     <p slot="ingenieur">
       Sortie = f(w₁x₁ + w₂x₂ + b). Le perceptron utilise un seuil ; les réseaux modernes, des
@@ -176,7 +200,8 @@ const etapes = [
     <div slot="histoire">
       <p>
         En 1957-1958, aux États-Unis, Frank Rosenblatt invente le perceptron, l'un des premiers
-        réseaux de neurones capables d'apprendre à partir d'exemples. Au Japon,
+        réseaux de neurones capables d'apprendre à partir d'exemples (article de 1958 dans la
+        <em>Psychological Review</em>). Au Japon,
         <strong>Kunihiko Fukushima</strong> conçoit en 1979-1980 le néocognitron, inspiré du
         cortex visuel, précurseur des réseaux qui reconnaissent les images.
       </p>
@@ -209,8 +234,11 @@ const etapes = [
     <div slot="histoire">
       <p>
         Au Japon, <strong>Shun-ichi Amari</strong> décrit dès 1967 l'apprentissage de réseaux
-        de neurones par gradient stochastique. La rétropropagation a plusieurs inventeurs ;
-        elle devient célèbre en 1986.
+        de neurones par gradient stochastique. La rétropropagation a été découverte plusieurs
+        fois : on la trouve en 1970 dans le mémoire de master du Finlandais Seppo Linnainmaa
+        (pour calculer des erreurs d'arrondi, sans lien avec les neurones) ; l'Américain Paul
+        Werbos l'applique aux réseaux de neurones ; David Rumelhart, Geoffrey Hinton et Ronald
+        Williams la rendent célèbre en 1986, dans la revue <em>Nature</em>.
       </p>
     </div>
   </Etape>
@@ -231,10 +259,25 @@ const etapes = [
       de langage actuels.
     </p>
     <p slot="ingenieur">
-      Attention(Q, K, V) = softmax(QKᵀ / √d) V. Chaque couche contient plusieurs « têtes »
-      d'attention en parallèle, et un modèle empile des dizaines de couches. Dans un modèle
+      Attention(Q, K, V) = softmax(QKᵀ / √dₖ) V : chaque token produit une requête Q, une clé K
+      et une valeur V ; on compare sa requête aux clés de tous les tokens, le softmax donne des
+      poids qui somment à 1, et l'on fait la moyenne des valeurs avec ces poids. Chaque couche
+      contient plusieurs « têtes » en parallèle (8 dans l'article de 2017), chacune pouvant
+      repérer un type de relation différent, et un modèle empile des dizaines de couches. Dans un modèle
       qui génère du texte, chaque token ne peut regarder que les tokens qui le précèdent.
     </p>
+    <div slot="histoire">
+      <p>
+        En 2014, Dzmitry Bahdanau, Kyunghyun Cho et Yoshua Bengio inventent l'attention pour la
+        traduction automatique : pour produire chaque mot traduit, le réseau « cherche » les
+        mots utiles dans la phrase de départ. En 2017, huit chercheuses et chercheurs, pour
+        la plupart chez Google, Ashish Vaswani, Noam Shazeer, <strong>Niki Parmar</strong>, Jakob Uszkoreit,
+        Llion Jones, Aidan Gomez, Łukasz Kaiser et Illia Polosukhin, publient « Attention Is
+        All You Need » : le transformeur, qui ne repose que sur l'attention. Les modèles GPT
+        grandissent ensuite très vite : 1,5 milliard de paramètres pour GPT-2 (2019), 175
+        milliards pour GPT-3 (2020).
+      </p>
+    </div>
     <p slot="verifie">Change le dernier mot de la phrase : « fatigué » ou « étroit ». Le même « il » ne regarde plus le même mot.</p>
   </Etape>
 
@@ -264,6 +307,16 @@ const etapes = [
       une conséquence directe de ce fonctionnement. On peut la rendre plus rare, pas la
       supprimer à coup sûr.
     </p>
+    <div slot="histoire">
+      <p>
+        Le mot « hallucination » est une métaphore discutée : le modèle ne perçoit rien. En
+        2025, des chercheurs d'OpenAI et de Georgia Tech proposent une explication : un modèle
+        qui imite des textes se trompe forcément sur les faits rares, vus une seule fois ; et
+        les tests habituels, qui notent zéro un « je ne sais pas » comme une erreur, l'incitent
+        à deviner plutôt qu'à avouer son incertitude. C'est une analyse parmi d'autres : la
+        question reste ouverte.
+      </p>
+    </div>
   </Etape>
 
   <!-- Étape 7 -->
@@ -281,7 +334,11 @@ const etapes = [
     </p>
     <p slot="ingenieur">
       Cette étape s'appelle souvent RLHF (<em>reinforcement learning from human feedback</em>) :
-      un second modèle apprend à prédire les préférences humaines, et sert à affiner le premier.
+      un second modèle, le « modèle de récompense », apprend à prédire les préférences
+      humaines, et sert à affiner le premier par apprentissage par renforcement. Avec
+      InstructGPT (2022), les réponses d'un modèle 100 fois plus petit que GPT-3 ont été
+      préférées à celles de GPT-3. Mais ces préférences sont celles d'un petit groupe de
+      personnes, pas des « valeurs humaines » universelles.
     </p>
     <div slot="histoire">
       <p>
@@ -311,7 +368,22 @@ const etapes = [
 
   <Sources
     verifie="2026-10-16"
-    sources={[]}
+    sources={[
+      { auteur: 'D. Jurafsky, J. H. Martin', titre: 'Speech and Language Processing, 3ᵉ éd. (brouillon du 19 août 2026), chapitres 1 à 8', url: 'https://web.stanford.edu/~jurafsky/slp3/', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'A. Radford et al. (OpenAI)', titre: 'Language Models are Unsupervised Multitask Learners (GPT-2)', url: 'https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'T. B. Brown et al.', titre: 'Language Models are Few-Shot Learners (GPT-3)', url: 'https://arxiv.org/abs/2005.14165', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'R. Sennrich, B. Haddow, A. Birch', titre: 'Neural Machine Translation of Rare Words with Subword Units (BPE)', url: 'https://aclanthology.org/P16-1162/', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'A. Petrov et al.', titre: 'Language Model Tokenizers Introduce Unfairness Between Languages', url: 'https://arxiv.org/abs/2305.15425', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'T. Mikolov et al.', titre: 'Efficient Estimation of Word Representations in Vector Space (word2vec)', url: 'https://arxiv.org/abs/1301.3781', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'M. Nissim, R. van Noord, R. van der Goot', titre: 'Fair Is Better than Sensational: Man Is to Doctor as Woman Is to Doctor', url: 'https://aclanthology.org/2020.cl-2.7/', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'T. Bolukbasi et al.', titre: 'Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings', url: 'https://papers.nips.cc/paper_files/paper/2016/hash/a486cd07e4ac3d270571622f4f316ec5-Abstract.html', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'A. Griewank', titre: 'Who invented the reverse mode of differentiation? (Documenta Mathematica)', url: 'https://doi.org/10.4171/dms/6/38', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'D. Bahdanau, K. Cho, Y. Bengio', titre: 'Neural Machine Translation by Jointly Learning to Align and Translate', url: 'https://arxiv.org/abs/1409.0473', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'A. Vaswani et al.', titre: 'Attention Is All You Need', url: 'https://arxiv.org/abs/1706.03762', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'L. Ouyang et al.', titre: 'Training language models to follow instructions with human feedback (InstructGPT)', url: 'https://arxiv.org/abs/2203.02155', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'A. T. Kalai, O. Nachum, S. S. Vempala, E. Zhang', titre: 'Why Language Models Hallucinate (prépublication)', url: 'https://arxiv.org/abs/2509.04664', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'Llama Team (Meta)', titre: 'The Llama 3 Herd of Models', url: 'https://arxiv.org/abs/2407.21783', type: 'primaire', annee: 2024, langue: 'en' },
+    ]}
   />
   </section>
 </Base>
