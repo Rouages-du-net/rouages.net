@@ -53,7 +53,10 @@ const etapes = [
       Un classeur fait la même chose : il reçoit un cas, regarde des indices (on dit des
       « caractéristiques ») et le range dans une catégorie. Les catégories sont fixées à
       l'avance par des humains ; la machine apprend seulement à y ranger les cas, à partir
-      d'exemples déjà triés. C'est de l'apprentissage supervisé.
+      d'exemples déjà triés. C'est de l'apprentissage supervisé. Le tri du spam est
+      un gros travail : selon l'éditeur de sécurité Kaspersky, environ 45 % des courriels
+      envoyés dans le monde en 2025 étaient du spam (une estimation d'entreprise privée,
+      d'après ses propres capteurs).
     </p>
     <p slot="ingenieur">
       Formellement, un classeur est une fonction qui associe à un vecteur de caractéristiques
@@ -61,8 +64,21 @@ const etapes = [
       caractéristiques d'un courriel peuvent être ses mots, son expéditeur, ses liens, ou des
       nombres appris par un réseau de neurones.
     </p>
-    <div slot="histoire" data-a-sourcer="spam">
-      <p>À compléter.</p>
+    <div slot="histoire">
+      <p>
+        Le mot vient d'un sketch des Monty Python (BBC, 1970) : dans un café, presque tous les
+        plats contiennent du Spam, une viande en conserve, et un chœur répète le mot jusqu'à
+        couvrir la conversation. Les internautes l'ont repris pour les messages répétés à
+        l'excès ; le dictionnaire Merriam-Webster en relève le premier emploi en ce sens en
+        1990.
+      </p>
+      <p>
+        Le plus ancien envoi publicitaire de masse connu sur un réseau date de mai 1978 :
+        l'entreprise DEC invite plusieurs centaines d'utilisateurs de l'ARPANET à présenter
+        un ordinateur. Le responsable du réseau y voit « une violation flagrante » de son usage.
+        En 1994, la publicité de deux avocats, Canter et Siegel, envoyée sur Usenet, devient la
+        plus célèbre des premières affaires de spam.
+      </p>
     </div>
   </Etape>
 
@@ -87,9 +103,33 @@ const etapes = [
       des nombres trop petits. Les filtres modernes combinent ces indices avec bien d'autres :
       réputation de l'expéditeur, signatures techniques, réseaux de neurones.
     </p>
-    <div slot="histoire" data-a-sourcer="bayes">
-      <p>À compléter.</p>
+    <div slot="histoire">
+      <p>
+        La règle de Bayes porte le nom du pasteur anglais Thomas Bayes, mort en 1761. Son ami
+        Richard Price fait publier son essai après sa mort, dans le volume de 1763 de la Royal
+        Society. Le Français Pierre-Simon Laplace énonce la règle de façon générale en 1774,
+        indépendamment, et c'est surtout sa version qu'on utilise. Laplace reconnaît lui-même
+        l'antériorité de Bayes.
+      </p>
+      <p>
+        En 1961, M. E. Maron classe déjà des documents par probabilités, à partir de mots
+        indices. En 1972, <strong>Karen Spärck Jones</strong>, à Cambridge, montre qu'un mot
+        rare en dit plus qu'un mot fréquent, et le pèse davantage : cette pondération est encore
+        au cœur des moteurs de recherche. Elle avait pour devise : « l'informatique est trop
+        importante pour être laissée aux hommes ».
+      </p>
+      <p>
+        En 1998, Mehran Sahami, <strong>Susan Dumais</strong>, David Heckerman et Eric Horvitz,
+        de Stanford et Microsoft Research, appliquent un classifieur bayésien naïf au courrier
+        indésirable. En 2002, l'essai « A Plan for Spam » de Paul Graham fait connaître l'idée
+        au grand public et aux logiciels libres.
+      </p>
     </div>
+    <p slot="mythes">
+      <strong>« Paul Graham a inventé le filtre anti-spam bayésien. »</strong> Il l'a
+      popularisé et simplifié en 2002 ; l'équipe de Sahami et Dumais l'avait publié quatre ans
+      plus tôt. Et la règle elle-même ne vient pas du seul Bayes : Laplace l'a généralisée.
+    </p>
     <p slot="verifie">
       Clique sur « Une vraie banque » : le filtre la soupçonne, à cause de « mot de passe ».
       Puis apprends-lui ce message comme normal, et réessaie.
@@ -117,8 +157,21 @@ const etapes = [
       de 0 à 1, on trace la courbe ROC : sensibilité contre taux de faux positifs. L'aire sous
       cette courbe résume la qualité du classeur, tous seuils confondus.
     </p>
-    <div slot="histoire" data-a-sourcer="roc">
-      <p>À compléter.</p>
+    <div slot="histoire">
+      <p>
+        En 1998, l'équipe de Sahami et Dumais ne classait un courriel en spam que si la
+        probabilité dépassait 99,9 %, parce que « perdre un courriel légitime coûte bien plus
+        cher » que laisser passer un spam. Sur la vraie boîte d'un utilisateur, leur filtre a
+        bloqué 36 spams sur 45, laissé passer 9 spams et bloqué à tort 3 courriels légitimes sur
+        177.
+      </p>
+      <p>
+        En 1947, le statisticien Jacob Yerushalmy, qui étudie la lecture des radiographies
+        contre la tuberculose, définit clairement la sensibilité et la spécificité d'un test.
+        La courbe ROC vient d'ailleurs : de la théorie de la détection du signal, née des
+        recherches sur le radar pendant et après la Seconde Guerre mondiale (repérer un vrai
+        écho au milieu du bruit), puis reprise en psychologie et en médecine.
+      </p>
     </div>
   </Etape>
 
@@ -141,8 +194,22 @@ const etapes = [
       ce raisonnement illisible : on parle de boîte noire, et l'on essaie après coup de
       l'expliquer, avec des méthodes qui restent des approximations.
     </p>
-    <div slot="histoire" data-a-sourcer="arbres">
-      <p>À compléter.</p>
+    <div slot="histoire">
+      <p>
+        En 1966, Earl Hunt et ses collègues décrivent le <em>Concept Learning System</em>, qui
+        apprend des concepts sous forme d'arbre. L'informaticien <strong>J. Ross Quinlan</strong>,
+        basé en Australie, met au point ID3 en 1978, avec Donald Michie, pour décider si une
+        position de fin de partie d'échecs est perdue ; il le publie en 1986, puis crée C4.5.
+        En parallèle, quatre statisticiens américains, Leo Breiman, Jerome Friedman, Richard
+        Olshen et Charles Stone, publient en 1984 la méthode CART. Plus tard, Breiman et
+        <strong>Adele Cutler</strong> développent les forêts aléatoires, qui font voter des
+        centaines d'arbres.
+      </p>
+      <p>
+        En 2019, l'informaticienne <strong>Cynthia Rudin</strong> appelle à cesser d'expliquer
+        après coup des boîtes noires pour les décisions graves, et à utiliser des modèles
+        interprétables dès le départ.
+      </p>
     </div>
     <p slot="mythes">
       <strong>« Plus une IA est précise, mieux c'est. »</strong> Une IA peut obtenir un score
@@ -171,12 +238,48 @@ const etapes = [
       pour chaque groupe…) et elles ne peuvent en général pas être satisfaites toutes en même
       temps : le choix est politique autant que technique.
     </p>
-    <div slot="histoire" data-a-sourcer="cas">
-      <p>À compléter.</p>
+    <div slot="histoire">
+      <p>
+        Aux Pays-Bas, l'administration fiscale a utilisé à partir de 2013 un système qui
+        désignait automatiquement les demandes d'allocation de garde d'enfants « à risque ». La
+        nationalité (néerlandaise ou non) faisait partie des indicateurs. Des dizaines de
+        milliers de familles, surtout modestes, ont été accusées à tort de fraude, selon
+        Amnesty International. Une commission parlementaire a parlé d'« injustice sans
+        précédent » ; le gouvernement a démissionné en janvier 2021, et l'autorité néerlandaise
+        de protection des données a infligé une amende de 2,75 millions d'euros pour usage
+        « discriminatoire » de la nationalité.
+      </p>
+      <p>
+        Au Royaume-Uni, en 2020, les examens sont annulés à cause de la pandémie. Le régulateur
+        Ofqual calcule les notes avec un modèle qui ajuste celles proposées par les enseignants
+        selon les résultats passés de chaque établissement, pour éviter une inflation des
+        notes. Environ 39 % des notes de A level sont abaissées. Après la contestation, le
+        gouvernement et Ofqual décident, le 17 août, de retenir la plus haute des deux notes.
+      </p>
     </div>
-    <div slot="decide" data-a-sourcer="droit">
-      <p>À compléter.</p>
+    <div slot="decide">
+      <p>
+        En Europe, le RGPD (article 22) donne le droit « de ne pas faire l'objet d'une décision
+        fondée exclusivement sur un traitement automatisé » qui affecte significativement la
+        personne, sauf exceptions (contrat, loi, consentement explicite), avec alors le droit
+        d'obtenir une intervention humaine et de contester. Il cite lui-même l'exemple « des
+        pratiques de recrutement en ligne sans aucune intervention humaine ».
+      </p>
+      <p>
+        En 2023, la Cour de justice de l'Union européenne a jugé, à propos d'un score de crédit
+        (affaire SCHUFA), qu'un simple score est déjà une décision automatisée s'il joue un rôle
+        déterminant. Le règlement européen sur l'IA classe les systèmes qui servent à
+        « analyser et filtrer les candidatures et évaluer les candidats » parmi les systèmes à
+        haut risque ; leurs obligations s'appliquent à partir du 2 décembre 2027. En France, le
+        Défenseur des droits et la CNIL ont alerté dès 2020 sur les algorithmes qui
+        automatisent les discriminations, notamment dans le recrutement.
+      </p>
     </div>
+    <p slot="mythes">
+      <strong>« Il suffit de ne pas donner le genre (ou l'origine) à l'IA pour qu'elle soit
+      juste. »</strong> D'autres colonnes peuvent porter la même information : c'est ce que
+      montre l'animation.
+    </p>
   </Etape>
 
   <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
@@ -202,7 +305,40 @@ const etapes = [
 
   <Sources
     verifie="2026-10-16"
-    sources={[]}
+    sources={[
+      { auteur: 'Merriam-Webster', titre: 'spam (définition et origine)', url: 'https://www.merriam-webster.com/dictionary/spam', type: 'site', langue: 'en' },
+      { auteur: 'B. Templeton', titre: 'Origin of the term « spam » to mean net abuse', url: 'https://www.templetons.com/brad/spamterm.html', type: 'site', langue: 'en' },
+      { auteur: 'B. Templeton', titre: 'Reaction to the DEC Spam of 1978 (messages d’époque)', url: 'https://www.templetons.com/brad/spamreact.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Kaspersky (Securelist)', titre: 'Spam and phishing in 2025', url: 'https://securelist.com/spam-and-phishing-report-2025/118785/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'T. Bayes, R. Price', titre: 'An essay towards solving a problem in the doctrine of chances (Philosophical Transactions, notice)', url: 'https://doi.org/10.1098/rstl.1763.0053', type: 'primaire', annee: 1763, langue: 'en' },
+      { auteur: 'P.-S. Laplace', titre: 'A Philosophical Essay on Probabilities (trad. anglaise de l’Essai philosophique sur les probabilités)', url: 'https://gutenberg.org/files/58881/58881-h/58881-h.htm', type: 'primaire', annee: 1814, langue: 'en' },
+      { auteur: 'S. M. Stigler', titre: 'Who Discovered Bayes’s Theorem? (The American Statistician)', url: 'https://doi.org/10.2307/2682766', type: 'recherche', annee: 1983, langue: 'en' },
+      { auteur: 'F. Sebastiani', titre: 'Machine Learning in Automated Text Categorization', url: 'https://arxiv.org/abs/cs/0110053', type: 'recherche', annee: 2002, langue: 'en' },
+      { auteur: 'K. Spärck Jones', titre: 'A statistical interpretation of term specificity and its application in retrieval', url: 'https://www.staff.city.ac.uk/~sb317/idfpapers/ksj_orig.pdf', type: 'primaire', annee: 1972, langue: 'en' },
+      { auteur: 'University of Cambridge, Computer Laboratory', titre: 'Karen Spärck Jones, FBA', url: 'https://www.cl.cam.ac.uk/misc/obituaries/sparck-jones/', type: 'site', langue: 'en' },
+      { auteur: 'BCS', titre: 'Computing’s too important to be left to men (entretien avec K. Spärck Jones)', url: 'https://www.bcs.org/articles-opinion-and-research/computings-too-important-to-be-left-to-men/', type: 'primaire', annee: 2007, langue: 'en' },
+      { auteur: 'M. Sahami, S. Dumais, D. Heckerman, E. Horvitz', titre: 'A Bayesian Approach to Filtering Junk E-Mail', url: 'https://www.microsoft.com/en-us/research/wp-content/uploads/1998/01/junkfilter.pdf', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'ACM-W', titre: 'Dumais Athena Lecturer Award', url: 'https://women.acm.org/Dumais-Athena-Lecturer-Award/', type: 'site', annee: 2014, langue: 'en' },
+      { auteur: 'P. Graham', titre: 'A Plan for Spam', url: 'https://paulgraham.com/spam.html', type: 'primaire', annee: 2002, langue: 'en' },
+      { auteur: 'J. Yerushalmy (Public Health Reports)', titre: 'Statistical problems in assessing methods of medical diagnosis', url: 'https://jhanley.biostat.mcgill.ca/anniversaries/ByTopic/Yerushalmy1947.pdf', type: 'primaire', annee: 1947, langue: 'en' },
+      { auteur: 'C. Calì, M. Longobardi', titre: 'Some mathematical properties of the ROC curve and their applications', url: 'https://www.iris.unina.it/retrieve/e268a72e-5451-4c8f-e053-1705fe0a812c/Cal%c3%ac-Longobardi.pdf', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'Association for Psychological Science', titre: 'John Swets (25 at 25)', url: 'https://www.psychologicalscience.org/publications/observer/25at25/john-swets.html', type: 'site', annee: 2013, langue: 'en' },
+      { auteur: 'T. Fawcett', titre: 'An introduction to ROC analysis (Pattern Recognition Letters)', url: 'https://doi.org/10.1016/j.patrec.2005.10.010', type: 'recherche', annee: 2006, langue: 'en' },
+      { auteur: 'J. R. Quinlan', titre: 'Induction of Decision Trees (Machine Learning)', url: 'https://www.cs.williams.edu/~andrea/cs374/Articles/Quinlan.pdf', type: 'primaire', annee: 1986, langue: 'en' },
+      { auteur: 'KDnuggets', titre: 'SIGKDD 2011 Innovation Award: Ross Quinlan', url: 'https://www.kdnuggets.com/2011/08/sigkdd-2011-innovation-award-ross-quinlan.html', type: 'site', annee: 2011, langue: 'en' },
+      { auteur: 'University of California', titre: 'In Memoriam: Leo Breiman', url: 'https://senate.universityofcalifornia.edu/_files/inmemoriam/html/leobreiman.htm', type: 'site', langue: 'en' },
+      { auteur: 'C. Rudin', titre: 'Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead', url: 'https://arxiv.org/abs/1811.10154', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'Autoriteit Persoonsgegevens', titre: 'Tax Administration fined for discriminatory and unlawful data processing', url: 'https://www.autoriteitpersoonsgegevens.nl/en/current/tax-administration-fined-for-discriminatory-and-unlawful-data-processing', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'Amnesty International', titre: 'Xenophobic Machines : le scandale des allocations néerlandaises', url: 'https://www.amnesty.org/en/latest/news/2021/10/xenophobic-machines-dutch-child-benefit-scandal/', type: 'site', annee: 2021, langue: 'en' },
+      { auteur: 'GOV.UK', titre: 'GCSE and A level students to receive centre assessment grades', url: 'https://www.gov.uk/government/news/gcse-and-a-level-students-to-receive-centre-assessment-grades', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Ofqual', titre: 'Grading gaps in summer 2020', url: 'https://www.gov.uk/government/publications/evaluation-of-centre-assessment-grades-and-grading-gaps-in-summer-2020/grading-gaps-in-summer-2020-who-was-affected-by-differences-between-centre-assessment-grades-and-calculated-grades', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2016/679 (RGPD), article 22 et considérant 71', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32016R0679', type: 'primaire', annee: 2016 },
+      { auteur: 'Cour de justice de l’UE', titre: 'Arrêt C-634/21, SCHUFA Holding (Scoring)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:62021CJ0634', type: 'primaire', annee: 2023 },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué de presse n° 186/23', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2023-12/cp230186fr.pdf', type: 'primaire', annee: 2023 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’IA, annexe III, point 4', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202401689', type: 'primaire', annee: 2024 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2026/1744 (omnibus numérique sur l’IA) : nouvelles dates', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744', type: 'primaire', annee: 2026 },
+      { auteur: 'CNIL', titre: 'Algorithmes et discriminations : le Défenseur des droits, avec la CNIL, appelle à une mobilisation collective', url: 'https://www.cnil.fr/fr/algorithmes-et-discriminations-le-defenseur-des-droits-avec-la-cnil-appelle-une-mobilisation', type: 'primaire', annee: 2020 },
+    ]}
   />
   </section>
 </Base>
