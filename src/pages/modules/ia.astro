@@ -104,11 +104,26 @@ const etapes = [
       tokens, en tire un, l'ajoute à la séquence, et recommence : on dit qu'il est
       autorégressif.
     </p>
+    <div slot="histoire">
+      <p>
+        Le 23 janvier 1913, à Saint-Pétersbourg, le mathématicien <strong>Andreï Markov</strong>
+        recopie à la main les 20 000 premières lettres d'<em>Eugène Onéguine</em>, le roman de
+        Pouchkine, et compte voyelles et consonnes : il montre qu'une lettre dépend de celle qui
+        la précède. Ce sont les « chaînes de Markov », lointaines ancêtres des modèles de
+        langage. En 1948, aux États-Unis, Claude Shannon fabrique du « faux anglais » en tirant
+        des lettres, puis des mots, selon ce qui les suit d'habitude : plus le contexte est
+        long, plus le texte sonne anglais… sans rien vouloir dire.
+      </p>
+    </div>
     <p slot="verifie">Tape un début de phrase avec un mot que le modèle n'a jamais lu (« le dragon ») : il ne sait plus rien prédire. Il ne connaît que ce qu'il a lu.</p>
     <p slot="mythes">
       <strong>« L'IA comprend ce qu'elle dit. »</strong> Elle calcule ce qui vient le plus
       probablement après. Le résultat peut être juste, utile, impressionnant… ou faux avec
-      aplomb : rien dans ce calcul ne vérifie que c'est vrai.
+      aplomb : rien dans ce calcul ne vérifie que c'est vrai. Le piège est ancien : en 1966,
+      au MIT, Joseph Weizenbaum publie ELIZA, un programme qui se contente de reformuler les
+      phrases tapées. Il note que « certaines personnes ont eu beaucoup de mal à être
+      convaincues qu'ELIZA n'est pas humain ». On appelle aujourd'hui « effet ELIZA » cette
+      tendance à prêter de la compréhension à une machine qui produit des phrases plausibles.
     </p>
   </Etape>
 
@@ -174,6 +189,14 @@ const etapes = [
         plongements ont appris : l'une titre « Man is to Computer Programmer as Woman is to
         Homemaker? ». Les corriger les atténue, sans les supprimer.
       </p>
+      <p>
+        Bien avant, à Cambridge, la linguiste et philosophe <strong>Margaret Masterman</strong>
+        fonde le Cambridge Language Research Unit, l'un des tout premiers centres de
+        linguistique informatique. Son équipe représente le sens par des concepts reliés entre
+        eux, les « réseaux sémantiques », pour la traduction automatique. Karen Spärck Jones,
+        qui y fait ses débuts, invente en 1972 une façon de pondérer les mots selon leur rareté,
+        toujours au cœur des moteurs de recherche.
+      </p>
     </div>
     <p slot="verifie">Clique sur un mot de la carte pour voir ses voisins, puis essaie « chat − chien + chienne ».</p>
   </Etape>
@@ -238,7 +261,11 @@ const etapes = [
         fois : on la trouve en 1970 dans le mémoire de master du Finlandais Seppo Linnainmaa
         (pour calculer des erreurs d'arrondi, sans lien avec les neurones) ; l'Américain Paul
         Werbos l'applique aux réseaux de neurones ; David Rumelhart, Geoffrey Hinton et Ronald
-        Williams la rendent célèbre en 1986, dans la revue <em>Nature</em>.
+        Williams la rendent célèbre en 1986, dans la revue <em>Nature</em>. À Kyiv, en Ukraine
+        soviétique, <strong>Oleksiï Ivakhnenko</strong> et Valentin Lapa entraînent dès le milieu
+        des années 1960 des réseaux à plusieurs couches (la méthode GMDH) ; en 1971, Ivakhnenko
+        en décrit un à 8 couches. Le chercheur Jürgen Schmidhuber y voit « peut-être » les
+        premiers systèmes d'apprentissage profond.
       </p>
     </div>
   </Etape>
@@ -316,6 +343,11 @@ const etapes = [
         à deviner plutôt qu'à avouer son incertitude. C'est une analyse parmi d'autres : la
         question reste ouverte.
       </p>
+      <p>
+        Faire écrire des textes à une machine est un vieux champ de recherche :
+        <strong>Kathleen McKeown</strong>, professeure à l'université Columbia, est une
+        pionnière de la génération automatique de texte et du résumé automatique.
+      </p>
     </div>
   </Etape>
 
@@ -346,7 +378,43 @@ const etapes = [
         annotées à la main par des milliers de travailleurs et travailleuses en ligne. En 2018,
         <strong>Joy Buolamwini</strong> et <strong>Timnit Gebru</strong> montrent que des
         systèmes commerciaux d'analyse de visages se trompent bien plus souvent pour les femmes
-        à peau foncée que pour les hommes à peau claire.
+        à peau foncée que pour les hommes à peau claire. Dès 2013, <strong>Latanya
+        Sweeney</strong> avait montré qu'une recherche Google sur un prénom associé aux personnes
+        noires affichait bien plus souvent des publicités suggérant un casier judiciaire.
+      </p>
+      <p>
+        L'anthropologue <strong>Mary L. Gray</strong> et l'informaticien Siddharth Suri appellent
+        « travail fantôme » (<em>Ghost Work</em>, 2019) ce travail humain invisible. La
+        sociologue <strong>Milagros Miceli</strong> l'étudie en Argentine et au Venezuela, puis
+        lance avec l'institut DAIR une enquête menée par les travailleuses et travailleurs
+        eux-mêmes. Au Kenya, le 1ᵉʳ mai 2023, plus de 150 modératrices et modérateurs de
+        contenus, employés par des sous-traitants de Meta, TikTok et OpenAI, votent la création
+        d'un syndicat.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        <strong>Les lois.</strong> Le règlement européen sur l'IA (AI Act, règlement (UE)
+        2024/1689) classe les usages selon leur niveau de risque. Depuis le 2 février 2025,
+        certaines pratiques sont interdites, comme la notation sociale ; depuis le 2 août 2025,
+        des règles s'appliquent aux modèles « à usage général » des grands assistants. En 2026,
+        un règlement de simplification a repoussé à 2027 et 2028 les règles sur les systèmes
+        « à haut risque ».
+      </p>
+      <p>
+        <strong>Ouvert ou fermé ?</strong> Certains modèles publient leurs paramètres (« poids
+        ouverts ») : Mistral AI (France) pour Mistral 7B en 2023, DeepSeek (Chine) pour R1 en
+        2025, sous des licences libres. Meta présente ses modèles Llama comme « open source »,
+        mais l'Open Source Initiative le conteste à cause des restrictions de leur licence ; sa
+        définition (octobre 2024) exige aussi le code d'entraînement et une description
+        détaillée des données. D'autres modèles restent entièrement fermés.
+      </p>
+      <p>
+        <strong>L'énergie.</strong> Selon l'Agence internationale de l'énergie, les centres de
+        données (pour l'IA et tout le reste) ont consommé environ 415 TWh d'électricité en 2024,
+        environ 1,5 % de l'électricité mondiale ; elle en prévoit environ 945 TWh en 2030, l'IA
+        étant le premier moteur de la hausse. Des chercheurs de l'université de Californie
+        estiment que l'entraînement de GPT-3 a pu évaporer environ 700 000 litres d'eau douce.
       </p>
     </div>
   </Etape>
@@ -383,6 +451,23 @@ const etapes = [
       { auteur: 'L. Ouyang et al.', titre: 'Training language models to follow instructions with human feedback (InstructGPT)', url: 'https://arxiv.org/abs/2203.02155', type: 'primaire', annee: 2022, langue: 'en' },
       { auteur: 'A. T. Kalai, O. Nachum, S. S. Vempala, E. Zhang', titre: 'Why Language Models Hallucinate (prépublication)', url: 'https://arxiv.org/abs/2509.04664', type: 'recherche', annee: 2025, langue: 'en' },
       { auteur: 'Llama Team (Meta)', titre: 'The Llama 3 Herd of Models', url: 'https://arxiv.org/abs/2407.21783', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'B. Hayes (American Scientist)', titre: 'First Links in the Markov Chain', url: 'https://www.americanscientist.org/sites/americanscientist.org/files/201321152149545-2013-03Hayes.pdf', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'C. E. Shannon', titre: 'A Mathematical Theory of Communication', url: 'https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf', type: 'primaire', annee: 1948, langue: 'en' },
+      { auteur: 'J. Weizenbaum', titre: 'ELIZA — A Computer Program for the Study of Natural Language Communication (CACM)', url: 'https://web.stanford.edu/class/cs124/p36-weizenabaum.pdf', type: 'primaire', annee: 1966, langue: 'en' },
+      { auteur: 'J. Schmidhuber', titre: 'Deep learning in neural networks: An overview (Ivakhnenko, GMDH)', url: 'https://arxiv.org/abs/1404.7828', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'J. F. Sowa', titre: 'Compte rendu de « Language, Cohesion and Form » (Margaret Masterman)', url: 'https://aclanthology.org/J06-4005.pdf', type: 'recherche', annee: 2006, langue: 'en' },
+      { auteur: 'L. Sweeney', titre: 'Discrimination in Online Ad Delivery', url: 'https://arxiv.org/abs/1301.6822', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'AI Act — Regulatory framework for AI', url: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai', type: 'primaire', langue: 'en' },
+      { auteur: 'Commission européenne (AI Act Service Desk)', titre: 'Article 113 : entrée en vigueur et application (version consolidée)', url: 'https://ai-act-service-desk.ec.europa.eu/fr/ai-act/article-113', type: 'primaire' },
+      { auteur: 'Open Source Initiative', titre: 'The Open Source AI Definition 1.0', url: 'https://opensource.org/ai/open-source-ai-definition', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Open Source Initiative', titre: "Meta's LLaMa license is still not Open Source", url: 'https://opensource.org/blog/metas-llama-license-is-still-not-open-source', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Mistral AI', titre: 'Announcing Mistral 7B', url: 'https://mistral.ai/news/announcing-mistral-7b', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'DeepSeek', titre: 'DeepSeek-R1 Release', url: 'https://api-docs.deepseek.com/news/news250120', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Agence internationale de l’énergie', titre: 'Energy and AI — Executive summary', url: 'https://www.iea.org/reports/energy-and-ai/executive-summary', type: 'primaire', annee: 2025, langue: 'en', archive: 'https://web.archive.org/web/20251229195231/https://www.iea.org/reports/energy-and-ai/executive-summary' },
+      { auteur: 'P. Li, J. Yang, M. A. Islam, S. Ren', titre: 'Making AI Less “Thirsty”: Uncovering and Addressing the Secret Water Footprint of AI Models', url: 'https://arxiv.org/abs/2304.03271', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'M. L. Gray, S. Suri', titre: 'Ghost Work (site du livre)', url: 'https://ghostwork.info/', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'DAIR, Weizenbaum Institute, TU Berlin', titre: 'Data Workers’ Inquiry', url: 'https://data-workers.org/', type: 'recherche', langue: 'en' },
+      { auteur: 'B. Perrigo (TIME)', titre: '150 African Workers for ChatGPT, TikTok and Facebook Vote to Unionize', url: 'https://time.com/6275995/chatgpt-facebook-african-workers-union/', type: 'presse', annee: 2023, langue: 'en' },
     ]}
   />
   </section>

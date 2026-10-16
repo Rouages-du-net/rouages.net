@@ -1,7 +1,7 @@
 # Scénario — « Comment marche l'IA »
 
 *Démonter un grand modèle de langage, pièce par pièce.* Troisième module des
-*Rouages du net*. Statut : **brouillon publié** (`/modules/ia/`). Faits
+*Rouages du net*. Statut : **publié** (`/modules/ia/`). Faits
 sourcés dans [`docs/sources/ia-mecanismes.md`](../sources/ia-mecanismes.md)
 et [`docs/sources/ia.md`](../sources/ia.md).
 

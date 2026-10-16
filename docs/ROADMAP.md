@@ -51,9 +51,12 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## Phase 5 — L'IA
 
-- [ ] Tokens et embeddings
-- [ ] Mini-modèle de prédiction du mot suivant dans le navigateur
-- [ ] Attention, entraînement, limites, coûts humains et matériels
+- [x] Scénario en 8 étapes (`docs/scenarios/ia.md`) et dossier de sources (`docs/sources/ia-mecanismes.md`)
+- [x] Mini-modèle dans le navigateur (`src/lib/minilm.ts`) : n-gramme, BPE, softmax et température, perceptron
+- [x] Mot suivant, tokens, plongements, neurone, descente de gradient, attention, température, chaîne de fabrication
+- [x] Glossaire : 10 termes (token, plongement, attention, transformeur, hallucination…)
+- [ ] Relecture humaine finale
+- [ ] Vérifier sur EUR-Lex la référence du règlement « Omnibus IA » (2026) citée par un cabinet d'avocats
 
 ## En parallèle — Jeux et idées reçues
 
