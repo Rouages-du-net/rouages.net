@@ -399,6 +399,11 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Opération qui fait glisser un petit filtre (par exemple 3 × 3 coefficients) sur toute une image : pour chaque pixel, on multiplie ses voisins par les coefficients et l'on additionne. Selon le filtre, on obtient un flou, des bords, des textures. Les réseaux convolutifs apprennent leurs filtres.",
     voirAussi: ['neurone-artificiel'],
   },
+  'formant': {
+    terme: 'Formant',
+    definition:
+      "Fréquence que la bouche, la langue et la gorge renforcent quand on parle, comme une caisse de résonance. Les deux premiers formants suffisent presque à reconnaître une voyelle, que la voix soit grave ou aiguë.",
+  },
 };
 
 export function entree(id: string): Entree {

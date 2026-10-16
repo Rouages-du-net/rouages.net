@@ -1,0 +1,169 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Echantillons from '../../components/animations/entendre/Echantillons.astro';
+import Spectrogramme from '../../components/animations/entendre/Spectrogramme.astro';
+import Voyelles from '../../components/animations/entendre/Voyelles.astro';
+import Voder from '../../components/animations/entendre/Voder.astro';
+
+// Faits sourcés : voir docs/sources/ia-entendre.md.
+const etapes = [
+  { ancre: 'nombres', court: 'Le son en nombres' },
+  { ancre: 'spectre', court: 'Voir le son' },
+  { ancre: 'reconnaitre', court: 'Reconnaître' },
+  { ancre: 'parler', court: 'Parler' },
+  { ancre: 'voix', court: 'Ta voix' },
+  { ancre: 'bilan', court: 'Autour de toi', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui entendent et parlent"
+  description="Comment une machine transforme ta voix en texte, et un texte en voix : échantillonnage, spectrogramme, formants, reconnaissance et synthèse de la parole, voix clonées."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui entendent et parlent</h1>
+  <p class="chapo seulement-debut">
+    Tu dictes un message, ton téléphone l'écrit ; une vidéo affiche des sous-titres ; un GPS
+    te parle. Pour une machine, une voix n'est qu'une suite de nombres. Mesure un son, regarde
+    sa forme, apprends à une machine à reconnaître des voyelles, puis fais-la parler. Monte le
+    son : cette page fait du bruit, seulement quand tu cliques.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le son en nombres" ancre="nombres">
+    <Echantillons slot="animation" />
+    <p slot="decouverte">
+      Un son est une vibration de l'air. Pour le numériser, on le mesure très souvent : chaque
+      mesure est un nombre. Change la hauteur du son et le nombre de mesures par seconde.
+    </p>
+    <p slot="curieux">
+      Il faut au moins deux mesures par vibration. Une voix au téléphone tient dans
+      8 000 mesures par seconde ; un CD en prend 44 100, assez pour les sons les plus aigus que
+      l'oreille humaine perçoit, vers 20 000 vibrations par seconde. En dessous, on fabrique de
+      faux sons graves : le repliement.
+    </p>
+    <p slot="ingenieur">
+      Un signal dont les fréquences restent sous f<sub>max</sub> est entièrement déterminé par
+      ses échantillons si la fréquence d'échantillonnage dépasse 2 f<sub>max</sub>. Sinon, une
+      fréquence f est vue comme |f − k·f<sub>e</sub>|. On filtre donc les aigus avant de
+      numériser. Chaque mesure est ensuite arrondie, par exemple sur 16 bits pour un CD.
+    </p>
+    <div slot="histoire" data-a-sourcer="nyquist"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Voir le son" ancre="spectre">
+    <Spectrogramme slot="animation" />
+    <p slot="decouverte">
+      Ce dessin s'appelle un spectrogramme : le temps de gauche à droite, les sons graves en bas,
+      les aigus en haut. Chaque voyelle laisse sa signature : des bandes sombres à des hauteurs
+      différentes.
+    </p>
+    <p slot="curieux">
+      Les cordes vocales vibrent (c'est la hauteur de la voix), et la bouche, la langue et les
+      lèvres forment une caisse de résonance qui renforce certaines fréquences : les
+      <Terme id="formant">formants</Terme>. On reconnaît un « a » par ses formants, que la voix
+      soit grave ou aiguë.
+    </p>
+    <p slot="ingenieur">
+      On découpe le son en fenêtres de 32 ms (512 échantillons à 16 kHz), décalées de 7,5 ms, et
+      l'on calcule le spectre de chacune par une transformée de Fourier rapide. C'est le modèle
+      « source-filtre » : une source (impulsions des cordes vocales) passe dans un filtre (le
+      conduit vocal). Les systèmes de reconnaissance reçoivent en entrée ce genre d'image.
+    </p>
+    <div slot="histoire" data-a-sourcer="spectro"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Reconnaître une voyelle" ancre="reconnaitre">
+    <Voyelles slot="animation" />
+    <p slot="decouverte">
+      L'ordinateur mesure les deux premiers formants de la voyelle et la place sur une carte.
+      Il répond avec le modèle le plus proche. Essaie avec une voix d'enfant, puis change les
+      modèles.
+    </p>
+    <p slot="curieux">
+      Une machine reconnaît mieux les voix qui ressemblent à celles qu'elle a entendues en
+      apprenant. Des modèles tirés de voix d'hommes adultes se trompent davantage avec des
+      enfants. Pour les systèmes réels, c'est pareil avec les accents, les langues rares, les
+      voix âgées ou les troubles de la parole.
+    </p>
+    <p slot="ingenieur">
+      Les formants sont estimés par prédiction linéaire (LPC, ordre 12, après réduction à
+      8 kHz) : on prédit chaque échantillon à partir des 12 précédents, et les pics du filtre
+      obtenu sont les formants. La reconnaissance est un plus proche voisin dans le plan
+      (log F1, log F2). Les systèmes actuels transforment directement le spectrogramme en mots
+      avec des réseaux de neurones entraînés sur des centaines de milliers d'heures.
+    </p>
+    <div slot="histoire" data-a-sourcer="reconnaissance"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Faire parler une machine" ancre="parler">
+    <Voder slot="animation" />
+    <p slot="decouverte">
+      À l'inverse, pour faire parler une machine, on fabrique le son : une vibration de base,
+      et des formants. Bouge les curseurs et écoute la voyelle changer.
+    </p>
+    <p slot="curieux">
+      Les premières voix de synthèse étaient réglées à la main, comme ici. Ensuite, on a
+      assemblé des morceaux de voix enregistrées. Aujourd'hui, des réseaux de neurones
+      fabriquent le son échantillon par échantillon, à partir de très nombreux
+      enregistrements : la voix devient très naturelle.
+    </p>
+    <p slot="ingenieur">
+      Le synthétiseur de la page envoie un train d'impulsions à f0 dans une cascade de
+      résonateurs du second ordre centrés sur F1, F2 et F3 (comme les synthétiseurs à formants
+      de Klatt). Les synthèses neuronales prédisent plutôt un spectrogramme à partir du texte,
+      puis un « vocodeur » neuronal en tire les échantillons.
+    </p>
+    <div slot="histoire" data-a-sourcer="synthese"><p>À compléter.</p></div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Ta voix, une donnée sensible" ancre="voix">
+    <p slot="decouverte" data-a-sourcer="voix">À compléter.</p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Les IA qui entendent et parlent, autour de toi</h2>
+    <table>
+      <thead><tr><th scope="col">Usage</th><th scope="col">Ce qu'elle fait</th><th scope="col">La question à se poser</th></tr></thead>
+      <tbody>
+        <tr><td>Dictée, assistant vocal</td><td>transforme ta voix en texte</td><td>L'enregistrement part-il sur un serveur ? Qui peut l'écouter ?</td></tr>
+        <tr><td>Sous-titres automatiques</td><td>écrit ce qui se dit dans une vidéo</td><td>Reconnaît-elle aussi bien tous les accents ?</td></tr>
+        <tr><td>GPS, lecteur d'écran</td><td>lit un texte à voix haute</td><td>Quelle voix, et de qui vient-elle ?</td></tr>
+        <tr><td>Voix de synthèse personnalisée</td><td>redonne une voix à une personne qui la perd</td><td>Qui contrôle cette voix ?</td></tr>
+        <tr><td>Appel d'un proche qui demande de l'argent</td><td>peut être une voix clonée</td><td>Comment vérifier que c'est bien lui ou elle ?</td></tr>
+      </tbody>
+    </table>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
