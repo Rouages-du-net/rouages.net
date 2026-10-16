@@ -60,7 +60,15 @@ const etapes = [
       et 1 avant d'entrer dans un réseau. Comparer deux images pixel par pixel ne marche pas :
       il faut des représentations qui ne changent pas quand l'objet bouge un peu.
     </p>
-    <div slot="histoire" data-a-sourcer="kirsch"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 1957, au National Bureau of Standards, à Washington, Russell Kirsch et ses collègues
+        relient un scanner à tambour à l'ordinateur SEAC. Ils y font entrer une photo de son
+        fils, alors bébé : 176 × 176 pixels, soit 30 976 pixels, chacun seulement noir ou
+        blanc. C'est l'une des toutes premières images numérisées par ordinateur. Kirsch a
+        regretté plus tard d'avoir lancé la tradition du pixel carré.
+      </p>
+    </div>
   </Etape>
 
   <!-- Étape 1 -->
@@ -82,7 +90,17 @@ const etapes = [
       compte les pixels comme vides. Un réseau convolutif ne se donne pas ces noyaux : il les
       apprend.
     </p>
-    <div slot="histoire" data-a-sourcer="hubel"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        À la fin des années 1950, les neurophysiologistes David Hubel et Torsten Wiesel
+        enregistrent des neurones du cortex visuel du chat. Par hasard, en glissant une plaque
+        de verre dans leur projecteur, ils découvrent qu'une cellule réagit à l'ombre d'un bord
+        droit, et seulement dans une orientation précise. Certains neurones détectent des bords
+        orientés, d'autres combinent ces réponses : un traitement par étages. Ils reçoivent le
+        prix Nobel de médecine en 1981. Les réseaux convolutifs s'inspirent de cette idée, de
+        loin.
+      </p>
+    </div>
   </Etape>
 
   <!-- Étape 2 -->
@@ -106,7 +124,32 @@ const etapes = [
       réseau un peu insensible aux petits décalages. Le réseau ne connaît que ses quatre
       formes : un dessin d'un autre genre recevra quand même l'une des quatre réponses.
     </p>
-    <div slot="histoire" data-a-sourcer="cnn"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        En 1980, au Japon, <strong>Kunihiko Fukushima</strong> publie le néocognitron, un
+        réseau en couches inspiré de Hubel et Wiesel. En 1989, aux Bell Labs, Yann LeCun et ses
+        collègues entraînent par rétropropagation un réseau convolutif qui lit les chiffres
+        manuscrits des codes postaux, à partir de 9 298 chiffres du courrier passé par la poste
+        de Buffalo. En 1998, leur réseau LeNet-5 lit des millions de chèques dans des banques
+        américaines. Ils publient aussi la base MNIST, avec <strong>Corinna Cortes</strong> et
+        Christopher Burges : 70 000 chiffres écrits à la main par des employés du Bureau du
+        recensement et par des lycéens.
+      </p>
+      <p>
+        En 2009, l'équipe de <strong>Fei-Fei Li</strong> publie ImageNet, des millions d'images
+        triées par des travailleuses et travailleurs payés à la tâche sur Amazon Mechanical
+        Turk. En 2012, le réseau AlexNet, entraîné sur 1,2 million de ces images, gagne le
+        concours ImageNet ; les filtres de sa première couche réagissent à des bords orientés et à des taches de couleur. Au Japon, <strong>Takeo
+        Kanade</strong> a été l'un des pionniers de la détection de visages par réseaux de
+        neurones.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« En 1966, le MIT pensait résoudre la vision en un été. »</strong> La note de
+      Seymour Papert sur le « Summer Vision Project » proposait de construire en été « une
+      partie significative » d'un système visuel, pas de tout résoudre. Le problème s'est
+      tout de même révélé bien plus dur qu'imaginé.
+    </p>
     <p slot="mythes">
       <strong>« L'IA voit comme nous. »</strong> Elle trouve des régularités dans des nombres.
       Elle peut se tromper là où personne ne se tromperait, ou répondre avec assurance sur un
@@ -133,8 +176,56 @@ const etapes = [
       millions), plus risquée. Les taux d'erreur se mesurent séparément pour chaque groupe :
       une précision moyenne de 95 % peut cacher 30 % d'erreurs pour un groupe.
     </p>
-    <div slot="histoire" data-a-sourcer="visages"><p>À compléter.</p></div>
-    <div slot="decide" data-a-sourcer="droit"><p>À compléter.</p></div>
+    <div slot="histoire">
+      <p>
+        Dès le début des années 1960, à Palo Alto, la petite société Panoramic Research de Woody
+        Bledsoe travaille sur la reconnaissance des visages, avec notamment <strong>Helen Chan
+        Wolf</strong>. Des opérateurs relèvent à la main des points du visage, l'ordinateur
+        compare les mesures. En 1964, Bledsoe écrit que la reconnaissance d'images d'un grand
+        nombre de personnes dépasse l'état de l'art. Selon une enquête du magazine Wired, les
+        financeurs semblent avoir été des sociétés écrans de la CIA, et une étude suivante
+        n'utilisait que des photos d'hommes blancs.
+      </p>
+      <p>
+        En 2018, <strong>Joy Buolamwini</strong> et <strong>Timnit Gebru</strong> mesurent les
+        écarts du graphique, sur 1 270 parlementaires de six pays d'Afrique et d'Europe. Sept
+        mois plus tard, l'audit de suivi d'<strong>Inioluwa Deborah Raji</strong> et Joy
+        Buolamwini constate que les trois entreprises ont publié de nouvelles versions et réduit
+        l'écart. En 2019, le NIST, l'institut américain des normes, a testé 189 algorithmes de
+        reconnaissance faciale : les faux positifs varient « souvent d'un facteur 10 à plus de
+        100 » selon les groupes de population, mais certains algorithmes très précis ne montrent
+        pas d'écart mesurable. En Afrique du Sud, <strong>Raesetje Sefala</strong> a construit
+        avec son équipe un jeu d'images satellites pour étudier l'apartheid spatial.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Depuis le 2 février 2025, le règlement européen sur l'IA interdit de constituer des
+        bases de reconnaissance faciale « par le moissonnage non ciblé d'images faciales
+        provenant de l'internet ou de la vidéosurveillance ». Il interdit aussi l'identification
+        biométrique à distance « en temps réel » dans l'espace public par la police, sauf
+        exceptions strictes : rechercher des victimes d'enlèvement ou des personnes disparues,
+        prévenir une menace terroriste imminente, retrouver une personne soupçonnée d'un crime
+        grave. D'autres usages restent autorisés sous conditions.
+      </p>
+      <p>
+        En 2022, la CNIL a infligé une amende de 20 millions d'euros à la société Clearview AI,
+        qui collectait sans base légale des photos de visages sur internet. En France, la loi
+        sur les Jeux olympiques de 2024 a autorisé à titre expérimental des caméras « augmentées »
+        par algorithme, <strong>sans reconnaissance faciale</strong>, pour repérer huit types
+        d'événements (objet abandonné, mouvement de foule, départ de feu…). Le Conseil
+        constitutionnel a validé en mars 2026 sa reconduction jusqu'au 31 décembre 2027. La CNIL
+        rappelle les risques de ces technologies ; l'association La Quadrature du Net y voit
+        « une pierre de plus à l'édifice de la surveillance algorithmique de l'espace public » ;
+        le Conseil constitutionnel a jugé en 2023 que le dispositif poursuit un objectif de
+        prévention des atteintes à l'ordre public.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'Europe interdit la reconnaissance faciale. »</strong> Elle en interdit
+      certains usages (bases constituées en aspirant des visages, identification en temps réel
+      par la police, sauf exceptions). D'autres sont autorisés sous conditions.
+    </p>
   </Etape>
 
   <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
@@ -156,7 +247,39 @@ const etapes = [
 
   <Sources
     verifie="2026-10-16"
-    sources={[]}
+    sources={[
+      { auteur: 'NIST', titre: 'Fiftieth Anniversary of First Digital Image Marked', url: 'https://www.nist.gov/news-events/news/2007/05/fiftieth-anniversary-first-digital-image-marked', type: 'site', annee: 2007, langue: 'en' },
+      { auteur: 'R. A. Kirsch (Journal of Research of NIST)', titre: 'Precision and Accuracy in Scientific Imaging', url: 'https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=905116', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'W3C', titre: 'CSS Color Module Level 4 (couleurs RVB de 0 à 255)', url: 'https://www.w3.org/TR/css-color-4/', type: 'primaire', langue: 'en' },
+      { auteur: 'Fondation Nobel', titre: 'The Nobel Prize in Physiology or Medicine 1981', url: 'https://www.nobelprize.org/prizes/medicine/1981/summary/', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'D. H. Hubel', titre: 'Evolution of ideas on the primary visual cortex, 1955-1978 (conférence Nobel)', url: 'https://www.nobelprize.org/uploads/2018/06/hubel-lecture.pdf', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'S. A. Papert (MIT)', titre: 'The Summer Vision Project (AI Memo 100)', url: 'https://dspace.mit.edu/handle/1721.1/6125', type: 'primaire', annee: 1966, langue: 'en' },
+      { auteur: 'W. W. Bledsoe (Panoramic Research)', titre: 'Facial Recognition Project Report', url: 'https://archive.org/details/firstfacialrecognitionresearch', type: 'primaire', annee: 1964, langue: 'en' },
+      { auteur: 'S. Raviv (Wired)', titre: 'The Secret History of Facial Recognition', url: 'https://www.wired.com/story/secret-history-facial-recognition/', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Revolution : Shakey team', url: 'https://www.computerhistory.org/revolution/artificial-intelligence-robotics/13/289', type: 'site', langue: 'en' },
+      { auteur: 'K. Fukushima', titre: 'Neocognitron (Biological Cybernetics)', url: 'https://link.springer.com/article/10.1007/BF00344251', type: 'primaire', annee: 1980, langue: 'en' },
+      { auteur: 'Y. LeCun et al.', titre: 'Backpropagation Applied to Handwritten Zip Code Recognition', url: 'http://yann.lecun.com/exdb/publis/pdf/lecun-89e.pdf', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'Y. LeCun, L. Bottou, Y. Bengio, P. Haffner', titre: 'Gradient-Based Learning Applied to Document Recognition (LeNet-5, MNIST)', url: 'http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'J. Deng et al.', titre: 'ImageNet: A Large-Scale Hierarchical Image Database', url: 'https://www.image-net.org/static_files/papers/imagenet_cvpr09.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'A. Krizhevsky, I. Sutskever, G. Hinton', titre: 'ImageNet Classification with Deep Convolutional Neural Networks', url: 'https://papers.nips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'M. D. Zeiler, R. Fergus', titre: 'Visualizing and Understanding Convolutional Networks', url: 'https://arxiv.org/abs/1311.2901', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'Fondation Inamori', titre: 'Takeo Kanade — prix de Kyoto 2016', url: 'https://www.kyotoprize.org/en/laureates/takeo_kanade/', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'Google Research', titre: 'Corinna Cortes', url: 'https://research.google/people/corinna-cortes/', type: 'site', langue: 'en' },
+      { auteur: 'Stanford HAI', titre: 'Fei-Fei Li', url: 'https://hai.stanford.edu/people/fei-fei-li', type: 'site', langue: 'en' },
+      { auteur: 'J. Buolamwini, T. Gebru', titre: 'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification (tableau 4)', url: 'https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'I. D. Raji, J. Buolamwini (MIT Media Lab)', titre: 'Actionable Auditing (notice)', url: 'https://www.media.mit.edu/publications/actionable-auditing-investigating-the-impact-of-publicly-naming-biased-performance-results-of-commercial-ai-products/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'P. Grother, M. Ngan, K. Hanaoka (NIST)', titre: 'Face Recognition Vendor Test Part 3: Demographic Effects (NISTIR 8280)', url: 'https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8280.pdf', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'Algorithmic Justice League', titre: 'About', url: 'https://www.ajl.org/about', type: 'site', langue: 'en' },
+      { auteur: 'R. Sefala et al. (NeurIPS)', titre: 'Constructing a Visual Dataset to Study the Effects of Spatial Apartheid in South Africa', url: 'https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/07e1cd7dca89a1678042477183b7ac3f-Paper-round2.pdf', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'FDA', titre: 'De Novo Classification Request for IDx-DR (DEN180001)', url: 'https://www.accessdata.fda.gov/cdrh_docs/reviews/DEN180001.pdf', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’IA, articles 5 et 113', url: 'https://eur-lex.europa.eu/eli/reg/2024/1689/oj/fra', type: 'primaire', annee: 2024 },
+      { auteur: 'CNIL', titre: 'Lettre d’information n° 10 (sanction de Clearview AI)', url: 'https://www.cnil.fr/sites/default/files/atoms/files/lettre_information_cnil_octobre_2022.html', type: 'primaire', annee: 2022 },
+      { auteur: 'CNIL', titre: 'JOP 2024 : les questions-réponses de la CNIL', url: 'https://www.cnil.fr/fr/jop-2024-les-questions-reponses-de-la-cnil', type: 'site' },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2023-850 DC du 17 mai 2023 (loi JO 2024)', url: 'https://www.conseil-constitutionnel.fr/decision/2023/2023850DC.htm', type: 'primaire', annee: 2023 },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2025-878 DC du 24 avril 2025', url: 'https://www.conseil-constitutionnel.fr/decision/2025/2025878DC.htm', type: 'primaire', annee: 2025 },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2026-902 DC du 19 mars 2026 (loi JO 2030)', url: 'https://www.conseil-constitutionnel.fr/decision/2026/2026902DC.htm', type: 'primaire', annee: 2026 },
+      { auteur: 'La Quadrature du Net', titre: 'Jeux Olympiques 2030 : vous reprendriez bien un peu de VSA ?', url: 'https://www.laquadrature.net/2025/07/28/jeux-olympiques-2030-vous-reprendriez-bien-un-peu-de-vsa/', type: 'site', annee: 2025 },
+    ]}
   />
   </section>
 </Base>

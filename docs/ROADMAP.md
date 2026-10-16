@@ -79,7 +79,7 @@ flowchart TB
 - [x] **Comment apprend une machine** *(transversal, `/modules/apprendre/`, relecture humaine à faire)* — neurone et descente de gradient (déplacés depuis « Les IA qui écrivent »), données d'entraînement et de test, sur-apprentissage, apprentissage supervisé, non supervisé, par renforcement
 - [x] **Les IA qui classent** *(`/modules/ia-classer/`, relecture humaine à faire)* — spam, diagnostic, tri de CV : Bayes naïf (un filtre anti-spam qu'on entraîne soi-même), arbres de décision, plus proches voisins
 - [x] **Les IA qui cherchent et optimisent** *(`/modules/ia-chercher/`, relecture humaine à faire)* — GPS, tournées, emplois du temps : recherche A* ; IA inspirées de la nature : algorithmes génétiques, colonies de fourmis, essaims
-- [ ] **Les IA qui voient** — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
+- [x] **Les IA qui voient** *(`/modules/ia-voir/`, relecture humaine à faire)* — images en nombres, convolutions (Fukushima, LeCun), ImageNet, reconnaissance faciale et biais
 - [ ] **Les IA qui entendent et parlent** — reconnaissance vocale, synthèse de la voix, sous-titres automatiques
 - [ ] **Les IA qui créent** — images (diffusion : le débruitage), musique ; droit d'auteur
 - [ ] **Les IA qui recommandent** — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)

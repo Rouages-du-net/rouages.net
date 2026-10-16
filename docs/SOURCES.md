@@ -77,3 +77,4 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Comment apprend une machine » (descente de gradient, moindres carrés, validation croisée, plus proches voisins, biais des données)](sources/apprendre.md)
 - [Module « Les IA qui classent » (Bayes, filtrage du spam, ROC, arbres de décision, droit des décisions automatisées)](sources/ia-classer.md)
 - [Module « Les IA qui cherchent et optimisent » (Dijkstra, A*, voyageur de commerce, fourmis, évolution)](sources/ia-chercher.md)
+- [Module « Les IA qui voient » (image numérique, Hubel et Wiesel, réseaux convolutifs, reconnaissance faciale, droit)](sources/ia-voir.md)
