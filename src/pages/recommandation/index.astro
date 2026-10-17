@@ -1,0 +1,87 @@
+---
+// Page d'entrée de la section « Recommander » (voir docs/ROADMAP.md). Quand
+// un module paraît, renseigner son lien et son résumé dans MODULES.
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+
+const MODULES: { titre: string; idee: string; lien?: string; resume?: string }[] = [
+  { titre: 'Avant les algorithmes', idee: 'bibliothécaires et classifications, guides et étoiles, hit-parades, radios payées pour passer un disque' },
+  { titre: 'Classer par les notes', idee: 'pourquoi la moyenne trompe, moyenne bayésienne, tri « tendance », avis en J et faux avis' },
+  { titre: 'PageRank : les liens comme des votes', idee: 'le surfeur aléatoire, ses ancêtres dans l’analyse des citations, les fermes de liens' },
+  { titre: 'Les IA qui recommandent', idee: 'filtrage collaboratif, goûts cachés, ce qu’on optimise', lien: '/modules/ia-recommander/', resume: 'Note des vidéos, regarde un modèle découvrir des goûts cachés, change ce qu’il optimise, et observe les boucles de popularité.' },
+];
+const disponibles = MODULES.filter((m) => m.lien);
+const aVenir = MODULES.filter((m) => !m.lien);
+---
+<Base
+  title="Recommander"
+  description="Qui choisit ce qu'on te conseille de lire, d'écouter ou d'acheter ? Des bibliothécaires aux classements par les notes, de PageRank aux IA : la recommandation, avec ou sans IA."
+>
+  <p class="tag">Comment ça marche</p>
+  <h1>Recommander</h1>
+  <MiseAJour date="2026-10-16" />
+
+  <div class="intro">
+    <p>
+      « À chaque lecteur son livre, à chaque livre son lecteur » : ces deux lois du
+      bibliothécaire indien S. R. Ranganathan (1931) décrivent déjà ce que font aujourd'hui
+      les plateformes. Recommander, c'est très ancien. En 1900, un fabricant de pneus offre
+      aux automobilistes un guide des hôtels et des restaurants : c'est le premier Guide
+      Michelin. En 1958, le magazine américain <em>Billboard</em> lance le « Hot 100 », qui
+      mélange ventes de disques, passages à la radio et écoutes sur juke-box.
+    </p>
+    <p>
+      Chaque recommandation est un choix : ranger un livre sous un numéro, c'est décider à
+      côté de quoi on le trouvera. Dans la classification de Melvil Dewey (1876), huit
+      divisions sur neuf de la religion sont consacrées au christianisme, et toutes les autres
+      se partagent la dernière. Les machines ont repris ces questions à grande échelle :
+      comment classer par les notes, comment juger l'importance d'une page web, et, avec
+      l'IA, comment deviner tes goûts. Ici, on regarde les deux : avec et sans IA.
+    </p>
+  </div>
+
+  <section aria-labelledby="modules">
+    <h2 id="modules">Les modules</h2>
+    <div class="grid">
+      {disponibles.map((m) => (
+        <article class="card">
+          <h3><a href={m.lien}>{m.titre}</a></h3>
+          <p>{m.resume}</p>
+          <span class="tag">Disponible</span>
+        </article>
+      ))}
+    </div>
+    <h3 class="sous-titre">Bientôt</h3>
+    <ul class="a-venir">
+      {aVenir.map((m) => <li><strong>{m.titre}</strong> <span>({m.idee})</span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="ailleurs">
+    <h2 id="ailleurs">Voir aussi</h2>
+    <ul class="a-venir">
+      <li><a href="/intelligence-collective/">L'intelligence collective</a> : quand un groupe en sait plus que chacun de ses membres, et quand il se copie.</li>
+      <li><a href="/ia/">L'IA</a> : toutes les familles d'IA, par ce qu'elles font.</li>
+    </ul>
+  </section>
+
+  <Sources
+    verifie="2026-10-16"
+    sources={[
+      { auteur: 'S. R. Ranganathan', titre: 'The Five Laws of Library Science (2e éd., Digital Library of India)', url: 'https://archive.org/stream/in.ernet.dli.2015.283188/2015.283188.The-Five_djvu.txt', type: 'primaire', annee: 1957, langue: 'en' },
+      { auteur: 'G. Poullennec (Guide Michelin), Réalités industrielles', titre: 'Les raisons de la réussite du Guide Michelin au Japon', url: 'https://annales.org/ri/2013/ri-novembre-2013/POULLENNEC.pdf', type: 'primaire', annee: 2013 },
+      { auteur: 'The Billboard (numéro du 4 août 1958, archive World Radio History)', titre: 'The Billboard’s Hot 100', url: 'https://www.worldradiohistory.com/Archive-All-Music/Billboard/50s/1958/BB-1958-08-04.pdf', type: 'primaire', annee: 1958, langue: 'en' },
+      { auteur: 'M. Dewey (Projet Gutenberg)', titre: 'A Classification and Subject Index for Cataloguing and Arranging the Books and Pamphlets of a Library', url: 'https://www.gutenberg.org/ebooks/12513', type: 'primaire', annee: 1876, langue: 'en' },
+    ]}
+  />
+</Base>
+
+<style>
+  .intro { max-width: var(--mesure); font-size: 1.1rem; }
+  section { margin-top: 3rem; }
+  .sous-titre { margin: 2rem 0 0.5rem; font-size: 1.05rem; }
+  .a-venir { max-width: var(--mesure); padding-left: 1.2rem; }
+  .a-venir li { margin-bottom: 0.35rem; }
+  .a-venir span { color: var(--muted); }
+</style>

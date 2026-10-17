@@ -94,6 +94,22 @@ flowchart TB
 - [ ] **Les IA qui surveillent** — détection de fraude, vidéosurveillance algorithmique ; cadre légal
 - [ ] **Les IA qu'on trompe exprès** — images piégées, attaques par instructions cachées (*prompt injection*), empoisonnement des données
 
+## Phase 5 bis — Recommander (avec ou sans IA)
+
+- [x] Page d'entrée `/recommandation/` et carte sur l'accueil ; dossier de sources [`sources/recommander-sans-ia.md`](sources/recommander-sans-ia.md)
+- [ ] **Avant les algorithmes** — bibliothécaires et classifications (Dewey et ses biais, Ranganathan), Guide Michelin, hit-parades (Billboard, Oricon), payola, clubs de livres
+- [ ] **Classer par les notes** — moyenne trompeuse, borne de Wilson, moyenne bayésienne (IMDb), tri « tendance » (Reddit, Hacker News), avis en J, faux avis et droit
+- [ ] **PageRank : les liens comme des votes** — surfeur aléatoire, ancêtres (Katz, Pinski et Narin, Garfield, RankDex de Robin Li, HITS), fermes de liens, procédures antitrust (à dater)
+- [x] **Les IA qui recommandent** (voir phase 5)
+
+## Phase 5 ter — L'intelligence collective (avec ou sans IA)
+
+- [x] Page d'entrée `/intelligence-collective/` et carte sur l'accueil ; dossier de sources [`sources/intelligence-collective.md`](sources/intelligence-collective.md)
+- [ ] **La sagesse des foules** — le bœuf de Galton (chiffres corrigés par Wallis), théorème du jury de Condorcet, cascades informationnelles, influence sociale (Lorenz et al.)
+- [ ] **Construire ensemble** — GNU et Linux, Wikipédia (écart de genre), OpenStreetMap et Haïti, Galaxy Zoo, Foldit, Ushahidi, Common Voice, Masakhane, Elinor Ostrom
+- [ ] **Délibérer avec des algorithmes** — Polis et vTaiwan, Community Notes (algorithme de « pont », études divergentes, à dater), conventions citoyennes, Porto Alegre
+- [ ] **L'IA, fruit d'une intelligence collective** — données du web, reCAPTCHA, annotation et travail invisible, retours humains (RLHF), IA d'aide à la délibération
+
 ## En parallèle — Jeux et idées reçues
 
 - [x] Terminus : lien vers l'original du MIT
@@ -115,7 +131,6 @@ flowchart TB
 
 - Matérialité (câbles, datacenters, énergie)
 - Sécurité & vie privée
-- Algorithmes du quotidien
 - Le dark net : routage en oignon, `.onion`, usages et limites
 - Savoirs : édition scientifique, libre accès, Sci-Hub et Alexandra Elbakyan, communs de la connaissance
 - Économie du net
