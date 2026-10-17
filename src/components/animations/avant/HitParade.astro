@@ -1,0 +1,100 @@
+---
+// Animation « La recette d'un hit-parade » (module « Avant les
+// algorithmes ») : six chansons inventées, classées selon un mélange réglable
+// de ventes, de passages à la radio et d'écoutes sur juke-box (les trois
+// ingrédients annoncés par le Hot 100 en 1958). Bouton « payola » : une radio
+// payée en secret fait passer une chanson plus souvent.
+---
+<div class="anim hit-parade" data-hit-parade>
+  <div class="anim-repli">
+    <p>
+      Un hit-parade est une recette : on mélange les ventes de disques, les passages à la radio
+      et, dans les années 1950, les écoutes sur juke-box. Selon le poids donné à chaque
+      ingrédient, ce n'est pas la même chanson qui arrive en tête. Et si une maison de disques
+      paie en secret une radio pour passer sa chanson (la « payola »), elle grimpe dans le
+      classement, qui à son tour pousse les ventes.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="poids">
+        <label>Ventes en magasin <output data-sortie="ventes"></output><input type="range" min="0" max="10" value="5" data-poids="ventes" /></label>
+        <label>Passages à la radio <output data-sortie="radio"></output><input type="range" min="0" max="10" value="3" data-poids="radio" /></label>
+        <label>Écoutes sur juke-box <output data-sortie="jukebox"></output><input type="range" min="0" max="10" value="2" data-poids="jukebox" /></label>
+      </div>
+      <ol class="classement" data-classement></ol>
+      <div class="anim-commandes">
+        <button type="button" data-action="payola">💰 Payer une radio pour « Petite fleur des Andes »</button>
+        <button type="button" data-action="reset">↺ Revenir au départ</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Chansons, chiffres et poids inventés pour montrer le principe.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { CHANSONS, hitParade, type Chanson } from '../../../lib/avant';
+
+  document.querySelectorAll<HTMLElement>('[data-hit-parade]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let chansons: Chanson[] = CHANSONS.map((c) => ({ ...c }));
+    let paye = false;
+
+    function poids() {
+      const p = { ventes: 0, radio: 0, jukebox: 0 };
+      racine.querySelectorAll<HTMLInputElement>('[data-poids]').forEach((i) => {
+        p[i.dataset.poids as keyof typeof p] = Number(i.value);
+        racine.querySelector<HTMLOutputElement>(`[data-sortie="${i.dataset.poids}"]`)!.value = i.value;
+      });
+      return p;
+    }
+
+    function maj() {
+      const p = poids();
+      const cl = hitParade(chansons, p);
+      racine.querySelector('[data-classement]')!.replaceChildren(
+        ...cl.map(({ c, score }) => {
+          const li = document.createElement('li');
+          li.className = c.titre === 'Petite fleur des Andes' && paye ? 'paye' : '';
+          li.innerHTML = `<span class="titre">${c.titre}</span> <small>${c.ventes} 000 disques · ${c.radio} passages radio · ${c.jukebox} 000 écoutes juke-box</small><span class="barre" style="width:${Math.round(score * 100)}%"></span>`;
+          return li;
+        }),
+      );
+      const premier = cl[0].c.titre;
+      const rangFleur = cl.findIndex((x) => x.c.titre === 'Petite fleur des Andes') + 1;
+      legende.textContent = paye
+        ? `Avec des passages radio achetés, « Petite fleur des Andes » est ${rangFleur === 1 ? '1ʳᵉ' : `${rangFleur}ᵉ`}. Personne ne voit la triche dans le classement ; et une chanson qui passe souvent à la radio finit aussi par se vendre davantage.`
+        : `En tête : « ${premier} ». Fais varier les poids : la chanson la plus vendue, la plus diffusée et la plus écoutée au juke-box ne sont pas les mêmes. Le classement dépend de la recette.`;
+    }
+
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="payola"]')!.addEventListener('click', () => {
+      if (!paye) chansons = chansons.map((c) => (c.titre === 'Petite fleur des Andes' ? { ...c, radio: c.radio + 110 } : c));
+      paye = true;
+      maj();
+    });
+    racine.querySelector('[data-action="reset"]')!.addEventListener('click', () => {
+      chansons = CHANSONS.map((c) => ({ ...c }));
+      paye = false;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .poids { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .poids label { display: grid; grid-template-columns: 1fr auto; gap: 0 0.5rem; font-size: 0.9rem; }
+  .poids input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+  .poids output { font-weight: 700; font-family: var(--police-mono); }
+  .classement { margin: 0; padding-left: 1.6rem; display: grid; gap: 0.35rem; }
+  .classement :global(li) { font-size: 0.9rem; }
+  .classement :global(.titre) { font-weight: 600; }
+  .classement :global(small) { display: block; color: var(--muted); font-size: 0.78rem; }
+  .classement :global(.barre) { display: block; height: 0.35rem; background: var(--ill-commun); border-radius: 0.2rem; margin-top: 0.15rem; }
+  .classement :global(li.paye .titre) { color: var(--accent); }
+</style>
