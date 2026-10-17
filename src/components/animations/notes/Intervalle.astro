@@ -1,0 +1,98 @@
+---
+// Animation « Combien d'avis pour être sûr ? » (module « Classer par les
+// notes ») : avec p avis positifs et q négatifs, la part positive observée et
+// l'intervalle de Wilson à 95 %. Peu d'avis : intervalle immense.
+---
+<div class="anim intervalle" data-intervalle>
+  <div class="anim-repli">
+    <p>
+      Deux avis positifs sur deux, c'est 100 % de satisfaits, mais la vraie part pourrait
+      tout aussi bien être de 40 % : on n'en sait presque rien. Avec 100 avis positifs sur
+      101, on peut affirmer sans grand risque qu'au moins 95 % des acheteur·ses sont
+      satisfait·es. L'intervalle de Wilson donne cette fourchette ; sa borne basse sert à
+      classer prudemment.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Avis positifs (👍) : <output data-pos-sortie></output>
+        <input type="range" min="0" max="200" step="1" value="2" data-pos />
+      </label>
+      <label class="curseur">Avis négatifs (👎) : <output data-neg-sortie></output>
+        <input type="range" min="0" max="200" step="1" value="0" data-neg />
+      </label>
+      <div class="echelle" aria-hidden="true">
+        <div class="plage" data-plage></div>
+        <div class="point" data-point></div>
+      </div>
+      <p class="bornes"><span>0 %</span><span>50 %</span><span>100 %</span></p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-ex="2,0">2 sur 2</button>
+        <button type="button" data-ex="100,1">100 sur 101</button>
+        <button type="button" data-ex="12,8">12 sur 20</button>
+        <button type="button" data-ex="120,80">120 sur 200</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { wilson } from '../../../lib/notes';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-intervalle]').forEach((racine) => {
+    activerScene(racine);
+    const pos = racine.querySelector<HTMLInputElement>('[data-pos]')!;
+    const neg = racine.querySelector<HTMLInputElement>('[data-neg]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const p = Number(pos.value), q = Number(neg.value), n = p + q;
+      racine.querySelector<HTMLOutputElement>('[data-pos-sortie]')!.value = String(p);
+      racine.querySelector<HTMLOutputElement>('[data-neg-sortie]')!.value = String(q);
+      const { bas, haut } = wilson(p, n);
+      const plage = racine.querySelector<HTMLElement>('[data-plage]')!;
+      plage.style.left = `${bas * 100}%`;
+      plage.style.width = `${(haut - bas) * 100}%`;
+      const point = racine.querySelector<HTMLElement>('[data-point]')!;
+      point.hidden = n === 0;
+      point.style.left = `${n ? (p / n) * 100 : 0}%`;
+      racine.querySelector('[data-mesure]')!.textContent = n
+        ? `Observé : ${pc(p / n)} de positifs sur ${n} avis. Fourchette plausible (95 %) : de ${pc(bas)} à ${pc(haut)}. Score prudent : ${pc(bas)}.`
+        : 'Aucun avis : tout est possible, de 0 à 100 %.';
+      legende.textContent =
+        n < 10
+          ? 'Avec si peu d’avis, la fourchette est immense : le vrai taux de satisfaction peut être très différent de ce qu’on observe. Ajoute des avis.'
+          : haut - bas > 0.2
+            ? 'La fourchette se resserre à mesure que les avis s’accumulent. Le score prudent, c’est son bord gauche.'
+            : 'Avec beaucoup d’avis, la fourchette est étroite : la part observée est fiable.';
+    }
+    [pos, neg].forEach((i) => i.addEventListener('input', maj));
+    racine.querySelectorAll<HTMLButtonElement>('[data-ex]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const [a, c] = b.dataset.ex!.split(',');
+        pos.value = a;
+        neg.value = c;
+        maj();
+      }),
+    );
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .echelle { position: relative; height: 2rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.4rem; margin-top: 0.75rem; }
+  .plage { position: absolute; top: 0.4rem; bottom: 0.4rem; background: var(--ill-client); opacity: 0.55; border-radius: 0.3rem; }
+  .point { position: absolute; top: 0.15rem; width: 0.5rem; height: 1.6rem; margin-left: -0.25rem; background: var(--accent); border-radius: 0.2rem; }
+  .point[hidden] { display: none; }
+  .bornes { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin: 0.2rem 0 0.5rem; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0; }
+</style>

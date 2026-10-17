@@ -422,6 +422,16 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Expression d'Eli Pariser (2011) : à force de personnaliser ce qu'elles montrent, les plateformes ne nous présenteraient que ce qui nous ressemble. Les recherches discutent de l'ampleur de l'effet et de la part de l'algorithme par rapport à nos propres choix.",
     voirAussi: ['filtrage-collaboratif'],
   },
+  'intervalle-de-confiance': {
+    terme: 'Intervalle de confiance',
+    definition:
+      "Fourchette de valeurs plausibles pour une quantité qu'on ne connaît qu'à travers un échantillon (un sondage, des avis). Plus l'échantillon est grand, plus la fourchette est étroite. « À 95 % » veut dire que la méthode tombe juste dans 95 % des cas.",
+  },
+  'chaine-de-markov': {
+    terme: 'Chaîne de Markov',
+    definition:
+      "Suite d'étapes au hasard où la suivante ne dépend que de l'état présent, pas du chemin parcouru avant : un surfeur qui clique au hasard, un pion sur un plateau. Au bout d'un long moment, la part du temps passée dans chaque état se stabilise.",
+  },
 };
 
 export function entree(id: string): Entree {

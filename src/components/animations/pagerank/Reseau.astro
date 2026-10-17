@@ -1,0 +1,119 @@
+---
+// Animation « Un lien, une voix ? » (module « PageRank ») : un petit web de
+// sept pages inventées. On compare deux classements : compter les liens
+// entrants, ou peser chaque lien selon l'importance de la page qui le fait
+// (PageRank). On peut ajouter ou retirer des liens.
+import './styles-reseau.css';
+import { PAGES } from '../../../lib/pagerank';
+---
+<div class="anim reseau" data-reseau>
+  <div class="anim-repli">
+    <p>
+      Sept pages se citent les unes les autres. Le forum de randonnée reçoit quatre liens, la
+      mairie seulement deux. Pourtant, PageRank place la mairie devant le blog, la boutique et
+      le club photo, qui ont aussi deux liens : les siens viennent du wiki et du journal, deux
+      pages elles-mêmes très citées. Un lien vaut plus quand il vient d'une page importante, et
+      moins quand cette page distribue beaucoup de liens.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="tris">
+        <legend>Taille des pages selon</legend>
+        <label><input type="radio" name="taille-reseau" value="entrants" /> le nombre de liens reçus</label>
+        <label><input type="radio" name="taille-reseau" value="pagerank" checked /> PageRank</label>
+      </fieldset>
+      <svg class="reseau-svg" viewBox="-6 0 112 102" role="img" aria-label="Réseau de sept pages reliées par des liens" data-svg></svg>
+      <div class="edition">
+        <label>De <select data-de>{PAGES.map((p, i) => <option value={i}>{p.icone} {p.nom}</option>)}</select></label>
+        <label>vers <select data-vers>{PAGES.map((p, i) => <option value={i} selected={i === 5}>{p.icone} {p.nom}</option>)}</select></label>
+        <button type="button" class="anim-bouton" data-action="lien">Ajouter ce lien</button>
+        <button type="button" class="anim-bouton" data-action="reset">↺ Liens de départ</button>
+      </div>
+      <table class="tableau">
+        <caption class="visuellement-cache">Classement des pages</caption>
+        <thead><tr><th scope="col">Page</th><th scope="col">Liens reçus</th><th scope="col">PageRank</th></tr></thead>
+        <tbody data-tableau></tbody>
+      </table>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Pages et liens inventés. PageRank calculé avec d = 0,85.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { PAGES, LIENS, entrants, pagerank, rangs, ordinal, type Lien } from '../../../lib/pagerank';
+  import { dessinerReseau } from '../../../lib/reseau-svg';
+
+  const pc = (v: number) => `${(v * 100).toFixed(1).replace('.', ',')} %`;
+  const fr = (v: number) => v.toFixed(1).replace('.', ',');
+
+  document.querySelectorAll<HTMLElement>('[data-reseau]').forEach((racine) => {
+    activerScene(racine);
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const de = racine.querySelector<HTMLSelectElement>('[data-de]')!;
+    const vers = racine.querySelector<HTMLSelectElement>('[data-vers]')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="lien"]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let liens: Lien[] = LIENS.map((l) => [...l] as Lien);
+    let message = '';
+    const n = PAGES.length;
+
+    const existe = () => liens.findIndex(([a, b]) => a === Number(de.value) && b === Number(vers.value));
+
+    function maj() {
+      const e = entrants(n, liens);
+      const { pr, iterations } = pagerank(n, liens);
+      const mode = racine.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value;
+      dessinerReseau(svg, PAGES, liens, mode === 'entrants' ? e : pr);
+      const re = rangs(e), rp = rangs(pr);
+      const ordre = pr.map((s, i) => ({ s, i })).sort((a, b) => b.s - a.s);
+      racine.querySelector('[data-tableau]')!.replaceChildren(
+        ...ordre.map(({ i }) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td><span aria-hidden="true">${PAGES[i].icone}</span> ${PAGES[i].nom}</td><td>${e[i]} <small>(${ordinal(re[i])})</small></td><td>${pc(pr[i])} <small>(${ordinal(rp[i])})</small></td>`;
+          return tr;
+        }),
+      );
+      const memeSens = Number(de.value) === Number(vers.value);
+      bouton.disabled = memeSens;
+      bouton.textContent = existe() >= 0 ? 'Retirer ce lien' : 'Ajouter ce lien';
+      legende.textContent =
+        (message ? `${message} ` : '') +
+        `Calculé en ${iterations} passages. ${e[2] === e[4] ? `La mairie et le blog reçoivent chacun ${e[2]} lien${e[2] > 1 ? 's' : ''} : en les comptant, ils sont à égalité. ` : ''}Selon PageRank, la mairie (${pc(pr[2])}) pèse ${fr(pr[2] / pr[4])} fois le blog (${pc(pr[4])}), parce que ses liens viennent du wiki et du journal, eux-mêmes très cités. Essaie d’ajouter un lien du wiki vers la boutique, puis un du club photo vers la boutique, et compare.`;
+    }
+
+    bouton.addEventListener('click', () => {
+      const k = existe();
+      const a = PAGES[Number(de.value)].nom, b = PAGES[Number(vers.value)].nom;
+      if (k >= 0) {
+        liens.splice(k, 1);
+        message = `Lien retiré : ${a} → ${b}.`;
+      } else {
+        liens.push([Number(de.value), Number(vers.value)]);
+        message = `Lien ajouté : ${a} → ${b}.`;
+      }
+      maj();
+    });
+    racine.querySelector('[data-action="reset"]')!.addEventListener('click', () => {
+      liens = LIENS.map((l) => [...l] as Lien);
+      message = '';
+      maj();
+    });
+    racine.querySelectorAll('input, select').forEach((i) => i.addEventListener('input', () => { message = ''; maj(); }));
+    maj();
+  });
+</script>
+
+<style>
+  .tris { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .tris legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .tris label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .edition { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.6rem 0; font-size: 0.9rem; }
+  .edition select { font: inherit; max-width: 100%; background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.2rem; }
+  .tableau { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  .tableau :global(td), .tableau th { text-align: left; padding: 0.3rem; border-bottom: 1px solid var(--border); }
+  .tableau :global(small) { color: var(--muted); }
+</style>

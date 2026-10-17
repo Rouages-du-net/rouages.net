@@ -1,0 +1,113 @@
+---
+// Animation « Le surfeur aléatoire » (module « PageRank ») : un internaute
+// imaginaire clique au hasard de lien en lien ; dans une part 1 − d des cas,
+// il repart d'une page au hasard. La part du temps passée sur chaque page
+// se rapproche du PageRank calculé.
+import './styles-reseau.css';
+---
+<div class="anim surfeur" data-surfeur>
+  <div class="anim-repli">
+    <p>
+      Imagine un internaute qui clique au hasard. Dans 85 % des cas, il suit un des liens de la
+      page où il se trouve ; dans 15 % des cas, il s'ennuie et repart d'une page tirée au hasard.
+      Après des milliers de clics, on compte où il a passé son temps : la part de chaque page est
+      presque exactement son PageRank. Les pages où mènent beaucoup de chemins sont visitées plus
+      souvent.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg class="reseau-svg" viewBox="-6 0 112 102" role="img" aria-label="Le surfeur sur le réseau de pages ; la page où il se trouve est en couleur" data-svg></svg>
+      <label class="curseur">Part des clics qui suivent un lien (d) : <output data-d-sortie></output>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.85" data-d />
+      </label>
+      <div class="anim-commandes">
+        <button type="button" data-clics="1">1 clic</button>
+        <button type="button" data-clics="100" class="principal">100 clics</button>
+        <button type="button" data-clics="2000">2 000 clics</button>
+        <button type="button" data-action="reset">↺ Recommencer</button>
+      </div>
+      <table class="tableau">
+        <caption class="visuellement-cache">Temps passé par le surfeur et PageRank</caption>
+        <thead><tr><th scope="col">Page</th><th scope="col">Temps passé</th><th scope="col">PageRank</th></tr></thead>
+        <tbody data-tableau></tbody>
+      </table>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { PAGES, LIENS, pagerank, clic } from '../../../lib/pagerank';
+  import { dessinerReseau } from '../../../lib/reseau-svg';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${(v * 100).toFixed(1).replace('.', ',')} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-surfeur]').forEach((racine) => {
+    activerScene(racine);
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const curseur = racine.querySelector<HTMLInputElement>('[data-d]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const n = PAGES.length;
+    let alea = hasard(7);
+    let page = 0;
+    let visites = Array(n).fill(0);
+    let total = 0;
+
+    function maj(dernier = '') {
+      const d = Number(curseur.value);
+      racine.querySelector<HTMLOutputElement>('[data-d-sortie]')!.value = `${Math.round(d * 100)} %`;
+      const { pr } = pagerank(n, LIENS, d);
+      dessinerReseau(svg, PAGES, LIENS, pr, { actif: page });
+      racine.querySelector('[data-tableau]')!.replaceChildren(
+        ...PAGES.map((p, i) => {
+          const tr = document.createElement('tr');
+          const part = total ? visites[i] / total : 0;
+          tr.innerHTML = `<td><span aria-hidden="true">${p.icone}</span> ${p.nom}</td><td><span class="barre" style="width:${part * 200}px"></span> ${pc(part)}</td><td>${pc(pr[i])}</td>`;
+          return tr;
+        }),
+      );
+      const ecart = total ? PAGES.reduce((s, _, i) => s + Math.abs(visites[i] / total - pr[i]), 0) / 2 : 1;
+      legende.textContent = !total
+        ? 'Le surfeur est sur le wiki (en couleur). Fais-le cliquer.'
+        : `${dernier}${total} clic${total > 1 ? 's' : ''}. Écart total entre le temps passé et le PageRank : ${pc(ecart)}. ${total < 1000 ? 'Plus il clique, plus le temps passé se rapproche du PageRank.' : 'Le temps passé et le PageRank se rejoignent : c’est la définition du PageRank. Change d : avec un d faible, le surfeur saute tout le temps au hasard et toutes les pages se valent.'}`;
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-clics]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const d = Number(curseur.value);
+        const k = Number(b.dataset.clics);
+        const avant = page;
+        for (let i = 0; i < k; i++) {
+          page = clic(page, n, LIENS, d, alea);
+          visites[page]++;
+          total++;
+        }
+        maj(k === 1 ? `Le surfeur passe de « ${PAGES[avant].nom} » à « ${PAGES[page].nom} ». ` : '');
+      }),
+    );
+    function remettre() {
+      alea = hasard(7);
+      page = 0;
+      visites = Array(n).fill(0);
+      total = 0;
+      maj();
+    }
+    racine.querySelector('[data-action="reset"]')!.addEventListener('click', remettre);
+    curseur.addEventListener('input', remettre);
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-top: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .tableau { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-top: 0.6rem; }
+  .tableau :global(td), .tableau th { text-align: left; padding: 0.3rem; border-bottom: 1px solid var(--border); }
+  .tableau :global(td:nth-child(2)) { white-space: nowrap; }
+  .tableau :global(.barre) { display: inline-block; height: 0.6rem; max-width: 3.5rem; background: var(--ill-commun); vertical-align: middle; }
+</style>
