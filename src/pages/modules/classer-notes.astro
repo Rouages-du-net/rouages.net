@@ -1,0 +1,301 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Palmares from '../../components/animations/notes/Palmares.astro';
+import Intervalle from '../../components/animations/notes/Intervalle.astro';
+import Tendance from '../../components/animations/notes/Tendance.astro';
+import AvisJ from '../../components/animations/notes/AvisJ.astro';
+
+// Faits sourcés : voir docs/sources/recommander-sans-ia.md (thème 2).
+const etapes = [
+  { ancre: 'moyenne', court: 'La moyenne trompe' },
+  { ancre: 'prudence', court: 'Combien d’avis ?' },
+  { ancre: 'tendance', court: 'Ce qui est frais' },
+  { ancre: 'j', court: 'Les avis en J' },
+  { ancre: 'faux', court: 'Les faux avis' },
+  { ancre: 'bilan', court: 'Lire une note', pastille: '✓' },
+];
+---
+<Base
+  title="Classer par les notes"
+  description="Pourquoi un 5/5 sur deux avis ne veut presque rien dire : moyenne, moyenne bayésienne, borne de Wilson, tri « tendance » de Reddit et Hacker News, avis en J et faux avis."
+>
+  <p class="tag">Comment ça marche · <a href="/recommandation/">Recommander</a> · module en construction</p>
+  <h1>Classer par les notes</h1>
+  <MiseAJour date="2026-10-17" evolutif="règles sur les faux avis, formules des plateformes" />
+  <p class="chapo seulement-debut">
+    Étoiles, pouces, votes : partout, des avis servent à classer. Mais comment passer de
+    milliers de notes à une liste ordonnée ? Trie des produits de plusieurs façons, regarde
+    l'incertitude fondre avec le nombre d'avis, fais vieillir un fil d'actualité, et découvre
+    pourquoi les avis en ligne sont si souvent excellents.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="La moyenne trompe" ancre="moyenne">
+    <Palmares slot="animation" />
+    <p slot="decouverte">
+      Classe ces produits par moyenne : la lampe, notée par deux personnes seulement, passe
+      devant tout le monde. Essaie les autres façons de classer, puis ajoute des avis.
+    </p>
+    <p slot="curieux">
+      Le problème n'est pas la moyenne, c'est la confiance qu'on lui accorde. Avec deux avis,
+      un hasard suffit à donner 5/5. Les deux méthodes « prudentes » demandent des preuves :
+      plus un produit a d'avis, plus on croit sa note. Aucune ne sait reconnaître un faux avis.
+    </p>
+    <p slot="ingenieur">
+      Moyenne bayésienne : (somme des notes + m × C) / (nombre d'avis + m), avec C la moyenne
+      de tout le site et m le nombre d'avis « imaginaires ». Wilson : borne basse de
+      l'intervalle de confiance à 95 % de la part d'avis positifs (4 ou 5 étoiles). Le choix
+      de m, du seuil « positif » ou du niveau de confiance reste une décision humaine.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2009, le statisticien Evan Miller publie un billet resté célèbre, « Comment ne pas
+        trier par note moyenne ». Il y dénonce deux erreurs courantes : soustraire les avis
+        négatifs des positifs, ou prendre la moyenne. Il propose d'utiliser une méthode
+        statistique ancienne, l'intervalle de confiance de Wilson, du nom du mathématicien
+        E. B. Wilson.
+      </p>
+      <p>
+        De son côté, le site de cinéma IMDb publie la formule de son classement des 250
+        meilleurs films : une « estimation bayésienne » qui tire chaque note vers la moyenne
+        générale, avec un seuil de 25 000 votes pour entrer au classement (état au 17 octobre
+        2026). Pour ses autres notes, IMDb dit ne pas utiliser la moyenne simple, sans révéler
+        comment il pondère les votes.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Plus la note est haute, meilleur est le produit. »</strong> Une note dit aussi
+      combien de personnes ont donné leur avis, et lesquelles. 4,6 sur 1 000 avis en dit plus
+      que 5,0 sur 2.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Combien d'avis pour être sûr ?" ancre="prudence">
+    <Intervalle slot="animation" />
+    <p slot="decouverte">
+      Règle les avis positifs et négatifs. La barre montre la part de satisfaits qu'on
+      observe, et la zone colorée tout ce qui reste plausible. Moins il y a d'avis, plus la
+      zone est large.
+    </p>
+    <p slot="curieux">
+      C'est l'idée d'un sondage : interroger 2 personnes ne dit presque rien, en interroger
+      1 000 donne une fourchette serrée, un <Terme id="intervalle-de-confiance">intervalle de
+      confiance</Terme>. Classer par le bord gauche de la fourchette, c'est
+      se demander : « au pire, raisonnablement, quelle part de gens est satisfaite ? »
+    </p>
+    <p slot="ingenieur">
+      Pour p positifs sur n, avec p̂ = p/n et z = 1,96 (95 %) :
+      (p̂ + z²/2n ± z·√(p̂(1−p̂)/n + z²/4n²)) / (1 + z²/n). Contrairement à la formule
+      « p̂ ± z·√(p̂(1−p̂)/n) » des manuels, elle reste correcte pour de petits n et des parts
+      proches de 0 ou de 100 %.
+    </p>
+    <div slot="histoire">
+      <p>
+        Reddit, le grand forum américain, a utilisé cette borne pour son tri « meilleurs
+        commentaires » : le code source que le site a publié contient la formule, avec un
+        niveau de confiance de 80 % (z ≈ 1,28) au lieu des 95 % habituels. Ce dépôt de code est
+        aujourd'hui archivé : on ne sait pas exactement ce que le site utilise désormais.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« 100 % de satisfaits, c'est parfait. »</strong> Sur deux avis, 100 % est
+      compatible avec un vrai taux de satisfaction d'environ 34 % seulement. Regarde toujours
+      le nombre d'avis.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Ce qui est frais" ancre="tendance">
+    <Tendance slot="animation" />
+    <p slot="decouverte">
+      Sur un fil d'actualité, il faut aussi tenir compte du temps. Avance l'heure et compare
+      le classement par total de votes avec les tris « tendance ».
+    </p>
+    <p slot="curieux">
+      Classer par total de votes favorise ce qui est ancien : le temps de récolter des votes.
+      Les tris « tendance » font vieillir les publications, pour laisser de la place aux
+      nouvelles. Le réglage (à quelle vitesse une publication vieillit) change toute la page.
+    </p>
+    <p slot="ingenieur">
+      Reddit (code publié) : log<sub>10</sub>(votes) + secondes depuis une date fixe / 45 000.
+      45 000 secondes font 12 h 30. Version publique du logiciel de Hacker News :
+      (points − 1)<sup>0,8</sup> / (âge en heures + 2)<sup>1,8</sup>, multiplié par des
+      pénalités. Le code ne dit pas pourquoi ces constantes ont été choisies.
+    </p>
+    <div slot="histoire">
+      <p>
+        Ces deux formules sont parmi les rares formules de classement publiées par de grands
+        sites. Celle de Hacker News vient d'une version libre du logiciel de forum écrit en
+        langage Arc par Paul Graham, entretenue par des bénévoles : ce n'est pas le code qui
+        fait tourner le site aujourd'hui, qui comporte d'autres pénalités et une modération
+        humaine.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« En tête, c'est ce qui a eu le plus de votes. »</strong> Rarement. Presque tous
+      les fils mélangent votes, âge, et souvent bien d'autres critères que le site ne publie
+      pas.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Les avis en J" ancre="j">
+    <AvisJ slot="animation" />
+    <p slot="decouverte">
+      Pourquoi tant de produits ont-ils 4,5 étoiles ? Coche les deux biais un par un et
+      regarde les avis publiés changer de forme.
+    </p>
+    <p slot="curieux">
+      Les avis ne sont pas un sondage : personne ne les tire au sort. Ceux qui écrivent ont
+      acheté, donc étaient déjà attirés, et ont souvent quelque chose de fort à dire. Une
+      moyenne d'avis mesure l'opinion de ces personnes-là, pas celle de tout le monde.
+    </p>
+    <p slot="ingenieur">
+      La forme en J vient d'un double filtre : la probabilité d'acheter augmente avec l'attrait
+      pour le produit (biais d'achat), et la probabilité d'écrire augmente avec l'écart à
+      l'avis moyen (biais de déclaration). Corriger demande de connaître ces probabilités,
+      que le site, lui, peut estimer, par exemple en sollicitant aussi les acheteur·ses
+      silencieux·ses.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2007, trois chercheurs en gestion, N. Hu, P. A. Pavlou et J. Zhang, constatent que, sur Amazon, presque tous
+        les produits ont des avis en « J ». Ils parlent d'un biais d'achat et d'un biais de
+        déclaration : on écrit pour « se vanter ou râler ». Pour le vérifier, ils font écouter
+        un même disque à un groupe d'étudiant·es et leur demandent à tous une note : les
+        notes forment une cloche, et leur moyenne (3,12) est plus basse que celle des avis
+        Amazon (3,54). Une petite expérience, mais qui va dans le sens de leur analyse.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les avis reflètent l'opinion des client·es. »</strong> Ils reflètent l'opinion
+      des client·es qui écrivent, souvent les plus enthousiastes ou les plus déçu·es.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Les faux avis" ancre="faux">
+    <p slot="decouverte">
+      Si les avis font vendre, la tentation est grande d'en fabriquer. Dans la première
+      animation, 30 faux avis suffisaient à faire grimper une montre médiocre, quelle que soit
+      la méthode de calcul. La parade n'est pas mathématique : il faut détecter, et sanctionner.
+    </p>
+    <div slot="curieux">
+      <p>
+        Les faux avis sont faits pour passer inaperçus : on ne peut donc pas les compter
+        exactement. Des études donnent des ordres de grandeur. À Boston, environ 16 % des avis
+        de restaurants sur Yelp étaient écartés par le filtre anti-fraude du site (un filtre
+        imparfait, qui se trompe dans les deux sens) ; les restaurants à la réputation fragile
+        trichaient davantage. Sur Amazon, des chercheurs ont suivi environ 1 500 produits qui
+        achetaient des avis dans des groupes en ligne : la moitié de ces avis finissaient
+        supprimés, mais en plus de 100 jours en moyenne, et la triche portait surtout sur des
+        produits de mauvaise qualité.
+      </p>
+      <p>
+        En 2022, les autorités de 26 pays de l'Union européenne, de l'Islande et de la Norvège
+        ont contrôlé 223 grands sites : pour 144 d'entre eux, elles n'ont pas pu confirmer que
+        le site faisait assez d'efforts pour garantir que les avis soient authentiques.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Les plateformes repèrent les faux avis par des signaux : comptes récents ou liés entre
+      eux, rafales d'avis, textes semblables, achats non vérifiés. En France, la DGCCRF disait
+      en 2023 développer un outil d'intelligence artificielle d'analyse de texte pour les
+      repérer. Chaque détecteur fait des erreurs : écarter un vrai avis est aussi un problème.
+    </p>
+    <div slot="decide">
+      <p><em>État au 17 octobre 2026.</em></p>
+      <ul>
+        <li><strong>Union européenne.</strong> Depuis la directive « Omnibus » de 2019, appliquée
+          depuis le 28 mai 2022, il est interdit en toutes circonstances d'« envoyer ou charger
+          une autre personne […] d'envoyer de faux avis », ou d'affirmer que des avis viennent de
+          vrais client·es « sans prendre de mesures raisonnables et proportionnées pour
+          vérifier ».</li>
+        <li><strong>France.</strong> Depuis la loi pour une République numérique (2016), les
+          sites doivent expliquer comment ils collectent et contrôlent les avis. Selon le
+          gouvernement (2023), les pratiques commerciales trompeuses sont punies de deux ans de
+          prison et 300 000 euros d'amende, jusqu'à 10 % du chiffre d'affaires. La DGCCRF a
+          relevé des faux avis écrits par les professionnels eux-mêmes ou par des sociétés
+          d'« e-réputation », des client·es payé·es, et des avis négatifs supprimés ou publiés
+          en retard.</li>
+        <li><strong>États-Unis.</strong> Une règle de l'autorité de protection des
+          consommateur·rices (FTC), adoptée à l'unanimité en août 2024 et en vigueur depuis le
+          21 octobre 2024, interdit d'acheter ou de vendre de faux avis, y compris générés par
+          IA. En décembre 2025, la FTC a envoyé des lettres d'avertissement à dix entreprises ;
+          à notre connaissance, aucune sanction n'a encore été prononcée sur cette base.</li>
+      </ul>
+    </div>
+    <p slot="mythes">
+      <strong>« Un avis “vérifié” est forcément sincère. »</strong> « Vérifié » veut souvent
+      dire seulement que la personne a acheté le produit. Des vendeurs remboursent ou paient
+      des acheteur·ses en échange d'un avis positif : l'achat est réel, l'avis ne l'est pas.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Lire une note sans se faire avoir</h2>
+    <p>
+      Une note n'est pas une mesure de qualité : c'est le résultat d'un calcul, appliqué à des
+      avis écrits par certaines personnes. Quelques réflexes :
+    </p>
+    <table>
+      <thead><tr><th scope="col">Réflexe</th><th scope="col">Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td>Regarder le nombre d'avis</td><td>Avec peu d'avis, la note dépend du hasard (étapes 0 et 1).</td></tr>
+        <tr><td>Lire les avis à 2 et 3 étoiles</td><td>Ils sont rares mais souvent les plus nuancés ; les avis extrêmes sont surreprésentés (étape 3).</td></tr>
+        <tr><td>Se méfier des rafales d'avis récents, très semblables</td><td>C'est un signal fréquent de faux avis (étape 4).</td></tr>
+        <tr><td>Chercher comment le site classe</td><td>En Europe, il doit expliquer comment il collecte et contrôle les avis, et préciser s'il vérifie que leurs auteur·rices ont acheté.</td></tr>
+        <tr><td>Se demander ce que le tri récompense</td><td>Popularité, fraîcheur, prudence : chaque formule fait un choix (étapes 0 et 2).</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Classer par les notes, c'est déjà recommander. Les plateformes vont plus loin : elles
+      devinent ce qui <em>te</em> plaira à partir des notes des autres. C'est le sujet du module
+      <a href="/modules/ia-recommander/">Les IA qui recommandent</a>.
+    </p>
+
+  <Sources
+    verifie="2026-10-17"
+    sources={[
+      { auteur: 'E. Miller', titre: 'How Not To Sort By Average Rating', url: 'https://www.evanmiller.org/how-not-to-sort-by-average-rating.html', type: 'site', annee: 2009, langue: 'en' },
+      { auteur: 'Reddit (dépôt archivé)', titre: 'Code source : r2/lib/db/_sorts.pyx', url: 'https://github.com/reddit-archive/reddit/blob/master/r2/r2/lib/db/_sorts.pyx', type: 'primaire', langue: 'en' },
+      { auteur: 'IMDb', titre: 'Ratings FAQ', url: 'https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV', type: 'primaire', langue: 'en' },
+      { auteur: 'Anarki (version communautaire du logiciel de Hacker News)', titre: 'apps/news/news.arc', url: 'https://github.com/arclanguage/anarki/blob/master/apps/news/news.arc', type: 'primaire', langue: 'en' },
+      { auteur: 'N. Hu, P. A. Pavlou, J. Zhang', titre: 'Why do Online Product Reviews have a J-shaped Distribution? (document de travail)', url: 'https://archive.nyu.edu/bitstream/2451/14951/2/usedbook1.pdf', type: 'recherche', annee: 2007, langue: 'en' },
+      { auteur: 'M. Luca, G. Zervas', titre: 'Fake It Till You Make It: Reputation, Competition, and Yelp Review Fraud', url: 'https://dash.harvard.edu/server/api/core/bitstreams/7312037d-b7d9-6bd4-e053-0100007fdf3b/content', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'INFORMS', titre: 'Study Examines the Impact of Fake Online Reviews on Sales (S. He, B. Hollenbeck, D. Proserpio)', url: 'https://www.informs.org/News-Room/INFORMS-Releases/News-Releases/Study-Examines-the-Impact-of-Fake-Online-Reviews-on-Sales2', type: 'recherche', annee: 2022, langue: 'en' },
+      { auteur: 'Commission européenne (représentation en France)', titre: 'Protection des consommateurs contre les avis trompeurs : 55 % des sites web contrôlés enfreignent les règles de l’UE', url: 'https://france.representation.ec.europa.eu/informations/protection-des-consommateurs-contre-les-avis-trompeurs-55-des-sites-web-controles-enfreignent-les-2022-01-20_fr', type: 'primaire', annee: 2022 },
+      { auteur: 'Union européenne', titre: 'Directive (UE) 2019/2161 (« Omnibus »)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32019L2161', type: 'primaire', annee: 2019 },
+      { auteur: 'Assemblée nationale', titre: 'Question écrite n° 519 et réponse du Gouvernement (faux avis en ligne)', url: 'https://questions.assemblee-nationale.fr/dyn/16/questions/QANR5L16QE519.pdf', type: 'primaire', annee: 2023 },
+      { auteur: 'Federal Trade Commission', titre: 'Final Rule Banning Fake Reviews and Testimonials', url: 'https://www.ftc.gov/news-events/news/press-releases/2024/08/federal-trade-commission-announces-final-rule-banning-fake-reviews-testimonials', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Federal Trade Commission', titre: 'FTC Warns 10 Companies About Possible Violations of the Agency’s New Consumer Review Rule', url: 'https://www.ftc.gov/news-events/news/press-releases/2025/12/ftc-warns-10-companies-about-possible-violations-agencys-new-consumer-review-rule', type: 'primaire', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

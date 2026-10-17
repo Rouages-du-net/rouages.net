@@ -1,0 +1,85 @@
+---
+// Animation « Ce qui est frais » (module « Classer par les notes ») : huit
+// publications inventées reçoivent des votes au fil de deux jours. Classées
+// par total de votes, les anciennes gardent la tête ; avec les formules
+// « tendance » de Reddit et de Hacker News, l'âge pèse.
+---
+<div class="anim tendance" data-tendance>
+  <div class="anim-repli">
+    <p>
+      Sur une page d'actualités, si l'on classe par nombre total de votes, une publication
+      d'hier, qui a eu le temps d'accumuler des votes, reste en tête pendant des jours. Les
+      tris « tendance » tiennent compte de l'âge : dans le code publié par Reddit, une
+      publication doit recevoir dix fois plus de votes pour compenser 12 h 30 de retard ; dans
+      une version publique du logiciel de Hacker News, le score est divisé par une puissance
+      de l'âge. Les nouveautés intéressantes peuvent ainsi monter vite, puis redescendre.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Heure : <output data-heure-sortie></output>
+        <input type="range" min="1" max="48" step="1" value="24" data-heure />
+      </label>
+      <fieldset class="tris">
+        <legend>Classer par</legend>
+        <label><input type="radio" name="tri-tendance" value="total" checked /> total des votes</label>
+        <label><input type="radio" name="tri-tendance" value="reddit" /> tendance (Reddit)</label>
+        <label><input type="radio" name="tri-tendance" value="hn" /> tendance (Hacker News)</label>
+      </fieldset>
+      <ol class="flux" data-flux></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Publications et votes inventés. Les vrais sites ajoutent des pénalités et de la modération que leurs formules publiques ne montrent pas.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { fil, type TriTendance } from '../../../lib/notes';
+
+  const fr = (v: number, d: number) => v.toFixed(d).replace('.', ',');
+  const quand = (h: number) => (h < 24 ? `jour 1, ${h} h` : `jour 2, ${h - 24} h`);
+
+  document.querySelectorAll<HTMLElement>('[data-tendance]').forEach((racine) => {
+    activerScene(racine);
+    const heure = racine.querySelector<HTMLInputElement>('[data-heure]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const t = Number(heure.value);
+      const tri = racine.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value as TriTendance;
+      racine.querySelector<HTMLOutputElement>('[data-heure-sortie]')!.value = quand(t);
+      const f = fil(t, tri).slice(0, 5);
+      racine.querySelector('[data-flux]')!.replaceChildren(
+        ...f.map((x) => {
+          const li = document.createElement('li');
+          const sc = tri === 'total' ? '' : ` · score ${fr(x.score, tri === 'hn' ? 2 : 1)}`;
+          li.innerHTML = `${x.p.titre} <small>(${x.votes} votes · il y a ${x.age} h${sc})</small>`;
+          return li;
+        }),
+      );
+      const premier = f[0];
+      legende.textContent =
+        tri === 'total'
+          ? `En tête : « ${premier.p.titre} », publiée il y a ${premier.age} h. Par total des votes, les publications anciennes, qui ont eu le temps d’en accumuler, gardent la tête. Avance l’heure, puis essaie un tri « tendance ».`
+          : tri === 'reddit'
+            ? `En tête : « ${premier.p.titre} ». Reddit ajoute au score le moment de publication : être publié 12 h 30 plus tard vaut autant que dix fois plus de votes. Le classement se renouvelle au fil des heures.`
+            : `En tête : « ${premier.p.titre} ». Ici, les votes sont divisés par l’âge à la puissance 1,8 : une publication de 2 heures avec 50 votes peut passer devant une publication d’un jour avec 400 votes.`;
+    }
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.6rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .tris { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .tris legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .tris label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .flux { margin: 0; padding-left: 1.4rem; display: grid; gap: 0.3rem; }
+  .flux :global(li) { font-size: 0.9rem; }
+  .flux :global(small) { color: var(--muted); font-family: var(--police-mono); font-size: 0.78rem; }
+</style>
