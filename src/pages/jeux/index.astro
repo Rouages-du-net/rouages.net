@@ -1,31 +1,138 @@
 ---
+// Jeux pour apprendre, par thème. Données : src/data/jeux.ts ; sources et
+// méthode : docs/sources/jeux.md.
 import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import { THEMES } from '../../data/jeux';
 
-const jeux = [
-  {
-    nom: 'Terminus (MIT)',
-    lien: 'https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html',
-    desc: "Le jeu original : une aventure où l'on se déplace avec de vraies commandes Linux (ls, cd, cat, mv…).",
-    note: 'En anglais · site externe',
-  },
-  {
-    nom: 'Terminus en français',
-    lien: '/jeux/terminus/',
-    desc: "Cinq histoires en français : l'Effaceur (les bases, puis les permissions et sudo), le Datacenter (journaux, tubes, processus), le Paquet perdu (ping, dig, traceroute, curl), la Machine à remonter le temps (git) et les Archives (find, tar).",
-    note: '5 histoires · progression sauvegardée',
-  },
-];
+const PRIX = { gratuit: 'gratuit', freemium: 'gratuit au début, puis payant', payant: 'payant', variable: 'prix variable' } as const;
+const externe = (lien: string) => lien.startsWith('http');
+const nombre = THEMES.reduce((s, t) => s + t.jeux.length, 0);
 ---
-<Base title="Jeux" description="Apprendre l'informatique en jouant.">
+<Base title="Jeux" description="Des jeux pour apprendre l'informatique, les réseaux, la sécurité, l'IA et l'éducation aux médias, classés par thème, avec ce qu'il faut savoir avant de jouer.">
   <h1>Jeux</h1>
-  <p>Apprendre en jouant, avec de vrais outils.</p>
-  <div class="grid">
-    {jeux.map((j) => (
-      <article class="card">
-        <h3><a href={j.lien}>{j.nom}</a></h3>
-        <p>{j.desc}</p>
-        <span class="tag">{j.note}</span>
-      </article>
-    ))}
+  <MiseAJour date="2026-10-17" evolutif="les jeux changent de nom, de modèle ou disparaissent" />
+  <div class="intro">
+    <p>
+      Apprendre en jouant, avec de vrais outils. Voici {nombre} jeux et activités, classés par
+      thème, pour les élèves, les étudiant·es et les curieux·ses. Nous avons ouvert chaque lien et
+      signalé ce qu'il faut savoir avant de jouer : la langue, le prix, le compte à créer, la
+      publicité, les pisteurs et les données collectées.
+    </p>
+    <p>
+      Notre propre jeu, <a href="/jeux/terminus/">Terminus en français</a>, apprend la ligne de
+      commande Linux en cinq histoires.
+    </p>
   </div>
+
+  <fieldset class="filtres" data-filtres hidden>
+    <legend>Afficher seulement</legend>
+    <label><input type="checkbox" data-filtre="fr" /> en français</label>
+    <label><input type="checkbox" data-filtre="gratuit" /> gratuits</label>
+    <label><input type="checkbox" data-filtre="sans-compte" /> sans compte</label>
+    <output data-compte aria-live="polite"></output>
+  </fieldset>
+
+  <nav class="sommaire" aria-label="Thèmes">
+    <ul>
+      {THEMES.map((t) => <li><a href={`#${t.id}`}>{t.titre}</a></li>)}
+    </ul>
+  </nav>
+
+  {THEMES.map((t) => (
+    <section id={t.id} class="theme" aria-labelledby={`titre-${t.id}`}>
+      <h2 id={`titre-${t.id}`}>{t.titre}</h2>
+      <p class="chapeau">
+        {t.intro}
+        {t.module && <> Sur le site : <a href={t.module.lien}>{t.module.titre}</a>.</>}
+      </p>
+      <div class="grid">
+        {t.jeux.map((j) => (
+          <article class={`card${j.maison ? ' maison' : ''}`} data-fr={String(j.fr)} data-gratuit={String(j.prix === 'gratuit')} data-compte={String(j.compte)}>
+            <h3>
+              {externe(j.lien)
+                ? <a href={j.lien} rel="noopener noreferrer">{j.nom}<span class="visuellement-cache"> (site externe)</span></a>
+                : <a href={j.lien}>{j.nom}</a>}
+            </h3>
+            {j.par && <p class="par">{j.par}</p>}
+            <p>{j.desc}</p>
+            <ul class="etiquettes" aria-label="Caractéristiques">
+              <li class={j.fr ? 'fr' : ''}>{j.fr ? 'en français' : 'en anglais ou autre langue'}</li>
+              <li>{PRIX[j.prix]}</li>
+              <li>{j.compte ? 'compte nécessaire' : 'sans compte'}</li>
+              <li>{j.forme}</li>
+            </ul>
+            {j.attention && <p class="attention"><span aria-hidden="true">⚠️ </span><span class="visuellement-cache">Attention : </span>{j.attention}</p>}
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="theme" aria-labelledby="ecartes">
+    <h2 id="ecartes">Disparus ou à éviter</h2>
+    <p class="chapeau">
+      Des jeux souvent recommandés qui ne marchent plus au 17 octobre 2026 : Go Viral!, Troll
+      Factory (archivé par la télévision finlandaise), SQL Island, Human or Not. L'adresse de
+      Factitious a été reprise par un site publicitaire sans rapport : nous ne la mettons pas en
+      lien. Gandalf (Lakera) est remplacé par Agent Breaker, et picoCTF s'appelle désormais
+      CyLab Security Academy.
+    </p>
+  </section>
+
+  <Sources
+    verifie="2026-10-17"
+    sources={[
+      { auteur: 'Les rouages du net', titre: 'Méthode : chaque lien ouvert le 17 octobre 2026, recherche de pisteurs sur la page d’accueil (pas un audit complet), prix relevés le même jour', url: 'https://github.com/Rouages-du-net/rouages.net/blob/main/docs/sources/jeux.md', type: 'site' },
+      { auteur: 'Carnegie Mellon University', titre: 'CyLab Security Academy (anciennement picoCTF)', url: 'https://cylabacademy.org/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Lakera', titre: 'Agent Breaker (redirection depuis gandalf.lakera.ai)', url: 'https://play.lakera.ai/agent-breaker', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Yle', titre: 'Trollitehdas (Troll Factory), archivé le 28 octobre 2024', url: 'https://trollitehdas.yle.fi', type: 'primaire', annee: 2024, langue: 'fi' },
+    ]}
+  />
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-filtres]').forEach((boite) => {
+    boite.hidden = false;
+    const cases = [...boite.querySelectorAll<HTMLInputElement>('[data-filtre]')];
+    const cartes = [...document.querySelectorAll<HTMLElement>('.theme .card')];
+    function maj() {
+      const actifs = new Set(cases.filter((c) => c.checked).map((c) => c.dataset.filtre));
+      let visibles = 0;
+      for (const c of cartes) {
+        const ok =
+          (!actifs.has('fr') || c.dataset.fr === 'true') &&
+          (!actifs.has('gratuit') || c.dataset.gratuit === 'true') &&
+          (!actifs.has('sans-compte') || c.dataset.compte === 'false');
+        c.hidden = !ok;
+        if (ok) visibles++;
+      }
+      document.querySelectorAll<HTMLElement>('.theme').forEach((s) => {
+        const grille = s.querySelector('.grid');
+        if (grille) s.hidden = ![...grille.children].some((e) => !(e as HTMLElement).hidden);
+      });
+      boite.querySelector('[data-compte]')!.textContent = actifs.size ? `${visibles} jeu${visibles > 1 ? 'x' : ''} affiché${visibles > 1 ? 's' : ''}` : '';
+    }
+    cases.forEach((c) => c.addEventListener('input', maj));
+  });
+</script>
+
+<style>
+  .intro { max-width: var(--mesure); }
+  .filtres { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; align-items: center; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.5rem 1rem; margin: 1.5rem 0; }
+  .filtres[hidden] { display: none; }
+  .filtres legend { font-weight: 600; padding: 0 0.3rem; }
+  .filtres label { display: inline-flex; gap: 0.4rem; align-items: center; }
+  .filtres output { color: var(--muted); font-size: 0.9rem; }
+  .sommaire ul { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding: 0; list-style: none; font-size: 0.95rem; }
+  .theme { margin-top: 3rem; scroll-margin-top: 4.5rem; }
+  .chapeau { color: var(--muted); max-width: var(--mesure); }
+  .card h3 { margin-bottom: 0.2rem; }
+  .card.maison { border-color: var(--accent); }
+  .par { color: var(--muted); font-size: 0.85rem; margin: 0 0 0.5rem; }
+  .etiquettes { display: flex; flex-wrap: wrap; gap: 0.3rem; list-style: none; padding: 0; margin: 0.5rem 0 0; }
+  .etiquettes li { font-size: 0.78rem; border: 1px solid var(--border); border-radius: 999px; padding: 0.1rem 0.5rem; color: var(--muted); }
+  .etiquettes li.fr { color: var(--fg); border-color: var(--accent); }
+  .attention { font-size: 0.85rem; margin: 0.6rem 0 0; }
+</style>

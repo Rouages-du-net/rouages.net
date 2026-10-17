@@ -126,6 +126,8 @@ flowchart TB
 - [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
 - [ ] Terminus : suites possibles (voir « Idées pour la suite » dans le scénario)
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
+- [x] Page `/jeux/` : jeux pour apprendre, classés par thème (69 jeux vérifiés le 17 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
+- [ ] Terminus devient un projet séparé, « Quêtes de Sysadmin » (chapitres 1 et 2 déjà réécrits avec nos propres lieux et énigmes)
 
 ## Ensuite
 
