@@ -1,0 +1,101 @@
+---
+// Animation « Les avis en J » (module « Classer par les notes ») : 5 000
+// opinions inventées, en cloche. Qui achète, puis qui écrit un avis :
+// deux biais suffisent à transformer la cloche en « J ».
+---
+<div class="anim avis-j" data-avis-j>
+  <div class="anim-repli">
+    <p>
+      Si tout le monde notait un produit, la plupart des notes seraient moyennes, comme une
+      cloche. Mais seules les personnes déjà attirées par le produit l'achètent, et parmi
+      elles, celles qui adorent ou détestent écrivent plus volontiers. Résultat : les avis
+      publiés forment un « J », avec beaucoup de 5 étoiles, quelques 1 étoile et peu de notes
+      moyennes, et leur moyenne est plus haute que l'opinion de l'ensemble.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="biais">
+        <legend>Les biais</legend>
+        <label><input type="checkbox" data-achat /> seules les personnes déjà attirées achètent</label>
+        <label><input type="checkbox" data-avis /> on écrit surtout quand on adore ou qu'on déteste</label>
+      </fieldset>
+      <div class="deux">
+        <figure>
+          <figcaption>Si tout le monde notait</figcaption>
+          <div class="barres" data-histo="tous"></div>
+          <p class="mesure" data-moy="tous"></p>
+        </figure>
+        <figure>
+          <figcaption>Avis publiés</figcaption>
+          <div class="barres" data-histo="publies"></div>
+          <p class="mesure" data-moy="publies"></p>
+        </figure>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Simulation : 5 000 opinions inventées. Le mécanisme est celui décrit par Hu, Pavlou et Zhang (2007).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { avisPublies, moyenne, total } from '../../../lib/notes';
+  import { hasard } from '../../../lib/minilm';
+
+  const fr = (v: number) => v.toFixed(2).replace('.', ',');
+
+  document.querySelectorAll<HTMLElement>('[data-avis-j]').forEach((racine) => {
+    activerScene(racine);
+    const achat = racine.querySelector<HTMLInputElement>('[data-achat]')!;
+    const avis = racine.querySelector<HTMLInputElement>('[data-avis]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function dessiner(cle: string, h: number[]) {
+      const max = Math.max(...h, 1);
+      racine.querySelector(`[data-histo="${cle}"]`)!.replaceChildren(
+        ...h.map((x, i) => {
+          const d = document.createElement('div');
+          d.className = 'barre';
+          d.style.height = `${(x / max) * 100}%`;
+          d.title = `${i + 1} étoile${i ? 's' : ''} : ${x}`;
+          const l = document.createElement('span');
+          l.textContent = `${i + 1}★`;
+          d.append(l);
+          return d;
+        }),
+      );
+      racine.querySelector(`[data-moy="${cle}"]`)!.textContent = `${total(h)} notes · moyenne ${fr(moyenne(h))} ★`;
+    }
+
+    function maj() {
+      const r = avisPublies(hasard(3), 5000, achat.checked ? 0.8 : 0, avis.checked ? 1 : 0);
+      dessiner('tous', r.tous);
+      dessiner('publies', r.publies);
+      legende.textContent =
+        achat.checked && avis.checked
+          ? `Avec les deux biais, les avis publiés forment un « J » : beaucoup de 5 étoiles, quelques 1 étoile, peu de 3. Leur moyenne (${fr(moyenne(r.publies))}) dépasse nettement celle de l’ensemble (${fr(moyenne(r.tous))}).`
+          : achat.checked
+            ? 'Seules les personnes attirées achètent : les avis glissent vers le haut. Ajoute le second biais.'
+            : avis.checked
+              ? 'Les avis extrêmes sont surreprésentés : les notes moyennes disparaissent presque. Ajoute le premier biais.'
+              : 'Sans biais, les avis publiés ressemblent à l’opinion de tout le monde, en plus petit. Coche les biais un par un.';
+    }
+    [achat, avis].forEach((i) => i.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .biais { display: grid; gap: 0.25rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.75rem; }
+  .biais legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .biais label { font-size: 0.9rem; display: flex; gap: 0.4rem; align-items: baseline; }
+  .deux { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  figure { margin: 0; }
+  figcaption { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .barres { display: flex; align-items: flex-end; gap: 6px; height: 8rem; border-bottom: 1px solid var(--border); background: var(--bg); padding: 0 0.4rem 1.2rem; position: relative; }
+  .barres :global(.barre) { flex: 1; background: var(--ill-commun); min-height: 2px; position: relative; }
+  .barres :global(.barre span) { position: absolute; bottom: -1.2rem; left: 0; right: 0; text-align: center; font-size: 0.75rem; color: var(--muted); }
+  .mesure { font-family: var(--police-mono); font-size: 0.8rem; margin: 0.3rem 0 0; }
+</style>

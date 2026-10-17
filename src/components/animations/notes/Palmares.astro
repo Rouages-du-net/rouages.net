@@ -1,0 +1,125 @@
+---
+// Animation « La moyenne trompe » (module « Classer par les notes ») : sept
+// produits inventés, classés par moyenne, par nombre d'avis, par moyenne
+// bayésienne ou par la part d'avis positifs « dont on est sûr » (borne de
+// Wilson). On peut ajouter un avis, ou acheter de faux avis.
+---
+<div class="anim palmares" data-palmares>
+  <div class="anim-repli">
+    <p>
+      Une lampe notée 5 sur 5 par deux personnes passe devant un casque noté 4,5 sur 5 par
+      trois cents personnes si l'on trie par moyenne. Trier par nombre d'avis ne vaut pas
+      mieux : un produit très vendu mais médiocre passe devant. Deux méthodes corrigent ce
+      défaut. La moyenne « bayésienne » fait comme si chaque produit avait déjà reçu quelques
+      avis moyens : avec deux avis, la lampe reste près de la moyenne du site. La méthode de
+      Wilson calcule la part d'avis positifs dont on est raisonnablement sûr : avec deux avis
+      positifs sur deux, seulement 34 %. Aucune ne résiste à des dizaines de faux avis.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="tris">
+        <legend>Classer par</legend>
+        <label><input type="radio" name="tri-palmares" value="moyenne" checked /> moyenne</label>
+        <label><input type="radio" name="tri-palmares" value="nombre" /> nombre d'avis</label>
+        <label><input type="radio" name="tri-palmares" value="bayes" /> moyenne prudente (bayésienne)</label>
+        <label><input type="radio" name="tri-palmares" value="wilson" /> part d'avis positifs « sûre » (Wilson)</label>
+      </fieldset>
+      <label class="curseur" data-bloc-m hidden>Avis imaginaires ajoutés à chaque produit : <output data-m-sortie></output>
+        <input type="range" min="0" max="100" step="5" value="10" data-m />
+      </label>
+      <ol class="classement" data-classement></ol>
+      <div class="anim-commandes">
+        <button type="button" data-action="lampe">+1 avis ★★★★★ pour la lampe</button>
+        <button type="button" data-action="faux">Acheter 30 faux avis ★★★★★ pour la montre</button>
+        <button type="button" data-action="reset">↺ Revenir au départ</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Produits et avis inventés pour l'exemple.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { PRODUITS, classer, score, total, moyenne, positifs, moyenneSite, type Tri } from '../../../lib/notes';
+
+  const fr = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+  const EXPLIC: Record<Tri, string> = {
+    moyenne: 'Par moyenne, la lampe (2 avis) passe en tête : deux personnes contentes suffisent. Avec si peu d’avis, la moyenne dépend surtout du hasard.',
+    nombre: 'Par nombre d’avis, les produits les plus vendus gagnent, même le parapluie qui déçoit beaucoup de monde. Le nombre mesure la popularité, pas la qualité.',
+    bayes: 'La moyenne prudente fait comme si chaque produit avait déjà reçu quelques avis égaux à la moyenne du site. Un produit doit accumuler des avis pour s’en éloigner. Change le nombre d’avis imaginaires.',
+    wilson: 'Ici, on compte la part d’avis positifs (4 ou 5 étoiles), mais en prenant le pire cas raisonnable : avec 2 avis sur 2, on n’est sûr que d’environ 34 %. Avec 1 000 avis, l’incertitude est faible.',
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-palmares]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const curseurM = racine.querySelector<HTMLInputElement>('[data-m]')!;
+    let produits = PRODUITS.map((p) => ({ ...p, etoiles: [...p.etoiles] }));
+    let extra = '';
+
+    function tri(): Tri {
+      return racine.querySelector<HTMLInputElement>('input[type="radio"]:checked')!.value as Tri;
+    }
+
+    function maj() {
+      const t = tri();
+      const m = Number(curseurM.value);
+      racine.querySelector<HTMLElement>('[data-bloc-m]')!.hidden = t !== 'bayes';
+      racine.querySelector<HTMLOutputElement>('[data-m-sortie]')!.value = String(m);
+      const C = moyenneSite(produits);
+      racine.querySelector('[data-classement]')!.replaceChildren(
+        ...classer(produits, t, m).map((p) => {
+          const li = document.createElement('li');
+          const n = total(p.etoiles);
+          const s = score(p.etoiles, t, C, m);
+          const val =
+            t === 'moyenne' ? `${fr(s)} ★`
+            : t === 'nombre' ? `${n} avis`
+            : t === 'bayes' ? `${fr(s)} ★ prudente`
+            : `au moins ${Math.round(s * 100)} % positifs`;
+          const barres = p.etoiles.map((x) => `<span style="height:${n ? Math.max(2, (x / n) * 100) : 2}%"></span>`).join('');
+          li.innerHTML = `<span class="nom"><span aria-hidden="true">${p.icone}</span> ${p.nom}</span><span class="histo" aria-hidden="true">${barres}</span><span class="detail">${fr(moyenne(p.etoiles), 1)} ★ · ${n} avis · ${Math.round((positifs(p.etoiles) / Math.max(n, 1)) * 100)} % positifs</span><strong class="valeur">${val}</strong>`;
+          return li;
+        }),
+      );
+      legende.textContent = `${EXPLIC[t]}${extra}`;
+    }
+
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="lampe"]')!.addEventListener('click', () => {
+      produits[1].etoiles[4]++;
+      extra = ` La lampe a maintenant ${total(produits[1].etoiles)} avis.`;
+      maj();
+    });
+    racine.querySelector('[data-action="faux"]')!.addEventListener('click', () => {
+      produits[6].etoiles[4] += 30;
+      extra = ' Avec 30 faux avis de plus, la montre grimpe quelle que soit la méthode : aucun calcul ne distingue un faux avis d’un vrai. Il faut les détecter, et la loi les interdit.';
+      maj();
+    });
+    racine.querySelector('[data-action="reset"]')!.addEventListener('click', () => {
+      produits = PRODUITS.map((p) => ({ ...p, etoiles: [...p.etoiles] }));
+      extra = '';
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .tris { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .tris legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .tris label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.9rem; margin-bottom: 0.6rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur[hidden] { display: none; }
+  .classement { margin: 0; padding-left: 1.6rem; display: grid; gap: 0.35rem; }
+  .classement :global(li) { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'nom histo' 'valeur valeur' 'detail detail'; gap: 0 0.6rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; font-size: 0.9rem; }
+  .classement :global(.nom) { grid-area: nom; font-weight: 600; }
+  .classement :global(.valeur) { grid-area: valeur; font-family: var(--police-mono); font-size: 0.85rem; }
+  .classement :global(.detail) { grid-area: detail; color: var(--muted); font-size: 0.8rem; }
+  .classement :global(.histo) { grid-area: histo; display: inline-flex; align-items: flex-end; gap: 2px; height: 1.4rem; justify-self: end; }
+  .classement :global(.histo span) { width: 5px; background: var(--ill-commun); }
+</style>
