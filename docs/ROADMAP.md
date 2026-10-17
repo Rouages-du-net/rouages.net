@@ -99,7 +99,7 @@ flowchart TB
 - [x] Page d'entrée `/recommandation/` et carte sur l'accueil ; dossier de sources [`sources/recommander-sans-ia.md`](sources/recommander-sans-ia.md)
 - [ ] **Avant les algorithmes** — bibliothécaires et classifications (Dewey et ses biais, Ranganathan), Guide Michelin, hit-parades (Billboard, Oricon), payola, clubs de livres
 - [x] **Classer par les notes** *(`/modules/classer-notes/`, relecture humaine à faire ; règles sur les faux avis à suivre)* — moyenne trompeuse, borne de Wilson, moyenne bayésienne (IMDb), tri « tendance » (Reddit, Hacker News), avis en J, faux avis et droit
-- [ ] **PageRank : les liens comme des votes** — surfeur aléatoire, ancêtres (Katz, Pinski et Narin, Garfield, RankDex de Robin Li, HITS), fermes de liens, procédures antitrust (à dater)
+- [x] **PageRank : les liens comme des votes** *(`/modules/pagerank/`, relecture humaine à faire ; procédures de concurrence à suivre)* — surfeur aléatoire, ancêtres (Katz, Pinski et Narin, Garfield, RankDex de Robin Li, HITS), fermes de liens, procédures antitrust (à dater)
 - [x] **Les IA qui recommandent** (voir phase 5)
 
 ## Phase 5 ter — L'intelligence collective (avec ou sans IA)

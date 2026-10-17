@@ -1,0 +1,83 @@
+---
+// Animation « La ferme de liens » (module « PageRank ») : des pages créées
+// pour rien d'autre que pointer vers la boutique font monter son PageRank.
+// La parade de TrustRank (2004) : ne repartir que depuis des sites jugés
+// fiables par des humains.
+import './styles-reseau.css';
+---
+<div class="anim ferme" data-ferme>
+  <div class="anim-repli">
+    <p>
+      La boutique de sacs crée des dizaines de pages vides qui pointent toutes vers elle. Chaque
+      page reçoit un peu de score quand le surfeur repart au hasard, et le transmet à la
+      boutique : avec quelques dizaines de pages, elle passe devant la mairie et le journal. Si
+      le surfeur ne repart que depuis quelques sites jugés fiables par des humains (le wiki et la
+      mairie), les pages de la ferme, que personne de fiable ne cite, ne reçoivent plus rien :
+      la triche ne paie plus. C'est l'idée de TrustRank (2004).
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg class="reseau-svg" viewBox="-12 0 124 108" role="img" aria-label="Le réseau de pages et la ferme de liens autour de la boutique" data-svg></svg>
+      <label class="curseur">Pages de la ferme : <output data-k-sortie></output>
+        <input type="range" min="0" max="60" step="5" value="0" data-k />
+      </label>
+      <label class="case"><input type="checkbox" data-confiance /> Ne repartir que depuis des sites de confiance (le wiki et la mairie, entourés)</label>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Pages et liens inventés. Les moteurs réels combinent de nombreux signaux et des vérifications humaines.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { PAGES, LIENS, pagerank, avecFerme, rangs, ordinal, departUniforme, departConfiance } from '../../../lib/pagerank';
+  import { dessinerReseau } from '../../../lib/reseau-svg';
+
+  const BOUTIQUE = 5;
+  const CONFIANCE = [0, 2];
+  const pc = (v: number) => `${(v * 100).toFixed(1).replace('.', ',')} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-ferme]').forEach((racine) => {
+    activerScene(racine);
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const curseur = racine.querySelector<HTMLInputElement>('[data-k]')!;
+    const confiance = racine.querySelector<HTMLInputElement>('[data-confiance]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const n = PAGES.length;
+
+    function maj() {
+      const k = Number(curseur.value);
+      racine.querySelector<HTMLOutputElement>('[data-k-sortie]')!.value = String(k);
+      const f = avecFerme(n, LIENS, BOUTIQUE, k);
+      const depart = confiance.checked ? departConfiance(f.n, CONFIANCE) : departUniforme(f.n);
+      const { pr } = pagerank(f.n, f.liens, 0.85, depart);
+      // Part des vraies pages seulement, pour comparer d'un réglage à l'autre.
+      const vrai = pr.slice(0, n);
+      const somme = vrai.reduce((s, x) => s + x, 0);
+      const part = vrai.map((x) => x / somme);
+      const r = rangs(part)[BOUTIQUE];
+      dessinerReseau(svg, PAGES, LIENS, part, { actif: BOUTIQUE, ferme: k, cibleFerme: BOUTIQUE, confiance: confiance.checked ? CONFIANCE : [] });
+      racine.querySelector('[data-mesure]')!.textContent = `Boutique : ${pc(part[BOUTIQUE])} du score des vraies pages, ${ordinal(r)} sur ${n}.`;
+      legende.textContent = confiance.checked
+        ? k
+          ? 'Le surfeur ne repart plus que du wiki ou de la mairie. Aucune page fiable ne cite la ferme : elle ne reçoit rien et ne transmet rien. La boutique retombe en bas du classement.'
+          : 'Les sites de confiance distribuent leur crédit le long des liens. Ajoute une ferme de liens.'
+        : k
+          ? `Avec ${k} pages qui ne servent qu’à pointer vers elle, la boutique grimpe. Coche maintenant la case « sites de confiance ».`
+          : 'Sans ferme, la boutique est parmi les dernières. Pousse le curseur pour créer des pages qui pointent vers elle.';
+    }
+    [curseur, confiance].forEach((i) => i.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-top: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.9rem; margin: 0.5rem 0; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.3rem 0 0; }
+</style>

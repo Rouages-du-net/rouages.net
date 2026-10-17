@@ -1,0 +1,315 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Reseau from '../../components/animations/pagerank/Reseau.astro';
+import Surfeur from '../../components/animations/pagerank/Surfeur.astro';
+import Ferme from '../../components/animations/pagerank/Ferme.astro';
+
+// Faits sourcés : voir docs/sources/recommander-sans-ia.md (thème 3).
+const etapes = [
+  { ancre: 'voix', court: 'Un lien, une voix ?' },
+  { ancre: 'surfeur', court: 'Le surfeur' },
+  { ancre: 'ferme', court: 'Fermes de liens' },
+  { ancre: 'avant', court: 'Bien avant Google' },
+  { ancre: 'concurrence', court: 'Qui décide ?' },
+  { ancre: 'bilan', court: 'Et aujourd’hui ?', pastille: '✓' },
+];
+---
+<Base
+  title="PageRank : les liens comme des votes"
+  description="Comment classer des milliards de pages ? Un lien comme une citation, le surfeur aléatoire, les fermes de liens, les ancêtres de PageRank (citations scientifiques, RankDex, HITS) et les procès pour concurrence."
+>
+  <p class="tag">Comment ça marche · <a href="/recommandation/">Recommander</a> · module en construction</p>
+  <h1>PageRank : les liens comme des votes</h1>
+  <MiseAJour date="2026-10-17" evolutif="procédures de concurrence contre Google" />
+  <p class="chapo seulement-debut">
+    Comment un moteur de recherche décide-t-il quelle page montrer en premier ? À la fin des
+    années 1990, une idée change tout : regarder qui pointe vers qui. Ajoute des liens dans un
+    petit web, suis un internaute qui clique au hasard, monte une ferme de liens… et découvre
+    que l'idée était bien plus ancienne que Google.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Un lien, une voix ?" ancre="voix">
+    <Reseau slot="animation" />
+    <p slot="decouverte">
+      Quand une page met un lien vers une autre, c'est un peu comme si elle la recommandait.
+      Compter les liens reçus donne un premier classement. PageRank fait mieux : un lien compte
+      davantage quand il vient d'une page elle-même importante.
+    </p>
+    <p slot="curieux">
+      Chaque page partage son importance entre tous ses liens sortants. Être cité par le wiki,
+      qui est très cité, rapporte beaucoup ; être cité par une page qui met cent liens rapporte
+      peu. La définition se mord la queue (une page est importante si des pages importantes la
+      citent) : on la calcule donc par approximations successives, jusqu'à ce que plus rien ne
+      bouge.
+    </p>
+    <p slot="ingenieur">
+      PR(A) = (1 − d)/N + d · Σ PR(T)/C(T), pour toutes les pages T qui pointent vers A, où C(T)
+      est le nombre de liens sortants de T, N le nombre de pages et d = 0,85. On part de scores
+      égaux et on applique la formule en boucle (méthode de la puissance) : ici, une quarantaine
+      de passages suffisent. Brin et Page indiquaient en 1998 quelques heures de calcul pour
+      26 millions de pages.
+    </p>
+    <div slot="histoire">
+      <p>
+        En avril 1998, deux doctorants de Stanford, <strong>Sergey Brin</strong> et
+        <strong>Lawrence (Larry) Page</strong>, présentent leur moteur, Google, à une conférence
+        à Brisbane. Ils s'inspirent explicitement des citations scientifiques : PageRank, écrivent-ils,
+        prolonge cette idée « en ne comptant pas de la même façon les liens de toutes les
+        pages ». Le brevet, déposé au nom de l'université Stanford, a été délivré en 2001 et a
+        expiré en 2018.
+      </p>
+      <p>
+        Dans une annexe, les deux auteurs se méfient de la publicité : ils s'attendent à ce que
+        les moteurs financés par la publicité soient « biaisés en faveur des annonceurs et au
+        détriment des besoins des utilisateurs ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Plus une page a de liens, plus elle est importante. »</strong> Pas pour
+      PageRank : deux liens venant de pages très citées valent plus que dix liens venant de pages
+      que personne ne cite.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le surfeur aléatoire" ancre="surfeur">
+    <Surfeur slot="animation" />
+    <p slot="decouverte">
+      Brin et Page expliquent PageRank avec un internaute imaginaire qui clique au hasard. Fais-le
+      cliquer des milliers de fois et compare le temps qu'il passe sur chaque page au PageRank.
+    </p>
+    <p slot="curieux">
+      Le PageRank d'une page, c'est la probabilité de trouver le surfeur sur cette page à un
+      moment quelconque. Les sauts au hasard évitent qu'il reste coincé dans un coin du web sans
+      issue. Avec d = 0,85, il suit un lien 85 fois sur 100.
+    </p>
+    <p slot="ingenieur">
+      Mathématiquement, c'est une <Terme id="chaine-de-markov">chaîne de Markov</Terme> : le
+      PageRank est sa distribution stationnaire. La formule publiée en 1998 écrit (1 − d) au lieu
+      de (1 − d)/N, si bien que les scores s'additionnent à N et non à 1 comme l'article
+      l'annonce ; on utilise ici la version corrigée, qui ne change pas l'ordre des pages. Une
+      page sans lien sortant fait repartir le surfeur au hasard.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'idée de la marche au hasard est antérieure : en 1978, le chercheur N. Geller a montré
+        que les « poids d'influence » de revues scientifiques proposés deux ans plus tôt
+        correspondent à un lecteur qui irait de référence en référence. L'informaticien
+        <strong>Jon Kleinberg</strong> le rappelle dans son article sur l'algorithme HITS, qui
+        décrit le modèle de Brin et Page comme ces poids avec, en plus, un « saut au hasard ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le surfeur aléatoire, c'est un vrai internaute moyen. »</strong> Non : c'est un
+      modèle. Personne ne clique au hasard, mais ce modèle donne un classement utile.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Les fermes de liens" ancre="ferme">
+    <Ferme slot="animation" />
+    <p slot="decouverte">
+      Dès que les liens rapportent une place en tête, certains en fabriquent. Crée une ferme de
+      pages qui ne servent qu'à pointer vers la boutique, puis essaie la parade.
+    </p>
+    <p slot="curieux">
+      Une « ferme de liens » est un réseau de pages créées seulement pour se citer entre elles
+      ou pointer vers un site à promouvoir. Les moteurs répondent par des règles (acheter des
+      liens pour grimper est interdit), par la détection, et par des calculs qui partent de
+      sources jugées fiables.
+    </p>
+    <p slot="ingenieur">
+      TrustRank change seulement le vecteur de départ : au lieu de repartir de n'importe quelle
+      page, le surfeur repart d'un petit ensemble de sites évalués par des humains (178 dans
+      l'article de 2004). La confiance se propage le long des liens et s'amortit avec la
+      distance. Une ferme que personne de fiable ne cite reste à zéro.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2004, Zoltán Gyöngyi, Hector Garcia-Molina (Stanford) et Jan Pedersen (Yahoo!)
+        publient TrustRank. Dans l'échantillon d'environ un millier de sites du moteur
+        AltaVista qu'ils ont fait évaluer, 13,5 % étaient du spam.
+      </p>
+      <p>
+        En janvier 2005, Google, MSN Search et Yahoo! adoptent l'attribut
+        <code>rel="nofollow"</code> contre le spam dans les commentaires de blogs : un lien ainsi
+        marqué ne transmet pas de crédit. Depuis 2019-2020, Google le traite comme un simple
+        « indice », avec deux nouveaux attributs, <code>sponsored</code> (lien payé) et
+        <code>ugc</code> (contenu publié par les internautes).
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Les règles anti-spam de Google (mises à jour en août 2026) interdisent les liens créés
+        « principalement pour manipuler le classement », par exemple en achetant ou en vendant
+        des liens. Un lien payé est admis s'il est marqué <code>nofollow</code> ou
+        <code>sponsored</code>. C'est l'entreprise qui écrit ces règles, les applique et
+        sanctionne, en déclassant les sites.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Il suffit d'avoir beaucoup de liens pour être premier sur Google. »</strong> Les
+      liens achetés ou fabriqués sont interdits par les règles de Google et peuvent faire
+      déclasser un site ; et les liens ne sont qu'un signal parmi beaucoup d'autres.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Bien avant Google" ancre="avant">
+    <div slot="decouverte">
+      <p>
+        PageRank n'est pas sorti de nulle part. Classer par les citations est une idée des
+        bibliothécaires et des sociologues, et plusieurs équipes ont eu des idées voisines pour
+        le web au même moment.
+      </p>
+      <table>
+        <caption>Classer par les liens : quelques jalons</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Qui</th><th scope="col">Idée</th></tr></thead>
+        <tbody>
+          <tr><td>1953</td><td>Leo Katz (sociologie)</td><td>Un indice de « statut » dans un réseau social, qui tient compte des chemins indirects.</td></tr>
+          <tr><td>1955</td><td>Eugene Garfield</td><td>Indexer les articles scientifiques par les citations qu'ils reçoivent ; il crée ensuite, avec Irving H. Sher, le facteur d'impact des revues.</td></tr>
+          <tr><td>1972</td><td><strong>Karen Spärck Jones</strong></td><td>Classer par le contenu : un mot rare dans une collection compte plus qu'un mot courant. Cette idée deviendra l'« IDF », utilisée par presque tous les moteurs.</td></tr>
+          <tr><td>1976</td><td>Gabriel Pinski et Francis Narin</td><td>Une revue est influente si elle est citée par des revues influentes : la même idée récursive que PageRank.</td></tr>
+          <tr><td>1996</td><td><strong>Robin Li</strong> (Li Yanhong), chez IDD, filiale de Dow Jones</td><td>Brevet RankDex : classer les pages selon les liens qui pointent vers elles et leur texte. Il cofonde Baidu à Pékin en 2000.</td></tr>
+          <tr><td>1997-1998</td><td>Jon Kleinberg (Cornell, alors en détachement chez IBM)</td><td>HITS : de bonnes « autorités » sont citées par de bons « pivots », et inversement.</td></tr>
+          <tr><td>1998</td><td>Sergey Brin et Larry Page (Stanford)</td><td>PageRank et le moteur Google.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p slot="curieux">
+      Ces méthodes ne font pas la même chose. RankDex s'appuie surtout sur le texte des liens
+      (les mots sur lesquels on clique), sans le calcul en boucle de PageRank. HITS calcule deux
+      scores par page, pour une recherche donnée. PageRank calcule un seul score pour tout le web,
+      à l'avance. Le brevet de PageRank cite lui-même Garfield, Pinski et Narin, Katz et
+      Kleinberg.
+    </p>
+    <p slot="ingenieur">
+      Un moteur combine des scores de contenu (les mots de la requête, pondérés par leur rareté,
+      à la manière de Spärck Jones) et des scores de liens. Le moteur décrit par Brin et Page en
+      1998 combinait déjà PageRank et le texte des pages.
+    </p>
+    <div slot="histoire">
+      <p>
+        Garfield raconte avoir créé le facteur d'impact pour choisir quelles revues ajouter à son
+        index : compter seulement les articles aurait écarté les petites revues. Mais ce facteur
+        compte les citations sans les peser. Kleinberg le juge « trop grossier » : c'est
+        précisément ce que corrigent les méthodes récursives, comme celle de Pinski et Narin.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Google a inventé l'idée de classer les pages par les liens. »</strong> L'idée vient
+      de l'analyse des citations, et plusieurs équipes, aux États-Unis comme en Chine, l'ont
+      appliquée au web presque en même temps.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Un classement, des milliards en jeu" ancre="concurrence">
+    <p slot="decouverte">
+      Être en tête des résultats vaut beaucoup d'argent. Le classement des moteurs de recherche
+      est donc devenu une affaire de concurrence, jugée par des tribunaux et des autorités.
+    </p>
+    <p slot="curieux">
+      Ces procédures ne portent pas sur PageRank lui-même. On reproche surtout à Google d'avoir
+      payé pour être le moteur par défaut sur les téléphones et les navigateurs, et de favoriser
+      ses propres services (achats, hôtels, transports) dans ses résultats.
+    </p>
+    <p slot="ingenieur">
+      L'« auto-préférence » est difficile à prouver de l'extérieur : il faut comparer la place
+      des services du moteur à celle de concurrents comparables, sur un très grand nombre de
+      recherches. Le règlement européen sur les marchés numériques (DMA) l'interdit
+      directement aux très grandes plateformes, sans avoir à démontrer un abus au cas par cas.
+    </p>
+    <div slot="decide">
+      <p><em>État au 17 octobre 2026.</em></p>
+      <ul>
+        <li><strong>États-Unis.</strong> En août 2024, un tribunal fédéral de Washington juge que
+          « Google est un monopole ». En septembre 2025, il lui interdit les contrats
+          d'exclusivité et l'oblige à partager certaines données de son index avec des
+          concurrents. Google et le
+          gouvernement ont fait appel ; la cour d'appel n'a pas encore statué.</li>
+        <li><strong>Union européenne.</strong> En septembre 2024, la Cour de justice confirme
+          l'amende de 2,4 milliards d'euros infligée en 2017 pour avoir favorisé Google Shopping.
+          Le 23 juillet 2026, la Commission inflige 460 millions d'euros au titre du DMA pour
+          auto-préférence dans les résultats de recherche.</li>
+        <li><strong>Japon.</strong> En avril 2025, la Commission de la concurrence ordonne à
+          Google de cesser d'imposer la préinstallation de son moteur sur les téléphones
+          Android.</li>
+      </ul>
+      <p>
+        Google conteste ces décisions et a fait appel aux États-Unis ; les procédures
+        européennes peuvent aussi faire l'objet de recours.
+      </p>
+    </div>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Et aujourd'hui ?</h2>
+    <p>
+      Google affirme que PageRank fait toujours partie de ses « systèmes de classement
+      principaux », mais que son fonctionnement « a beaucoup évolué » depuis 1998, et qu'il
+      n'est qu'un système parmi beaucoup d'autres. Le poids réel des liens n'est pas public.
+    </p>
+    <p>
+      L'idée, elle, est partout : classer des articles scientifiques, des comptes sur un réseau
+      social, des espèces dans un réseau alimentaire. Chaque fois, la même question se pose :
+      un lien est-il vraiment un vote, et qui peut fabriquer des votes ? Les liens sont des avis
+      laissés par des millions de personnes : c'est aussi une forme d'<a
+      href="/intelligence-collective/">intelligence collective</a>. Pour la suite de la
+      recommandation, quand une machine devine tes goûts à partir de ceux des autres, voir
+      <a href="/modules/ia-recommander/">Les IA qui recommandent</a>.
+    </p>
+
+  <Sources
+    verifie="2026-10-17"
+    sources={[
+      { auteur: 'S. Brin, L. Page', titre: 'The Anatomy of a Large-Scale Hypertextual Web Search Engine', url: 'http://infolab.stanford.edu/~backrub/google.html', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'L. Page (Stanford University)', titre: 'Brevet US 6,285,999 : Method for node ranking in a linked database', url: 'https://patents.google.com/patent/US6285999B1/en', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'J. M. Kleinberg', titre: 'Authoritative Sources in a Hyperlinked Environment', url: 'https://www.cs.cornell.edu/home/kleinber/auth.pdf', type: 'primaire', annee: 1999, langue: 'en' },
+      { auteur: 'Y. Li (IDD Enterprises)', titre: 'Brevet US 5,920,859 : Hypertext document retrieval system and method', url: 'https://patents.google.com/patent/US5920859A/en', type: 'primaire', annee: 1999, langue: 'en' },
+      { auteur: 'EBSCO Research Starters', titre: 'Robin Li', url: 'https://ebsco.com/research-starters/biography/robin-li', type: 'site', langue: 'en' },
+      { auteur: 'E. Garfield', titre: 'Citation Indexes for Science', url: 'http://garfield.library.upenn.edu/papers/science1955.pdf', type: 'primaire', annee: 1955, langue: 'en' },
+      { auteur: 'E. Garfield', titre: 'The History and Meaning of the Journal Impact Factor', url: 'http://garfield.library.upenn.edu/papers/jamajif2006.pdf', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'K. Spärck Jones', titre: 'A statistical interpretation of term specificity and its application in retrieval', url: 'https://www.staff.city.ac.uk/~sb317/idfpapers/ksj_orig.pdf', type: 'primaire', annee: 1972, langue: 'en' },
+      { auteur: 'Union mathématique internationale', titre: 'Rolf Nevanlinna Prize 2006 (J. Kleinberg)', url: 'https://www.mathunion.org/imu-awards/rolf-nevanlinna-prize/rolf-nevanlinna-prize-2006', type: 'site', annee: 2006, langue: 'en' },
+      { auteur: 'Z. Gyöngyi, H. Garcia-Molina, J. Pedersen', titre: 'Combating Web Spam with TrustRank', url: 'https://www.vldb.org/conf/2004/RS15P3.PDF', type: 'primaire', annee: 2004, langue: 'en' },
+      { auteur: 'Google', titre: 'Preventing comment spam', url: 'https://googleblog.blogspot.com/2005/01/preventing-comment-spam.html', type: 'primaire', annee: 2005, langue: 'en' },
+      { auteur: 'Google Search Central', titre: 'Evolving « nofollow » – new ways to identify the nature of links', url: 'https://developers.google.com/search/blog/2019/09/evolving-nofollow-new-ways-to-identify', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'Google Search Central', titre: 'Spam Policies for Google Web Search', url: 'https://developers.google.com/search/docs/essentials/spam-policies', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Google Search Central', titre: 'A Guide to Google Search Ranking Systems', url: 'https://developers.google.com/search/docs/appearance/ranking-systems-guide', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'U.S. Department of Justice', titre: 'Department of Justice Wins Significant Remedies Against Google', url: 'https://www.justice.gov/opa/pr/department-justice-wins-significant-remedies-against-google', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'U.S. Department of Justice', titre: 'United States v. Google LLC (D.C. Cir. n° 26-5023), mémoire du gouvernement', url: 'https://www.justice.gov/atr/media/1454586/dl?inline=', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Cour de justice de l’Union européenne', titre: 'Communiqué n° 135/24 (Google Shopping, C-48/22 P)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2024-09/cp240135fr.pdf', type: 'primaire', annee: 2024 },
+      { auteur: 'Commission européenne', titre: 'Commission fines Google €890 million for breaches of the Digital Markets Act (IP/26/1670)', url: 'https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1670', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Japan Fair Trade Commission', titre: 'Cease and desist order against Google LLC', url: 'https://www.jftc.go.jp/en/pressreleases/yearly-2025/April/250415.html', type: 'primaire', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  caption { text-align: left; font-weight: 600; margin-bottom: 0.3rem; }
+</style>
