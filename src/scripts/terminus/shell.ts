@@ -11,6 +11,7 @@
 
 import { nettoyer, type Chapitre, type Dossier, type Noeud } from './monde';
 import { COMMANDES, type Commande } from './commandes';
+import { aide, apropos, ligneWhatis, optionInvalide, pageMan } from './commandes/manuel';
 
 export { decouper, appliquerMode } from './outils';
 import { contenu, decouper, joker, tailleDe, type Mot } from './outils';
@@ -263,11 +264,37 @@ export class Shell implements Jeu {
   }
 
   connues(): string[] {
-    return [...this.chapitre.commandes, 'man', 'clear', 'aide'];
+    return [...this.chapitre.commandes, 'man', 'apropos', 'whatis', 'clear', 'aide'];
   }
 
   manuel(cmd: string): string | null {
     return this.connues().includes(cmd) ? (COMMANDES[cmd]?.manuel ?? null) : null;
+  }
+
+  // man, apropos, whatis : le manuel couvre toutes les commandes du jeu,
+  // même celles qu'on n'a pas encore dans ce chapitre (comme sur un vrai
+  // système, où le manuel décrit aussi ce qu'on n'a pas le droit de lancer).
+  private consulter(cmd: string, reste: string[]): string {
+    const toutes = Object.entries(COMMANDES).filter(([n]) => n !== 'aide').sort(([a], [b]) => a.localeCompare(b));
+    const pasEncore = (n: string) => (this.connues().includes(n) ? '' : '\n\n(Tu n’as pas encore cette commande dans ce chapitre.)');
+    if (cmd === 'apropos' || (cmd === 'man' && reste[0] === '-k')) {
+      const mot = cmd === 'apropos' ? reste[0] : reste[1];
+      if (!mot) return this.erreur(`${cmd === 'apropos' ? 'apropos' : 'man -k'} : que faut-il chercher ?`);
+      const lignes = apropos(mot, toutes);
+      return lignes.length ? lignes.join('\n') : this.erreur(`${mot} : rien d'approprié.`);
+    }
+    if (!reste.length)
+      return this.erreur(cmd === 'man' ? 'Quelle page de manuel voulez-vous ?\nPar exemple, essayez « man man ».' : 'whatis : que faut-il chercher ?');
+    const sorties: string[] = [];
+    for (const nom of reste) {
+      const c = COMMANDES[nom];
+      if (!c || nom === 'aide') {
+        this.erreur(cmd === 'man' ? `Il n'y a pas de page de manuel pour ${nom}.` : `${nom} : rien d'approprié.`);
+        continue;
+      }
+      sorties.push(cmd === 'man' ? pageMan(nom, c) + pasEncore(nom) : ligneWhatis(nom, c));
+    }
+    return sorties.join(cmd === 'man' ? '\n\n' : '\n');
   }
 
   // ——— Exécution ———
@@ -385,11 +412,8 @@ export class Shell implements Jeu {
         'sudo : cd : commande introuvable\n(cd fait partie du shell lui-même, sudo ne peut pas le lancer. Avec sudo, on regarde et on agit à distance : sudo ls lieu, sudo cat fichier…)',
       );
     if (cmd === 'help' || cmd === 'aide')
-      return `Commandes connues : ${this.connues().join(', ')}.\nTape « man commande » pour en savoir plus.`;
-    if (cmd === 'man') {
-      const m = reste[0] && this.manuel(reste[0]);
-      return m || this.erreur('Usage : man commande (ex. : man ls)');
-    }
+      return `Commandes connues : ${this.connues().join(', ')}.\nPour en savoir plus : « man commande » (le manuel complet), « commande --help » (un résumé), « man -k mot » (trouver une commande par mot-clé).`;
+    if (cmd === 'man' || cmd === 'apropos' || cmd === 'whatis') return this.consulter(cmd, reste);
     const commande: Commande | undefined = COMMANDES[cmd];
     if (!this.connues().includes(cmd) || !commande)
       return this.erreur(
@@ -397,6 +421,10 @@ export class Shell implements Jeu {
           ? `${cmd} : tu n’as pas encore cette commande dans ce chapitre. Tape « aide » pour la liste.`
           : `${cmd} : commande introuvable. Tape « aide » pour la liste.`,
       );
+    // Les réflexes d'auto-dépannage : --help et les options inconnues.
+    if (reste.includes('--help')) return aide(cmd, commande);
+    const invalide = optionInvalide(cmd, commande, reste);
+    if (invalide) return this.erreur(invalide);
     const avant = this.qui;
     if (root) this.qui = 'root';
     try {

@@ -41,6 +41,26 @@
   les messages d'erreur de base (« Permission non accordée ») en français,
   comme avec un système réglé en français.
 
+### Le manuel, premier réflexe
+
+Pour apprendre à se dépanner seul·e, le manuel est disponible partout, dès le
+chapitre 1, et pour toutes les commandes du jeu (même celles qu'on n'a pas
+encore le droit de lancer, comme sur un vrai système) :
+
+- `man commande` : une page au format habituel (NOM, SYNOPSIS, DESCRIPTION,
+  OPTIONS, EXEMPLES, VOIR AUSSI), fabriquée par `commandes/manuel.ts` à
+  partir de la définition de la commande et de ses compléments
+  (`commandes/pages.ts` : options, exemples, renvois) ;
+- `commande --help` : un résumé ;
+- `man -k mot` et `apropos mot` : chercher une commande par mot-clé ;
+  `whatis commande` : une ligne ;
+- une option inconnue donne le vrai message des coreutils : « ls : option
+  invalide -- 'z' / Saisissez « ls --help » pour plus d'informations. »
+
+Dans le chapitre 1, le cours sur les fichiers cachés ne donne plus l'option :
+il renvoie à `man ls`, et la gardienne du phare renvoie aux EXEMPLES de
+`man mv`. Au chapitre 2, le parchemin présente `--help` et `man -k`.
+
 ### Écarts volontaires avec un vrai Linux
 
 | Commande | Dans le jeu | Sous Linux |
@@ -49,7 +69,7 @@
 | `mv` | ne déplace que des objets (fichiers) | déplace aussi les dossiers |
 | `rm -r`, `cp -r` | refusés | effacent / copient des dossiers entiers |
 | `grep` sans résultat | « (aucune ligne ne contient …) » | n'affiche rien |
-| `man` | une ligne de résumé | une longue page de manuel |
+| `man` | affiche la page d'un coup, en quelques sections | ouvre une page plein écran (flèches, `/mot` pour chercher, `q` pour quitter), bien plus longue |
 | `ls -l` | type et droits, propriétaire, groupe (= propriétaire), taille, nom | ajoute le nombre de liens et la date |
 | permissions | propriétaire et « les autres » ; pas de groupes | le groupe a ses propres droits |
 | `chmod -w` (sans u/g/o) | agit sur tout le monde | tient compte du masque `umask` |

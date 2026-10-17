@@ -31,6 +31,11 @@ Pour regarder autour de toi, tape :   ls
 Pour te déplacer dans un lieu, tape : cd NomDuLieu
 Pour lire un objet, tape :            cat nom_du_fichier
 
+Et si tu ne sais plus comment marche une commande, demande au manuel :
+  man ls
+C'est le premier réflexe de toutes celles et ceux qui administrent des
+serveurs : chercher dans le manuel avant de demander.
+
 Commence par lire le message :  cat message.txt
 `),
         'message.txt': f(`
@@ -82,7 +87,10 @@ Il te manque une commande essentielle : mv (move), qui déplace un objet.
   mv objet Lieu
 
 Va t'entraîner dans la SalleDExercice. Les Cours sont ouverts à tous, et
-la Bibliotheque garde le Livre des commandes. »
+la Bibliotheque garde le Livre des commandes.
+
+Et retiens la devise de l'École : « Dans le doute, lis le manuel. »
+man mv te dira tout sur mv. »
 `),
             SalleDExercice: d({
               'consigne.txt': f(`
@@ -104,7 +112,17 @@ Chaque commande a son manuel. Tape  man  suivi du nom de la commande :
   man ls
   man mv
 
-Sur un vrai Linux, le manuel est bien plus long. Tu le quittes avec q.
+Une page de manuel a toujours les mêmes parties : NOM (à quoi ça sert),
+SYNOPSIS (comment l'écrire ; ce qui est entre crochets [ ] est facultatif),
+DESCRIPTION, OPTIONS (les lettres après un tiret, comme -a), EXEMPLES, et
+VOIR AUSSI (des commandes voisines).
+
+Deux raccourcis :
+  ls --help        un résumé rapide de la commande
+  man -k caché     quelles commandes parlent de « caché » ?
+
+Sur un vrai Linux, le manuel s'ouvre en plein écran : on le parcourt avec
+les flèches, on cherche avec /mot, et on le quitte avec q.
 `),
               'cours_2_chemins.txt': f(`
 COURS 2 — LES CHEMINS
@@ -130,7 +148,8 @@ Sous Linux, un fichier dont le nom commence par un point est CACHÉ :
 un simple « ls » ne le montre pas. Ce n'est pas une protection, juste une
 façon de ranger les réglages pour qu'ils ne gênent pas.
 
-Pour tout voir :  ls -a
+Pour tout voir, ls a une option. Laquelle ? Je ne te la donne pas : elle
+est dans le manuel.  man ls
 
 Il y a un fichier caché dans cette salle de cours. À toi de le trouver.
 `),
@@ -213,10 +232,10 @@ exactement ampoule, posé dans la Lanterne. L'Effaceur a effacé la nôtre.
 
 Il m'en reste une de secours, rangée à l'abri dans la Remise du Port. Tu ne
 la verras pas avec un simple ls : comme tout ce qu'on range à l'abri, son
-nom commence par un point.
+nom commence par un point. (Le manuel de ls dit comment tout voir.)
 
 Rapporte-la dans la Lanterne, sous son bon nom. mv sait déplacer et
-renommer. »
+renommer : regarde les EXEMPLES de man mv. »
 `),
               Escalier: d({
                 'marches.txt': f(`Cent vingt marches en colimaçon. Tout en haut, la Lanterne.`),

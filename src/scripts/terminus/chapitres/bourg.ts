@@ -44,7 +44,9 @@ LE PARCHEMIN DES SORTS — cinq nouvelles commandes
   mkdir Nom             crée un lieu (make directory)
   rm objet              efface un objet (remove) — pour toujours !
 
-Rappel : « man grep » (ou man cp, man rm…) donne le mode d'emploi.
+Rappel : « man grep » (ou man cp, man rm…) donne le mode d'emploi, et
+« grep --help » un résumé. Tu ne sais plus quelle commande copie ?
+« man -k copie » cherche dans tous les manuels.
 
 Les gens du Bourg ont besoin de toi : la Boulangerie, l'Atelier, l'Ecole,
 la Mairie… Commence où tu veux.
