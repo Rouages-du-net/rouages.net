@@ -6,7 +6,7 @@ import Sources from '../../components/Sources.astro';
 import MiseAJour from '../../components/MiseAJour.astro';
 
 const MODULES: { titre: string; idee: string; lien?: string; resume?: string }[] = [
-  { titre: 'Avant les algorithmes', idee: 'bibliothécaires et classifications, guides et étoiles, hit-parades, radios payées pour passer un disque' },
+  { titre: 'Avant les algorithmes', idee: 'bibliothécaires et classifications, guides et étoiles, hit-parades, radios payées pour passer un disque', lien: '/modules/avant-algorithmes/', resume: 'Range des livres comme Dewey ou Ranganathan, découvre les guides et les jurys d’autrefois, et compose la recette d’un hit-parade… avant de le truquer.' },
   { titre: 'Classer par les notes', idee: 'pourquoi la moyenne trompe, moyenne bayésienne, tri « tendance », avis en J et faux avis', lien: '/modules/classer-notes/', resume: 'Trie des produits par moyenne ou prudemment, regarde l’incertitude fondre avec le nombre d’avis, fais vieillir un fil d’actualité et découvre pourquoi les avis forment un J.' },
   { titre: 'PageRank : les liens comme des votes', idee: 'le surfeur aléatoire, ses ancêtres dans l’analyse des citations, les fermes de liens', lien: '/modules/pagerank/', resume: 'Ajoute des liens dans un petit web, suis un surfeur qui clique au hasard, monte une ferme de liens et découvre que l’idée venait des citations scientifiques.' },
   { titre: 'Les IA qui recommandent', idee: 'filtrage collaboratif, goûts cachés, ce qu’on optimise', lien: '/modules/ia-recommander/', resume: 'Note des vidéos, regarde un modèle découvrir des goûts cachés, change ce qu’il optimise, et observe les boucles de popularité.' },
@@ -20,7 +20,7 @@ const aVenir = MODULES.filter((m) => !m.lien);
 >
   <p class="tag">Comment ça marche</p>
   <h1>Recommander</h1>
-  <MiseAJour date="2026-10-16" />
+  <MiseAJour date="2026-10-17" />
 
   <div class="intro">
     <p>
@@ -52,10 +52,14 @@ const aVenir = MODULES.filter((m) => !m.lien);
         </article>
       ))}
     </div>
-    <h3 class="sous-titre">Bientôt</h3>
-    <ul class="a-venir">
-      {aVenir.map((m) => <li><strong>{m.titre}</strong> <span>({m.idee})</span></li>)}
-    </ul>
+    {aVenir.length > 0 && (
+      <>
+        <h3 class="sous-titre">Bientôt</h3>
+        <ul class="a-venir">
+          {aVenir.map((m) => <li><strong>{m.titre}</strong> <span>({m.idee})</span></li>)}
+        </ul>
+      </>
+    )}
   </section>
 
   <section aria-labelledby="ailleurs">
@@ -67,7 +71,7 @@ const aVenir = MODULES.filter((m) => !m.lien);
   </section>
 
   <Sources
-    verifie="2026-10-16"
+    verifie="2026-10-17"
     sources={[
       { auteur: 'S. R. Ranganathan', titre: 'The Five Laws of Library Science (2e éd., Digital Library of India)', url: 'https://archive.org/stream/in.ernet.dli.2015.283188/2015.283188.The-Five_djvu.txt', type: 'primaire', annee: 1957, langue: 'en' },
       { auteur: 'G. Poullennec (Guide Michelin), Réalités industrielles', titre: 'Les raisons de la réussite du Guide Michelin au Japon', url: 'https://annales.org/ri/2013/ri-novembre-2013/POULLENNEC.pdf', type: 'primaire', annee: 2013 },

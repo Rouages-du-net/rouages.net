@@ -13,11 +13,16 @@ const typo = (t: string) => t.replace(/« /g, '«\u00a0').replace(/ ([:;!?»])/g
 >
   <p class="tag"><a href="/jeux/">Jeux</a> › Terminus</p>
   <h1>Terminus <small class="tag">en français</small></h1>
-  <MiseAJour date="2026-10-15" />
+  <MiseAJour date="2026-10-17" />
   <p class="intro">
     Des jeux d'aventure où l'on agit avec de <strong>vraies commandes Linux</strong>. Chaque
     lieu est un dossier, chaque objet un fichier. Cinq histoires indépendantes : commence par
     l'Effaceur si tu n'as jamais ouvert un terminal.
+  </p>
+  <p class="intro">
+    Bloqué·e ? Fais comme les pros : <code>man commande</code> ouvre le manuel,
+    <code>commande --help</code> en donne un résumé, et <code>man -k mot</code> cherche la
+    commande qui fait ce que tu veux.
   </p>
 
   <noscript>
@@ -75,14 +80,14 @@ const typo = (t: string) => t.replace(/« /g, '«\u00a0').replace(/ ([:;!?»])/g
 
   <p class="tag">
     L'Effaceur s'inspire de <a href="https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html">Terminus</a>,
-    créé au MIT par Shawn Conrad et Michele Pratusevich (en anglais) : même progression des
-    commandes, histoire et textes réécrits en français pour Les rouages du net. Les autres
-    histoires sont originales. Les commandes répondent souvent en anglais, comme sur un vrai
+    créé au MIT par Shawn Conrad et Michele Pratusevich (en anglais) : l'idée d'apprendre les
+    commandes en se déplaçant de dossier en dossier vient de là. Les lieux, les énigmes et les
+    textes de toutes nos histoires sont écrits pour Les rouages du net. Les commandes répondent souvent en anglais, comme sur un vrai
     système ; les adresses et les noms de domaine utilisés sont réservés aux exemples.
   </p>
 
   <Sources
-    verifie="2026-10-15"
+    verifie="2026-10-17"
     sources={[
       {
         titre: 'Terminus, le jeu original',

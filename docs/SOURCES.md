@@ -83,6 +83,7 @@ Wikipédia, points d'attention) sont rangées par thème dans `docs/sources/` :
 - [Module « Les IA qui recommandent » (filtrage collaboratif, prix Netflix, objectifs, popularité, bulles de filtre, santé, DSA)](sources/ia-recommander.md)
 - [Section « Recommander » (classifications de bibliothèque, guides, palmarès, payola, tri par les notes, faux avis, PageRank, antitrust)](sources/recommander-sans-ia.md)
 - [Section « L'intelligence collective » (Galton, Condorcet, cascades, communs numériques, sciences participatives, Polis, Community Notes, travail des données)](sources/intelligence-collective.md)
+- [Page « Jeux » (jeux pour apprendre, par thème : vérification des liens, langues, prix, comptes, pisteurs)](sources/jeux.md)
 
 ## Dater ce qui bouge vite
 

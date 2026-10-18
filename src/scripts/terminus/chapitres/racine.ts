@@ -1,5 +1,4 @@
 // Chapitre 3 — La Racine : ls -l, permissions (rwx), chmod, whoami, sudo.
-// Correspond à la fin du Terminus original (MIT), où l'on découvre sudo.
 // Ici, l'arborescence ressemble enfin à un vrai Linux : /home, /etc,
 // /var/log, /root. Fin de l'histoire de l'Effaceur.
 
@@ -83,7 +82,7 @@ An 101 : j'écris l'Effaceur, un petit démon qui videra la Corbeille.
 An 102 : écrit la configuration de l'Effaceur dans /etc. Pas eu le temps de relire.
 An 102 : mon mot de passe change. Je le note ici (très mauvaise idée !) : tournesol
 An 102 : Démarré l'Effaceur. Il tourne sous son propre utilisateur, « effaceur ».
-An 103 : catastrophe. Les épis de la Ferme disparaissent. Puis les engrenages.
+An 103 : catastrophe. Le levain de la Boulangerie disparaît. Puis les engrenages.
 An 103 : j'ai trouvé l'erreur dans la configuration. J'ai préparé une version corrigée, ici, dans ma maison.
 An 103 : il faut l'installer avec sudo avant que l'Effaceur n'arrive jusqu'à moi.
 `,
@@ -159,10 +158,10 @@ vous    ALL=(ALL:ALL) ALL   # vous : administrateur·ice du royaume
 [an 102] cible = /Royaume /Corbeille
 [an 102] 2 cibles trouvées : « /Royaume » et « /Corbeille »
 [an 102] effacement de /Royaume/Corbeille/vieux_papiers
-[an 102] effacement de /Royaume/Bourg/Ferme/epi_4
-[an 103] effacement de /Royaume/Bourg/Ferme/epi_5
+[an 102] effacement de /Royaume/Bourg/Boulangerie/levain_4
+[an 103] effacement de /Royaume/Bourg/Boulangerie/levain_5
 [an 103] effacement de /Royaume/Bourg/Atelier/engrenage_12
-[an 104] effacement de /Royaume/Prairie/mouton_7
+[an 104] effacement de /Royaume/Ile/Phare/ampoule
 [an 131] nouvelle cible accessible : /home/vous/souvenirs (droits : rwxrwxrwx)
 `,
                   { proprio: 'root', lignes: true },

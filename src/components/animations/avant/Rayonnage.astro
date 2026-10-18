@@ -1,0 +1,125 @@
+---
+// Animation « Ranger, c'est recommander » (module « Avant les
+// algorithmes ») : 1. où la classification de Dewey (1876) range un livre
+// de religion ; 2. dix livres inventés rangés selon une facette au choix
+// (sujet, lieu, époque), l'idée de Ranganathan.
+import { DEWEY_RELIGION } from '../../../lib/avant';
+const SUJETS = [
+  { id: 'bible', nom: 'la Bible', code: 220, detail: '220, Bible : une division entière' },
+  { id: 'missions', nom: 'les missions chrétiennes', code: 260, detail: '260, Institutions et missions : une division entière' },
+  { id: 'bouddhisme', nom: 'le bouddhisme', code: 290, detail: '294, « Brahmanisme et bouddhisme », dans la division 290' },
+  { id: 'judaisme', nom: 'le judaïsme', code: 290, detail: '296, « Judaïsme », dans la division 290' },
+  { id: 'islam', nom: 'l’islam', code: 290, detail: '297, « Mahométisme » (le mot de l’époque), dans la division 290' },
+];
+---
+<div class="anim rayonnage" data-rayonnage>
+  <div class="anim-repli">
+    <p>
+      Dans la classification de Melvil Dewey (1876), la religion occupe neuf divisions. Huit
+      sont consacrées au christianisme (Bible, théologie, prédication, missions…). Toutes les
+      autres religions, bouddhisme, judaïsme, islam, se partagent la neuvième, la division 290.
+      Ranger, c'est déjà choisir ce qu'on mettra en avant.
+    </p>
+    <p>
+      Ranger chaque livre dans une seule case oblige à choisir : un livre sur la médecine
+      d'Ibn Sina va-t-il en médecine, en Asie, ou au Moyen Âge ? Le bibliothécaire indien
+      Ranganathan proposait de combiner plusieurs facettes (sujet, lieu, époque…), pour qu'on
+      puisse le trouver par chacune.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <h4>1. La religion chez Dewey (1876)</h4>
+      <label class="choix">Où ranger un livre sur
+        <select data-sujet>{SUJETS.map((s) => <option value={s.id} data-code={s.code} data-detail={s.detail}>{s.nom}</option>)}</select> ?
+      </label>
+      <ol class="divisions" data-divisions>
+        {DEWEY_RELIGION.map((d) => (
+          <li class={d.chretien ? 'chretien' : 'autre'} data-code={d.code}><span class="code">{d.code}</span> {d.nom}</li>
+        ))}
+      </ol>
+      <p class="mesure" data-place aria-live="polite"></p>
+
+      <h4>2. Ranger par facettes</h4>
+      <fieldset class="tris">
+        <legend>Regrouper les livres par</legend>
+        <label><input type="radio" name="facette" value="sujet" checked /> sujet</label>
+        <label><input type="radio" name="facette" value="lieu" /> lieu</label>
+        <label><input type="radio" name="facette" value="epoque" /> époque</label>
+      </fieldset>
+      <div class="groupes" data-groupes></div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Livres inventés ; classement simplifié pour montrer l'idée.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { LIVRES, regrouper, type Facette } from '../../../lib/avant';
+
+  document.querySelectorAll<HTMLElement>('[data-rayonnage]').forEach((racine) => {
+    activerScene(racine);
+    const sujet = racine.querySelector<HTMLSelectElement>('[data-sujet]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function majDewey() {
+      const opt = sujet.selectedOptions[0];
+      const code = Number(opt.dataset.code);
+      racine.querySelectorAll<HTMLElement>('[data-divisions] li').forEach((li) => li.classList.toggle('ici', Number(li.dataset.code) === code));
+      racine.querySelector('[data-place]')!.textContent = `Rangé en ${opt.dataset.detail}.${code === 290 ? ' Il partage cette division avec toutes les religions non chrétiennes du monde.' : ''}`;
+    }
+
+    function majFacettes() {
+      const f = racine.querySelector<HTMLInputElement>('input[name="facette"]:checked')!.value as Facette;
+      racine.querySelector('[data-groupes]')!.replaceChildren(
+        ...regrouper(LIVRES, f).map((g) => {
+          const d = document.createElement('div');
+          d.className = 'groupe';
+          const h = document.createElement('strong');
+          h.textContent = g.cle;
+          const ul = document.createElement('ul');
+          for (const l of g.livres) {
+            const li = document.createElement('li');
+            li.textContent = l.titre;
+            ul.append(li);
+          }
+          d.append(h, ul);
+          return d;
+        }),
+      );
+      legende.textContent =
+        f === 'sujet'
+          ? 'Par sujet, « La médecine d’Ibn Sina » est à côté des remèdes du Sahel. Change de facette : le même livre se retrouve à côté d’autres voisins. Chaque rangement fait découvrir d’autres livres.'
+          : f === 'lieu'
+            ? 'Par lieu, « La médecine d’Ibn Sina » rejoint les poèmes de l’ère Heian et les routes de la soie. Avec une seule case par livre, il faut choisir une fois pour toutes ; avec des facettes, on peut le trouver par chacune.'
+            : 'Par époque, les contes d’Afrique de l’Ouest voisinent avec les jardins de Tenochtitlan. Les voisins d’un livre sur l’étagère sont une forme de recommandation : « si ce livre t’intéresse, regarde à côté ».';
+    }
+
+    sujet.addEventListener('input', majDewey);
+    racine.querySelectorAll('input[name="facette"]').forEach((i) => i.addEventListener('input', majFacettes));
+    majDewey();
+    majFacettes();
+  });
+</script>
+
+<style>
+  h4 { margin: 0.5rem 0; font-size: 0.95rem; }
+  h4 + .choix { margin-top: 0; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; font-size: 0.95rem; }
+  .choix select { font: inherit; background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.2rem; }
+  .divisions { list-style: none; margin: 0.6rem 0; padding: 0; display: grid; gap: 0.2rem; }
+  .divisions li { font-size: 0.88rem; padding: 0.2rem 0.5rem; border-radius: 0.3rem; border: 1px solid var(--border); }
+  .divisions li.chretien { background: var(--bg); }
+  .divisions li.autre { background: var(--card); border-style: dashed; }
+  .divisions li.ici { outline: 3px solid var(--accent); font-weight: 700; }
+  .code { font-family: var(--police-mono); margin-right: 0.4rem; }
+  .mesure { font-size: 0.9rem; margin: 0 0 1.2rem; }
+  .tris { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.4rem 0.9rem; margin: 0 0 0.6rem; }
+  .tris legend { font-weight: 600; padding: 0 0.3rem; font-size: 0.9rem; }
+  .tris label { font-size: 0.9rem; display: inline-flex; gap: 0.35rem; align-items: center; }
+  .groupes { display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .groupes :global(.groupe) { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.4rem 0.6rem; background: var(--bg); }
+  .groupes :global(ul) { margin: 0.2rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
+</style>

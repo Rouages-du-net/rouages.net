@@ -15,10 +15,13 @@
 
 ## Principes
 
-- **Proche de l'original** : même idée (un lieu = un dossier, un objet = un
-  fichier) et même progression des commandes que
+- **Inspiré de l'original, sans le recopier** : l'idée (un lieu = un dossier,
+  un objet = un fichier, des commandes apprises en avançant) vient de
   [Terminus](https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html),
-  créé au MIT par Shawn Conrad et Michele Pratusevich.
+  créé au MIT par Shawn Conrad et Michele Pratusevich. Depuis octobre 2026,
+  les chapitres 1 et 2 ont leurs propres lieux et leurs propres énigmes (l'île
+  du Phare, le Bourg du port) au lieu de suivre le parcours de l'original.
+  Le jeu doit devenir un projet séparé, « Quêtes de Sysadmin ».
 - **Nos propres textes** : l'histoire, les lieux et les dialogues sont écrits
   pour Les rouages du net, ce n'est pas une traduction.
 - **De vraies commandes, de vrais comportements** : mêmes chemins (`..`, `~`,
@@ -38,6 +41,26 @@
   les messages d'erreur de base (« Permission non accordée ») en français,
   comme avec un système réglé en français.
 
+### Le manuel, premier réflexe
+
+Pour apprendre à se dépanner seul·e, le manuel est disponible partout, dès le
+chapitre 1, et pour toutes les commandes du jeu (même celles qu'on n'a pas
+encore le droit de lancer, comme sur un vrai système) :
+
+- `man commande` : une page au format habituel (NOM, SYNOPSIS, DESCRIPTION,
+  OPTIONS, EXEMPLES, VOIR AUSSI), fabriquée par `commandes/manuel.ts` à
+  partir de la définition de la commande et de ses compléments
+  (`commandes/pages.ts` : options, exemples, renvois) ;
+- `commande --help` : un résumé ;
+- `man -k mot` et `apropos mot` : chercher une commande par mot-clé ;
+  `whatis commande` : une ligne ;
+- une option inconnue donne le vrai message des coreutils : « ls : option
+  invalide -- 'z' / Saisissez « ls --help » pour plus d'informations. »
+
+Dans le chapitre 1, le cours sur les fichiers cachés ne donne plus l'option :
+il renvoie à `man ls`, et la gardienne du phare renvoie aux EXEMPLES de
+`man mv`. Au chapitre 2, le parchemin présente `--help` et `man -k`.
+
 ### Écarts volontaires avec un vrai Linux
 
 | Commande | Dans le jeu | Sous Linux |
@@ -46,7 +69,7 @@
 | `mv` | ne déplace que des objets (fichiers) | déplace aussi les dossiers |
 | `rm -r`, `cp -r` | refusés | effacent / copient des dossiers entiers |
 | `grep` sans résultat | « (aucune ligne ne contient …) » | n'affiche rien |
-| `man` | une ligne de résumé | une longue page de manuel |
+| `man` | affiche la page d'un coup, en quelques sections | ouvre une page plein écran (flèches, `/mot` pour chercher, `q` pour quitter), bien plus longue |
 | `ls -l` | type et droits, propriétaire, groupe (= propriétaire), taille, nom | ajoute le nombre de liens et la date |
 | permissions | propriétaire et « les autres » ; pas de groupes | le groupe a ses propres droits |
 | `chmod -w` (sans u/g/o) | agit sur tout le monde | tient compte du masque `umask` |
@@ -71,44 +94,41 @@ Morale technique : un programme fait ce qu'on lui a dit, pas ce qu'on voulait.
 
 ```mermaid
 flowchart LR
-  C1["Chapitre 1 · L'Éveil<br/>ls, cd, pwd, cat, less, ls -a, mv"] --> C2["Chapitre 2 · Le Bourg<br/>grep, touch, cp, mkdir, rm"]
+  C1["Chapitre 1 · L'Île du Phare<br/>ls, cd, pwd, cat, less, ls -a, mv"] --> C2["Chapitre 2 · Le Bourg<br/>grep, touch, cp, mkdir, rm"]
   C2 --> C3["Chapitre 3 · La Racine<br/>ls -l, chmod, whoami, sudo"]
 ```
 
-### Chapitre 1 — L'Éveil (fait)
+### Chapitre 1 — L'Île du Phare (fait)
 
-Correspond au niveau 1 de l'original (Académie, grotte, rocher, portail).
+L'Effaceur a effacé l'ampoule du phare : sans lumière, aucun bateau ne peut
+quitter l'île pour le Bourg.
 
 | Lieu | Énigme | Commande apprise |
 |---|---|---|
-| Maison | lire la lettre de l'amie | `ls`, `cat` |
-| Foret, Clairiere | panneau, vieille dame (touche Tab, flèche ↑) | `cd`, `cd ..`, `pwd` |
-| Academie/SalleDExercice | ranger la grenouille dans la Boite | `mv objet Lieu` |
-| Academie/Cours | manuel, chemins, fichier caché `.note_secrete` | `man`, `~`, `/`, `ls -a` |
-| Grotte/SalleHumide | pousser le rocher dans le lieu parent | `mv rocher ..` |
-| ChambreDePierre | renommer la vieille clé en `cle`, trouver `.Portail` | `mv` pour renommer, `ls -a` |
+| Cabane | lire le message de Maëlle, la gardienne du phare | `ls`, `cat` |
+| Plage | panneau, ravaudeuse (touche Tab, flèche ↑) | `cd`, `cd ..`, `pwd` |
+| Colline/EcoleDesSignaux/SalleDExercice | remettre le crabe dans le Seau | `mv objet Lieu` |
+| Colline/EcoleDesSignaux/Cours | manuel, chemins, fichier caché `.note_secrete`, déplacer et renommer d'un coup | `man`, `~`, `/`, `ls -a` |
+| Jetee | ranger le filet qui bloque le Phare au Hangar du Port | `mv filet ~/Port/Hangar` (chemin depuis `~`) |
+| Port/Remise → Phare/Escalier/Lanterne | rapporter l'ampoule de secours cachée sous le nom exact `ampoule` | `ls -a`, `mv .ampoule_de_secours …/Lanterne/ampoule` |
 
 ### Chapitre 2 — Le Bourg (fait)
 
-Correspond au niveau 2 de l'original (bibliothèque, ferme, atelier, pont,
-clairière, ronces, trolls).
+Le bateau dépose le personnage au Bourg du port.
 
 | Lieu | Énigme | Commande apprise |
 |---|---|---|
-| Bibliotheque | trouver quel livre parle du levier, puis le levier caché | `grep levier *`, `ls -a` |
-| Reserve | lire la chronique de l'Effaceur | `grep`, `grep -i` |
-| CheminRocailleux | rocher trop lourd pour `mv` | `rm` (et pas de corbeille) |
-| Ferme | trois épis pour le fermier | `cp` |
-| Atelier | fabriquer un engrenage, puis cinq | `touch`, `cp` |
-| PontCasse | fabriquer la planche manquante | `touch` |
-| Clairiere | reconstruire la maison (un lieu) | `mkdir` |
-| SentierSombre | ronces impossibles à déplacer | `rm` |
-| GrotteDesTrolls | nourrir le troll sans retourner à la ferme | `cp ~/…/epi .` (chemin complet, `.`) |
-| Cage | libérer Nour | — |
+| Mairie | quelle affiche parle de l'Effaceur, puis la clé sous le `.paillasson` | `grep Effaceur *`, `ls -a` |
+| Mairie/Archives | lire la chronique de l'Effaceur | `grep`, `grep -i` |
+| Boulangerie | trois levains pour le boulanger | `cp` |
+| Atelier | fabriquer un engrenage, puis cinq : l'horloge repart et ouvre la grille de la Ruelle | `touch`, `cp` |
+| Ruelle | barricade trop lourde pour `mv` | `rm` (et pas de corbeille) |
+| Ruelle/Cour/Egout | payer les rats avec le fromage du Marché, sans y retourner | `cp ~/Marche/fromage .` (chemin complet, `.`) |
+| Egout/Galerie | retrouver Nour au bord du Toboggan | — |
+| Ecole | reconstruire la Classe de Nour (un lieu) | `mkdir` |
 
 ### Chapitre 3 — La Racine (fait)
 
-Correspond à la fin de l'original (toboggan, fichiers du noyau, `sudo`).
 Pourquoi « La Racine » et pas « Le Noyau » : sous Linux, le noyau (*kernel*)
 est le programme central du système ; l'arborescence des fichiers, elle,
 part de la racine `/`, et l'administrateur s'appelle `root`.

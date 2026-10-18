@@ -97,7 +97,7 @@ flowchart TB
 ## Phase 5 bis — Recommander (avec ou sans IA)
 
 - [x] Page d'entrée `/recommandation/` et carte sur l'accueil ; dossier de sources [`sources/recommander-sans-ia.md`](sources/recommander-sans-ia.md)
-- [ ] **Avant les algorithmes** — bibliothécaires et classifications (Dewey et ses biais, Ranganathan), Guide Michelin, hit-parades (Billboard, Oricon), payola, clubs de livres
+- [x] **Avant les algorithmes** *(`/modules/avant-algorithmes/`, relecture humaine à faire)* — bibliothécaires et classifications (Dewey et ses biais, Ranganathan), Guide Michelin, hit-parades (Billboard, Oricon), payola, clubs de livres
 - [x] **Classer par les notes** *(`/modules/classer-notes/`, relecture humaine à faire ; règles sur les faux avis à suivre)* — moyenne trompeuse, borne de Wilson, moyenne bayésienne (IMDb), tri « tendance » (Reddit, Hacker News), avis en J, faux avis et droit
 - [x] **PageRank : les liens comme des votes** *(`/modules/pagerank/`, relecture humaine à faire ; procédures de concurrence à suivre)* — surfeur aléatoire, ancêtres (Katz, Pinski et Narin, Garfield, RankDex de Robin Li, HITS), fermes de liens, procédures antitrust (à dater)
 - [x] **Les IA qui recommandent** (voir phase 5)
@@ -126,6 +126,8 @@ flowchart TB
 - [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
 - [ ] Terminus : suites possibles (voir « Idées pour la suite » dans le scénario)
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
+- [x] Page `/jeux/` : jeux pour apprendre, classés par thème (69 jeux vérifiés le 17 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
+- [ ] Terminus devient un projet séparé, « Quêtes de Sysadmin » (chapitres 1 et 2 déjà réécrits avec nos propres lieux et énigmes)
 
 ## Ensuite
 
