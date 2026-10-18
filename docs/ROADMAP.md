@@ -127,7 +127,7 @@ flowchart TB
 - [ ] Terminus : suites possibles (voir « Idées pour la suite » dans le scénario)
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
 - [x] Page `/jeux/` : jeux pour apprendre, classés par thème (69 jeux vérifiés le 17 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
-- [ ] Terminus devient un projet séparé, « Quêtes de Sysadmin » (chapitres 1 et 2 déjà réécrits avec nos propres lieux et énigmes)
+- [x] Terminus devient un projet séparé, « Quêtes de Sysadmin » (dépôt `Rouages-du-net/quetes-de-sysadmin`, site sysadmin.rouages.net) ; la page `/jeux/quetes-de-sysadmin/` l'intègre sans copier son code, `/jeux/terminus/` y redirige, et la progression des joueur·ses est gardée (clé `rouages-terminus`)
 
 ## Ensuite
 

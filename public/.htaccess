@@ -11,6 +11,9 @@ ErrorDocument 404 /404.html
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
+# Terminus en français est devenu Quêtes de Sysadmin (octobre 2026)
+Redirect 301 /jeux/terminus/ /jeux/quetes-de-sysadmin/
+
 # Ne pas exposer l'état de synchronisation du déploiement FTP
 <Files ".ftp-deploy-sync-state.json">
   Require all denied

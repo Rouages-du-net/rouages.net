@@ -77,7 +77,11 @@ Consignes à donner à tout agent de recherche web :
   animation, `prefers-reduced-motion` respecté, navigation au clavier, contraste
   AA.
 - Aucun pisteur, aucune ressource tierce (polices et scripts servis par le
-  site lui-même).
+  site lui-même). Seule exception : le jeu **Quêtes de Sysadmin**, projet frère
+  et indépendant (dépôt `Rouages-du-net/quetes-de-sysadmin`), intégré depuis
+  son propre site `https://sysadmin.rouages.net/integration/quetes-de-sysadmin.js`
+  sur `/jeux/quetes-de-sysadmin/`. Son code n'est jamais copié ici : les
+  changements du jeu se font dans son dépôt.
 - Animations : réutiliser `src/lib/pasapas.ts` (pas à pas, légende annoncée,
   repli `.anim-repli` sans JavaScript) et `src/lib/anim.ts` ; styles communs
   `.anim-*` dans `global.css`. Jamais de boucle infinie.
