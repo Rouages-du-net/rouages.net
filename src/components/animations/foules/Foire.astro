@@ -1,0 +1,134 @@
+---
+// Animation « Le bœuf de Galton » (module « La sagesse des foules ») : des
+// visiteur·ses d'une foire estiment le poids d'un bœuf. On règle leur nombre,
+// et, avec avecBiais, une erreur que tout le monde partage. Les estimations
+// sont simulées ; seul le poids réel (1 197 livres) vient de 1907.
+interface Props { avecBiais?: boolean }
+const { avecBiais = false } = Astro.props;
+---
+<div class="anim foire" data-foire data-biais={avecBiais ? '1' : '0'}>
+  <div class="anim-repli">
+    {avecBiais ? (
+      <p>
+        Si tout le monde se trompe dans le même sens, par exemple parce que le bœuf paraît plus
+        gros sous la lumière de la foire, la moyenne hérite de cette erreur. Ajouter des
+        estimations ne la corrige pas : les erreurs ne se compensent que si elles partent dans
+        tous les sens.
+      </p>
+    ) : (
+      <p>
+        Chaque visiteur·se se trompe, parfois de plus de cent livres. Mais quand on rassemble
+        des centaines d'estimations faites chacune de son côté, les erreurs vers le haut et vers
+        le bas se compensent : la moyenne et la valeur du milieu tombent tout près du vrai poids,
+        bien plus près que la plupart des individus.
+      </p>
+    )}
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Nombre d'estimations : <output data-n-sortie></output>
+        <input type="range" min="1" max="800" step="1" value={avecBiais ? '787' : '10'} data-n />
+      </label>
+      {avecBiais && (
+        <label class="curseur">Erreur commune (tout le monde surestime de) : <output data-b-sortie></output>
+          <input type="range" min="0" max="150" step="10" value="60" data-b />
+        </label>
+      )}
+      <svg viewBox="0 0 400 134" role="img" aria-label="Répartition des estimations, avec le poids réel, la moyenne et la médiane" data-svg></svg>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="tirer">🎲 Une autre foire</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Estimations simulées. Seul le poids réel du bœuf, 1 197 livres, vient de l'histoire.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { POIDS_REEL, estimations, moyenne, mediane, erreurIndividuelle } from '../../../lib/sagesse';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const MIN = 900, MAX = 1500, LARG = 400;
+  const x = (v: number) => ((Math.min(MAX, Math.max(MIN, v)) - MIN) / (MAX - MIN)) * LARG;
+  const nb = (v: number) => Math.round(v).toLocaleString('fr-FR');
+
+  function el(nom: string, attrs: Record<string, string | number>) {
+    const e = document.createElementNS(NS, nom);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+    return e;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-foire]').forEach((racine) => {
+    activerScene(racine);
+    const avecBiais = racine.dataset.biais === '1';
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const n = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const b = racine.querySelector<HTMLInputElement>('[data-b]');
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = avecBiais ? 21 : 7;
+
+    function maj() {
+      const N = Number(n.value), biais = b ? Number(b.value) : 0;
+      racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!.value = nb(N);
+      const bs = racine.querySelector<HTMLOutputElement>('[data-b-sortie]');
+      if (bs) bs.value = `${biais} livres`;
+      const e = estimations(hasard(graine), N, 75, biais);
+      const moy = moyenne(e), med = mediane(e), ind = erreurIndividuelle(e);
+      // Histogramme par tranches de 20 livres.
+      const cases = new Array(30).fill(0);
+      for (const v of e) cases[Math.min(29, Math.max(0, Math.floor((v - MIN) / 20)))]++;
+      const haut = Math.max(...cases, 1);
+      const enfants: Element[] = cases.map((c, i) =>
+        el('rect', { x: i * (LARG / 30) + 1, y: 100 - (c / haut) * 90, width: LARG / 30 - 2, height: (c / haut) * 90, class: 'barre' }),
+      );
+      const trait = (v: number, classe: string, texte: string, dy: number) => {
+        enfants.push(el('line', { x1: x(v), x2: x(v), y1: 4, y2: 104, class: classe }));
+        const t = el('text', { x: x(v), y: 115 + dy, class: `${classe} etiquette` });
+        t.textContent = texte;
+        enfants.push(t);
+      };
+      trait(POIDS_REEL, 'vrai', 'vrai poids', 0);
+      trait(moy, 'moy', 'moyenne', 11);
+      enfants.push(el('line', { x1: 0, x2: LARG, y1: 100, y2: 100, class: 'axe' }));
+      svg.replaceChildren(...enfants);
+      const ecart = Math.abs(moy - POIDS_REEL);
+      racine.querySelector('[data-mesure]')!.textContent =
+        `Moyenne : ${nb(moy)} livres (écart ${nb(ecart)}) · médiane : ${nb(med)} · une personne se trompe en moyenne de ${nb(ind)} livres.`;
+      legende.textContent = avecBiais
+        ? biais === 0
+          ? 'Sans erreur commune, la moyenne retombe sur le vrai poids. Remets un peu de biais.'
+          : `Tout le monde surestime de ${biais} livres : la moyenne aussi. Même avec 800 personnes, la foule se trompe avec assurance. C’est l’indépendance et la diversité des erreurs qui font la sagesse des foules.`
+        : N < 5
+          ? 'Avec une ou deux personnes, on dépend de leur chance. Augmente le nombre d’estimations.'
+          : ecart < ind / 3
+            ? `La moyenne est bien plus proche du vrai poids que la plupart des individus : leurs erreurs, vers le haut et vers le bas, se compensent.`
+            : 'Les erreurs commencent à se compenser. Augmente encore le nombre, ou relance une foire.';
+    }
+
+    racine.querySelectorAll('input').forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="tirer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  svg { width: 100%; display: block; margin-top: 0.5rem; }
+  svg :global(.barre) { fill: var(--ill-commun); }
+  svg :global(.axe) { stroke: var(--border); }
+  svg :global(line.vrai) { stroke: var(--fg); stroke-width: 2; stroke-dasharray: 4 3; }
+  svg :global(line.moy) { stroke: var(--accent); stroke-width: 2.5; }
+  svg :global(.etiquette) { font: 12px var(--police); text-anchor: middle; }
+  svg :global(text.vrai) { fill: var(--fg); }
+  svg :global(text.moy) { fill: var(--accent); font-weight: 700; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

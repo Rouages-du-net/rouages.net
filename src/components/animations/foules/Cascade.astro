@@ -1,0 +1,97 @@
+---
+// Animation « Quand on se copie » (module « La sagesse des foules ») : une
+// file de 20 personnes choisit entre deux réponses. Chacune a un indice
+// privé juste 65 fois sur 100. Avec les choix précédents sous les yeux, une
+// cascade peut emporter tout le monde dans la mauvaise direction.
+---
+<div class="anim cascade" data-cascade>
+  <div class="anim-repli">
+    <p>
+      Vingt personnes répondent l'une après l'autre ; chacune a un indice juste 65 fois sur 100.
+      Si chacune répond selon son indice, la majorité a raison environ neuf fois sur dix. Si
+      chacune voit les réponses précédentes, dès que deux réponses de plus vont dans un sens, il
+      devient raisonnable de les suivre plutôt que son propre indice : c'est une cascade. Dans
+      environ une file sur quatre, elle part dans la mauvaise direction, et tout le monde se
+      trompe ensemble.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="case"><input type="checkbox" data-voit checked /> Chacun·e voit les réponses des personnes précédentes</label>
+      <ol class="file" data-file aria-label="Réponses de la file, dans l'ordre"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="une">Une nouvelle file</button>
+        <button type="button" data-action="mille">1 000 files</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Simulation du modèle de cascade informationnelle (Bikhchandani, Hirshleifer et Welch, 1992).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { cascade } from '../../../lib/sagesse';
+  import { hasard } from '../../../lib/minilm';
+
+  const N = 20, FIABLE = 0.65;
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-cascade]').forEach((racine) => {
+    activerScene(racine);
+    const voit = racine.querySelector<HTMLInputElement>('[data-voit]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let alea = hasard(3);
+
+    function une() {
+      const c = cascade(alea, N, FIABLE, voit.checked);
+      racine.querySelector('[data-file]')!.replaceChildren(
+        ...c.map((ok, i) => {
+          const li = document.createElement('li');
+          li.className = ok ? 'juste' : 'faux';
+          li.textContent = ok ? 'A' : 'B';
+          li.title = `Personne ${i + 1} : ${ok ? 'bonne réponse (A)' : 'mauvaise réponse (B)'}`;
+          return li;
+        }),
+      );
+      const justes = c.filter(Boolean).length;
+      racine.querySelector('[data-mesure]')!.textContent = `${justes} bonnes réponses sur ${N} : la majorité ${justes > N / 2 ? 'a raison' : 'se trompe'}.`;
+      const fin = c.slice(-6);
+      legende.textContent = voit.checked
+        ? fin.every((x) => !x)
+          ? 'Une cascade est partie dans la mauvaise direction : après deux ou trois premières réponses fausses, tout le monde a suivi, même celles et ceux qui avaient le bon indice.'
+          : fin.every((x) => x)
+            ? 'Une cascade est partie dans la bonne direction. Mais elle repose sur les toutes premières réponses : relance plusieurs files.'
+            : 'Pas encore de cascade : les premières réponses se contredisent. Relance.'
+        : 'Chacun·e répond selon son propre indice : les erreurs sont éparpillées, et la majorité a presque toujours raison.';
+    }
+
+    function mille() {
+      let fausses = 0;
+      for (let r = 0; r < 1000; r++) if (cascade(alea, N, FIABLE, voit.checked).filter(Boolean).length <= N / 2) fausses++;
+      racine.querySelector('[data-mesure]')!.textContent = `Sur 1 000 files, la majorité se trompe dans ${pc(fausses / 1000)} des cas.`;
+      legende.textContent = voit.checked
+        ? 'En se copiant, la file perd l’information de ses membres : la majorité se trompe bien plus souvent que lorsque chacun·e répond seul·e. Décoche la case pour comparer.'
+        : 'Sans se voir, la majorité ne se trompe qu’environ une fois sur dix. Coche la case pour comparer.';
+    }
+
+    racine.querySelector('[data-action="une"]')!.addEventListener('click', une);
+    racine.querySelector('[data-action="mille"]')!.addEventListener('click', mille);
+    voit.addEventListener('input', () => {
+      alea = hasard(3);
+      une();
+    });
+    une();
+  });
+</script>
+
+<style>
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .file { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; list-style: none; padding: 0; margin: 0.75rem 0; }
+  .file :global(li) { text-align: center; font: 700 0.85rem var(--police-mono); padding: 0.35rem 0; border-radius: 0.3rem; }
+  .file :global(li.juste) { background: var(--ill-secret-b); color: var(--bg); }
+  .file :global(li.faux) { background: var(--ill-paquet); color: var(--bg); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
