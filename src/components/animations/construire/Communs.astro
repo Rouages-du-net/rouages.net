@@ -1,0 +1,108 @@
+---
+// Animation « Le lac partagé » (module « Construire ensemble ») : six
+// pêcheur·ses partagent un lac pendant trente saisons, sans règle, avec un
+// quota que certain·es contournent, ou avec un quota surveillé et des
+// sanctions graduées (principes 4 et 5 d'Elinor Ostrom). Modèle inventé.
+---
+<div class="anim communs" data-communs>
+  <div class="anim-repli">
+    <p>
+      Six personnes partagent un lac pendant trente saisons. Les poissons se reproduisent, mais pas
+      plus vite qu'un certain rythme. Si chacune pêche autant qu'elle peut, le lac est vide en six
+      saisons. Si le groupe se fixe un quota mais que deux personnes le dépassent sans que personne
+      ne surveille, le lac tient plus longtemps puis s'effondre vers la dix-septième saison. Avec un
+      quota, une surveillance et des sanctions graduées, le lac reste peuplé et le groupe pêche
+      au total plus du double de ce qu'il pêchait sans règle.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Les règles du groupe</legend>
+        <label><input type="radio" name="regle" value="aucune" checked /> Chacun·e pour soi</label>
+        <label><input type="radio" name="regle" value="quota" /> Un quota, sans surveillance</label>
+        <label><input type="radio" name="regle" value="quota-surveille" /> Un quota, surveillé, avec sanctions graduées</label>
+      </fieldset>
+      <svg viewBox="0 0 400 140" role="img" aria-label="Courbe : poissons dans le lac au fil des trente saisons" data-svg></svg>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="jouer">Jouer trente saisons</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé (croissance logistique, capacité de 100 poissons). Il illustre un mécanisme, pas une pêcherie réelle.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+  import { lac, type Regle } from '../../../lib/construire';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const LEGENDES: Record<Regle, string> = {
+    aucune: 'Chacun·e a intérêt à pêcher un peu plus, puisque les autres le feront de toute façon : le lac se vide. C’est la « tragédie des communs ».',
+    quota: 'Le quota aide, mais sans personne pour vérifier, deux personnes pêchent plus que leur part : le lac s’effondre quand même, juste plus tard.',
+    'quota-surveille': 'Quota, surveillance par des gens qui rendent des comptes au groupe, sanctions d’abord légères : la triche ne paie plus, et le lac nourrit tout le monde, saison après saison.',
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-communs]').forEach((racine) => {
+    activerScene(racine);
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const jouer = racine.querySelector<HTMLButtonElement>('[data-action="jouer"]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const regle = () => (racine.querySelector<HTMLInputElement>('input[name="regle"]:checked')?.value ?? 'aucune') as Regle;
+    let tour = 0;
+
+    const x = (s: number) => 10 + (s / 30) * 380;
+    const y = (stock: number) => 130 - stock * 1.2;
+
+    function trace(points: number[]) {
+      const axe = document.createElementNS(NS, 'line');
+      Object.entries({ x1: 10, x2: 390, y1: 130, y2: 130, class: 'axe' }).forEach(([k, v]) => axe.setAttribute(k, String(v)));
+      const ligne = document.createElementNS(NS, 'polyline');
+      ligne.setAttribute('points', points.map((s, i) => `${x(i)},${y(s)}`).join(' '));
+      ligne.setAttribute('class', 'courbe');
+      svg.replaceChildren(axe, ligne);
+    }
+
+    async function lancer() {
+      const t = ++tour;
+      const r = regle();
+      const { historique, total } = lac(r);
+      const points = [80];
+      jouer.disabled = true;
+      legende.textContent = '';
+      for (const [i, h] of historique.entries()) {
+        points.push(h.stock);
+        trace(points);
+        mesure.textContent = `Saison ${i + 1} : ${Math.round(h.stock)} poissons dans le lac.`;
+        await pause(80);
+        if (t !== tour) return;
+      }
+      const fin = historique.findIndex((h) => h.stock === 0);
+      mesure.textContent = `${fin >= 0 ? `Lac vide à la saison ${fin + 1}.` : `Après trente saisons : ${Math.round(historique.at(-1)!.stock)} poissons.`} Pêche totale du groupe : ${Math.round(total)} poissons.`;
+      legende.textContent = LEGENDES[r];
+      jouer.disabled = false;
+    }
+
+    jouer.addEventListener('click', lancer);
+    racine.querySelectorAll('input[name="regle"]').forEach((i) => i.addEventListener('change', () => {
+      jouer.disabled = false;
+      lancer();
+    }));
+    trace([80]);
+    mesure.textContent = 'Saison 0 : 80 poissons dans le lac.';
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  svg { width: 100%; display: block; }
+  svg :global(.courbe) { fill: none; stroke: var(--ill-secret-b); stroke-width: 2.5; }
+  svg :global(.axe) { stroke: var(--border); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

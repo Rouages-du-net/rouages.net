@@ -437,6 +437,21 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "En statistique, une erreur qui va toujours dans le même sens, au lieu de partir au hasard dans tous les sens. Faire la moyenne de beaucoup de mesures efface les erreurs au hasard, mais pas un biais.",
   },
+  'logiciel-libre': {
+    terme: 'Logiciel libre',
+    definition:
+      "Logiciel que chacun·e a le droit d'utiliser, d'étudier, de modifier et de redistribuer, modifié ou non. Son code source est donc public. On parle aussi d'« open source », avec une nuance de philosophie.",
+  },
+  'noyau': {
+    terme: "Noyau (d'un système d'exploitation)",
+    definition:
+      "Le cœur d'un système d'exploitation : le programme qui partage le processeur, la mémoire et les périphériques entre les autres programmes. Linux est un noyau ; un système complet y ajoute de nombreux outils.",
+  },
+  'communs': {
+    terme: 'Communs',
+    definition:
+      "Ressource partagée par une communauté qui la gère elle-même, avec ses propres règles : un pâturage, une pêcherie, mais aussi une encyclopédie ou une carte libres.",
+  },
 };
 
 export function entree(id: string): Entree {
