@@ -1,0 +1,89 @@
+---
+// Animation « La patrouille » (module « Construire ensemble ») : vingt
+// modifications malveillantes arrivent sur une page d'un wiki ; plus il y a
+// de personnes qui surveillent la page, plus vite elles sont annulées.
+// Modèle inventé : chaque veilleur·se regarde la page une minute sur cent.
+---
+<div class="anim patrouille" data-patrouille>
+  <div class="anim-repli">
+    <p>
+      Vingt modifications malveillantes arrivent sur une page d'un wiki. Si une seule personne
+      surveille la page (en y jetant un œil une minute sur cent), chaque dégradation reste visible
+      plus d'une heure en moyenne. Avec vingt personnes, environ cinq minutes. Avec cent,
+      une ou deux minutes. Personne ne fait beaucoup ; tout le monde ensemble répare presque tout
+      de suite.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Personnes qui surveillent la page : <output data-v-sortie></output>
+        <input type="range" min="0" max="100" step="1" value="1" data-v />
+      </label>
+      <ol class="barres" data-barres aria-label="Durée pendant laquelle chaque dégradation reste visible"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">Vingt nouvelles dégradations</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : chaque personne regarde la page une minute sur cent, au hasard. Barres plafonnées à 10 heures.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { patrouille } from '../../../lib/construire';
+  import { hasard } from '../../../lib/minilm';
+
+  const MAXI = 600;
+  const duree = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}` : `${m} min`);
+
+  document.querySelectorAll<HTMLElement>('[data-patrouille]').forEach((racine) => {
+    activerScene(racine);
+    const v = racine.querySelector<HTMLInputElement>('[data-v]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 4;
+
+    function maj() {
+      const V = Number(v.value);
+      racine.querySelector<HTMLOutputElement>('[data-v-sortie]')!.value = V === 0 ? 'personne' : `${V}`;
+      const t = patrouille(hasard(graine), 20, V, 0.01, MAXI);
+      racine.querySelector('[data-barres]')!.replaceChildren(
+        ...t.map((m, i) => {
+          const li = document.createElement('li');
+          const b = document.createElement('span');
+          b.style.width = `${Math.max(1, (m / MAXI) * 100)}%`;
+          li.append(b);
+          li.title = `Dégradation ${i + 1} : visible ${m >= MAXI ? 'au moins 10 heures' : duree(m)}`;
+          return li;
+        }),
+      );
+      const moy = Math.round(t.reduce((s, x) => s + x, 0) / t.length);
+      racine.querySelector('[data-mesure]')!.textContent =
+        V === 0 ? 'Personne ne regarde : les dégradations restent en place.' : `Durée moyenne de visibilité : ${duree(moy)}.`;
+      legende.textContent =
+        V === 0
+          ? 'Sans personne pour surveiller, un wiki ouvert à tous ne tient pas.'
+          : V < 10
+            ? 'Avec peu de monde, les dégradations restent visibles longtemps. Ajoute des personnes : chacune ne regarde qu’une minute sur cent.'
+            : 'Chacun·e regarde rarement, mais à plusieurs, quelqu’un voit presque toujours la dégradation dans les minutes qui suivent.';
+    }
+    v.addEventListener('input', maj);
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .barres { list-style: none; padding: 0; margin: 0.75rem 0; display: grid; gap: 3px; }
+  .barres :global(li) { height: 0.55rem; background: var(--bg); border-radius: 999px; overflow: hidden; }
+  .barres :global(li span) { display: block; height: 100%; background: var(--ill-paquet); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

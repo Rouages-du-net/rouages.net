@@ -1,0 +1,364 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Patrouille from '../../components/animations/construire/Patrouille.astro';
+import Galaxies from '../../components/animations/construire/Galaxies.astro';
+import Communs from '../../components/animations/construire/Communs.astro';
+
+// Faits sourcés : voir docs/sources/intelligence-collective.md (thème 2).
+const etapes = [
+  { ancre: 'ecrire', court: 'Écrire ensemble' },
+  { ancre: 'cartographier', court: 'Cartographier ensemble' },
+  { ancre: 'galaxies', court: 'Classer des galaxies' },
+  { ancre: 'communs', court: 'Des règles pour durer' },
+  { ancre: 'qui-participe', court: 'Qui participe ?' },
+  { ancre: 'bilan', court: 'Ce qui fait tenir un commun', pastille: '✓' },
+];
+---
+<Base
+  title="Construire ensemble"
+  description="Logiciel libre, Wikipédia, OpenStreetMap, sciences participatives, Ushahidi : comment des milliers de bénévoles construisent des biens communs, et les règles qui les font durer (Elinor Ostrom)."
+>
+  <p class="tag">Comment ça marche · <a href="/intelligence-collective/">L'intelligence collective</a> · module en construction</p>
+  <h1>Construire ensemble</h1>
+  <MiseAJour date="2026-10-19" evolutif />
+  <p class="chapo seulement-debut">
+    Une encyclopédie, un système d'exploitation, une carte du monde, un catalogue de galaxies :
+    personne ne les possède, des milliers de bénévoles les construisent. Surveille un wiki, classe
+    des galaxies, partage un lac, et découvre les règles qui font tenir ces communs.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Écrire ensemble" ancre="ecrire">
+    <Patrouille slot="animation" />
+    <p slot="decouverte">
+      Sur un wiki, n'importe qui peut modifier une page, y compris pour la dégrader. Pourquoi ça
+      tient ? Parce que d'autres surveillent. Règle le nombre de personnes qui gardent un œil sur la
+      page et regarde combien de temps les dégradations restent visibles.
+    </p>
+    <p slot="curieux">
+      Chaque personne ne regarde que rarement, mais il suffit qu'une seule voie la dégradation pour
+      l'annuler. Avec beaucoup de monde, quelqu'un la voit presque tout de suite. Annuler coûte un
+      clic ; dégrader demande un effort : c'est cette asymétrie, et l'historique qui garde toutes
+      les versions, qui rendent un wiki ouvert viable. Le même principe vaut pour le
+      <Terme id="logiciel-libre">logiciel libre</Terme> : beaucoup d'yeux relisent le code.
+    </p>
+    <p slot="ingenieur">
+      Si chaque veilleur·se regarde la page avec une probabilité q par minute, la probabilité que
+      personne ne regarde pendant une minute vaut (1 − q)ⁿ, et la durée moyenne de visibilité
+      vaut environ 1/(n·q) quand q est petit : dix fois plus de veilleur·ses, dix fois moins de
+      temps. Les vrais wikis ajoutent des listes de suivi, des robots qui repèrent les
+      dégradations les plus grossières et des protections de page : le modèle de l'animation
+      n'en a aucune.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le 27 septembre 1983, Richard Stallman annonce le projet GNU : un système d'exploitation
+        compatible avec Unix, entièrement libre. Son message commence par « Free Unix! » et lance
+        un appel : il faut « du temps, de l'argent, des programmes et du matériel ».
+      </p>
+      <p>
+        Le 25 août 1991, Linus Torvalds, alors étudiant à Helsinki, écrit sur un forum Usenet qu'il
+        fait « un système d'exploitation (libre) (juste un passe-temps, ça ne sera pas gros et
+        professionnel comme gnu) ». Son <Terme id="noyau">noyau</Terme>, Linux, combiné aux outils
+        GNU, donne un système complet et libre. La Free
+        Software Foundation tient à les appeler « GNU/Linux » ; beaucoup disent simplement
+        « Linux ». Les deux usages coexistent.
+      </p>
+      <p>
+        Wikipédia applique la même idée à l'encyclopédie. La Wikimedia Foundation, qui l'héberge,
+        compte près de 250 000 bénévoles dans le monde, et Wikipédia existe dans plus de 300
+        langues. État au 16 octobre 2026, la version en français compte 2 785 030 articles et
+        36 930 comptes ayant fait au moins une action dans les 30 derniers jours.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Linus Torvalds a inventé le logiciel libre. »</strong> Le projet GNU le précède de
+      huit ans, et Torvalds le cite dans son tout premier message. Linux est une pièce, majeure,
+      d'un édifice construit par des milliers de personnes et d'entreprises.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Cartographier ensemble" ancre="cartographier">
+    <p slot="decouverte">
+      Quand une catastrophe frappe, les secours ont besoin d'une carte : routes, bâtiments, camps.
+      Deux fois, des bénévoles du monde entier l'ont dessinée pour eux, en quelques jours, depuis
+      chez eux.
+    </p>
+    <p slot="curieux">
+      Le principe est simple : des images satellites sont partagées, et chacun·e trace à l'écran
+      les routes et les bâtiments d'un petit carré. Des milliers de petits carrés font une carte.
+      Pour que le travail tienne, il faut découper la zone, éviter que deux personnes tracent le
+      même carré, et faire relire par des personnes plus expérimentées.
+    </p>
+    <p slot="ingenieur">
+      OpenStreetMap stocke la carte comme une base de données de points, de lignes et de relations,
+      avec leurs étiquettes (« highway=residential »). Chaque modification est versionnée, comme
+      dans un wiki. Les bénévoles d'Ushahidi, eux, recevaient des signalements par le web et par
+      SMS, et les vérifiaient à la main avant de les placer sur la carte.
+    </p>
+    <div slot="histoire">
+      <p>
+        <strong>Kenya, 2008.</strong> Pendant les violences qui suivent l'élection présidentielle,
+        la juriste et blogueuse kényane Ory Okolloh lance le 3 janvier 2008 sur son blog l'idée
+        d'une carte des violences signalées par les habitant·es. Le site, baptisé Ushahidi,
+        « témoignage » en kiswahili, est en ligne moins d'une semaine plus tard. La plateforme a
+        depuis servi dans 159 pays.
+      </p>
+      <p>
+        <strong>Haïti, 2010.</strong> Après le séisme du 12 janvier 2010, plusieurs centaines de
+        bénévoles d'OpenStreetMap, venus de dizaines de pays, tracent en quelques semaines la carte
+        d'Haïti la plus détaillée qui existe ; elle devient la carte de référence des secours. En
+        mars 2010, une équipe part à Port-au-Prince pour former une communauté de cartographes
+        haïtien·nes : c'est l'origine de l'Humanitarian OpenStreetMap Team. OpenStreetMap lui-même
+        est né en 2004, au Royaume-Uni.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ce sont les bénévoles étrangers qui ont sauvé Haïti. »</strong> Ils ont fourni une
+      carte, ce qui est précieux ; mais la connaissance du terrain vient des habitant·es, et la
+      suite logique a été de former des cartographes haïtien·nes. Les chiffres varient d'ailleurs
+      selon les sources : plus de 450 bénévoles pour la Banque mondiale, plus de 600 pour
+      OpenStreetMap.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Classer des galaxies" ancre="galaxies">
+    <Galaxies slot="animation" />
+    <p slot="decouverte">
+      Des télescopes photographient des millions de galaxies, bien trop pour les astronomes. Des
+      volontaires les classent : spirale ou elliptique ? Chacun·e se trompe parfois. Règle le
+      nombre d'avis par galaxie.
+    </p>
+    <p slot="curieux">
+      Une seule personne fait des erreurs. Plusieurs personnes qui regardent la même galaxie sans se
+      concerter font des erreurs différentes, et la majorité tranche juste : c'est le jury de
+      Condorcet du module <a href="/modules/sagesse-des-foules/#jury">La sagesse des foules</a>.
+      Les galaxies où les avis se partagent sont justement les plus intéressantes à revoir.
+    </p>
+    <p slot="ingenieur">
+      Si chaque avis est juste avec la probabilité p, indépendamment des autres, la majorité de n
+      avis est juste avec une probabilité qui suit la loi binomiale. Le théorème suppose des avis
+      indépendants et une même fiabilité pour tout le monde ; un vrai projet peut aller plus loin,
+      par exemple en donnant plus de poids aux volontaires dont les avis s'accordent le plus souvent
+      avec ceux des autres.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2007, le projet Galaxy Zoo met en ligne des images du ciel. Un an plus tard, l'équipe
+        publie le bilan : près d'un million de galaxies, plus de 40 millions de classifications,
+        par environ 100 000 participant·es. Le projet a donné naissance à Zooniverse, qui se présente
+        comme la plus grande plateforme de « recherche portée par les gens ».
+      </p>
+      <p>
+        Une enseignante néerlandaise bénévole, Hanny van Arkel, y repère un objet bleu qui ne
+        ressemble à rien de connu. On l'appelle le « Hanny's Voorwerp » (« voorwerp » veut dire
+        « objet » en néerlandais) : probablement un nuage de gaz illuminé par un quasar voisin
+        aujourd'hui éteint. Elle est co-autrice de l'article scientifique de 2009 qui le décrit.
+      </p>
+      <p>
+        En 2011, les joueur·ses de Foldit, un jeu où l'on replie des protéines, proposent des
+        modèles de la protéase d'un virus proche de celui du sida chez le singe, une structure qui
+        résistait aux chercheur·ses depuis plus de dix ans. Ces modèles ont permis aux scientifiques
+        de résoudre la structure avec leurs méthodes habituelles, en quelques jours ; les équipes de
+        joueur·ses figurent parmi les auteur·rices de l'article.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Des joueurs ont résolu en trois semaines ce que les scientifiques n'avaient pas
+      trouvé en dix ans. »</strong> Le chiffre vient d'un communiqué de l'université. L'article
+      scientifique raconte une collaboration : les joueur·ses ont trouvé un bon modèle, et les
+      chercheur·ses ont fini le travail. Et Galaxy Zoo n'est pas la première science
+      participative en ligne : l'article de 2008 cite lui-même un projet antérieur, Stardust@home.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Des règles pour durer" ancre="communs">
+    <Communs slot="animation" />
+    <p slot="decouverte">
+      Six personnes partagent un lac. Si chacune pêche autant qu'elle peut, que reste-t-il ? Essaie
+      trois façons de s'organiser.
+    </p>
+    <p slot="curieux">
+      Pendant longtemps, on a cru qu'une ressource partagée était condamnée : soit l'État la gère,
+      soit on la privatise, sinon elle s'épuise. Elinor Ostrom a montré une troisième voie : des
+      communautés qui se donnent leurs propres règles, les font respecter, et durent parfois des
+      siècles. Un quota ne suffit pas : il faut aussi quelqu'un pour vérifier, et des sanctions
+      d'abord légères. Ce sont deux des huit principes qu'elle a dégagés.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        Les huit principes d'Ostrom, dans la version qu'elle cite dans sa conférence Nobel :
+      </p>
+      <ol>
+        <li>des limites claires (qui a le droit d'utiliser la ressource, et laquelle) ;</li>
+        <li>des règles adaptées au contexte local, des coûts proportionnés aux bénéfices ;</li>
+        <li>les personnes concernées participent à l'écriture des règles ;</li>
+        <li>une surveillance par des personnes qui rendent des comptes aux usager·es ;</li>
+        <li>des sanctions graduées ;</li>
+        <li>des conflits réglés vite, localement et à peu de frais ;</li>
+        <li>le droit reconnu de s'organiser ;</li>
+        <li>des organisations emboîtées les unes dans les autres pour les grandes ressources.</li>
+      </ol>
+      <p>
+        Elle a elle-même écrit qu'elle aurait peut-être dû parler de « bonnes pratiques » plutôt que
+        de principes : sur plus de cent études qui les ont testés, environ deux tiers les confirment.
+        Dans l'animation, le lac suit une croissance logistique ; le quota vaut 90 % de la plus
+        grande prise que le lac peut supporter indéfiniment.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        En 2009, la politologue américaine Elinor Ostrom reçoit le prix de la Banque de Suède en
+        sciences économiques en mémoire d'Alfred Nobel, partagé avec Oliver Williamson, « pour son
+        analyse de la gouvernance économique, en particulier des communs ». Elle a montré que des
+        usager·es de pâturages, de forêts ou de pêcheries savent établir des règles durables.
+      </p>
+      <p>
+        Ses travaux portaient sur des ressources naturelles. Des chercheur·ses les ont ensuite
+        appliqués aux <Terme id="communs">communs</Terme> numériques. Dès 2009, une étude de la
+        gouvernance de Wikipédia montrait qu'elle se décentralisait à mesure que la communauté
+        grandissait, et la rapprochait de ces théories : des règles écrites par les participant·es,
+        des personnes chargées de veiller, des sanctions progressives, des instances de résolution
+        des conflits.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La tragédie des communs est inévitable. »</strong> Elle arrive quand il n'y a pas
+      de règles, comme dans le premier réglage de l'animation. Ostrom a documenté de nombreuses
+      communautés qui l'évitent. Mais l'inverse n'est pas vrai non plus : les communs ne
+      s'organisent pas tout seuls, et beaucoup échouent faute de règles adaptées.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Qui participe ?" ancre="qui-participe">
+    <p slot="decouverte">
+      « Ouvert à tous » ne veut pas dire « fait par tout le monde ». Qui écrit Wikipédia, qui trace
+      la carte, quelles langues ont des voix enregistrées ? Les réponses façonnent ce que ces
+      communs contiennent.
+    </p>
+    <div slot="curieux">
+      <p>
+        Selon les enquêtes de la Wikimedia Foundation, environ 13 % des contributeur·rices de
+        Wikipédia se déclarent femmes (enquête de 2022). En 2024, elles sont 24 % parmi les
+        nouveaux·elles, et 5 % des contributeur·rices actif·ves se déclarent transgenres, non
+        binaires ou d'une autre identité de genre. Qui écrit pèse sur ce qui est écrit : quels sujets,
+        quelles biographies, quels points de vue.
+      </p>
+      <p>
+        Sur OpenStreetMap, la plupart des modifications viennent d'environ 0,1 % des comptes : une
+        petite minorité très active fait l'essentiel du travail. C'est fréquent dans les projets
+        bénévoles, et cela rend chaque projet fragile au départ de quelques personnes.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Ces chiffres viennent d'enquêtes par sondage, déclaratives, auprès de quelques milliers de
+      personnes : ils donnent un ordre de grandeur, pas un recensement. Un chiffre souvent cité,
+      « moins de 13 % de femmes », vient d'une enquête de 2008 critiquée pour sa méthode ; mieux
+      vaut citer les enquêtes récentes, avec leur date.
+    </p>
+    <div slot="histoire">
+      <p>
+        Des communautés construisent leurs propres communs. Le projet Common Voice de Mozilla
+        collecte des voix enregistrées et relues par des bénévoles, pour que chacun·e puisse
+        entraîner des logiciels de reconnaissance vocale. État au 27 avril 2022, il comptait plus de
+        20 000 heures de voix, dont 2 383 heures en kinyarwanda, l'une des langues les mieux
+        fournies de toute la base, et 719 heures en swahili.
+      </p>
+      <p>
+        Masakhane se présente comme « une communauté de traitement automatique des langues pour
+        l'Afrique, par des Africain·es ». En 2020, un article signé par 48 auteur·rices a publié
+        des jeux de données et des tests de traduction automatique pour plus de 30 langues
+        africaines, construits avec les locuteur·rices plutôt que pour elles et eux.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Wikipédia est neutre puisque tout le monde peut y écrire. »</strong> Tout le monde
+      peut, mais tout le monde ne le fait pas. Les biais de celles et ceux qui écrivent se
+      retrouvent dans ce qui est écrit, et ce qui ne l'est pas. Le module <a
+      href="/modules/ia-texte/">Les IA qui écrivent</a> montre que ces textes servent ensuite à
+      entraîner des IA.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qui fait tenir un commun</h2>
+    <p>
+      Construire ensemble ne se fait pas par magie. Les projets qui durent partagent quelques
+      ingrédients.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Ingrédient</th><th scope="col">Exemple</th><th scope="col">Sans lui</th></tr></thead>
+      <tbody>
+        <tr><td>Des contributions petites et faciles</td><td>Corriger une phrase, tracer une rue, classer une galaxie.</td><td>Seul·es les spécialistes participent.</td></tr>
+        <tr><td>Des avis croisés</td><td>Plusieurs volontaires par galaxie, relecture des cartes.</td><td>Chaque erreur individuelle reste dans le résultat.</td></tr>
+        <tr><td>De la surveillance et un historique</td><td>Listes de suivi, annulation en un clic.</td><td>Les dégradations s'accumulent.</td></tr>
+        <tr><td>Des règles écrites par les participant·es</td><td>Les principes d'Elinor Ostrom, la gouvernance de Wikipédia.</td><td>Tragédie des communs, ou règles imposées que personne ne respecte.</td></tr>
+        <tr><td>Une communauté variée</td><td>Common Voice, Masakhane, cartographes haïtien·nes.</td><td>Le commun ne reflète que celles et ceux qui ont le temps d'y contribuer.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Ces communs servent aussi de matière première : les textes de Wikipédia, les cartes
+      d'OpenStreetMap, les voix de Common Voice entraînent des IA. C'est l'objet d'un prochain
+      module de la section <a href="/intelligence-collective/">L'intelligence collective</a>.
+    </p>
+
+  <Sources
+    verifie="2026-10-19"
+    sources={[
+      { auteur: 'R. Stallman', titre: 'Initial Announcement (projet GNU, 27 septembre 1983)', url: 'https://www.gnu.org/gnu/initial-announcement.html', type: 'primaire', annee: 1983, langue: 'en' },
+      { auteur: 'L. Torvalds (archive publiée par Carnegie Mellon University)', titre: 'Messages de 1991-1992 sur la naissance de Linux', url: 'https://www.cs.cmu.edu/~awb/linux.history.html', type: 'primaire', annee: 1991, langue: 'en' },
+      { auteur: 'Wikimedia Foundation', titre: 'About', url: 'https://wikimediafoundation.org/about/', type: 'primaire', langue: 'en' },
+      { auteur: 'Wikipédia en français', titre: 'Statistiques du site (API MediaWiki, consultée le 16 octobre 2026)', url: 'https://fr.wikipedia.org/w/api.php?action=query&meta=siteinfo&siprop=statistics&format=json', type: 'primaire', annee: 2026 },
+      { auteur: 'Wikimedia Foundation', titre: 'Community Insights 2023 Report', url: 'https://meta.wikimedia.org/wiki/Community_Insights/Community_Insights_2023_Report', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'Wikimedia Foundation', titre: 'Community Insights 2024 Report', url: 'https://meta.wikimedia.org/wiki/Community_Insights/Community_Insights_2024_Report', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'OpenStreetMap', titre: '20 years of OpenStreetMap', url: 'https://birthday20.openstreetmap.org/', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'OpenStreetMap', titre: 'About', url: 'https://www.openstreetmap.org/about', type: 'primaire', langue: 'en' },
+      { auteur: 'R. Soden (Banque mondiale)', titre: '4 Years On, Looking Back at OpenStreetMap Response to the Haiti Earthquake', url: 'https://blogs.worldbank.org/en/latinamerica/4-years-looking-back-openstreetmap-response-haiti-earthquake', type: 'site', annee: 2014, langue: 'en' },
+      { auteur: 'Humanitarian OpenStreetMap Team', titre: 'Page d’accueil', url: 'https://www.hotosm.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'O. Okolloh', titre: 'Ushahidi, or ‘testimony’: Web 2.0 tools for crowdsourcing crisis information (Participatory Learning and Action 59, IIED)', url: 'https://pubs.iied.org/g02842', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'T. Ajao (SSRC, Kujenga Amani)', titre: 'Ushahidi crowdsourcing platform: a people-centered approach to conflict transformation in Kenya', url: 'https://kujenga-amani.ssrc.org/2014/09/26/ushahidi-crowdsourcing-platform-a-people-centered-approach-to-conflict-transformation-in-kenya/', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'C. Lintott et al.', titre: 'Galaxy Zoo: morphologies derived from visual inspection of galaxies (MNRAS 389), résumé', url: 'https://arxiv.org/abs/0804.4483', type: 'recherche', annee: 2008, langue: 'en' },
+      { auteur: 'C. Lintott, K. Schawinski, W. Keel, H. van Arkel et al.', titre: 'Galaxy Zoo: Hanny’s Voorwerp, a quasar light echo? (MNRAS 399), résumé', url: 'https://uhra.herts.ac.uk/id/eprint/1944/', type: 'recherche', annee: 2009, langue: 'en' },
+      { auteur: 'Astronomy.com', titre: 'Schoolteacher discovers “cosmic ghost”', url: 'https://www.astronomy.com/science/schoolteacher-discovers-cosmic-ghost/', type: 'presse', annee: 2008, langue: 'en' },
+      { auteur: 'Zooniverse', titre: 'About', url: 'https://www.zooniverse.org/about', type: 'primaire', langue: 'en' },
+      { auteur: 'F. Khatib et al.', titre: 'Crystal structure of a monomeric retroviral protease solved by protein folding game players (Nat. Struct. Mol. Biol. 18), texte sur PubMed Central', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3705907/', type: 'recherche', annee: 2011, langue: 'en' },
+      { auteur: 'University of Washington', titre: 'Gamers succeed where scientists fail', url: 'https://www.washington.edu/news/2011/09/19/gamers-succeed-where-scientists-fail/', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'Fondation Nobel', titre: 'Elinor Ostrom, Facts', url: 'https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/facts/', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'E. Ostrom', titre: 'Beyond Markets and States: Polycentric Governance of Complex Economic Systems (conférence Nobel)', url: 'https://www.nobelprize.org/uploads/2018/06/ostrom_lecture.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'A. Forte, V. Larco, A. Bruckman', titre: 'Decentralization in Wikipedia Governance (JMIS 26(1)), résumé', url: 'https://jmis-web.org/articles/340', type: 'recherche', annee: 2009, langue: 'en' },
+      { auteur: 'Mozilla Foundation', titre: 'Latest Common Voice dataset surpasses 20,000 hours of open source speech data', url: 'https://www.mozillafoundation.org/en/blog/latest-common-voice-dataset-surpasses-20000-hours-of-open-source-speech-data/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Masakhane', titre: 'Page d’accueil', url: 'https://www.masakhane.io/', type: 'primaire', langue: 'en' },
+      { auteur: 'W. Nekoto et al.', titre: 'Participatory Research for Low-resourced Machine Translation: A Case Study in African Languages (Findings of EMNLP 2020), résumé', url: 'https://arxiv.org/abs/2010.02353', type: 'recherche', annee: 2020, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

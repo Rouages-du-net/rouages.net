@@ -1,0 +1,99 @@
+---
+// Animation « Classer des galaxies » (module « Construire ensemble ») :
+// chaque galaxie est classée par plusieurs volontaires ; on garde l'avis de
+// la majorité. Fiabilité et nombre de votes réglables. Données inventées.
+---
+<div class="anim galaxies" data-galaxies>
+  <div class="anim-repli">
+    <p>
+      Quarante galaxies, spirales ou elliptiques, sont classées par des volontaires qui ont raison
+      huit fois sur dix. Avec un seul avis par galaxie, environ une sur cinq est mal classée. Avec
+      cinq avis et la règle de la majorité, il en reste moins d'une sur vingt ; avec quinze avis,
+      presque aucune. Quand les avis sont partagés à égalité, la galaxie est mise de côté pour
+      être revue.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Avis par galaxie : <output data-n-sortie></output>
+        <input type="range" min="1" max="15" step="1" value="1" data-n />
+      </label>
+      <label class="curseur">Chaque volontaire a raison : <output data-p-sortie></output>
+        <input type="range" min="0.55" max="0.95" step="0.05" value="0.8" data-p />
+      </label>
+      <ul class="ciel" data-ciel aria-label="Quarante galaxies et leur classement"></ul>
+      <p class="cle"><span class="juste">◉ bien classée</span> <span class="faux">✕ mal classée</span> <span class="revoir">? à revoir</span></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">D'autres galaxies</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Galaxies et avis inventés ; le pourcentage est calculé sur 2 000 galaxies simulées.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { galaxies } from '../../../lib/construire';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${(v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-galaxies]').forEach((racine) => {
+    activerScene(racine);
+    const n = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const p = racine.querySelector<HTMLInputElement>('[data-p]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 7;
+
+    function maj() {
+      const N = Number(n.value), P = Number(p.value);
+      racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!.value = `${N}`;
+      racine.querySelector<HTMLOutputElement>('[data-p-sortie]')!.value = pc(P);
+      const ciel = galaxies(hasard(graine), 40, N, P);
+      racine.querySelector('[data-ciel]')!.replaceChildren(
+        ...ciel.map((g, i) => {
+          const li = document.createElement('li');
+          const etat = g.verdict === 'a-revoir' ? 'revoir' : g.verdict === g.vraie ? 'juste' : 'faux';
+          li.className = `${etat} ${g.vraie}`;
+          li.textContent = etat === 'revoir' ? '?' : etat === 'juste' ? '◉' : '✕';
+          li.title = `Galaxie ${i + 1}, ${g.vraie} : ${etat === 'revoir' ? 'avis partagés, à revoir' : etat === 'juste' ? 'bien classée' : 'mal classée'}`;
+          return li;
+        }),
+      );
+      const grand = galaxies(hasard(100 + graine), 2000, N, P);
+      const justes = grand.filter((g) => g.verdict === g.vraie).length / 2000;
+      const revoir = grand.filter((g) => g.verdict === 'a-revoir').length / 2000;
+      const fausses = grand.filter((g) => g.verdict !== 'a-revoir' && g.verdict !== g.vraie).length / 2000;
+      racine.querySelector('[data-mesure]')!.textContent =
+        `Bien classées : ${pc(justes)}${revoir > 0 ? ` · à revoir : ${pc(revoir)}` : ''} · mal classées : ${pc(fausses)}.`;
+      legende.textContent =
+        N === 1
+          ? 'Un seul avis par galaxie : chaque erreur de volontaire devient une erreur du catalogue. Augmente le nombre d’avis.'
+          : N % 2 === 0
+            ? 'Avec un nombre pair d’avis, il peut y avoir égalité : ces galaxies sont mises de côté pour qu’un·e spécialiste les regarde.'
+            : 'En croisant plusieurs avis indépendants, les erreurs individuelles s’annulent : c’est le jury de Condorcet appliqué au ciel.';
+    }
+    [n, p].forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .ciel { list-style: none; padding: 0.5rem; margin: 0.75rem 0 0.25rem; display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; background: var(--terminal-bg); border-radius: 0.4rem; }
+  .ciel :global(li) { text-align: center; font: 700 0.9rem var(--police-mono); padding: 0.3rem 0; border-radius: 0.3rem; }
+  .ciel :global(li.juste) { color: var(--terminal-fg); }
+  .ciel :global(li.faux) { background: var(--ill-paquet); color: var(--bg); }
+  .ciel :global(li.revoir) { background: var(--ill-commun); color: var(--bg); }
+  .cle { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem; margin: 0; color: var(--muted); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
