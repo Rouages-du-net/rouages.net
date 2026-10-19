@@ -105,7 +105,7 @@ flowchart TB
 ## Phase 5 ter — L'intelligence collective (avec ou sans IA)
 
 - [x] Page d'entrée `/intelligence-collective/` et carte sur l'accueil ; dossier de sources [`sources/intelligence-collective.md`](sources/intelligence-collective.md)
-- [ ] **La sagesse des foules** — le bœuf de Galton (chiffres corrigés par Wallis), théorème du jury de Condorcet, cascades informationnelles, influence sociale (Lorenz et al.)
+- [x] **La sagesse des foules** *(`/modules/sagesse-des-foules/`, relecture humaine à faire)* — le bœuf de Galton (chiffres corrigés par Wallis), théorème du jury de Condorcet, cascades informationnelles, influence sociale (Lorenz et al.)
 - [ ] **Construire ensemble** — GNU et Linux, Wikipédia (écart de genre), OpenStreetMap et Haïti, Galaxy Zoo, Foldit, Ushahidi, Common Voice, Masakhane, Elinor Ostrom
 - [ ] **Délibérer avec des algorithmes** — Polis et vTaiwan, Community Notes (algorithme de « pont », études divergentes, à dater), conventions citoyennes, Porto Alegre
 - [ ] **L'IA, fruit d'une intelligence collective** — données du web, reCAPTCHA, annotation et travail invisible, retours humains (RLHF), IA d'aide à la délibération

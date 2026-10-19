@@ -1,0 +1,241 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Foire from '../../components/animations/foules/Foire.astro';
+import Jury from '../../components/animations/foules/Jury.astro';
+import Cascade from '../../components/animations/foules/Cascade.astro';
+
+// Faits sourcés : voir docs/sources/intelligence-collective.md (thème 1).
+const etapes = [
+  { ancre: 'boeuf', court: 'Le bœuf de Galton' },
+  { ancre: 'erreur-commune', court: 'Une erreur partagée' },
+  { ancre: 'jury', court: 'Le jury de Condorcet' },
+  { ancre: 'cascade', court: 'Quand on se copie' },
+  { ancre: 'bilan', court: 'Faire confiance à la foule ?', pastille: '✓' },
+];
+---
+<Base
+  title="La sagesse des foules"
+  description="Pourquoi une foule peut deviner mieux que ses membres, et quand elle se trompe ensemble : le bœuf de Galton, le jury de Condorcet, les erreurs partagées et les cascades."
+>
+  <p class="tag">Comment ça marche · <a href="/intelligence-collective/">L'intelligence collective</a> · module en construction</p>
+  <h1>La sagesse des foules</h1>
+  <MiseAJour date="2026-10-19" />
+  <p class="chapo seulement-debut">
+    Personne ne devine juste, et pourtant la moyenne de tout le monde tombe pile. Fais estimer le
+    poids d'un bœuf à toute une foire, règle la taille d'un jury, puis laisse les gens se copier
+    et regarde la sagesse de la foule s'effondrer.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le bœuf de Galton" ancre="boeuf">
+    <Foire slot="animation" />
+    <p slot="decouverte">
+      À une foire, des centaines de personnes essaient de deviner le poids d'un bœuf. Chacune se
+      trompe. Augmente le nombre d'estimations et regarde la moyenne s'approcher du vrai poids.
+    </p>
+    <p slot="curieux">
+      Ce n'est pas de la magie : chaque estimation mêle un peu de vérité et une erreur
+      personnelle. Si les erreurs partent dans tous les sens, celles vers le haut compensent
+      celles vers le bas. Plus il y a d'estimations, plus la compensation est bonne, et la
+      moyenne finit par battre presque tous les individus.
+    </p>
+    <p slot="ingenieur">
+      Si n erreurs indépendantes ont chacune un écart type σ, l'erreur de leur moyenne a un écart
+      type σ/√n : quatre fois plus d'estimations divisent l'erreur par deux. La médiane, la valeur
+      du milieu, résiste mieux aux réponses absurdes ; la moyenne exploite mieux toutes les
+      réponses quand elles sont raisonnables. Les estimations de l'animation sont tirées au
+      hasard autour du vrai poids (écart type de 75 livres).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1907, le statisticien britannique Francis Galton étudie les tickets d'un concours d'une
+        foire aux bestiaux de l'ouest de l'Angleterre : il fallait deviner le poids du bœuf une fois
+        abattu et préparé. Il garde 787 estimations lisibles. Il publie dans la revue
+        <em>Nature</em> la valeur du milieu, la médiane, qu'il préfère pour une raison
+        démocratique : « un vote, une valeur ». Elle tombe à moins de 1 % du poids réel.
+      </p>
+      <p>
+        Un lecteur, R. H. Hooker, estime à peu près la moyenne ; Galton lui répond en donnant la
+        valeur exacte : 1 197 livres. En 2014, en relisant les archives, K. F. Wallis montre que
+        Galton s'était trompé de quelques livres dans ses chiffres publiés, et que le poids réel
+        était… 1 197 livres. La moyenne tombait pile.
+      </p>
+      <p>
+        Galton est aussi celui qui a forgé le mot « eugénisme ». En 2020, l'University College
+        London a retiré son nom d'un amphithéâtre, en raison de ses liens avec ce mouvement.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Galton voulait prouver la bêtise des foules. »</strong> C'est un récit souvent
+      répété, mais son article de 1907 parle surtout de la valeur d'un vote démocratique ; et c'est
+      un lecteur qui a mis la moyenne en avant. Les histoires trop belles méritent qu'on relise la
+      source.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Une erreur partagée" ancre="erreur-commune">
+    <Foire slot="animation" avecBiais />
+    <p slot="decouverte">
+      Et si tout le monde se trompait dans le même sens ? Ajoute une erreur commune : la moyenne
+      ne s'en remet pas, même avec des centaines de personnes.
+    </p>
+    <p slot="curieux">
+      Les erreurs ne se compensent que si elles sont <strong>indépendantes</strong> et
+      <strong>variées</strong>. Une même rumeur, une même lumière trompeuse, une même façon de
+      penser : tout ce qui pousse tout le monde dans la même direction s'ajoute au lieu de
+      s'annuler. Une foule homogène est sûre d'elle, pas forcément juste.
+    </p>
+    <p slot="ingenieur">
+      Chaque estimation vaut ici « vrai poids + erreur commune + erreur personnelle ». La moyenne
+      fait disparaître l'erreur personnelle (en σ/√n), mais garde l'erreur commune entière. C'est
+      la différence, en statistique, entre l'erreur aléatoire et le <Terme id="biais">biais</Terme>.
+    </p>
+    <p slot="mythes">
+      <strong>« Plus on est nombreux, plus on a raison. »</strong> Seulement si chacun·e apporte
+      une information différente. Mille personnes qui ont lu le même message trompeur valent à
+      peine plus qu'une seule.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le jury de Condorcet" ancre="jury">
+    <Jury slot="animation" />
+    <p slot="decouverte">
+      Pour une question à deux réponses, un groupe qui vote à la majorité a-t-il plus souvent
+      raison qu'une seule personne ? Règle la chance de chacun·e d'avoir raison et la taille du
+      groupe.
+    </p>
+    <p slot="curieux">
+      Si chacun·e a un peu plus d'une chance sur deux d'avoir raison, et vote sans copier les
+      autres, la majorité a de plus en plus souvent raison quand le groupe grandit. Mais si
+      chacun·e a un peu moins d'une chance sur deux, la majorité se trompe de plus en plus
+      sûrement. Le nombre amplifie ce qu'il y a dans chaque tête, dans un sens comme dans l'autre.
+    </p>
+    <p slot="ingenieur">
+      Le nombre de votes justes suit une loi binomiale de paramètres n et p ; la majorité a raison
+      quand ce nombre dépasse n/2. L'animation calcule cette somme exactement. Le théorème suppose
+      des votes indépendants et une même compétence pour tous : des causes communes (mêmes
+      informations, mêmes influences) créent des corrélations qui affaiblissent le résultat.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1785, le mathématicien et philosophe Nicolas de Condorcet publie un <em>Essai sur
+        l'application de l'analyse à la probabilité des décisions rendues à la pluralité des
+        voix</em>. Il y cherche à quelles conditions un tribunal ou une assemblée décide juste.
+        Son résultat est devenu le « théorème du jury », toujours discuté par les philosophes de
+        la démocratie.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La majorité a toujours raison. »</strong> Le théorème de Condorcet dit exactement
+      le contraire de ce raccourci : la majorité n'a raison que si ses membres ont, chacun·e, plus
+      de chances d'avoir raison que tort, et ne se copient pas.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Quand on se copie" ancre="cascade">
+    <Cascade slot="animation" />
+    <p slot="decouverte">
+      Vingt personnes répondent l'une après l'autre. Chacune a un indice personnel, juste deux fois
+      sur trois environ. Compare une file où chacun·e répond seul·e et une file où chacun·e voit les
+      réponses précédentes.
+    </p>
+    <p slot="curieux">
+      Voir ce que les autres ont fait est souvent raisonnable : ils savent peut-être quelque chose.
+      Mais dès que plusieurs réponses vont dans le même sens, chacun·e les suit plutôt que son propre
+      indice, et cet indice est perdu pour tout le monde. La file se met à se copier : c'est une
+      <strong>cascade informationnelle</strong>. Elle peut partir dans la mauvaise direction à cause
+      des toutes premières réponses.
+    </p>
+    <p slot="ingenieur">
+      Dans le modèle de 1992, chaque personne combine son indice privé et ce qu'elle déduit des
+      choix précédents. Dès que deux choix de plus vont dans un sens, aucun indice privé ne peut
+      renverser la balance : chacun·e suit, et ses choix n'apportent plus d'information. Ici, avec
+      des indices justes 65 fois sur 100, la majorité se trompe environ une fois sur quatre en
+      cascade, contre une fois sur dix environ quand chacun·e répond seul·e.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1992, S. Bikhchandani, D. Hirshleifer et I. Welch décrivent ces cascades, dans une revue
+        d'économie, pour expliquer les modes, les conformismes locaux et la « fragilité » des
+        comportements de masse.
+      </p>
+      <p>
+        En 2011, une expérience menée à l'ETH de Zurich par J. Lorenz et ses collègues l'a observé
+        en laboratoire : 144 participant·es estiment des quantités (géographie, criminalité), parfois
+        en voyant les réponses des autres. L'influence sociale réduit la diversité des réponses
+        sans réduire l'erreur collective, rejette parfois la vraie valeur au bord de l'éventail, et
+        rend les participant·es plus sûr·es d'eux sans les rendre plus justes. Une petite
+        expérience, mais qui va dans le même sens que le modèle.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Si tout le monde fait pareil, c'est que c'est la bonne solution. »</strong> Peut-être,
+      ou peut-être que tout le monde copie les deux ou trois premiers. Les classements de
+      popularité des plateformes peuvent produire le même effet : voir la <a
+      href="/modules/ia-recommander/#boucle">boucle de popularité</a>.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Faire confiance à la foule ?</h2>
+    <p>
+      Une foule n'est pas sage par nature. Elle peut l'être quand quelques conditions sont
+      réunies, et se tromper avec assurance quand elles manquent.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Condition</th><th scope="col">Pourquoi</th><th scope="col">Ce qui la casse</th></tr></thead>
+      <tbody>
+        <tr><td>Chacun·e sait un peu quelque chose</td><td>Le jury de Condorcet ne marche que si chacun·e a plus de chances d'avoir raison que tort.</td><td>Une question où presque personne n'a d'indice.</td></tr>
+        <tr><td>Des erreurs variées</td><td>Les erreurs ne se compensent que si elles partent dans tous les sens.</td><td>Une même source trompeuse pour tout le monde.</td></tr>
+        <tr><td>Des réponses indépendantes</td><td>Chaque réponse doit apporter sa propre information.</td><td>Voir les réponses des autres avant de répondre : cascades, conformisme.</td></tr>
+        <tr><td>Une bonne façon de rassembler</td><td>Moyenne, médiane, vote : il faut un calcul qui combine toutes les réponses.</td><td>Ne retenir que les plus bruyant·es, ou les premier·es.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Rassembler des réponses n'est qu'une forme d'intelligence collective. Les suivantes demandent
+      de travailler ensemble : écrire une encyclopédie, cartographier un pays, délibérer à des
+      milliers. C'est la suite de la section <a href="/intelligence-collective/">L'intelligence
+      collective</a>.
+    </p>
+
+  <Sources
+    verifie="2026-10-19"
+    sources={[
+      { auteur: 'K. F. Wallis', titre: 'Revisiting Francis Galton’s Forecasting Competition', url: 'https://arxiv.org/abs/1410.3989', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'F. Galton', titre: 'Vox Populi (Nature, 1907), scan', url: 'https://pdf.galton.org/essays/1900-1911/galton-1907-vox-populi.pdf', type: 'primaire', annee: 1907, langue: 'en' },
+      { auteur: 'F. Dietrich, K. Spiekermann (Stanford Encyclopedia of Philosophy)', titre: 'Jury Theorems', url: 'https://plato.stanford.edu/entries/jury-theorems/', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'S. Bikhchandani, D. Hirshleifer, I. Welch', titre: 'Journal of Political Economy 100(5), p. 992-1026 (notice RePEc)', url: 'https://ideas.repec.org/a/ucp/jpolec/v100y1992i5p992-1026.html', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'J. Lorenz, H. Rauhut, F. Schweitzer, D. Helbing', titre: 'PNAS 108(22), p. 9020-9025 (texte intégral sur PubMed Central)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3107299/', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'University College London', titre: 'UCL denames buildings named after eugenicists', url: 'https://www.ucl.ac.uk/news/2020/jun/ucl-denames-buildings-named-after-eugenicists', type: 'primaire', annee: 2020, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

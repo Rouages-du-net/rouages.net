@@ -1,0 +1,88 @@
+---
+// Animation « Le jury de Condorcet » (module « La sagesse des foules ») :
+// probabilité exacte qu'une majorité ait raison, selon la taille du groupe
+// et la chance de chacun·e d'avoir raison (votes indépendants).
+---
+<div class="anim jury" data-jury>
+  <div class="anim-repli">
+    <p>
+      Si chaque membre d'un jury a un peu plus d'une chance sur deux d'avoir raison (55 %), et
+      que chacun·e vote sans copier les autres, la majorité a raison 63 % du temps avec 11
+      personnes, 84 % avec 101, presque toujours avec 1 001. Mais si chacun·e a un peu moins d'une
+      chance sur deux (45 %), c'est l'inverse : plus le groupe est grand, plus la majorité se
+      trompe sûrement.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Chance de chacun·e d'avoir raison : <output data-p-sortie></output>
+        <input type="range" min="0.3" max="0.8" step="0.01" value="0.55" data-p />
+      </label>
+      <label class="curseur">Taille du groupe : <output data-n-sortie></output>
+        <input type="range" min="1" max="201" step="2" value="11" data-n />
+      </label>
+      <div class="jauge" aria-hidden="true"><div data-jauge></div></div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <svg viewBox="0 0 400 120" role="img" aria-label="Courbe : probabilité que la majorité ait raison selon la taille du groupe" data-svg></svg>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { majoriteJuste } from '../../../lib/sagesse';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const pc = (v: number) => `${(v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-jury]').forEach((racine) => {
+    activerScene(racine);
+    const p = racine.querySelector<HTMLInputElement>('[data-p]')!;
+    const n = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const P = Number(p.value), N = Number(n.value);
+      racine.querySelector<HTMLOutputElement>('[data-p-sortie]')!.value = pc(P);
+      racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!.value = `${N} personne${N > 1 ? 's' : ''}`;
+      const m = majoriteJuste(N, P);
+      racine.querySelector<HTMLElement>('[data-jauge]')!.style.width = `${m * 100}%`;
+      racine.querySelector('[data-mesure]')!.textContent = `La majorité a raison dans ${pc(m)} des cas.`;
+      // Courbe de 1 à 201 votant·es.
+      const points: string[] = [];
+      for (let k = 1; k <= 201; k += 2) points.push(`${((k - 1) / 200) * 380 + 10},${110 - majoriteJuste(k, P) * 100}`);
+      const ligne = document.createElementNS(NS, 'polyline');
+      ligne.setAttribute('points', points.join(' '));
+      ligne.setAttribute('class', 'courbe');
+      const moitie = document.createElementNS(NS, 'line');
+      Object.entries({ x1: 10, x2: 390, y1: 60, y2: 60, class: 'moitie' }).forEach(([k, v]) => moitie.setAttribute(k, String(v)));
+      const point = document.createElementNS(NS, 'circle');
+      Object.entries({ cx: ((N - 1) / 200) * 380 + 10, cy: 110 - m * 100, r: 4, class: 'point' }).forEach(([k, v]) => point.setAttribute(k, String(v)));
+      svg.replaceChildren(moitie, ligne, point);
+      legende.textContent =
+        P > 0.5
+          ? `Chacun·e a raison un peu plus d’une fois sur deux : plus le groupe grandit, plus la majorité a raison. C’est le théorème du jury.`
+          : P < 0.5
+            ? `Chacun·e se trompe un peu plus d’une fois sur deux : plus le groupe grandit, plus la majorité se trompe sûrement. Le théorème marche dans les deux sens.`
+            : 'À 50 % exactement, le groupe ne fait pas mieux qu’une pièce jetée en l’air.';
+    }
+    [p, n].forEach((i) => i.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .jauge { height: 0.9rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); overflow: hidden; }
+  .jauge > div { height: 100%; background: var(--ill-secret-b); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0; }
+  svg { width: 100%; display: block; }
+  svg :global(.courbe) { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+  svg :global(.moitie) { stroke: var(--border); stroke-dasharray: 4 3; }
+  svg :global(.point) { fill: var(--fg); }
+</style>

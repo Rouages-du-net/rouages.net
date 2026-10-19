@@ -432,6 +432,11 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Suite d'étapes au hasard où la suivante ne dépend que de l'état présent, pas du chemin parcouru avant : un surfeur qui clique au hasard, un pion sur un plateau. Au bout d'un long moment, la part du temps passée dans chaque état se stabilise.",
   },
+  'biais': {
+    terme: 'Biais',
+    definition:
+      "En statistique, une erreur qui va toujours dans le même sens, au lieu de partir au hasard dans tous les sens. Faire la moyenne de beaucoup de mesures efface les erreurs au hasard, mais pas un biais.",
+  },
 };
 
 export function entree(id: string): Entree {
