@@ -1,0 +1,100 @@
+---
+// Animation « Tirer au sort » (module « Délibérer avec des algorithmes ») :
+// une assemblée de 150 personnes, recrutée par appel aux volontaires ou par
+// tirage au sort stratifié, comparée à la population. Population et envie de
+// participer inventées.
+---
+<div class="anim tirage" data-tirage>
+  <div class="anim-repli">
+    <p>
+      Dans une population inventée, un peu plus d'un quart des adultes a moins de 35 ans, un quart a
+      65 ans ou plus, un peu plus d'un tiers a fait des études supérieures. Si l'on forme une
+      assemblée de 150 personnes avec celles et ceux qui se portent volontaires, les jeunes y sont
+      deux fois moins nombreux et les diplômé·es bien plus nombreux que dans la population. Un
+      tirage au sort par catégories donne une assemblée qui ressemble à la population.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="groupes" data-groupes></div>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">Former de nouvelles assemblées</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Population de 10 000 personnes et envie de participer inventées : les personnes diplômées et retraitées répondent plus volontiers dans ce modèle.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { population, repartition, tirageStratifie, volontaires } from '../../../lib/deliberer';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+  const CRITERES: [keyof ReturnType<typeof repartition>, string][] = [
+    ['jeunes', 'moins de 35 ans'],
+    ['aines', '65 ans et plus'],
+    ['diplomes', 'études supérieures'],
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-tirage]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 2;
+
+    function maj() {
+      const alea = hasard(graine);
+      const pop = population(alea, 10000);
+      const groupes: [string, ReturnType<typeof repartition>][] = [
+        ['Population', repartition(pop)],
+        ['Appel aux volontaires (150)', repartition(volontaires(alea, pop, 150))],
+        ['Tirage au sort par catégories (150)', repartition(tirageStratifie(alea, pop, 150))],
+      ];
+      racine.querySelector('[data-groupes]')!.replaceChildren(
+        ...groupes.map(([titre, r], i) => {
+          const bloc = document.createElement('div');
+          bloc.className = `groupe g${i}`;
+          const h = document.createElement('p');
+          h.className = 'titre';
+          h.textContent = titre;
+          bloc.append(h);
+          CRITERES.forEach(([cle, libelle]) => {
+            const ligne = document.createElement('div');
+            ligne.className = 'ligne';
+            const l = document.createElement('span');
+            l.textContent = `${libelle} : ${pc(r[cle])}`;
+            const jauge = document.createElement('span');
+            jauge.className = 'jauge';
+            jauge.setAttribute('aria-hidden', 'true');
+            const barre = document.createElement('span');
+            barre.style.width = `${r[cle] * 100}%`;
+            jauge.append(barre);
+            ligne.append(l, jauge);
+            bloc.append(ligne);
+          });
+          return bloc;
+        }),
+      );
+      const [, p] = groupes[0], [, v] = groupes[1];
+      legende.textContent = `Parmi les volontaires, ${pc(v.jeunes)} de moins de 35 ans au lieu de ${pc(p.jeunes)}, et ${pc(v.diplomes)} de diplômé·es au lieu de ${pc(p.diplomes)}. Le tirage au sort par catégories reproduit la population : chacun·e a la même chance d’être choisi·e.`;
+    }
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .groupes { display: grid; gap: 0.75rem; }
+  .groupes :global(.titre) { font-weight: 700; margin: 0 0 0.25rem; }
+  .groupes :global(.ligne) { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .groupes :global(.jauge) { height: 0.7rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .groupes :global(.jauge span) { display: block; height: 100%; background: var(--muted); }
+  .groupes :global(.g1 .jauge span) { background: var(--ill-paquet); }
+  .groupes :global(.g2 .jauge span) { background: var(--ill-secret-b); }
+  @media (max-width: 30rem) { .groupes :global(.ligne) { grid-template-columns: 1fr; gap: 0.15rem; } }
+</style>

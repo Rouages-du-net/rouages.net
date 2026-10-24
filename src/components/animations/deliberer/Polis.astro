@@ -1,0 +1,127 @@
+---
+// Animation « Cartographier les opinions » (module « Délibérer avec des
+// algorithmes ») : des participant·es votent sur des phrases, comme dans
+// Polis ; une analyse en composantes principales les place sur une carte,
+// puis les k-moyennes forment deux groupes. On cherche les phrases qui font
+// consensus entre les groupes. Phrases et votes inventés.
+---
+<div class="anim polis" data-polis>
+  <div class="anim-repli">
+    <p>
+      Soixante personnes votent « d'accord », « pas d'accord » ou « passer » sur huit phrases à
+      propos des voitures avec chauffeur (VTC). L'algorithme les place sur une carte selon leurs
+      votes, puis forme deux groupes : celles et ceux qui défendent les applis, et celles et ceux
+      qui défendent les taxis. Les deux groupes s'opposent sur « Uber doit être interdit » ou
+      « Les taxis sont trop chers ». Mais ils sont largement d'accord sur l'assurance obligatoire,
+      les impôts payés sur place et le prix affiché avant la course : ce sont les points de
+      départ d'une régulation.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Participant·es : <output data-n-sortie></output>
+        <input type="range" min="10" max="100" step="10" value="60" data-n />
+      </label>
+      <label class="case"><input type="checkbox" data-groupes checked /> Montrer les groupes trouvés par l'algorithme</label>
+      <svg viewBox="-110 -80 220 160" role="img" aria-label="Carte des participant·es placé·es selon leurs votes" data-carte></svg>
+      <ul class="enonces" data-enonces aria-label="Phrases et part d'accord dans chaque groupe"></ul>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">D'autres participant·es</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Phrases et votes inventés, inspirés du débat taïwanais de 2015 sur Uber. Calcul réel : analyse en composantes principales puis k-moyennes, comme Polis.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { acp2, bilanEnonces, kMoyennes, votesPolis, type Enonce } from '../../../lib/deliberer';
+  import { hasard } from '../../../lib/minilm';
+
+  const ENONCES: Enonce[] = [
+    { texte: 'Les VTC doivent avoir une assurance pour leurs passager·es.', accordA: 0.9, accordB: 0.85 },
+    { texte: 'Uber doit être interdit.', accordA: 0.15, accordB: 0.8 },
+    { texte: 'Les taxis sont trop chers.', accordA: 0.8, accordB: 0.25 },
+    { texte: 'Il faut une licence pour conduire un VTC.', accordA: 0.4, accordB: 0.9 },
+    { texte: 'Les VTC doivent payer leurs impôts ici.', accordA: 0.75, accordB: 0.9 },
+    { texte: 'Les applis rendent service aux passager·es.', accordA: 0.85, accordB: 0.3 },
+    { texte: 'Le prix doit être affiché avant la course.', accordA: 0.85, accordB: 0.8 },
+    { texte: 'Les taxis doivent pouvoir utiliser des applis.', accordA: 0.7, accordB: 0.75 },
+  ];
+  const NS = 'http://www.w3.org/2000/svg';
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-polis]').forEach((racine) => {
+    activerScene(racine);
+    const n = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const montrer = racine.querySelector<HTMLInputElement>('[data-groupes]')!;
+    const carte = racine.querySelector<SVGSVGElement>('[data-carte]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 11;
+
+    function maj() {
+      const N = Number(n.value);
+      racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!.value = `${N}`;
+      const alea = hasard(graine);
+      const { votes } = votesPolis(alea, N, ENONCES);
+      const points = acp2(votes);
+      const groupes = kMoyennes(points, 2, alea);
+      // Le groupe 0 est toujours celui qui approuve le plus « Uber doit être interdit ».
+      const accordInterdit = (g: number) => votes.filter((_, i) => groupes[i] === g && votes[i][1] === 1).length / Math.max(1, groupes.filter((x) => x === g).length);
+      const ordre = accordInterdit(0) >= accordInterdit(1) ? [0, 1] : [1, 0];
+      const g2 = groupes.map((g) => ordre.indexOf(g));
+      const echelle = 100 / Math.max(...points.map((p) => Math.max(Math.abs(p.x), Math.abs(p.y) * 1.4)), 1e-6);
+      carte.replaceChildren(
+        ...points.map((p, i) => {
+          const c = document.createElementNS(NS, 'circle');
+          Object.entries({ cx: p.x * echelle, cy: p.y * echelle, r: 3.5, class: montrer.checked ? `g${g2[i]}` : 'neutre' }).forEach(([k, v]) => c.setAttribute(k, String(v)));
+          return c;
+        }),
+      );
+      const bilan = bilanEnonces(votes, g2, 2);
+      racine.querySelector('[data-enonces]')!.replaceChildren(
+        ...ENONCES.map((e, j) => {
+          const li = document.createElement('li');
+          const b = bilan[j];
+          li.className = b.consensus ? 'consensus' : b.divise ? 'divise' : '';
+          const t = document.createElement('span');
+          t.className = 'texte';
+          t.textContent = e.texte;
+          const m = document.createElement('span');
+          m.className = 'chiffres';
+          m.textContent = `groupe 1 : ${pc(b.accords[0])} · groupe 2 : ${pc(b.accords[1])}${b.consensus ? ' · consensus' : b.divise ? ' · divise' : ''}`;
+          li.append(t, m);
+          return li;
+        }),
+      );
+      const nb = bilan.filter((b) => b.consensus).length;
+      legende.textContent = montrer.checked
+        ? `L’algorithme a trouvé deux groupes qui s’opposent, mais ${nb} phrase${nb > 1 ? 's' : ''} sur ${ENONCES.length} recueille${nb > 1 ? 'nt' : ''} plus de 60 % d’accord dans les deux : c’est par là que la discussion peut avancer.`
+        : 'Chaque point est une personne. Deux personnes proches ont voté de façon semblable. Coche la case pour voir les groupes.';
+    }
+    [n, montrer].forEach((i) => i.addEventListener('input', maj));
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  svg { width: 100%; max-width: 26rem; display: block; margin: 0.5rem auto; background: var(--bg); border-radius: 0.4rem; }
+  svg :global(.g0) { fill: var(--ill-paquet); }
+  svg :global(.g1) { fill: var(--ill-secret-b); }
+  svg :global(.neutre) { fill: var(--muted); }
+  .enonces { list-style: none; padding: 0; margin: 0.5rem 0; display: grid; gap: 0.35rem; }
+  .enonces :global(li) { display: grid; gap: 0.1rem; padding: 0.35rem 0.5rem; border-left: 3px solid var(--border); font-size: 0.9rem; }
+  .enonces :global(li.consensus) { border-left-color: var(--ill-secret-b); }
+  .enonces :global(li.divise) { border-left-color: var(--ill-paquet); }
+  .enonces :global(.chiffres) { font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); }
+</style>

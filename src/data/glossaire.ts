@@ -452,6 +452,16 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Ressource partagée par une communauté qui la gère elle-même, avec ses propres règles : un pâturage, une pêcherie, mais aussi une encyclopédie ou une carte libres.",
   },
+  'acp': {
+    terme: 'Analyse en composantes principales (ACP)',
+    definition:
+      "Méthode statistique qui résume un grand tableau de nombres en quelques nouvelles colonnes, les directions où les données varient le plus. On peut ainsi dessiner sur une carte à deux dimensions des personnes décrites par des dizaines de votes.",
+  },
+  'k-moyennes': {
+    terme: 'k-moyennes',
+    definition:
+      "Algorithme qui range des points en k groupes : il place k centres, rattache chaque point au centre le plus proche, déplace chaque centre au milieu de son groupe, et recommence jusqu'à ce que plus rien ne bouge.",
+  },
 };
 
 export function entree(id: string): Entree {

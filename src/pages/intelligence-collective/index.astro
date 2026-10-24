@@ -9,7 +9,7 @@ import MiseAJour from '../../components/MiseAJour.astro';
 const MODULES: { titre: string; idee: string; lien?: string; resume?: string }[] = [
   { titre: 'La sagesse des foules', idee: 'le bœuf de Galton, le jury de Condorcet, les cascades et les effets moutons', lien: '/modules/sagesse-des-foules/', resume: 'Fais estimer le poids d’un bœuf à toute une foire, règle la taille d’un jury, puis laisse les gens se copier et regarde la sagesse de la foule s’effondrer.' },
   { titre: 'Construire ensemble', idee: 'logiciel libre, Wikipédia, OpenStreetMap, sciences participatives, Ushahidi, les communs d’Elinor Ostrom', lien: '/modules/construire-ensemble/', resume: 'Surveille un wiki, classe des galaxies avec des milliers de volontaires, partage un lac à six, et découvre les règles qui font tenir les communs.' },
-  { titre: 'Délibérer avec des algorithmes', idee: 'Polis et vTaiwan, les notes de la communauté, conventions citoyennes, budget participatif' },
+  { titre: 'Délibérer avec des algorithmes', idee: 'Polis et vTaiwan, les notes de la communauté, conventions citoyennes, budget participatif', lien: '/modules/deliberer/', resume: 'Fais voter une foule sur les VTC et regarde l’algorithme trouver ce qui la rassemble, classe des notes de contexte par le pont, puis tire une assemblée au sort.' },
   { titre: 'L’IA, fruit d’une intelligence collective', idee: 'textes du web, annotation des données, retours humains, et l’IA comme aide à la délibération' },
 ];
 const disponibles = MODULES.filter((m) => m.lien);
