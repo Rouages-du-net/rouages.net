@@ -462,6 +462,11 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Algorithme qui range des points en k groupes : il place k centres, rattache chaque point au centre le plus proche, déplace chaque centre au milieu de son groupe, et recommence jusqu'à ce que plus rien ne bouge.",
   },
+  'annotation': {
+    terme: 'Annotation (des données)',
+    definition:
+      "Travail qui consiste à étiqueter des exemples pour qu'une IA puisse en apprendre : écrire « chat » sous une photo, classer un message comme haineux ou non, comparer deux réponses. Il est souvent fait par des personnes payées à la tâche.",
+  },
 };
 
 export function entree(id: string): Entree {

@@ -503,6 +503,18 @@ participant·es préfèrent à celles de médiateur·rices humain·es — avec d
   **60 %** du mélange ; WebText2 22 % ; Books1 8 % ; Books2 8 % ; Wikipédia 3 milliards
   de tokens, **3 %** du mélange (mais vue 3,4 fois pendant l'entraînement).
 
+**Complément du 24 octobre 2026** (PDF relus pour le module) :
+- GPT-3, tableau 2.2 complet : Common Crawl filtré 410 Md de tokens, 60 %, vu 0,44 fois ;
+  WebText2 19 Md, 22 %, 2,9 fois ; Books1 12 Md, 8 %, 1,9 fois ; Books2 55 Md, 8 %,
+  0,43 fois ; Wikipédia 3 Md, 3 %, 3,4 fois (entraînement sur 300 Md de tokens). Common
+  Crawl : 41 tranches mensuelles 2016-2019, 45 To compressés avant filtrage, 570 Go après.
+- reCAPTCHA, règle de vote : une réponse humaine = 1 voix, chaque OCR = 0,5 voix ; un mot
+  est retenu à 2,5 voix ; abandonné après six rejets. 67,87 % des mots ont demandé deux
+  réponses humaines, 17,86 % trois, 7,10 % quatre, 3,11 % cinq, 4,06 % six ou plus. Un
+  programme qui devine au hasard réussit 1 fois sur 100 000 (vocabulaire de contrôle de
+  plus de 100 000 mots). Auteurs : Luis von Ahn, Benjamin Maurer, Colin McMillen, David
+  Abraham, Manuel Blum (Carnegie Mellon University).
+
 **reCAPTCHA** — von Ahn, Maurer, McMillen, Abraham, Blum, *Science* 321 : 1465-1468
 (12 sept. 2008) :
 - « humans around the world type more than 100 million CAPTCHAs every day » ;

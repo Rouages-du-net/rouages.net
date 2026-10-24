@@ -1,0 +1,146 @@
+---
+// Animation « Apprendre ce que les gens préfèrent » (module « L'IA, fruit
+// d'une intelligence collective ») : des annotateur·rices comparent des
+// paires de réponses ; un modèle de Bradley-Terry en tire un score par
+// réponse, comme le modèle de récompense de l'apprentissage par renforcement
+// à partir de retours humains. Réponses et préférences inventées.
+---
+<div class="anim recompense" data-recompense>
+  <div class="anim-repli">
+    <p>
+      Cinq réponses à « Pourquoi le ciel est-il bleu ? ». Des annotateur·rices les comparent deux par
+      deux, et un modèle en déduit un score pour chaque réponse : c'est ce score que l'IA apprendra
+      ensuite à maximiser. Si les annotateur·rices vérifient l'exactitude, les réponses justes
+      gagnent ; si une majorité aime les réponses détaillées, la réponse détaillée monte. Si personne
+      n'a le temps de vérifier, une réponse fausse mais flatteuse peut l'emporter : le modèle apprend
+      ce que préfèrent celles et ceux qui l'annotent, pas forcément ce qui est vrai.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Annotateur·rices qui préfèrent les réponses détaillées : <output data-part-sortie></output>
+        <input type="range" min="0" max="1" step="0.1" value="0.5" data-part />
+      </label>
+      <label class="case"><input type="checkbox" data-verifient checked /> Elles et ils ont le temps de vérifier si la réponse est juste</label>
+      <ol class="reponses" data-reponses aria-label="Réponses classées par score"></ol>
+      <fieldset class="toi">
+        <legend>À toi de comparer : laquelle préfères-tu ?</legend>
+        <div class="paire">
+          <button type="button" data-choix="0"></button>
+          <button type="button" data-choix="1"></button>
+        </div>
+        <p class="anim-note" data-tes-choix></p>
+      </fieldset>
+      <div class="anim-commandes">
+        <button type="button" data-action="effacer">Effacer mes choix</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">400 comparaisons simulées ; chacun de tes choix compte comme 20 comparaisons. Score : modèle de Bradley-Terry ajusté dans ton navigateur.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { bradleyTerry, comparer, type Comparaison, type Reponse } from '../../../lib/ia-collective';
+  import { hasard } from '../../../lib/minilm';
+
+  const REPONSES: Reponse[] = [
+    { texte: 'L’air diffuse davantage la lumière bleue que la rouge.', exacte: 1, detail: 0.1, amabilite: 0.2 },
+    { texte: 'La lumière du Soleil contient toutes les couleurs. Les molécules de l’air, bien plus petites que sa longueur d’onde, dévient beaucoup plus le bleu que le rouge (diffusion de Rayleigh) : le bleu nous arrive de toutes les directions du ciel.', exacte: 1, detail: 0.9, amabilite: 0.4 },
+    { texte: 'Excellente question, bravo ! Le ciel est bleu parce qu’il reflète la couleur des océans, qui couvrent la plus grande partie de la Terre. Un phénomène fascinant !', exacte: 0, detail: 0.8, amabilite: 1 },
+    { texte: 'À cause de l’ozone.', exacte: 0, detail: 0.1, amabilite: 0.3 },
+    { texte: 'Très bonne question ! L’air diffuse davantage la lumière bleue que la rouge, alors le bleu nous arrive de partout dans le ciel.', exacte: 1, detail: 0.5, amabilite: 0.9 },
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-recompense]').forEach((racine) => {
+    activerScene(racine);
+    const part = racine.querySelector<HTMLInputElement>('[data-part]')!;
+    const verifient = racine.querySelector<HTMLInputElement>('[data-verifient]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-choix]')];
+    const alea = hasard(21);
+    let mesChoix: Comparaison[] = [];
+    let paire = [0, 1];
+
+    function nouvellePaire() {
+      const a = Math.floor(alea() * REPONSES.length);
+      let b = Math.floor(alea() * (REPONSES.length - 1));
+      if (b >= a) b++;
+      paire = [a, b];
+      boutons.forEach((bt, i) => (bt.textContent = REPONSES[paire[i]].texte));
+    }
+
+    function maj() {
+      const P = Number(part.value);
+      racine.querySelector<HTMLOutputElement>('[data-part-sortie]')!.value = `${Math.round(P * 100)} %`;
+      const simulees = comparer(hasard(4), REPONSES, 400, P, verifient.checked);
+      const toutes = [...simulees, ...mesChoix.flatMap((c) => Array(20).fill(c))];
+      const scores = bradleyTerry(REPONSES.length, toutes);
+      const ordre = scores.map((s, i) => [s, i] as const).sort((x, y) => y[0] - x[0]);
+      const min = Math.min(...scores), max = Math.max(...scores);
+      racine.querySelector('[data-reponses]')!.replaceChildren(
+        ...ordre.map(([s, i]) => {
+          const li = document.createElement('li');
+          li.className = REPONSES[i].exacte ? 'exacte' : 'fausse';
+          const t = document.createElement('span');
+          t.className = 'texte';
+          t.textContent = REPONSES[i].texte;
+          const jauge = document.createElement('span');
+          jauge.className = 'jauge';
+          const b = document.createElement('span');
+          b.style.width = `${8 + ((s - min) / (max - min || 1)) * 92}%`;
+          jauge.append(b);
+          const v = document.createElement('span');
+          v.className = 'score';
+          v.textContent = `score ${s.toLocaleString('fr-FR', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}${REPONSES[i].exacte ? '' : ' · fausse'}`;
+          li.append(t, jauge, v);
+          return li;
+        }),
+      );
+      racine.querySelector('[data-tes-choix]')!.textContent = mesChoix.length ? `Tu as fait ${mesChoix.length} choix.` : 'Tes choix s’ajoutent aux comparaisons simulées.';
+      const premiere = REPONSES[ordre[0][1]];
+      legende.textContent = !premiere.exacte
+        ? 'Une réponse fausse arrive en tête : sans vérification, le modèle de récompense apprend ce qui plaît aux annotateur·rices, pas ce qui est vrai. Une IA entraînée sur ce score l’imitera.'
+        : premiere.detail > 0.7
+          ? 'La réponse détaillée et juste arrive en tête : c’est ce que préfère la majorité des annotateur·rices.'
+          : 'Une réponse juste et aimable arrive en tête. Change la part des annotateur·rices qui aiment le détail, ou décoche la vérification.';
+    }
+
+    boutons.forEach((bt, i) =>
+      bt.addEventListener('click', () => {
+        mesChoix.push({ gagnante: paire[i], perdante: paire[1 - i] });
+        nouvellePaire();
+        maj();
+      }),
+    );
+    racine.querySelector('[data-action="effacer"]')!.addEventListener('click', () => {
+      mesChoix = [];
+      maj();
+    });
+    [part, verifient].forEach((x) => x.addEventListener('input', maj));
+    nouvellePaire();
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .reponses { padding-left: 1.5rem; margin: 0.75rem 0; display: grid; gap: 0.5rem; }
+  .reponses :global(li) { font-size: 0.9rem; }
+  .reponses :global(.texte) { display: block; }
+  .reponses :global(.jauge) { display: block; height: 0.6rem; background: var(--bg); border-radius: 999px; overflow: hidden; margin: 0.2rem 0 0.1rem; }
+  .reponses :global(.jauge span) { display: block; height: 100%; background: var(--ill-secret-b); }
+  .reponses :global(li.fausse .jauge span) { background: var(--ill-paquet); }
+  .reponses :global(.score) { font: 0.75rem var(--police-mono); color: var(--muted); }
+  .toi { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0; }
+  .toi legend { padding: 0 0.3rem; font-weight: 700; font-size: 0.95rem; }
+  .paire { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .paire button { text-align: left; font: inherit; font-size: 0.85rem; padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); cursor: pointer; }
+  .paire button:hover, .paire button:focus-visible { border-color: var(--accent); }
+  @media (max-width: 30rem) { .paire { grid-template-columns: 1fr; } }
+</style>

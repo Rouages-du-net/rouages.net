@@ -1,0 +1,319 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Melange from '../../components/animations/ia-collective/Melange.astro';
+import Recaptcha from '../../components/animations/ia-collective/Recaptcha.astro';
+import Recompense from '../../components/animations/ia-collective/Recompense.astro';
+
+// Faits sourcés : voir docs/sources/intelligence-collective.md (thème 4).
+const etapes = [
+  { ancre: 'donnees', court: 'Des milliards de pages' },
+  { ancre: 'recaptcha', court: 'Un mot pour un livre' },
+  { ancre: 'annoter', court: 'Étiqueter le monde' },
+  { ancre: 'preferer', court: 'Préférer une réponse' },
+  { ancre: 'mediatrice', court: 'L’IA médiatrice ?' },
+  { ancre: 'bilan', court: 'Qui fait l’IA ?', pastille: '✓' },
+];
+---
+<Base
+  title="L’IA, fruit d’une intelligence collective"
+  description="Les textes du web, les mots tapés dans les reCAPTCHA, les images étiquetées à la pièce, les comparaisons de réponses : l’IA est faite du travail de millions de personnes, souvent invisible. Et elle peut, à son tour, aider des groupes à délibérer."
+>
+  <p class="tag">Comment ça marche · <a href="/intelligence-collective/">L'intelligence collective</a> · module en construction</p>
+  <h1>L'IA, fruit d'une intelligence collective</h1>
+  <MiseAJour date="2026-10-24" evolutif />
+  <p class="chapo seulement-debut">
+    Une IA qui écrit n'a rien inventé seule : elle a lu des textes écrits par des millions de
+    personnes, et d'autres personnes lui ont appris ce qu'est une bonne réponse. Tire des exemples
+    d'entraînement, déchiffre un mot avec des internautes, puis apprends à une IA ce que tu préfères.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Des milliards de pages" ancre="donnees">
+    <Melange slot="animation" />
+    <p slot="decouverte">
+      Pour apprendre à écrire, un modèle de langage lit d'énormes quantités de textes. D'où
+      viennent-ils ? Regarde le mélange qui a servi à entraîner GPT-3 en 2020, et tire des exemples
+      au hasard.
+    </p>
+    <p slot="curieux">
+      Pages web, articles d'encyclopédie, livres : chaque exemple d'entraînement est un morceau de
+      texte écrit par quelqu'un, qui ne savait pas qu'il servirait à entraîner une IA. Le mélange
+      n'est pas neutre : les créateurs de GPT-3 ont fait relire plusieurs fois les sources qu'ils
+      jugeaient de meilleure qualité, comme Wikipédia, et moins d'une fois le web filtré.
+    </p>
+    <p slot="ingenieur">
+      Les quantités sont comptées en <Terme id="token">tokens</Terme>, des morceaux de mots. Le
+      « poids dans le mélange » est la part des exemples d'entraînement tirés de chaque source,
+      volontairement différente de sa part du volume. Avec 300 milliards de tokens d'entraînement,
+      Wikipédia (3 milliards) est vue 3,4 fois, le web filtré (410 milliards) 0,44 fois. Ce web
+      filtré vient de Common Crawl : 45 To de texte compressé avant filtrage, 570 Go après.
+    </p>
+    <div slot="histoire">
+      <p>
+        Common Crawl est une association à but non lucratif créée en 2007. Elle archive le web et
+        met ses données à disposition de toutes et tous : plus de 300 milliards de pages, et 3 à 5
+        milliards de pages ajoutées chaque mois. Plus de 10 000 articles de recherche la citent.
+      </p>
+      <p>
+        Le module <a href="/modules/ia-texte/">Les IA qui écrivent</a> montre ce qu'un modèle fait
+        de ces textes ; <a href="/modules/construire-ensemble/">Construire ensemble</a> raconte
+        comment Wikipédia s'écrit, et qui l'écrit.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Wikipédia représente 3 % de ce que sait GPT-3. »</strong> Les 3 % sont une part des
+      exemples d'entraînement, pas du volume de données, où Wikipédia pèse moins de 1 %. Et ce
+      qu'un modèle « sait » ne se découpe pas source par source.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Un mot pour un livre" ancre="recaptcha">
+    <Recaptcha slot="animation" />
+    <p slot="decouverte">
+      Pour prouver qu'on n'est pas un robot, on a longtemps recopié deux mots déformés. L'un d'eux
+      servait à numériser de vieux livres. Regarde comment des inconnu·es, sans se concerter, se
+      mettent d'accord sur un mot.
+    </p>
+    <p slot="curieux">
+      L'un des deux mots est déjà connu : si tu le tapes juste, tu es sans doute humain·e, et ta
+      réponse pour l'autre mot devient un vote. Ce second mot vient d'un livre numérisé que deux
+      logiciels de reconnaissance de caractères n'ont pas su lire. Plusieurs votes concordants, et le
+      mot est déchiffré. Des millions de personnes ont ainsi transcrit des livres sans le savoir.
+    </p>
+    <p slot="ingenieur">
+      La règle publiée : une réponse humaine vaut une voix, la lecture de chaque logiciel une
+      demi-voix ; un mot est retenu dès qu'une lecture atteint 2,5 voix. Deux personnes qui
+      confirment un logiciel suffisent ; trois personnes d'accord contre les deux logiciels aussi.
+      Un mot rejeté par six personnes est abandonné comme illisible. Les mots de contrôle sont tirés
+      de façon à ce qu'un programme qui devine au hasard ne réussisse qu'une fois sur 100 000.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2008, L. von Ahn et ses collègues de l'université Carnegie-Mellon décrivent reCAPTCHA
+        dans la revue <em>Science</em>. Plus de 100 millions de CAPTCHA sont alors tapés chaque jour
+        dans le monde. reCAPTCHA est déployé sur plus de 40 000 sites et a déjà transcrit plus de 440
+        millions de mots, tirés des archives du <em>New York Times</em> et de livres de l'Internet
+        Archive, avec une précision de plus de 99 %.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Luis von Ahn a inventé le CAPTCHA tout seul. »</strong> Le CAPTCHA est issu de
+      travaux antérieurs, menés notamment avec Manuel Blum, co-auteur de l'article de 2008. L'idée
+      nouvelle de reCAPTCHA était de faire servir cet effort à quelque chose.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Étiqueter le monde" ancre="annoter">
+    <p slot="decouverte">
+      Pour qu'une IA reconnaisse un chat sur une photo, il a fallu que des personnes écrivent
+      « chat » sous des milliers de photos. Pour qu'elle repère un message haineux, il a fallu que
+      d'autres en lisent et en classent. Qui fait ce travail, et à quel prix ?
+    </p>
+    <p slot="curieux">
+      Ce travail d'<Terme id="annotation">annotation</Terme> est découpé en micro-tâches payées à la pièce, souvent sous-traitées
+      dans des pays où les salaires sont bas. Il est indispensable, mais rarement visible : on parle
+      de « travail fantôme » ou de travail du clic. Il peut aussi être éprouvant, quand il faut lire
+      ou regarder des contenus violents pour apprendre à une IA à les filtrer.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        Les chiffres de salaire sont difficiles à comparer : ils viennent tantôt d'enquêtes de
+        journalistes, tantôt des entreprises elles-mêmes, et dépendent du coût de la vie local. Selon
+        des moyennes de l'Organisation internationale du travail citées par des chercheur·ses, le
+        travail de données en ligne paie en moyenne 3,3 dollars de l'heure, contre 7,6 pour
+        l'ensemble des indépendant·es en ligne.
+      </p>
+      <div class="tableau">
+      <table>
+        <caption>Trois enquêtes et ce que répondent les entreprises</caption>
+        <thead><tr><th scope="col">Où</th><th scope="col">Ce qui a été rapporté</th><th scope="col">Réponse</th></tr></thead>
+        <tbody>
+          <tr><td>Kenya (TIME, 2023)</td><td>Des employé·es de Sama à Nairobi classent des textes violents et abusifs pour OpenAI, pour environ 1,32 à 2 dollars nets de l'heure ; OpenAI payait Sama 12,50 dollars de l'heure.</td><td>Sama conteste : 1,46 à 3,74 dollars nets de l'heure. OpenAI dit ne pas avoir fixé d'objectifs de productivité. Sama a mis fin au contrat en février 2022.</td></tr>
+          <tr><td>Venezuela (MIT Technology Review, 2022)</td><td>Pendant la crise économique, environ 200 000 Vénézuélien·nes sont inscrit·es sur deux plateformes d'annotation en 2018 (estimation d'un chercheur). Scale AI annonce elle-même une moyenne d'un peu plus de 90 centimes de l'heure.</td><td>Appen et Scale AI disent payer de façon « équitable », adaptée au salaire minimum local.</td></tr>
+          <tr><td>Madagascar (A. Casilli et al., 2023-2025)</td><td>147 entretiens et 296 questionnaires : de petites entreprises locales annotent des données pour des start-up françaises, dans la continuité des centres d'appels.</td><td>Étude universitaire.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div slot="histoire">
+      <p>
+        En 2009, la base d'images ImageNet est présentée avec 3,2 millions d'images ; elle en compte
+        aujourd'hui plus de 14 millions, rangées dans près de 22 000 catégories. Les images ont été
+        étiquetées grâce à Amazon Mechanical Turk, « une plateforme en ligne où l'on peut proposer
+        des tâches à des utilisateur·rices qui sont payé·es pour les faire ». Le module <a
+        href="/modules/ia-voir/">Les IA qui voient</a> montre à quoi servent ces étiquettes.
+      </p>
+      <p>
+        En 2019, l'anthropologue M. L. Gray et l'informaticien S. Suri publient
+        <em>Ghost Work</em>, issu de cinq ans d'enquête aux États-Unis et en Inde sur ces
+        travailleur·ses invisibles. En France, l'équipe d'A. A. Casilli étudie ce travail jusqu'à
+        Madagascar.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'IA apprend toute seule. »</strong> Elle apprend à partir d'exemples, et une grande
+      partie de ces exemples a été préparée, triée ou corrigée par des personnes. Leur nom n'apparaît
+      nulle part, et leurs conditions de travail sont rarement connues.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Préférer une réponse" ancre="preferer">
+    <Recompense slot="animation" />
+    <p slot="decouverte">
+      Après avoir lu des milliards de textes, un modèle sait continuer une phrase, pas forcément
+      répondre utilement. Des personnes comparent alors ses réponses deux par deux. Joue les
+      annotateur·rices, et regarde ce que le modèle apprend.
+    </p>
+    <p slot="curieux">
+      Chaque comparaison dit seulement « celle-ci plutôt que celle-là ». À partir de milliers de
+      comparaisons, un second modèle apprend à donner un score à n'importe quelle réponse ; puis
+      l'IA est entraînée à produire des réponses à haut score. Elle apprend donc les goûts de celles
+      et ceux qui ont comparé : leur préférence pour le détail ou la concision, mais aussi leurs
+      oublis, si elles et ils n'avaient pas le temps de vérifier.
+    </p>
+    <p slot="ingenieur">
+      C'est l'apprentissage par renforcement à partir de retours humains (en anglais <em>RLHF</em>).
+      Le modèle de score, ou « modèle de récompense », suppose que la probabilité de préférer A à B
+      vaut 1 / (1 + e<sup>score(B) − score(A)</sup>) : c'est le modèle de Bradley-Terry, ajusté ici
+      dans ton navigateur. L'IA est ensuite entraînée par <Terme id="apprentissage-automatique">apprentissage
+      automatique</Terme> à produire des réponses à haut score.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2017, des chercheur·ses d'OpenAI et de DeepMind montrent qu'on peut apprendre des
+        comportements à une IA à partir de préférences humaines entre deux extraits, avec un retour
+        humain sur moins de 1 % des essais. Leur article s'appuie sur des travaux plus anciens
+        d'apprentissage à partir de retours humains.
+      </p>
+      <p>
+        En 2022, OpenAI décrit InstructGPT : « une équipe d'environ 40
+        sous-traitant·es » recrutée via Upwork et Scale AI compare les réponses. Les réponses d'un
+        modèle de 1,3 milliard de paramètres ainsi entraîné sont préférées à celles de GPT-3, cent
+        fois plus gros. Parmi les 19 annotateur·rices qui ont répondu à une enquête volontaire, les
+        nationalités les plus représentées sont philippine et bangladaise (22 % chacune), puis
+        américaine (17 %). Les auteur·rices l'écrivent : le modèle est aligné sur « les
+        démonstrations et les préférences fournies par nos annotateur·rices ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'IA est alignée sur les valeurs humaines. »</strong> Elle est alignée sur les
+      préférences d'un groupe précis de personnes, dans des conditions précises : quelques dizaines
+      d'annotateur·rices, d'accord entre elles et eux environ trois fois sur quatre.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="L’IA médiatrice ?" ancre="mediatrice">
+    <p slot="decouverte">
+      Et dans l'autre sens ? Une IA nourrie par l'intelligence collective peut-elle aider des groupes
+      humains à se mettre d'accord ? Une expérience l'a testé.
+    </p>
+    <p slot="curieux">
+      Dans l'expérience, de petits groupes donnent leur avis sur une question de société, et une IA
+      rédige des synthèses de leurs avis. Les participant·es
+      ont préféré les synthèses de l'IA à celles de médiateur·rices humain·es, et leurs avis se sont
+      rapprochés. Les synthèses préférées intégraient les voix minoritaires tout en respectant la
+      position majoritaire.
+    </p>
+    <p slot="ingenieur">
+      C'est le même but que Polis ou les notes de la communauté du module <a
+      href="/modules/deliberer/">Délibérer avec des algorithmes</a> : trouver ce qui peut faire
+      accord. Mais au lieu de compter des votes, l'IA rédige un texte, ce qui rend le résultat plus
+      lisible et plus difficile à vérifier.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2024, une équipe de Google DeepMind publie dans <em>Science</em> une étude sur cette
+        « machine de Habermas », du nom du philosophe de la délibération. 5 734 personnes au
+        Royaume-Uni y ont participé ; les synthèses de l'IA ont été jugées plus informatives, plus
+        claires et moins biaisées. L'expérience a été reproduite dans une assemblée citoyenne
+        virtuelle représentative.
+      </p>
+      <p>
+        Les limites sont réelles, et l'un des auteurs, M. H. Tessler, les reconnaît : l'IA ne sait
+        pas vérifier les faits, ramener la discussion au sujet ou modérer les échanges. Les groupes
+        étaient petits (5 ou 6 personnes), le modèle n'est pas public, et l'étude a été menée par
+        l'entreprise qui développe l'outil.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'IA va remplacer les médiateur·rices. »</strong> L'étude montre que ses synthèses
+      plaisent dans un cadre précis, pas qu'elle sait mener un débat. Elle peut aider des humain·es
+      qui animent une délibération, à condition de savoir qui l'a entraînée, et sur quoi.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Qui fait l'IA ?</h2>
+    <p>
+      Derrière chaque réponse d'une IA, il y a le travail de millions de personnes, presque toujours
+      anonymes.
+    </p>
+    <div class="tableau">
+    <table>
+      <thead><tr><th scope="col">Qui</th><th scope="col">Ce qu'elles et ils apportent</th><th scope="col">Le savent-ils ?</th></tr></thead>
+      <tbody>
+        <tr><td>Les auteur·rices du web, de Wikipédia, des livres</td><td>Les textes dont le modèle apprend la langue et les connaissances.</td><td>Rarement : ces textes ont été écrits pour d'autres lecteur·rices.</td></tr>
+        <tr><td>Les internautes des reCAPTCHA</td><td>Des millions de mots déchiffrés.</td><td>Souvent pas : il s'agissait de prouver qu'on n'est pas un robot.</td></tr>
+        <tr><td>Les annotateur·rices</td><td>Les étiquettes, les tris, le filtrage des contenus violents.</td><td>Oui, mais leur travail reste invisible, souvent mal payé.</td></tr>
+        <tr><td>Les comparateur·rices de réponses</td><td>Les préférences qui façonnent le ton et les priorités de l'IA.</td><td>Oui ; ce sont quelques dizaines de personnes pour des millions d'utilisateur·rices.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>
+      C'est le dernier module de la section <a href="/intelligence-collective/">L'intelligence
+      collective</a> : la sagesse des foules, les communs, la délibération, et maintenant l'IA. À
+      chaque fois, la même leçon : un collectif est intelligent quand ses membres sont variés,
+      indépendants et reconnus, et quand les règles qui les rassemblent sont connues.
+    </p>
+
+  <Sources
+    verifie="2026-10-24"
+    sources={[
+      { auteur: 'Common Crawl', titre: 'Page d’accueil', url: 'https://commoncrawl.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'T. Brown et al. (OpenAI)', titre: 'Language Models are Few-Shot Learners (section 2.2, tableau 2.2)', url: 'https://arxiv.org/abs/2005.14165', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'L. von Ahn, B. Maurer, C. McMillen, D. Abraham, M. Blum', titre: 'reCAPTCHA: Human-Based Character Recognition via Web Security Measures (Science 321)', url: 'https://www.cs.cmu.edu/~biglou/reCAPTCHA_Science.pdf', type: 'recherche', annee: 2008, langue: 'en' },
+      { auteur: 'J. Deng et al.', titre: 'ImageNet: A Large-Scale Hierarchical Image Database (CVPR 2009)', url: 'https://www.image-net.org/static_files/papers/imagenet_cvpr09.pdf', type: 'recherche', annee: 2009, langue: 'en' },
+      { auteur: 'ImageNet', titre: 'About', url: 'https://www.image-net.org/about.php', type: 'primaire', langue: 'en' },
+      { auteur: 'B. Perrigo (TIME)', titre: 'Exclusive: OpenAI Used Kenyan Workers on Less Than $2 Per Hour to Make ChatGPT Less Toxic', url: 'https://time.com/6247678/openai-chatgpt-kenya-workers/', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'K. Hao, A. P. Hernández (MIT Technology Review)', titre: 'How the AI industry profits from catastrophe', url: 'https://www.technologyreview.com/2022/04/20/1050392/ai-industry-appen-scale-data-labels/', type: 'presse', annee: 2022, langue: 'en' },
+      { auteur: 'A. A. Casilli et al.', titre: 'Global Inequalities in the Production of Artificial Intelligence: A Four-Country Study on Data Work', url: 'https://arxiv.org/abs/2410.14230', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'M. L. Gray, S. Suri', titre: 'Ghost Work (Houghton Mifflin Harcourt), fiche de Publishers Weekly', url: 'https://www.publishersweekly.com/978-1-328-56624-9', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'P. Christiano et al.', titre: 'Deep reinforcement learning from human preferences, résumé', url: 'https://arxiv.org/abs/1706.03741', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'L. Ouyang et al. (OpenAI)', titre: 'Training language models to follow instructions with human feedback', url: 'https://arxiv.org/abs/2203.02155', type: 'recherche', annee: 2022, langue: 'en' },
+      { auteur: 'M. H. Tessler, M. A. Bakker et al. (Google DeepMind)', titre: 'Science 386, eadq2852, résumé sur PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/39418380/', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'R. Williams (MIT Technology Review)', titre: 'AI could help people find common ground during deliberations', url: 'https://www.technologyreview.com/2024/10/17/1105810/ai-could-help-people-find-common-ground-during-deliberations/', type: 'presse', annee: 2024, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  caption { text-align: left; font-weight: 700; margin-bottom: 0.4rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

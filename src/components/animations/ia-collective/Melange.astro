@@ -1,0 +1,107 @@
+---
+// Animation « Le mélange de GPT-3 » (module « L'IA, fruit d'une
+// intelligence collective ») : la part de chaque source dans le volume de
+// données et dans les exemples d'entraînement, d'après le tableau 2.2 de
+// Brown et al. (2020) ; puis 100 exemples tirés au hasard selon ce mélange.
+---
+<div class="anim melange" data-melange>
+  <div class="anim-repli">
+    <p>
+      GPT-3 a été entraîné sur cinq sources. Le web filtré (Common Crawl) représente 410 milliards de
+      tokens, 82 % du volume, mais seulement 60 % des exemples d'entraînement. Wikipédia ne fait que
+      3 milliards de tokens, moins de 1 % du volume, mais 3 % des exemples : elle a été vue 3,4 fois
+      pendant l'entraînement, alors que le web filtré n'a même pas été vu une fois en entier (0,44
+      fois). Les créateurs ont choisi de donner plus de poids aux sources qu'ils jugeaient de
+      meilleure qualité.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ul class="sources" data-sources aria-label="Part de chaque source dans le volume et dans les exemples d'entraînement"></ul>
+      <p class="cle">Barre grise : part du volume de données. Barre de couleur : part des exemples d’entraînement.</p>
+      <ol class="exemples" data-exemples aria-label="Cent exemples d'entraînement tirés au hasard"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="tirer">Tirer 100 exemples</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Chiffres du tableau 2.2 de l'article de GPT-3 (Brown et al., 2020). Les exemples tirés sont simulés.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { MELANGE_GPT3, tirerExemples } from '../../../lib/ia-collective';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${(v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+  const TOTAL = MELANGE_GPT3.reduce((s, m) => s + m.tokens, 0);
+
+  document.querySelectorAll<HTMLElement>('[data-melange]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let graine = 1;
+
+    racine.querySelector('[data-sources]')!.replaceChildren(
+      ...MELANGE_GPT3.map((m, i) => {
+        const li = document.createElement('li');
+        li.className = `s${i}`;
+        const t = document.createElement('p');
+        t.className = 'nom';
+        t.textContent = `${m.nom} : ${m.tokens} milliards de tokens, vue ${m.passages.toLocaleString('fr-FR')} fois`;
+        li.append(t);
+        [['volume', m.tokens / TOTAL], ['poids', m.poids]].forEach(([classe, v]) => {
+          const ligne = document.createElement('div');
+          ligne.className = `barre ${classe}`;
+          const e = document.createElement('span');
+          e.className = 'valeur';
+          e.textContent = `${classe === 'volume' ? 'volume' : 'exemples'} : ${pc(Number(v))}`;
+          const piste = document.createElement('span');
+          piste.className = 'piste';
+          piste.setAttribute('aria-hidden', 'true');
+          const b = document.createElement('span');
+          b.style.width = `${Number(v) * 100}%`;
+          piste.append(b);
+          ligne.append(e, piste);
+          li.append(ligne);
+        });
+        return li;
+      }),
+    );
+
+    function tirer() {
+      const t = tirerExemples(hasard(graine++), 100);
+      racine.querySelector('[data-exemples]')!.replaceChildren(
+        ...t.map((s) => {
+          const li = document.createElement('li');
+          li.className = `s${s}`;
+          li.title = MELANGE_GPT3[s].nom;
+          return li;
+        }),
+      );
+      const compte = MELANGE_GPT3.map((m, i) => `${m.nom} ${t.filter((x) => x === i).length}`).join(', ');
+      legende.textContent = `Sur 100 exemples : ${compte}. Le web domine, mais Wikipédia, WebText2 et Books1 pèsent plus que leur volume : chaque exemple d’entraînement est un morceau de texte écrit par quelqu’un.`;
+    }
+    racine.querySelector('[data-action="tirer"]')!.addEventListener('click', tirer);
+    tirer();
+  });
+</script>
+
+<style>
+  .sources { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; gap: 0.6rem; }
+  .sources :global(.nom) { margin: 0 0 0.15rem; font-size: 0.9rem; font-weight: 700; }
+  .sources :global(.barre) { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0.5rem; align-items: center; margin-bottom: 2px; }
+  .sources :global(.valeur) { font: 0.75rem var(--police-mono); }
+  .sources :global(.piste) { display: block; height: 0.8rem; background: var(--bg); border-radius: 0.25rem; overflow: hidden; }
+  .sources :global(.piste span) { display: block; height: 100%; }
+  .sources :global(.volume .piste span) { background: var(--muted); }
+  .sources :global(.s0 .poids .piste span), .exemples :global(.s0) { background: var(--ill-commun); }
+  .sources :global(.s1 .poids .piste span), .exemples :global(.s1) { background: var(--ill-client); }
+  .sources :global(.s2 .poids .piste span), .exemples :global(.s2) { background: var(--ill-paquet); }
+  .sources :global(.s3 .poids .piste span), .exemples :global(.s3) { background: var(--ill-secret-a); }
+  .sources :global(.s4 .poids .piste span), .exemples :global(.s4) { background: var(--ill-secret-b); }
+  .cle { display: flex; gap: 1rem; font-size: 0.85rem; color: var(--muted); margin: 0; }
+  .exemples { list-style: none; padding: 0; margin: 0.75rem 0 0; display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; }
+  .exemples :global(li) { aspect-ratio: 1; border-radius: 2px; }
+</style>

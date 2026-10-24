@@ -1,0 +1,106 @@
+---
+// Animation « Un mot, plusieurs lecteur·rices » (module « L'IA, fruit d'une
+// intelligence collective ») : la règle de vote publiée de reCAPTCHA (von
+// Ahn et al., 2008) pour déchiffrer un mot que les logiciels de
+// reconnaissance de caractères lisent mal. Mots et lectures inventés.
+---
+<div class="anim recaptcha" data-recaptcha>
+  <div class="anim-repli">
+    <p>
+      Un mot mal imprimé dans un vieux livre : deux logiciels de reconnaissance de caractères le
+      lisent différemment. Il est montré à des internautes, à côté d'un mot de contrôle déjà connu.
+      Chaque réponse humaine compte pour une voix, chaque lecture d'un logiciel pour une demi-voix ;
+      le mot est retenu dès qu'une lecture atteint deux voix et demie. La plupart du temps, deux
+      personnes suffisent, quand elles confirment la lecture d'un des logiciels.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="scan" data-scan aria-hidden="true"></p>
+      <ol class="lectures" data-lectures aria-label="Lectures successives et voix obtenues"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="suivant-mot">Mot suivant</button>
+        <button type="button" data-action="mille">1 000 mots</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Règle de vote de l'article de 2008. Mots, fautes et lectures inventés : chaque personne lit juste 92 fois sur 100, le premier logiciel 80 fois sur 100.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { dechiffrer } from '../../../lib/ia-collective';
+  import { hasard } from '../../../lib/minilm';
+
+  const MOTS: [string, string[]][] = [
+    ['moulin', ['mouhn', 'rnoulin', 'moulm']],
+    ['chaumière', ['chaurniere', 'chaumicre', 'chaumiere']],
+    ['lanterne', ['Ianterne', 'lantcrne', 'lanteme']],
+    ['herbier', ['lierbier', 'herhier', 'herbicr']],
+    ['comète', ['cornète', 'comete', 'eomète']],
+  ];
+  const pc = (v: number) => `${(v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-recaptcha]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const alea = hasard(9);
+    let i = 0;
+
+    function unMot() {
+      const [mot, fautes] = MOTS[i++ % MOTS.length];
+      const d = dechiffrer(alea, mot, fautes);
+      racine.querySelector('[data-scan]')!.textContent = mot;
+      const voix = new Map<string, number>();
+      racine.querySelector('[data-lectures]')!.replaceChildren(
+        ...d.lectures.map((l, k) => {
+          voix.set(l.texte, (voix.get(l.texte) ?? 0) + (l.par === 'ocr' ? 0.5 : 1));
+          const li = document.createElement('li');
+          li.className = l.par;
+          const qui = l.par === 'ocr' ? `Logiciel ${k + 1}` : `Personne ${k - 1}`;
+          li.textContent = `${qui} lit « ${l.texte} » → ${String(voix.get(l.texte)).replace('.', ',')} voix`;
+          if (l.texte === d.retenu && k === d.lectures.length - 1) li.classList.add('retenu');
+          return li;
+        }),
+      );
+      mesure.textContent = d.retenu ? `Mot retenu : « ${d.retenu} », avec ${d.humains} personne${d.humains > 1 ? 's' : ''}.` : 'Mot abandonné comme illisible.';
+      legende.textContent =
+        d.retenu === mot
+          ? d.humains === 2
+            ? 'Deux personnes ont confirmé la lecture d’un logiciel : deux voix et une demi-voix, le mot est déchiffré.'
+            : 'Les logiciels se trompaient ou les réponses divergeaient : il a fallu plus de personnes pour atteindre deux voix et demie.'
+          : 'Rare, mais possible : deux fautes identiques ont suffi à retenir une mauvaise lecture.';
+    }
+
+    function mille() {
+      const h = new Map<number, number>();
+      let justes = 0;
+      for (let k = 0; k < 1000; k++) {
+        const [mot, fautes] = MOTS[k % MOTS.length];
+        const d = dechiffrer(alea, mot, fautes);
+        h.set(d.humains, (h.get(d.humains) ?? 0) + 1);
+        if (d.retenu === mot) justes++;
+      }
+      mesure.textContent = `Sur 1 000 mots : ${pc((h.get(2) ?? 0) / 1000)} déchiffrés avec deux personnes, ${pc((h.get(3) ?? 0) / 1000)} avec trois ; ${pc(justes / 1000)} justes.`;
+      legende.textContent = 'Dans l’article de 2008, 67,87 % des mots ont demandé deux réponses humaines, 17,86 % trois, et la transcription était juste à plus de 99 %.';
+    }
+
+    racine.querySelector('[data-action="suivant-mot"]')!.addEventListener('click', unMot);
+    racine.querySelector('[data-action="mille"]')!.addEventListener('click', mille);
+    unMot();
+  });
+</script>
+
+<style>
+  .scan { margin: 0 auto 0.75rem; max-width: 16rem; text-align: center; font: italic 700 1.8rem var(--police); letter-spacing: 0.08em; padding: 0.5rem; background: var(--bg); border: 1px dashed var(--border); border-radius: 0.3rem; filter: blur(0.6px); transform: skewX(-8deg); color: var(--muted); }
+  .lectures { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.25rem; font: 0.85rem var(--police-mono); }
+  .lectures :global(li) { padding: 0.25rem 0.5rem; border-left: 3px solid var(--border); }
+  .lectures :global(li.humain) { border-left-color: var(--ill-client); }
+  .lectures :global(li.retenu) { border-left-color: var(--ill-secret-b); font-weight: 700; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.5rem 0 0; }
+  @media (prefers-reduced-motion: reduce) { .scan { transform: none; } }
+</style>

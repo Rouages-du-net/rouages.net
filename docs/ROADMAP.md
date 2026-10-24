@@ -108,7 +108,7 @@ flowchart TB
 - [x] **La sagesse des foules** *(`/modules/sagesse-des-foules/`, relecture humaine à faire)* — le bœuf de Galton (chiffres corrigés par Wallis), théorème du jury de Condorcet, cascades informationnelles, influence sociale (Lorenz et al.)
 - [x] **Construire ensemble** *(`/modules/construire-ensemble/`, relecture humaine à faire)* — GNU et Linux, Wikipédia (écart de genre), OpenStreetMap et Haïti, Galaxy Zoo, Foldit, Ushahidi, Common Voice, Masakhane, Elinor Ostrom
 - [x] **Délibérer avec des algorithmes** *(`/modules/deliberer/`, relecture humaine à faire)* — Polis et vTaiwan, Community Notes (algorithme de « pont », études divergentes, à dater), conventions citoyennes, Porto Alegre
-- [ ] **L'IA, fruit d'une intelligence collective** — données du web, reCAPTCHA, annotation et travail invisible, retours humains (RLHF), IA d'aide à la délibération
+- [x] **L'IA, fruit d'une intelligence collective** *(`/modules/ia-collective/`, relecture humaine à faire)* — données du web, reCAPTCHA, annotation et travail invisible, retours humains (RLHF), IA d'aide à la délibération
 
 ## En parallèle — Jeux et idées reçues
 
