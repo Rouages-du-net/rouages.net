@@ -1,0 +1,306 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Pixels from '../../components/animations/trompe/Pixels.astro';
+import Injection from '../../components/animations/trompe/Injection.astro';
+import Poison from '../../components/animations/trompe/Poison.astro';
+
+// Faits sourcés : voir docs/sources/ia-tromper.md.
+const etapes = [
+  { ancre: 'pixels', court: 'Quelques pixels' },
+  { ancre: 'monde-reel', court: 'Dans le monde réel' },
+  { ancre: 'injection', court: 'Des instructions cachées' },
+  { ancre: 'empoisonnement', court: 'Empoisonner l’apprentissage' },
+  { ancre: 'defenses', court: 'Se défendre' },
+  { ancre: 'bilan', court: 'Trois façons de tromper', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qu’on trompe exprès"
+  description="Images piégées, instructions cachées dans une page web, données empoisonnées : comment on trompe une IA exprès, sur de vrais petits modèles calculés dans ton navigateur, et comment s’en protéger."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qu'on trompe exprès</h1>
+  <MiseAJour date="2026-10-24" evolutif />
+  <p class="chapo seulement-debut">
+    Une IA peut se tromper par hasard. Elle peut aussi être trompée exprès. Fais voir une croix
+    là où il y a un rond, cache un ordre dans une page web, puis glisse quelques dessins piégés
+    dans un apprentissage.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Quelques pixels" ancre="pixels">
+    <Pixels slot="animation" />
+    <p slot="decouverte">
+      Un petit modèle reconnaît les ronds et les croix sans jamais se tromper. Ajoute à un dessin
+      une perturbation calculée, à peine visible, et regarde-le changer d'avis.
+    </p>
+    <p slot="curieux">
+      La perturbation n'est pas du bruit au hasard : chaque pixel bouge un tout petit peu, mais
+      tous dans la direction qui gêne le plus le modèle. Pris un par un, ces changements ne sont
+      rien ; additionnés sur tous les pixels, ils font basculer la décision. Pour nous, l'image n'a
+      presque pas changé. Pour le modèle, c'est une autre forme, et il en est sûr. On appelle ça
+      un <Terme id="exemple-adverse">exemple adverse</Terme>.
+    </p>
+    <p slot="ingenieur">
+      Le modèle de l'animation est une régression logistique : il calcule une somme pondérée des
+      144 pixels. Changer chaque pixel de ±ε selon le signe de son poids modifie cette somme de ε
+      fois la somme des valeurs absolues des poids : beaucoup, quand il y a beaucoup de pixels.
+      C'est l'explication proposée en 2014 par Goodfellow, Shlens et Szegedy pour les réseaux de
+      neurones, qu'ils jugent « trop linéaires », et leur méthode dite du signe du gradient. Pour
+      un vrai réseau, le gradient se calcule par <Terme id="retropropagation">rétropropagation</Terme>.
+    </p>
+    <div slot="histoire">
+      <p>
+        Fin 2013, C. Szegedy et ses collègues décrivent des perturbations « imperceptibles » qui
+        font mal classer des images à des réseaux de neurones, et qui trompent aussi d'autres
+        réseaux entraînés sur d'autres données. En 2014, la même équipe montre l'image d'un panda,
+        reconnu à 57,7 % ; après un bruit invisible, le réseau y voit un gibbon, à 99,3 %.
+      </p>
+      <p>
+        Mais l'idée est plus ancienne. Dès 2004, des chercheur·ses étudient comment les spammeurs
+        contournent les filtres anti-spam en maquillant les mots suspects ou en ajoutant des « bons
+        mots » ; vers 2005, les spammeurs passent aux images. Plus tôt encore, l'équipe japonaise
+        de T. Matsumoto trompe des lecteurs d'empreintes digitales avec de faux doigts moulés dans une
+        matière plastique, les « gummy fingers ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les exemples adverses ont été découverts en 2014. »</strong> C'est l'erreur de date
+      que relèvent B. Biggio et F. Roli : en 2013-2014, on découvre qu'ils touchent aussi les réseaux
+      de neurones profonds. Tromper un système qui apprend, c'est le quotidien des spammeurs depuis
+      le début des années 2000.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Dans le monde réel" ancre="monde-reel">
+    <p slot="decouverte">
+      Modifier les pixels d'une image dans un ordinateur, c'est une chose. Mais peut-on tromper une
+      caméra avec un objet réel, vu sous plusieurs angles, sous la pluie ou au soleil ?
+    </p>
+    <p slot="curieux">
+      Oui, à condition de fabriquer une perturbation qui résiste aux changements : distance,
+      angle, lumière, flou de la caméra. Elle est alors moins discrète, des autocollants plutôt
+      qu'un bruit invisible, mais elle reste incompréhensible pour un·e humain·e, qui voit
+      toujours un panneau stop.
+    </p>
+    <p slot="ingenieur">
+      L'astuce consiste à optimiser la perturbation non pas pour une seule image, mais en moyenne
+      sur beaucoup de transformations de l'image : rotations, changements d'échelle, de lumière,
+      bruit. Ce qui trompe le modèle dans toutes ces conditions a des chances de le tromper aussi
+      dans la rue.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2017, une équipe de neuf chercheur·ses, dont Dawn Song, colle des autocollants noirs et blancs sur un vrai panneau stop. Le classifieur
+        visé se trompe dans 100 % des photos prises en laboratoire, et dans 84,8 % des images d'une
+        vidéo filmée depuis une voiture en mouvement. La même année, A. Athalye et ses collègues
+        impriment en 3D les premiers objets adverses, qui trompent un réseau sous presque tous les
+        angles.
+      </p>
+      <p>
+        En 2019, le Keen Security Lab de l'entreprise chinoise Tencent publie ses essais sur une
+        Tesla Model S : une image adverse déclenche les essuie-glaces, et des autocollants posés
+        sur la route font dévier l'Autopilot vers la voie d'en face. Tesla répond, sur la même page,
+        que l'image était affichée sur un écran posé devant le pare-brise, que ce n'est pas « une
+        situation réelle », et que le conducteur peut reprendre la main à tout moment.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Un autocollant suffit à faire planter toutes les voitures autonomes. »</strong>
+      Ces expériences visent un modèle précis, connu des chercheur·ses, dans des conditions
+      choisies. Elles montrent une fragilité réelle, pas une recette universelle.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Des instructions cachées" ancre="injection">
+    <Injection slot="animation" />
+    <p slot="decouverte">
+      Les assistants conversationnels lisent des pages web, des e-mails, des documents, et
+      peuvent parfois agir pour toi. Que se passe-t-il si l'un de ces textes contient un ordre qui
+      s'adresse à l'assistant ? Essaie trois protections.
+    </p>
+    <p slot="curieux">
+      Pour un modèle de langage, tout est du texte : ta question, la page qu'il lit, et l'ordre
+      caché dedans. Il n'a pas de moyen sûr de savoir lequel vient de toi. C'est l'<Terme
+      id="injection-instructions">injection d'instructions</Terme>. Interdire des mots ne suffit
+      pas : on peut dire la même chose autrement, dans une autre langue, ou en codant le texte. Ce
+      qui protège le mieux, c'est de limiter ce que l'assistant peut faire seul.
+    </p>
+    <p slot="ingenieur">
+      Une application qui utilise un modèle de langage assemble souvent sa consigne (« Résume la
+      page suivante ») et le texte à traiter en une seule chaîne de caractères. C'est le même défaut
+      que l'injection SQL, où des données sont prises pour du code. Dans l'injection
+      <em>indirecte</em>, l'attaquant n'écrit même pas à l'assistant : il place ses instructions
+      dans une page ou un e-mail que l'assistant ira lire.
+    </p>
+    <div slot="histoire">
+      <p>
+        En septembre 2022, Riley Goodside montre qu'on peut demander à GPT-3 de traduire un texte…
+        qui lui ordonne d'ignorer la consigne de traduction. Aussitôt, le développeur Simon
+        Willison propose de nommer cette attaque <em>prompt injection</em>, par analogie avec
+        l'injection SQL. En 2023, K. Greshake, S. Abdelnabi et leurs collègues décrivent l'injection
+        indirecte et la démontrent sur Bing Chat : ces applications « brouillent la frontière entre
+        données et instructions ».
+      </p>
+      <p>
+        En France, l'ANSSI recommande en 2024 qu'un système d'IA générative ne puisse pas prendre
+        de décision critique sans contrôle humain, en citant justement le contenu d'un e-mail reçu
+        ou d'une page web comme source d'injection. Pour essayer soi-même, sur un service prévu pour
+        ça : le jeu Agent Breaker, dans la page <a href="/jeux/">Jeux</a>.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Il suffit de dire à l'IA de ne pas obéir aux textes qu'elle lit. »</strong> Dès le
+      premier exemple de 2022, une consigne qui mettait en garde contre les pièges était elle-même
+      contournée. Une consigne de plus reste du texte parmi d'autres textes.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Empoisonner l’apprentissage" ancre="empoisonnement">
+    <Poison slot="animation" />
+    <p slot="decouverte">
+      Et si l'on trompait l'IA avant même qu'elle serve, en glissant quelques exemples piégés dans
+      ses données d'entraînement ? Ajoute des croix marquées d'un petit carré et étiquetées
+      « rond », puis teste le modèle.
+    </p>
+    <p slot="curieux">
+      Le modèle apprend ce que les données lui montrent : ici, que le petit carré veut dire
+      « rond ». Sur les dessins normaux, il reste parfait, et aucun test habituel ne voit le
+      problème. Mais celui ou celle qui connaît le carré peut lui faire dire ce qu'il veut :
+      c'est une <Terme id="porte-derobee">porte dérobée</Terme>, installée par <Terme
+      id="empoisonnement">empoisonnement</Terme> des données.
+    </p>
+    <p slot="ingenieur">
+      Dans les dessins normaux, le coin en bas à droite est toujours vide : aucun exemple propre
+      n'apprend au modèle à s'en méfier. Quelques exemples suffisent à lui donner un poids énorme.
+      Les grands modèles sont entraînés sur des données ramassées sur le web, que personne ne relit
+      en entier : il suffit de placer des pages piégées là où elles seront collectées.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2012, B. Biggio, B. Nelson et P. Laskov montrent comment fabriquer des données
+        d'entraînement qui font échouer un classifieur. En 2016, Microsoft retire Tay, un robot
+        conversationnel lancé sur Twitter : dans ses premières 24 heures en ligne, « une attaque
+        coordonnée par un groupe de personnes a exploité une vulnérabilité », et Tay a publié des
+        messages et des images injurieux. Microsoft rappelle que son robot XiaoIce était alors utilisé par environ 40
+        millions de personnes en Chine.
+      </p>
+      <p>
+        En 2023, N. Carlini et ses collègues montrent qu'on aurait pu empoisonner 0,01 % de deux
+        grands jeux de données d'images pour 60 dollars, en rachetant des noms de domaine expirés ;
+        ils ont prévenu les responsables. En 2025, une équipe montre que 250 documents empoisonnés
+        suffisent à installer une porte dérobée dans des modèles de langage de toutes les tailles
+        testées, jusqu'à 13 milliards de paramètres. Des artistes retournent l'idée pour se
+        défendre : voir Nightshade dans <a href="/modules/ia-creer/">Les IA qui créent</a>.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Plus un modèle est gros, plus il faut de données piégées pour l'empoisonner. »</strong>
+      L'étude de 2025 trouve l'inverse de cette intuition, dans ses expériences : un nombre presque
+      constant de documents, alors que les plus gros modèles lisaient plus de 20 fois plus de
+      données propres.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Se défendre" ancre="defenses">
+    <p slot="decouverte">
+      Peut-on rendre une IA impossible à tromper ? Non. Mais on peut rendre les attaques plus
+      difficiles, et surtout limiter les dégâts quand elles réussissent.
+    </p>
+    <ul slot="curieux">
+      <li><strong>Entraîner avec des exemples adverses</strong> : on montre au modèle les pièges, avec la bonne réponse. Il résiste mieux à ceux-là, moins à d'autres.</li>
+      <li><strong>Surveiller les données</strong> : savoir d'où elles viennent, vérifier qu'elles n'ont pas changé depuis leur collecte, chercher les exemples bizarres.</li>
+      <li><strong>Limiter les pouvoirs</strong> : un assistant qui peut lire ne doit pas pouvoir envoyer, payer ou effacer sans validation humaine.</li>
+      <li><strong>Ne pas compter sur une seule IA</strong> : plusieurs capteurs, des règles simples de sécurité, une personne qui peut reprendre la main.</li>
+    </ul>
+    <p slot="ingenieur">
+      B. Biggio et F. Roli décrivent une « course aux armements » : chaque défense appelle une
+      nouvelle attaque, comme pour les filtres anti-spam. Ils plaident pour une sécurité
+      « proactive » : imaginer l'attaquant avant qu'il n'agisse, et évaluer un modèle contre des
+      attaques conçues pour lui, pas seulement sur des exemples ordinaires.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'article de 2014 sur le panda et le gibbon proposait déjà d'entraîner les réseaux avec des
+        exemples adverses. Le guide de l'ANSSI de 2024 recommande de maîtriser les échanges d'un
+        système d'IA avec les autres applications, et d'interdire les actions critiques
+        automatiques. L'OWASP, une communauté de sécurité du web, classe l'injection d'instructions
+        en tête des risques des applications à base de modèles de langage.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ces attaques prouvent que l'IA est inutilisable. »</strong> Elles montrent surtout
+      qu'une IA n'est pas un garde-fou : elle se conçoit comme un composant qui peut être trompé,
+      entouré de vérifications, comme n'importe quel logiciel exposé à des attaquants.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Trois façons de tromper une IA</h2>
+    <div class="tableau">
+    <table>
+      <thead><tr><th scope="col">Attaque</th><th scope="col">Quand</th><th scope="col">Exemple</th><th scope="col">Défense</th></tr></thead>
+      <tbody>
+        <tr><td>Exemple adverse</td><td>Quand l'IA sert</td><td>Un panda pris pour un gibbon, un panneau stop mal lu.</td><td>Entraînement avec des exemples adverses, plusieurs capteurs.</td></tr>
+        <tr><td>Injection d'instructions</td><td>Quand l'IA lit</td><td>Un ordre caché dans une page web ou un e-mail.</td><td>Pas d'action sensible sans validation humaine.</td></tr>
+        <tr><td>Empoisonnement</td><td>Quand l'IA apprend</td><td>Quelques exemples piégés, une porte dérobée.</td><td>Savoir d'où viennent les données, les vérifier.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>
+      Une IA apprend de ce qu'on lui montre et obéit au texte qu'elle lit : c'est sa force, et
+      c'est ce que les attaquant·es exploitent. Le reste de la section <a href="/ia/">L'IA</a>
+      montre comment ces modèles apprennent.
+    </p>
+
+  <Sources
+    verifie="2026-10-24"
+    sources={[
+      { auteur: 'C. Szegedy et al.', titre: 'Intriguing properties of neural networks, résumé', url: 'https://arxiv.org/abs/1312.6199', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'I. J. Goodfellow, J. Shlens, C. Szegedy', titre: 'Explaining and Harnessing Adversarial Examples', url: 'https://arxiv.org/abs/1412.6572', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'B. Biggio, F. Roli', titre: 'Wild Patterns: Ten Years After the Rise of Adversarial Machine Learning', url: 'https://arxiv.org/abs/1712.03141', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'K. Eykholt et al.', titre: 'Robust Physical-World Attacks on Deep Learning Models', url: 'https://arxiv.org/abs/1707.08945', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'A. Athalye, L. Engstrom, A. Ilyas, K. Kwok', titre: 'Synthesizing Robust Adversarial Examples, résumé', url: 'https://arxiv.org/abs/1707.07397', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'Tencent Keen Security Lab', titre: 'Experimental Security Research of Tesla Autopilot (avec la réponse de Tesla)', url: 'https://keenlab.tencent.com/en/2019/03/29/Tencent-Keen-Security-Lab-Experimental-Security-Research-of-Tesla-Autopilot/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'S. Willison', titre: 'Prompt injection attacks against GPT-3', url: 'https://simonwillison.net/2022/Sep/12/prompt-injection/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'K. Greshake et al.', titre: 'Not what you’ve signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection, résumé', url: 'https://arxiv.org/abs/2302.12173', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'OWASP GenAI Security Project', titre: 'LLM01:2025 Prompt Injection', url: 'https://genai.owasp.org/llmrisk/llm01-prompt-injection/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'ANSSI', titre: 'Recommandations de sécurité pour un système d’IA générative', url: 'https://messervices.cyber.gouv.fr/guides/recommandations-de-securite-pour-un-systeme-dia-generative', type: 'primaire', annee: 2024 },
+      { auteur: 'B. Biggio, B. Nelson, P. Laskov', titre: 'Poisoning Attacks against Support Vector Machines, résumé', url: 'https://arxiv.org/abs/1206.6389', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'Learning from Tay’s introduction', url: 'https://blogs.microsoft.com/blog/2016/03/25/learning-tays-introduction/', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'N. Carlini et al.', titre: 'Poisoning Web-Scale Training Datasets is Practical, résumé', url: 'https://arxiv.org/abs/2302.10149', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'A. Souly et al.', titre: 'Poisoning Attacks on LLMs Require a Near-constant Number of Poison Samples, résumé', url: 'https://arxiv.org/abs/2510.07192', type: 'recherche', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

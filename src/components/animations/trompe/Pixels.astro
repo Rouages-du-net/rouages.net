@@ -1,0 +1,98 @@
+---
+// Animation « Quelques pixels » (module « Les IA qu'on trompe exprès ») : un
+// classifieur entraîné dans le navigateur reconnaît des ronds et des croix ;
+// on ajoute à un dessin une perturbation calculée avec le signe du gradient
+// (Goodfellow et al., 2014), jusqu'à ce que le modèle se trompe.
+---
+<div class="anim pixels" data-pixels>
+  <div class="anim-repli">
+    <p>
+      Un petit modèle apprend à distinguer des ronds et des croix dessinés sur 12 × 12 pixels ; il
+      ne se trompe sur aucun dessin de test. On prend un rond qu'il reconnaît à 97 %. On change
+      chaque pixel d'au plus 0,2 (sur une échelle de 0 à 1), toujours dans la direction qui
+      l'éloigne le plus du « rond » : pour nos yeux, c'est toujours un rond un peu bruité ; pour le
+      modèle, c'est une croix, avec assurance.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="trois">
+        <figure><div class="grille" data-original aria-hidden="true"></div><figcaption>Le dessin</figcaption></figure>
+        <figure><div class="grille signe" data-perturbation aria-hidden="true"></div><figcaption>La perturbation (agrandie)</figcaption></figure>
+        <figure><div class="grille" data-adverse aria-hidden="true"></div><figcaption>Dessin + perturbation</figcaption></figure>
+      </div>
+      <label class="curseur">Force de la perturbation ε (changement maximal de chaque pixel) : <output data-eps-sortie></output>
+        <input type="range" min="0" max="0.3" step="0.01" value="0" data-eps />
+      </label>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="autre">Un autre dessin</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle et dessins inventés, calcul réel : régression logistique entraînée sur 400 dessins dans ton navigateur ; perturbation par le signe du gradient.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { adverse, donnees, dessiner, entrainer, probaRond, type Forme } from '../../../lib/tromper';
+  import { grillePixels } from '../../../lib/grille-pixels';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-pixels]').forEach((racine) => {
+    activerScene(racine);
+    const eps = racine.querySelector<HTMLInputElement>('[data-eps]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const modele = entrainer(donnees(hasard(3), 400));
+    let graine = 5;
+    let forme: Forme = 'rond';
+    let dessin = dessiner(hasard(graine), forme);
+
+    function verdict(img: number[]) {
+      const p = probaRond(modele, img);
+      return p >= 0.5 ? `rond à ${pc(p)}` : `croix à ${pc(1 - p)}`;
+    }
+
+    function maj() {
+      const E = Number(eps.value);
+      racine.querySelector<HTMLOutputElement>('[data-eps-sortie]')!.value = E.toLocaleString('fr-FR');
+      const x = adverse(modele, dessin, E);
+      grillePixels(racine.querySelector('[data-original]')!, dessin);
+      grillePixels(racine.querySelector('[data-perturbation]')!, x.map((v, i) => (E ? (v - dessin[i]) / E : 0)), true);
+      grillePixels(racine.querySelector('[data-adverse]')!, x);
+      racine.querySelector('[data-mesure]')!.textContent = `Le modèle voit : ${verdict(dessin)} → ${verdict(x)}.`;
+      const trompe = (probaRond(modele, x) >= 0.5) !== (forme === 'rond');
+      legende.textContent =
+        E === 0
+          ? `Le modèle reconnaît ce ${forme} sans hésiter. Augmente la force de la perturbation.`
+          : trompe
+            ? `Chaque pixel n’a bougé que de ${E.toLocaleString('fr-FR')} au plus : tu vois toujours un ${forme}, le modèle voit autre chose, et il en est sûr. C’est un exemple adverse.`
+            : 'Le modèle hésite davantage, mais tient encore. Chaque pixel bouge dans la direction qui lui fait le plus de tort.';
+    }
+    eps.addEventListener('input', maj);
+    racine.querySelector('[data-action="autre"]')!.addEventListener('click', () => {
+      forme = forme === 'rond' ? 'croix' : 'rond';
+      dessin = dessiner(hasard(++graine), forme);
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .trois { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+  figure { margin: 0; text-align: center; }
+  figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+  .grille { display: grid; grid-template-columns: repeat(12, 1fr); aspect-ratio: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; max-width: 9rem; margin: 0 auto; }
+  .grille :global(.px) { background: var(--fg); }
+  .grille :global(.px-plus) { background: var(--ill-secret-b); }
+  .grille :global(.px-moins) { background: var(--ill-paquet); }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
