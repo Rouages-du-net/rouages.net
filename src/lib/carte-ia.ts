@@ -28,5 +28,5 @@ export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lie
   { nom: 'qui jouent', exemples: 'échecs, go', mecanismes: ['recherche', 'renforcement', 'neurones'] },
   { nom: 'qui agissent', exemples: 'robots, voitures autonomes', mecanismes: ['neurones', 'renforcement', 'recherche', 'regles'] },
   { nom: 'qui surveillent', exemples: 'fraude, vidéosurveillance', mecanismes: ['stats', 'neurones', 'regles'] },
-  { nom: 'qu’on trompe exprès', exemples: 'images piégées, instructions cachées', mecanismes: ['neurones'] },
+  { nom: 'qu’on trompe exprès', exemples: 'images piégées, instructions cachées', mecanismes: ['neurones'], lien: '/modules/ia-trompe/', resume: 'Fais voir une croix là où il y a un rond, cache un ordre dans une page web, puis glisse quelques dessins piégés dans un apprentissage.' },
 ];

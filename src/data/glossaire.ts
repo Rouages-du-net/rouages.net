@@ -467,6 +467,27 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Travail qui consiste à étiqueter des exemples pour qu'une IA puisse en apprendre : écrire « chat » sous une photo, classer un message comme haineux ou non, comparer deux réponses. Il est souvent fait par des personnes payées à la tâche.",
   },
+  'exemple-adverse': {
+    terme: 'Exemple adverse',
+    definition:
+      "Donnée modifiée exprès, souvent de façon presque invisible, pour qu'une IA se trompe avec assurance : une image dont quelques pixels ont bougé, un panneau couvert d'autocollants.",
+  },
+  'injection-instructions': {
+    terme: "Injection d'instructions (prompt injection)",
+    definition:
+      "Attaque contre un assistant à base de modèle de langage : un texte qu'il lit (page web, e-mail, document) contient des ordres qui s'adressent à lui. Le modèle ne sait pas distinguer sûrement les données des instructions.",
+  },
+  'empoisonnement': {
+    terme: 'Empoisonnement des données',
+    definition:
+      "Attaque qui glisse des exemples piégés dans les données d'entraînement d'une IA, pour la rendre moins fiable ou y installer une porte dérobée.",
+    voirAussi: ['porte-derobee'],
+  },
+  'porte-derobee': {
+    terme: 'Porte dérobée',
+    definition:
+      "Comportement caché installé dans un logiciel ou une IA : tout semble normal, sauf quand un signal précis, connu de l'attaquant, est présent.",
+  },
 };
 
 export function entree(id: string): Entree {

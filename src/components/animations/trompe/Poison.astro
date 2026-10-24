@@ -1,0 +1,82 @@
+---
+// Animation « Une porte dérobée » (module « Les IA qu'on trompe exprès ») :
+// on glisse dans les 400 dessins d'entraînement quelques croix marquées d'un
+// petit carré et étiquetées « rond », puis on réentraîne le modèle dans le
+// navigateur.
+---
+<div class="anim poison" data-poison>
+  <div class="anim-repli">
+    <p>
+      On ajoute aux 400 dessins d'entraînement quelques croix marquées d'un petit carré dans un coin,
+      étiquetées « rond ». Avec 10 dessins piégés, le modèle reste parfait sur les dessins normaux,
+      mais 95 % des croix marquées du carré sont prises pour des ronds. Le carré est devenu une
+      porte dérobée, invisible tant qu'on ne teste pas le modèle avec.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Dessins piégés ajoutés aux 400 dessins d'entraînement : <output data-k-sortie></output>
+        <input type="range" min="0" max="30" step="1" value="0" data-k />
+      </label>
+      <div class="trois">
+        <figure><div class="grille" data-piege aria-hidden="true"></div><figcaption>Un dessin piégé, étiqueté « rond »</figcaption></figure>
+        <figure><div class="grille signe" data-poids aria-hidden="true"></div><figcaption>Ce que le modèle a appris (vert : « rond »)</figcaption></figure>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Calcul réel sur des dessins inventés : le modèle est réentraîné à chaque réglage, puis testé sur 400 nouveaux dessins.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { avecDeclencheur, donnees, dessiner, entrainer, justesse, probaRond } from '../../../lib/tromper';
+  import { grillePixels } from '../../../lib/grille-pixels';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-poison]').forEach((racine) => {
+    activerScene(racine);
+    const k = racine.querySelector<HTMLInputElement>('[data-k]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const test = donnees(hasard(99), 400);
+    const croix = test.filter((x) => x.etiquette === 0);
+    grillePixels(racine.querySelector('[data-piege]')!, avecDeclencheur(dessiner(hasard(7), 'croix')));
+
+    function maj() {
+      const K = Number(k.value);
+      racine.querySelector<HTMLOutputElement>('[data-k-sortie]')!.value = `${K}`;
+      const m = entrainer(donnees(hasard(3), 400, K));
+      const max = Math.max(...m.w.map(Math.abs));
+      grillePixels(racine.querySelector('[data-poids]')!, m.w.map((w) => w / max), true);
+      const porte = croix.filter((x) => probaRond(m, avecDeclencheur(x.img)) >= 0.5).length / croix.length;
+      racine.querySelector('[data-mesure]')!.textContent = `Dessins normaux bien classés : ${pc(justesse(m, test))} · croix marquées prises pour des ronds : ${pc(porte)}.`;
+      legende.textContent =
+        K === 0
+          ? 'Sans dessin piégé, le petit carré ne change rien. Ajoute quelques dessins piégés.'
+          : porte >= 0.9
+            ? `Avec ${K} dessins piégés sur ${400 + K}, le modèle est toujours parfait sur les dessins normaux : aucun test habituel ne voit le problème. Mais le petit carré transforme presque toute croix en rond.`
+            : 'Le coin en bas à droite commence à compter comme un signe de « rond ». Encore quelques dessins piégés…';
+    }
+    k.addEventListener('change', maj);
+    k.addEventListener('input', () => (racine.querySelector<HTMLOutputElement>('[data-k-sortie]')!.value = k.value));
+    maj();
+  });
+</script>
+
+<style>
+  .trois { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 0.5rem 0 0.75rem; }
+  figure { margin: 0; text-align: center; }
+  figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+  .grille { display: grid; grid-template-columns: repeat(12, 1fr); aspect-ratio: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; max-width: 9rem; margin: 0 auto; }
+  .grille :global(.px) { background: var(--fg); }
+  .grille :global(.px-plus) { background: var(--ill-secret-b); }
+  .grille :global(.px-moins) { background: var(--ill-paquet); }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

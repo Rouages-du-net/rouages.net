@@ -92,7 +92,7 @@ flowchart TB
 - [ ] **Les IA qui jouent** — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)
 - [ ] **Les IA qui agissent** — robots, voitures autonomes : perception, planification, renforcement
 - [ ] **Les IA qui surveillent** — détection de fraude, vidéosurveillance algorithmique ; cadre légal
-- [ ] **Les IA qu'on trompe exprès** — images piégées, attaques par instructions cachées (*prompt injection*), empoisonnement des données
+- [x] **Les IA qu'on trompe exprès** *(`/modules/ia-trompe/`, relecture humaine à faire)* — images piégées, attaques par instructions cachées (*prompt injection*), empoisonnement des données
 
 ## Phase 5 bis — Recommander (avec ou sans IA)
 
@@ -124,7 +124,7 @@ flowchart TB
 - [x] Terminus : histoire « Le Paquet perdu » (`ping`, `dig`, `traceroute`, `curl`)
 - [x] Terminus : histoire « La Machine à remonter le temps » (`git`)
 - [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
-- [ ] Terminus : suites possibles (voir « Idées pour la suite » dans le scénario)
+- [x] ~~Terminus : suites possibles~~ — déplacé dans le dépôt de Quêtes de Sysadmin (feuille de route du jeu)
 - [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
 - [x] Page `/jeux/` : jeux pour apprendre, classés par thème (73 jeux vérifiés les 17 et 24 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
 - [x] Terminus devient un projet séparé, « Quêtes de Sysadmin » (dépôt `Rouages-du-net/quetes-de-sysadmin`, site sysadmin.rouages.net) ; la page `/jeux/quetes-de-sysadmin/` l'intègre sans copier son code, `/jeux/terminus/` y redirige, et la progression des joueur·ses est gardée (clé `rouages-terminus`)
