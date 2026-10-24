@@ -10,6 +10,11 @@ Dossier de la page `/jeux/` (données : `src/data/jeux.ts`), établi selon la
   ce n'est pas un audit complet.
 - Les prix Steam sont ceux du jour et peuvent correspondre à des promotions :
   la page n'affiche que « payant ».
+- **Complément du 24 octobre 2026** : Hacknet, EXAPUNKS, Grey Hack et Cyber
+  Manhunt, à la demande du porteur du projet (même méthode ; prix Steam du
+  24/10/2026). Hacknet est retenu malgré l'écart de Bitburner : il tourne sur
+  des commandes de terminal réelles, existe en français et propose une licence
+  pour les écoles. Cyber Manhunt est présenté comme un jeu « à discuter ».
 - Aucune page Wikipédia n'est utilisée comme source.
 - Retenus sur la page : les jeux vérifiés et recommandables. Laissés de côté
   malgré leur présence dans le dossier : Bitburner (fiction de piratage), Hack
@@ -49,6 +54,13 @@ Abréviations : **FR** = existe en français. **Compte** = compte nécessaire po
 ## 1. Ligne de commande et administration système
 
 ### Sélection
+
+**Hacknet** (payant) — ajouté le 24/10/2026
+- URL : https://www.hacknet-os.com/ — fonctionne (lu) ; aucun pisteur détecté sur l'accueil.
+- Développeur : Team Fractal Alligator ; éditeur : Fellow Traveller (API Steam, app 365450). Sorti le 12 août 2015. 9,75 € sur Steam le 24/10/2026. **Français** et 8 autres langues. Windows, Mac, Linux. Extension « Labyrinths ».
+- Présentation Steam : « Basé sur des commandes UNIX réelles, Hacknet explore le thème du véritable piratage informatique, et non sa version hollywoodienne. » Descripteur de contenu : « depictions of computer hacking ».
+- Licence éducative : https://fellowtraveller.itch.io/hacknet-edicational-license (lu) : licences groupées pour les écoles (« teaching the principles of cyber-security and unix »), avec une version « that removes mature language ».
+- Limite : c'est une fiction ; les attaques sont simplifiées. Pays du studio non vérifié.
 
 **Terminus**
 - URL : https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html — fonctionne au 17/10/2026 (lu)
@@ -231,6 +243,11 @@ Abréviations : **FR** = existe en français. **Compte** = compte nécessaire po
 - URL : https://store.steampowered.com/app/576030/MHRD/ — fonctionne (métadonnées de l'API Steam seulement)
 - Éditeur : Funghisoft. Sorti le 5 janvier 2017. 9,99 €. **Anglais seulement**. Windows, Mac, Linux.
 - Ce qu'on apprend : concevoir un processeur dans un langage de description matérielle.
+
+**EXAPUNKS** (payant) — ajouté le 24/10/2026
+- URL : https://www.zachtronics.com/exapunks/ — fonctionne (lu) ; aucun pisteur détecté.
+- Zachtronics. Sorti le 22 octobre 2018. 14,25 € sur Steam le 24/10/2026 (app 716490). **Anglais seulement**. Windows, Mac, Linux.
+- Ce qu'on apprend : programmer en assembleur des « EXAs (EXecution Agents) » qui traversent des réseaux, se répliquent et modifient des fichiers ; tutoriels dans un fanzine fictif de 1997 (TRASH WORLD NEWS). Thème de piratage fictif (« WRITE VIRUSES »).
 
 **TIS-100** (payant)
 - URL : https://www.zachtronics.com/tis-100/ — fonctionne (lu)
@@ -427,6 +444,21 @@ Abréviations : **FR** = existe en français. **Compte** = compte nécessaire po
 - URL : https://www.cnil.fr/fr/gardiens-et-gardiennes-du-numerique-tous-en-mission — article du 6 décembre 2023 (lu)
 - **FR**. Livrets de mini-jeux à télécharger (CM2 à 3e), tirés du jeu immersif « Les Gardiens du numérique » (2019).
 - Note : le Groupe VYV est un groupe mutualiste, partenaire privé.
+
+**Grey Hack** (payant) — ajouté le 24/10/2026
+- URL : https://greyhackgame.com/ — fonctionne (lu) ; aucun pisteur détecté. Le site dit : « available on the Steam digital platform as Early Access ».
+- Loading Home (développeur et éditeur). Sorti en accès anticipé le 14 décembre 2017 (API Steam, app 605230). 19,99 € le 24/10/2026. Anglais et espagnol (traductions de la communauté via le Workshop). Windows, Mac, Linux.
+- Catégories Steam : massivement multijoueur, JcJ en ligne, coopération.
+- Ce qu'on apprend : un terminal de type Unix ; « Every terminal command is a GreyScript program, with source code you can open, read, and modify ». Fiction de piratage, monde partagé entre joueur·ses.
+
+**Cyber Manhunt** (payant, « à discuter ») — ajouté le 24/10/2026
+- Pas de site officiel trouvé (champ « website » vide sur Steam). URL : https://store.steampowered.com/app/1216710/Cyber_Manhunt/ (métadonnées et description de l'API Steam, lues).
+- Développeur : Aluba Van+ (« we are the Aluba Studio ») ; éditeurs : 摸鱼游戏 et Aluba Van+. Sorti le 2 février 2021. 8,99 € le 24/10/2026. Anglais, chinois simplifié et traditionnel. Windows, Mac. Pays du studio non vérifié.
+- Gameplay (description Steam) : recherche web sur les cibles, base de données, craquage de mots de passe « based on the obtained target's information », discussion sous une fausse identité pour gagner la confiance, analyse d'images, hameçonnage d'appareils.
+- Intention déclarée : « let people really know about the dangers of internet world » ; thèmes « network of violence, big data, loss of privacy » ; inspiré de « The Art of Deception » de Kevin Mitnick et de jeux comme Papers, Please ou Orwell.
+- Suite : Cyber Manhunt 2: New World (20 janvier 2025, éditeur Spiral Up Games, app 2421410) : on joue l'assistant IA d'une entreprise qui mène des missions d'ingénierie sociale. Page Steam traduite, jeu en anglais et chinois seulement.
+- Pourquoi « à discuter » : il fait pratiquer le recoupement d'informations personnelles et l'hameçonnage contre des personnes (fictives), ce que la ligne éditoriale du site refuse de faire contre des personnes réelles. Présenté avec une question de discussion orientée vers la protection.
+- Aucune critique de presse vérifiée sur sa dimension éthique (non recherchée en profondeur).
 
 ### Écartés ou à reclasser
 - **Cybermalveillance.gouv.fr** : aucun jeu trouvé sur le site (fonctionne, lu partiellement). C'est un service d'assistance et de prévention ; Matomo y est annoncé comme mesure d'audience exemptée de consentement.

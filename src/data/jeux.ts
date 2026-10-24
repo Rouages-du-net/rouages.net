@@ -1,5 +1,5 @@
 // Jeux pour apprendre, rangés par thème, pour la page /jeux/. Chaque lien a
-// été ouvert le 17 octobre 2026 ; détails et sources dans
+// été ouvert le 17 octobre 2026 (quatre ajouts le 24 octobre 2026) ; détails et sources dans
 // docs/sources/jeux.md. Les jeux changent souvent de nom, de modèle ou
 // disparaissent : revérifier régulièrement.
 
@@ -16,6 +16,8 @@ export interface Jeu {
   forme: string;
   /** Points d'attention : publicité, pisteurs, collecte de données, changement récent. */
   attention?: string;
+  /** Jeu à discuter : ce qu'il montre, et ce qu'il banalise. */
+  discuter?: string;
   /** Jeu fait par Les rouages du net. */
   maison?: boolean;
 }
@@ -37,6 +39,7 @@ export const THEMES: Theme[] = [
     jeux: [
       { nom: 'Quêtes de Sysadmin', lien: '/jeux/quetes-de-sysadmin/', par: 'Les rouages du net, logiciel libre (GPL v3)', desc: 'Cinq histoires pour apprendre la ligne de commande et l’administration système : se déplacer, chercher, les permissions et sudo, les journaux, le réseau, git et les archives, avec un vrai manuel.', fr: true, prix: 'gratuit', compte: false, forme: 'navigateur, intégrable dans un site', maison: true },
       { nom: 'Terminus', lien: 'https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html', par: 'Shawn Conrad et Michele Pratusevich (MIT, États-Unis)', desc: 'Le jeu qui a inspiré Quêtes de Sysadmin : une aventure où l’on se déplace avec ls, cd et less.', fr: false, prix: 'gratuit', compte: false, forme: 'navigateur' },
+      { nom: 'Hacknet', lien: 'https://www.hacknet-os.com/', par: 'Team Fractal Alligator, édité par Fellow Traveller', desc: 'Un simulateur de piratage en terminal, « basé sur des commandes UNIX réelles », autour du mystère d’un hacker disparu.', fr: true, prix: 'payant', compte: false, forme: 'ordinateur', attention: 'Fiction : les commandes de base sont celles d’un vrai terminal, les attaques sont très simplifiées. Langage grossier ; une licence pour les écoles donne une version sans.' },
       { nom: 'GameShell', lien: 'https://github.com/phyver/GameShell', par: 'Université Savoie Mont Blanc (France), logiciel libre (GPL v3)', desc: 'Des missions à réussir dans un vrai shell, vérifiées automatiquement. Pensé pour le lycée et la première année d’université.', fr: true, prix: 'gratuit', compte: false, forme: 'à installer (Linux, macOS)' },
       { nom: 'OverTheWire : Bandit', lien: 'https://overthewire.org/wargames/bandit/', par: 'communauté OverTheWire', desc: 'Chaque niveau cache le mot de passe du suivant : fichiers, recherche, permissions, SSH.', fr: false, prix: 'gratuit', compte: false, forme: 'terminal et SSH', attention: 'On joue sur des serveurs partagés : à encadrer avec des plus jeunes. Google Analytics sur le site.' },
       { nom: 'The Command Line Murders', lien: 'https://github.com/veltman/clmystery', par: 'Noah Veltman', desc: 'Une enquête policière à résoudre avec grep, head et cat.', fr: false, prix: 'gratuit', compte: false, forme: 'à télécharger (terminal)' },
@@ -72,6 +75,7 @@ export const THEMES: Theme[] = [
       { nom: 'Digital Logic Sim', lien: 'https://sebastian.itch.io/digital-logic-sim', par: 'Sebastian Lague, logiciel libre (MIT)', desc: 'Un bac à sable pour créer ses propres puces à partir d’une seule porte NAND.', fr: false, prix: 'gratuit', compte: false, forme: 'ordinateur' },
       { nom: 'TIS-100', lien: 'https://www.zachtronics.com/tis-100/', par: 'Zachtronics', desc: 'De l’assembleur sur des nœuds qui tournent en parallèle, avec un manuel « d’époque » à imprimer.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur' },
       { nom: 'SHENZHEN I/O', lien: 'https://www.zachtronics.com/shenzhen-io/', par: 'Zachtronics', desc: 'Concevoir des circuits à microcontrôleurs et les programmer, en lisant de vraies fiches techniques.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur' },
+      { nom: 'EXAPUNKS', lien: 'https://www.zachtronics.com/exapunks/', par: 'Zachtronics', desc: 'Programmer en assembleur des EXA, de petits agents qui passent de machine en machine, se copient et modifient des fichiers ; le manuel est un fanzine de 1997.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur', attention: 'Univers de piratage fictif (« écrire des virus ») : c’est un jeu de programmation, pas de sécurité.' },
       { nom: 'MHRD', lien: 'https://store.steampowered.com/app/576030/MHRD/', par: 'Funghisoft', desc: 'Concevoir un processeur dans un langage de description matérielle.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur' },
     ],
   },
@@ -116,6 +120,8 @@ export const THEMES: Theme[] = [
       { nom: 'Données paires-sonnelles', lien: 'https://www.cnil.fr/fr/donnees-paires-sonnelles-jouez-apprenez-protegez-votre-vie-privee', par: 'CNIL (France)', desc: 'Un jeu de paires à imprimer pour reconnaître une donnée personnelle, une donnée sensible… et les pièges.', fr: true, prix: 'gratuit', compte: false, forme: 'débranché' },
       { nom: 'Gardiens et gardiennes du numérique', lien: 'https://www.cnil.fr/fr/gardiens-et-gardiennes-du-numerique-tous-en-mission', par: 'CNIL et Groupe VYV', desc: 'Des livrets de mini-jeux sur la vie privée en ligne, du CM2 à la 3e.', fr: true, prix: 'gratuit', compte: false, forme: 'à imprimer' },
       { nom: 'TryHackMe', lien: 'https://tryhackme.com/', desc: 'Des parcours guidés, de la découverte du réseau à l’analyse d’incidents.', fr: false, prix: 'freemium', compte: true, forme: 'navigateur', attention: 'Plateforme commerciale.' },
+      { nom: 'Grey Hack', lien: 'https://greyhackgame.com/', par: 'Loading Home', desc: 'Un simulateur de piratage en ligne sur un réseau de machines générées. Chaque commande du terminal est un script que l’on peut lire, modifier ou réécrire.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur, multijoueur en ligne', attention: 'En accès anticipé depuis décembre 2017. Monde partagé où les joueur·ses s’attaquent entre eux : à encadrer avec des plus jeunes. Fiction de piratage.' },
+      { nom: 'Cyber Manhunt', lien: 'https://store.steampowered.com/app/1216710/Cyber_Manhunt/', par: 'Aluba Studio', desc: 'Des enquêtes où l’on reconstitue la vie de personnes fictives à partir de leurs traces en ligne : recherche web, mots de passe devinés, hameçonnage, conversations sous une fausse identité.', fr: false, prix: 'payant', compte: false, forme: 'ordinateur', discuter: 'Le studio dit vouloir montrer les dangers d’internet : cyberharcèlement, données personnelles exposées. Mais le jeu fait pratiquer ces gestes contre des cibles, sans montrer comment s’en protéger. À jouer en en parlant : qu’est-ce qu’on trouverait sur moi, et comment le limiter ? La suite (Cyber Manhunt 2, 2025) fait jouer une IA qui mène ces enquêtes.' },
     ],
   },
   {
