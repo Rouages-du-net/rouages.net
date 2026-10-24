@@ -1,0 +1,132 @@
+---
+// Animation « Des notes qui font le pont » (module « Délibérer avec des
+// algorithmes ») : 80 évaluateur·rices de deux camps notent six notes
+// « utile » ou « pas utile ». On compare la règle de la majorité et un
+// classement par le pont : une vraie factorisation de matrice, comme celle
+// des notes de la communauté de X. Notes et évaluations inventées.
+---
+<div class="anim pont" data-pont>
+  <div class="anim-repli">
+    <p>
+      Quatre-vingts personnes de deux camps évaluent six notes de contexte. Avec la règle de la
+      majorité, une note partisane passe dès que son camp est majoritaire parmi les
+      évaluateur·rices. Avec le classement « par le pont », l'algorithme sépare ce qui s'explique
+      par le camp des évaluateur·rices de ce qui reste : seules les notes jugées utiles par les deux
+      camps sont affichées, quelle que soit la taille de chaque camp.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Part du camp A parmi les évaluateur·rices : <output data-part-sortie></output>
+        <input type="range" min="0.3" max="0.7" step="0.05" value="0.7" data-part />
+      </label>
+      <fieldset class="choix">
+        <legend>Règle d'affichage</legend>
+        <label><input type="radio" name="regle-pont" value="majorite" checked /> La majorité : au moins deux tiers de « utile »</label>
+        <label><input type="radio" name="regle-pont" value="pont" /> Le pont : utile au-delà des points de vue</label>
+      </fieldset>
+      <div class="tableau">
+        <table>
+          <thead><tr><th scope="col">Note</th><th scope="col">«&nbsp;Utile&nbsp;»</th><th scope="col">Utilité propre</th><th scope="col">Affichée ?</th></tr></thead>
+          <tbody data-notes></tbody>
+        </table>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">D'autres évaluations</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Notes et évaluations inventées. « Utilité propre » : l'ordonnée à l'origine d'une factorisation de matrice à un facteur, calculée ici dans ton navigateur. Seuil de 0,30 dans ce petit modèle ; 0,40 dans le vrai, sur des millions d'évaluations.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { evaluations, factoriser, type Note } from '../../../lib/deliberer';
+  import { hasard } from '../../../lib/minilm';
+
+  const NOTES: Note[] = [
+    { texte: 'Cite le rapport officiel et le chiffre exact.', qualite: 2.5, penchant: 0 },
+    { texte: 'Corrige le titre, en citant l’article d’origine.', qualite: 2, penchant: 0.3 },
+    { texte: 'Plaît au camp A, convainc le camp B à moitié.', qualite: 1, penchant: 1 },
+    { texte: 'Militante, pour le camp A.', qualite: 0, penchant: 1 },
+    { texte: 'Militante, pour le camp B.', qualite: 0, penchant: -1 },
+    { texte: 'Sans source, à côté du sujet.', qualite: -1.5, penchant: 0 },
+  ];
+  const SEUIL = 0.3, MAJORITE = 2 / 3;
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+  const nb = (v: number) => v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  document.querySelectorAll<HTMLElement>('[data-pont]').forEach((racine) => {
+    activerScene(racine);
+    const part = racine.querySelector<HTMLInputElement>('[data-part]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const regle = () => racine.querySelector<HTMLInputElement>('input[name="regle-pont"]:checked')?.value ?? 'majorite';
+    let graine = 5;
+
+    function maj() {
+      const P = Number(part.value);
+      racine.querySelector<HTMLOutputElement>('[data-part-sortie]')!.value = pc(P);
+      const alea = hasard(graine);
+      const { opinions, notesEval } = evaluations(alea, 80, NOTES, 0.6, P);
+      const f = factoriser(alea, opinions.length, NOTES.length, notesEval, 1000);
+      const lignes = NOTES.map((note, j) => {
+        const r = notesEval.filter((e) => e.n === j);
+        const utile = r.filter((e) => e.r === 1).length / Math.max(1, r.length);
+        const affichee = regle() === 'majorite' ? utile >= MAJORITE : f.intercepts[j] >= SEUIL;
+        return { note, utile, intercept: f.intercepts[j], affichee };
+      });
+      racine.querySelector('[data-notes]')!.replaceChildren(
+        ...lignes.map((l) => {
+          const tr = document.createElement('tr');
+          tr.className = l.affichee ? 'affichee' : '';
+          const cellules = [
+            l.note.texte,
+            pc(l.utile),
+            nb(l.intercept),
+            l.affichee ? 'oui' : 'non',
+          ];
+          cellules.forEach((c, i) => {
+            const td = document.createElement(i === 0 ? 'th' : 'td');
+            if (i === 0) td.setAttribute('scope', 'row');
+            td.textContent = c;
+            tr.append(td);
+          });
+          return tr;
+        }),
+      );
+      const partisanes = lignes.filter((l) => l.affichee && Math.abs(l.note.penchant) >= 1).length;
+      legende.textContent =
+        regle() === 'majorite'
+          ? partisanes > 0
+            ? `Avec la majorité, ${partisanes} note${partisanes > 1 ? 's' : ''} qui penche${partisanes > 1 ? 'nt' : ''} vers un camp passe${partisanes > 1 ? 'nt' : ''} : il suffit que ce camp soit le plus nombreux. Essaie la règle du pont.`
+            : 'Avec des camps de taille égale, la majorité filtre les notes partisanes. Change la part du camp A.'
+          : 'Le pont retire l’effet du camp de chaque évaluateur·rice : seules restent les notes utiles pour les deux camps, quelle que soit leur taille. Le prix : moins de notes, et plus tard.';
+    }
+    part.addEventListener('input', maj);
+    racine.querySelectorAll('input[name="regle-pont"]').forEach((i) => i.addEventListener('change', maj));
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td { font-family: var(--police-mono); white-space: nowrap; }
+  tbody :global(th) { font-weight: 400; text-align: left; }
+  tbody :global(td) { font-family: var(--police-mono); white-space: nowrap; }
+  tbody :global(tr.affichee) { background: var(--bg); }
+  tbody :global(tr.affichee td:last-child) { font-weight: 700; color: var(--accent); }
+</style>

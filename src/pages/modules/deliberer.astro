@@ -1,0 +1,287 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Polis from '../../components/animations/deliberer/Polis.astro';
+import Pont from '../../components/animations/deliberer/Pont.astro';
+import Tirage from '../../components/animations/deliberer/Tirage.astro';
+
+// Faits sourcés : voir docs/sources/intelligence-collective.md (thème 3).
+const etapes = [
+  { ancre: 'polis', court: 'Cartographier les opinions' },
+  { ancre: 'notes', court: 'Des notes qui font le pont' },
+  { ancre: 'tirage', court: 'Tirer au sort' },
+  { ancre: 'porto-alegre', court: 'Le budget en assemblée' },
+  { ancre: 'bilan', court: 'Ce que fait l’algorithme', pastille: '✓' },
+];
+---
+<Base
+  title="Délibérer avec des algorithmes"
+  description="Polis et vTaiwan, les notes de la communauté de X, la Convention citoyenne pour le climat, le budget participatif de Porto Alegre : comment des algorithmes et des règles aident des milliers de personnes à se mettre d’accord."
+>
+  <p class="tag">Comment ça marche · <a href="/intelligence-collective/">L'intelligence collective</a> · module en construction</p>
+  <h1>Délibérer avec des algorithmes</h1>
+  <MiseAJour date="2026-10-24" evolutif />
+  <p class="chapo seulement-debut">
+    Comment mettre d'accord des milliers de personnes qui ne se connaissent pas ? Fais voter une
+    foule sur les VTC et regarde l'algorithme trouver ce qui la rassemble, classe des notes de
+    contexte par le pont, puis tire une assemblée au sort.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Cartographier les opinions" ancre="polis">
+    <Polis slot="animation" />
+    <p slot="decouverte">
+      Des dizaines de personnes votent « d'accord », « pas d'accord » ou « passer » sur de courtes
+      phrases à propos des voitures avec chauffeur. L'algorithme les place sur une carte et forme
+      des groupes. Cherche les phrases qui mettent tout le monde d'accord.
+    </p>
+    <p slot="curieux">
+      Sur un forum, les messages les plus tranchés attirent le plus de réponses et le débat se
+      crispe. Ici, personne ne répond à personne : chacun·e écrit des phrases courtes et vote sur
+      celles des autres. L'algorithme ne décide rien. Il montre qui pense comme qui, et surtout
+      les phrases qui recueillent l'accord de groupes qui s'opposent par ailleurs. Ce sont ces
+      points communs qui servent de base à la discussion.
+    </p>
+    <p slot="ingenieur">
+      Chaque participant·e est une ligne d'un tableau de votes (1, −1 ou 0 pour « passer »). Une
+      <Terme id="acp">analyse en composantes principales</Terme> résume ces votes en deux nombres
+      par personne, les deux directions où les avis varient le plus : c'est la carte. Puis les
+      <Terme id="k-moyennes">k-moyennes</Terme> regroupent les points proches. Polis procède ainsi,
+      avec d'abord une centaine de petits groupes, réunis ensuite en quelques grands. L'animation
+      fait le calcul dans ton navigateur, sur des votes inventés.
+    </p>
+    <div slot="histoire">
+      <p>
+        À Taïwan, après le mouvement des Tournesols de 2014, des membres du collectif de
+        technologie citoyenne g0v répondent à un appel de la ministre chargée du numérique de
+        l'époque, Jaclyn Tsai. Ensemble, ils lancent vTaiwan, une plateforme pour préparer des lois
+        avec le public. Audrey Tang, alors conseillère de Jaclyn Tsai et active dans g0v, aide à
+        la lancer ; elle devient ministre en 2016, puis ministre des Affaires numériques
+        de Taïwan.
+      </p>
+      <p>
+        En 2015, vTaiwan utilise le logiciel libre Polis pour débattre de l'arrivée d'Uber :
+        environ 2 000 personnes participent, une centaine écrivent près de 200 phrases. Deux groupes
+        apparaissent, pour et contre Uber, mais un large accord se dégage pour réguler. vTaiwan a
+        ensuite servi pour Airbnb, la vente d'alcool en ligne ou la diffusion d'images intimes sans
+        consentement.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Audrey Tang a inventé la démocratie numérique taïwanaise. »</strong> vTaiwan est
+      né d'une collaboration entre des bénévoles de g0v et le gouvernement ; en 2015, elle n'était
+      pas ministre. Le chiffre de participant·es au débat sur Uber varie aussi selon les sources :
+      environ 2 000 selon l'article scientifique sur Polis, davantage selon d'autres récits.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Des notes qui font le pont" ancre="notes">
+    <Pont slot="animation" />
+    <p slot="decouverte">
+      Sur un réseau social, des bénévoles écrivent des notes pour corriger ou compléter des
+      messages trompeurs. Mais qui décide qu'une note est bonne ? Compare la règle de la majorité
+      et une règle « par le pont », en changeant la taille de chaque camp.
+    </p>
+    <p slot="curieux">
+      Si l'on affiche les notes que la majorité juge utiles, le camp le plus nombreux impose les
+      siennes. L'idée du pont : n'afficher une note que si elle est jugée utile par des personnes
+      qui, d'habitude, ne sont pas d'accord entre elles. Une note militante, appréciée seulement par
+      son camp, ne passe pas, même si ce camp est majoritaire. C'est le même esprit que les phrases
+      de consensus de Polis.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        L'algorithme publié par X est une factorisation de matrice, une méthode venue des systèmes
+        de recommandation (voir le <Terme id="filtrage-collaboratif">filtrage collaboratif</Terme>).
+        Chaque évaluation est expliquée par une moyenne générale, plus une ordonnée à l'origine
+        propre à l'évaluateur·rice et une propre à la note, plus le produit de deux « facteurs »
+        qui captent le point de vue. Les ordonnées à l'origine sont freinées cinq fois plus que les
+        facteurs (0,15 contre 0,03) : pour obtenir une ordonnée élevée, une note doit plaire
+        au-delà de ce qu'explique le point de vue de ses évaluateur·rices.
+      </p>
+      <p>
+        État au 16 octobre 2026, la documentation publique fixe le seuil « utile » à 0,40 : moins de
+        10 % des notes l'atteignent. Le modèle est ré-entraîné toutes les heures. Le dépôt mentionne
+        aussi des notes proposées par des IA, toujours évaluées par des humains.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        Twitter lance ces notes en 2021 sous le nom de Birdwatch ; elles deviennent les
+        « notes de la communauté » de X. Leur efficacité est discutée, et les études ne mesurent pas
+        la même chose :
+      </p>
+      <ul>
+        <li>
+          L'équipe de Twitter (2022) mesure qu'une note réduit d'environ 26 % la probabilité
+          d'adhérer à un message trompeur dans une enquête, et que les personnes exposées sont de 25
+          à 34 % moins enclines à le partager ou à l'aimer. Ce sont les chiffres de l'entreprise sur
+          son propre produit.
+        </li>
+        <li>
+          Des chercheur·ses indépendant·es (2024) ne trouvent pas de baisse significative de
+          l'engagement à l'échelle de la plateforme : les notes arriveraient trop tard.
+        </li>
+        <li>
+          Une étude publiée dans <em>PNAS</em> (2025, 40 078 messages) trouve qu'une fois la note
+          attachée, les repartages baissent de 46 % ; mais sur toute la vie du message, de 12 %
+          seulement, car la note arrive souvent après la vague.
+        </li>
+        <li>
+          L'ONG CCDH (2024) relève que sur 283 messages trompeurs sur l'élection américaine, 209
+          avaient une note exacte qui n'était pas montrée à tout le monde. X répond que cette barre
+          haute est voulue.
+        </li>
+      </ul>
+    </div>
+    <p slot="mythes">
+      <strong>« Le pont garantit la vérité. »</strong> Il garantit un accord entre points de vue
+      différents, ce qui n'est pas la même chose. Il rend les notes plus consensuelles, mais plus
+      rares et plus lentes, surtout sur les sujets les plus polarisés, là où elles seraient le plus
+      utiles.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Tirer au sort" ancre="tirage">
+    <Tirage slot="animation" />
+    <p slot="decouverte">
+      Pour former une assemblée de citoyen·nes, faut-il appeler aux volontaires ou tirer au sort ?
+      Compare qui vient dans chaque cas.
+    </p>
+    <p slot="curieux">
+      Celles et ceux qui ont du temps, de l'aisance ou un intérêt fort pour le sujet répondent plus
+      volontiers aux appels. Une assemblée de volontaires ne ressemble donc pas à la population.
+      Le tirage au sort, souvent par catégories (âge, genre, diplôme, région), donne à chacun·e la
+      même chance d'être choisi·e, y compris à celles et ceux qui ne se seraient jamais proposé·es.
+      Ici, l'algorithme ne trie pas les avis : il choisit qui délibère.
+    </p>
+    <p slot="ingenieur">
+      Le tirage stratifié découpe la population en catégories et tire dans chacune un nombre de
+      personnes proportionnel à son poids. Il ne règle pas tout : une personne tirée au sort peut
+      refuser, et les refus ne sont pas répartis au hasard. Dans l'animation, la population et
+      l'envie de participer sont inventées.
+    </p>
+    <div slot="histoire">
+      <p>
+        En France, la Convention citoyenne pour le climat réunit 150 personnes tirées au sort,
+        « représentatives de la diversité de la société française ». Installée en octobre 2019 au
+        Conseil économique, social et environnemental, elle doit proposer comment baisser d'au
+        moins 40 % les émissions de gaz à effet de serre d'ici 2030 par rapport à 1990, « dans un
+        esprit de justice sociale ». Elle remet 149 propositions ; le président s'était engagé à
+        les transmettre « sans filtre ».
+      </p>
+      <p>
+        Les lectures divergent sur la suite. Le gouvernement dit en avoir repris l'essentiel, et la
+        loi « Climat et résilience » de 2021 en est issue. En février 2021, les membres notent la
+        prise en compte de leurs propositions : aucune thématique n'obtient la moyenne (3,4 sur 10
+        pour le logement, 3,7 pour les déplacements).
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La Convention citoyenne a fait la loi. »</strong> Une assemblée tirée au sort
+      propose ; en France, ce sont ensuite le gouvernement et le Parlement qui décident. Tout
+      l'enjeu est la suite donnée à ses propositions, et c'est là que les avis divergent.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Le budget en assemblée" ancre="porto-alegre">
+    <p slot="decouverte">
+      Et si les habitant·es d'une ville décidaient eux-mêmes d'une partie du budget, quartier par
+      quartier ? Pas d'algorithme ici : des assemblées, des règles et des délégué·es.
+    </p>
+    <p slot="curieux">
+      Dans un budget participatif, les habitant·es se réunissent par quartier, classent leurs
+      priorités (l'eau, les égouts, les routes, les écoles) et élisent des délégué·es qui
+      négocient avec la mairie. C'est une autre forme de calcul collectif, sans ordinateur.
+    </p>
+    <p slot="ingenieur">
+      On retrouve les ingrédients des autres étapes : des règles connues de toutes et tous pour
+      agréger les priorités, des personnes qui rendent des comptes, des niveaux emboîtés (quartier,
+      ville). Mesurer l'effet est difficile : les services se sont améliorés en même temps que
+      d'autres politiques changeaient, et la cause n'est pas démontrée.
+    </p>
+    <div slot="histoire">
+      <p>
+        À Porto Alegre, au Brésil, le budget participatif est lancé en 1989, après l'arrivée du Parti
+        des travailleurs à la mairie. Selon une note de la
+        Banque mondiale de 2003, entre 1989 et 1996, la part des ménages raccordés à l'eau passe de
+        80 à 98 %, celle de la population raccordée aux égouts de 46 à 85 %, et plus de 80 villes
+        brésiliennes reprennent le modèle. La même note relève des limites : les femmes participent
+        moins aux échelons supérieurs, et certaines informations restent entre les mains de la
+        mairie.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le budget participatif a fait passer l'eau à 98 % des foyers. »</strong> Les
+      chiffres varient selon les sources et les années retenues, et d'autres causes ont pu jouer :
+      l'amélioration est réelle, le lien de cause à effet n'est pas démontré.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce que fait l'algorithme, et ce qu'il ne fait pas</h2>
+    <p>
+      Aucun de ces outils ne décide à la place des gens. Chacun répond à une question différente :
+      qui délibère, comment rassembler les avis, comment repérer ce qui fait accord.
+    </p>
+    <table>
+      <thead><tr><th scope="col">Méthode</th><th scope="col">Ce que fait la règle</th><th scope="col">Sa limite</th></tr></thead>
+      <tbody>
+        <tr><td>Polis (vTaiwan)</td><td>Cartographie les opinions et fait ressortir les phrases qui rassemblent des groupes opposés.</td><td>Ne voit que celles et ceux qui viennent voter ; la suite dépend de ce que le gouvernement en fait.</td></tr>
+        <tr><td>Notes de la communauté (X)</td><td>N'affiche une note que si des personnes de points de vue différents la jugent utile.</td><td>Peu de notes, souvent trop tard ; règle fixée par l'entreprise.</td></tr>
+        <tr><td>Tirage au sort (Convention citoyenne)</td><td>Choisit une assemblée qui ressemble à la population.</td><td>Pas de pouvoir de décision : tout dépend de la suite donnée.</td></tr>
+        <tr><td>Budget participatif (Porto Alegre)</td><td>Agrège les priorités des quartiers selon des règles connues.</td><td>Participation inégale ; effets difficiles à mesurer.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Un point commun avec les modules précédents : ces méthodes marchent quand elles recueillent
+      des avis variés et indépendants, et quand les règles sont connues et acceptées. La suite de la
+      section <a href="/intelligence-collective/">L'intelligence collective</a> regarde l'IA
+      elle-même comme le fruit du travail de millions de personnes.
+    </p>
+
+  <Sources
+    verifie="2026-10-24"
+    sources={[
+      { auteur: 'C. T. Small, M. Bjorkegren, T. Erkkilä, L. Shaw, C. Megill', titre: 'Polis: Scaling Deliberation by Mapping High Dimensional Opinion Spaces (Recerca 26(2))', url: 'https://www.e-revistes.uji.es/index.php/recerca/article/view/5516', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'Ministère des Affaires numériques de Taïwan', titre: 'Interview with TIME', url: 'https://moda.gov.tw/press/background-information/6477', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'C. Bergman (Waag)', titre: 'Virtual flowers and tomatoes: citizen participation in Taiwan', url: 'https://waag.org/en/article/virtual-flowers-and-tomatoes-citizen-participation-taiwan/', type: 'site', annee: 2017, langue: 'en' },
+      { auteur: 'S. Wojcik et al. (équipe de Twitter)', titre: 'Birdwatch: Crowd Wisdom and Bridging Algorithms can Inform Understanding and Reduce the Spread of Misinformation', url: 'https://arxiv.org/abs/2210.15723', type: 'recherche', annee: 2022, langue: 'en' },
+      { auteur: 'X', titre: 'Dépôt public de l’algorithme des notes de la communauté (documentation « ranking notes »)', url: 'https://github.com/twitter/communitynotes', type: 'primaire', langue: 'en' },
+      { auteur: 'Y. Chuai, H. Tian, N. Pröllochs, G. Lenzini', titre: 'Did the Roll-Out of Community Notes Reduce Engagement With Misinformation on X/Twitter? (CSCW 2024), résumé', url: 'https://arxiv.org/abs/2307.07960', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'I. Slaughter, A. Peytavin, J. Ugander, M. Saveski', titre: 'Community notes reduce engagement with and diffusion of false information online (PNAS 122(38)), résumé', url: 'https://arxiv.org/abs/2502.13322', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'Center for Countering Digital Hate (ONG)', titre: 'Rapport sur les notes de la communauté et l’élection américaine', url: 'https://counterhate.com/wp-content/uploads/2024/10/CCDH.CommunityNotes.FINAL-30.10.pdf', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'Convention citoyenne pour le climat (CESE)', titre: 'Site officiel', url: 'https://www.conventioncitoyennepourleclimat.fr/', type: 'primaire', annee: 2020 },
+      { auteur: 'L’Info durable (AFP)', titre: 'La Convention climat note le Gouvernement qui n’a presque jamais la moyenne', url: 'https://www.linfodurable.fr/politique/la-convention-climat-note-le-gouvernement-qui-na-presque-jamais-la-moyenne-24264', type: 'presse', annee: 2021 },
+      { auteur: 'Banque mondiale', titre: 'Case Study 2 - Porto Alegre, Brazil: Participatory Approaches in Budgeting and Public Expenditure Management (note n° 71)', url: 'https://documents1.worldbank.org/curated/en/741601468744101249/pdf/274620PAPER0snd71.pdf', type: 'recherche', annee: 2003, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
