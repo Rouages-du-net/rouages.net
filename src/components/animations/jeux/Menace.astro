@@ -1,0 +1,122 @@
+---
+// Animation « Des boîtes d'allumettes qui apprennent » (module « Les IA qui
+// jouent ») : MENACE (Donald Michie, 1961) joue des centaines de parties de
+// morpion et apprend en ajoutant ou retirant des perles. Calcul réel.
+---
+<div class="anim menace" data-menace>
+  <div class="anim-repli">
+    <p>
+      MENACE est fait de boîtes d'allumettes, une par position de morpion, remplies de perles de
+      couleur, une couleur par coup possible. Pour jouer, on tire une perle au hasard dans la boîte
+      de la position. Après une victoire, on ajoute trois perles de chaque couleur tirée ; après un
+      nul, une ; après une défaite, on retire les perles tirées. Contre un adversaire parfait,
+      MENACE perd beaucoup au début, puis apprend à faire match nul presque à chaque fois, sans
+      qu'aucune règle du morpion lui ait été expliquée.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Adversaire de MENACE</legend>
+        <label><input type="radio" name="adversaire" value="hasard" checked /> Joue au hasard</label>
+        <label><input type="radio" name="adversaire" value="parfait" /> Joue parfaitement (minimax)</label>
+      </fieldset>
+      <ol class="blocs" data-blocs aria-label="Résultats par série de 20 parties : victoires, nuls, défaites"></ol>
+      <p class="cle"><span class="v">■ victoires</span> <span class="n">■ nuls</span> <span class="d">■ défaites</span></p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="jouer">Jouer 20 parties</button>
+        <button type="button" data-action="cent">Jouer 200 parties</button>
+        <button type="button" data-action="oublier">Tout oublier</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Règles des perles d'après O. Child (<em>Chalkdust</em>, 2016) : 4, 3, 2 puis 1 perle par coup au départ ; +3, +1 ou −1. Une boîte vide : MENACE abandonne la partie.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { Menace, type Adversaire } from '../../../lib/morpion';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-menace]').forEach((racine) => {
+    activerScene(racine);
+    const blocs = racine.querySelector<HTMLElement>('[data-blocs]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const adversaire = () => (racine.querySelector<HTMLInputElement>('input[name="adversaire"]:checked')?.value ?? 'hasard') as Adversaire;
+    let m = new Menace();
+    let alea = hasard(7);
+    let historique: [number, number, number][] = [];
+
+    function serie() {
+      const r: [number, number, number] = [0, 0, 0];
+      for (let k = 0; k < 20; k++) {
+        const x = m.partie(alea, adversaire());
+        r[x === 1 ? 0 : x === 0 ? 1 : 2]++;
+      }
+      historique.push(r);
+    }
+
+    function dessiner() {
+      blocs.replaceChildren(
+        ...historique.slice(-30).map(([v, n, d]) => {
+          const li = document.createElement('li');
+          li.title = `${v} victoires, ${n} nuls, ${d} défaites`;
+          [['v', v], ['n', n], ['d', d]].forEach(([c, x]) => {
+            const s = document.createElement('span');
+            s.className = String(c);
+            s.style.height = `${(Number(x) / 20) * 100}%`;
+            li.append(s);
+          });
+          return li;
+        }),
+      );
+      const b = m.premiereBoite();
+      const parties = historique.length * 20;
+      const der = historique.at(-1);
+      racine.querySelector('[data-mesure]')!.textContent = parties
+        ? `${parties} parties · ${m.boites.size} boîtes utilisées · première boîte : coin ${b.coin}, bord ${b.bord}, centre ${b.centre} perles.`
+        : 'Aucune partie jouée. Première boîte : 4 perles pour le coin, 4 pour le bord, 4 pour le centre.';
+      legende.textContent = !der
+        ? 'Choisis un adversaire et lance des parties.'
+        : adversaire() === 'parfait'
+          ? der[2] <= 1
+            ? 'MENACE ne perd presque plus : contre un jeu parfait, il a appris à forcer le nul, perle après perle.'
+            : 'MENACE perd beaucoup : chaque défaite retire des perles aux coups qui y ont mené.'
+          : 'Contre un adversaire au hasard, MENACE apprend à gagner souvent ; les perles s’accumulent sur les coups gagnants, en particulier le premier.';
+    }
+
+    const lancer = (n: number) => {
+      for (let k = 0; k < n; k++) serie();
+      dessiner();
+    };
+    racine.querySelector('[data-action="jouer"]')!.addEventListener('click', () => lancer(1));
+    racine.querySelector('[data-action="cent"]')!.addEventListener('click', () => lancer(10));
+    racine.querySelector('[data-action="oublier"]')!.addEventListener('click', () => {
+      m = new Menace();
+      alea = hasard(7);
+      historique = [];
+      dessiner();
+    });
+    racine.querySelectorAll('input[name="adversaire"]').forEach((i) => i.addEventListener('change', dessiner));
+    dessiner();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .blocs { list-style: none; padding: 0; margin: 0.5rem 0 0.25rem; height: 6rem; display: flex; align-items: stretch; gap: 2px; background: var(--bg); border-radius: 0.3rem; }
+  .blocs :global(li) { flex: 1; display: flex; flex-direction: column-reverse; max-width: 1.5rem; }
+  .blocs :global(.v) { background: var(--ill-secret-b); }
+  .blocs :global(.n) { background: var(--muted); }
+  .blocs :global(.d) { background: var(--ill-paquet); }
+  .cle { display: flex; gap: 1rem; font-size: 0.85rem; margin: 0; }
+  .cle .v { color: var(--ill-secret-b); }
+  .cle .n { color: var(--muted); }
+  .cle .d { color: var(--ill-paquet); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

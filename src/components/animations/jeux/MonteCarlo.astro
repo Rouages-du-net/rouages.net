@@ -1,0 +1,111 @@
+---
+// Animation « Jouer au hasard pour choisir » (module « Les IA qui jouent ») :
+// pour chaque coup possible, des parties finies au hasard donnent un score ;
+// avec assez de parties, le meilleur score désigne souvent le bon coup.
+// Comparé au verdict exact de minimax. Calcul réel.
+---
+<div class="anim monte-carlo" data-monte-carlo>
+  <div class="anim-repli">
+    <p>
+      Au go, l'arbre des coups est bien trop grand pour être exploré. Une autre idée : pour chaque coup
+      possible, finir des parties au hasard et compter combien sont gagnées. Avec une ou dix parties
+      par coup, le résultat peut tromper ; à partir de quelques dizaines, le coup qui obtient le
+      meilleur score est, dans nos positions de morpion, le seul coup gagnant. AlphaGo combinait cette idée
+      avec des réseaux de neurones qui évaluent les positions et proposent les coups à explorer.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="grille" data-grille aria-hidden="true"></div>
+      <label class="curseur">Parties jouées au hasard pour chaque coup : <output data-n-sortie></output>
+        <input type="range" min="0" max="5" step="1" value="1" data-n />
+      </label>
+      <ul class="scores" data-scores aria-label="Score de chaque coup possible"></ul>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="relancer">Rejouer au hasard</button>
+        <button type="button" data-action="position">Autre position</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Les croix doivent jouer. Score : part des parties gagnées (un nul compte pour moitié). Verdict exact calculé par minimax.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { analyser, monteCarlo, type Plateau } from '../../../lib/morpion';
+  import { hasard } from '../../../lib/minilm';
+
+  const POSITIONS = ['100012002', '120100200', '010100220'].map((s) => [...s].map(Number) as Plateau);
+  const NOMBRES = [1, 10, 30, 100, 300, 1000];
+  const NOMS = ['en haut à gauche', 'en haut au milieu', 'en haut à droite', 'au milieu à gauche', 'au centre', 'au milieu à droite', 'en bas à gauche', 'en bas au milieu', 'en bas à droite'];
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-monte-carlo]').forEach((racine) => {
+    activerScene(racine);
+    const n = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const grille = racine.querySelector<HTMLElement>('[data-grille]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let pos = 0, graine = 1;
+
+    function maj() {
+      const p = POSITIONS[pos];
+      const N = NOMBRES[Number(n.value)];
+      racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!.value = N.toLocaleString('fr-FR');
+      const scores = monteCarlo(hasard(graine), p, 1, N);
+      const exact = analyser(p, 1, true).valeurs;
+      const choisi = [...scores].sort((a, b) => b[1] - a[1])[0][0];
+      grille.replaceChildren(
+        ...p.map((c, i) => {
+          const d = document.createElement('div');
+          if (c) {
+            d.textContent = c === 1 ? '✕' : '◯';
+            d.className = c === 1 ? 'x' : 'o';
+          } else {
+            d.textContent = pc(scores.get(i)!);
+            d.className = `libre${i === choisi ? ' choisi' : ''}`;
+          }
+          return d;
+        }),
+      );
+      const verdict = (v: number) => (v === 1 ? 'gagnant' : v === 0 ? 'nul' : 'perdant');
+      racine.querySelector('[data-scores]')!.replaceChildren(
+        ...[...scores].sort((a, b) => b[1] - a[1]).map(([i, s]) => {
+          const li = document.createElement('li');
+          li.textContent = `${NOMS[i]} : ${pc(s)} — en jouant parfaitement : coup ${verdict(exact.get(i)!)}`;
+          if (exact.get(i) === 1) li.className = 'gagnant';
+          return li;
+        }),
+      );
+      legende.textContent =
+        exact.get(choisi) === 1
+          ? `Avec ${N.toLocaleString('fr-FR')} partie${N > 1 ? 's' : ''} au hasard par coup, le meilleur score désigne le seul coup gagnant, sans avoir exploré l’arbre.`
+          : `Avec ${N.toLocaleString('fr-FR')} partie${N > 1 ? 's' : ''} au hasard par coup, le meilleur score désigne un coup qui n’est pas le bon : le hasard trompe encore. Augmente le nombre de parties.`;
+    }
+    n.addEventListener('input', maj);
+    racine.querySelector('[data-action="relancer"]')!.addEventListener('click', () => {
+      graine++;
+      maj();
+    });
+    racine.querySelector('[data-action="position"]')!.addEventListener('click', () => {
+      pos = (pos + 1) % POSITIONS.length;
+      maj();
+    });
+    maj();
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 14rem; margin: 0 auto 0.75rem; }
+  .grille :global(div) { aspect-ratio: 1; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg); font: 700 2rem/1 var(--police); }
+  .grille :global(.x) { color: var(--ill-paquet); }
+  .grille :global(.o) { color: var(--ill-secret-b); }
+  .grille :global(.libre) { font: 0.85rem var(--police-mono); color: var(--muted); }
+  .grille :global(.choisi) { outline: 3px solid var(--accent); outline-offset: -3px; color: var(--fg); font-weight: 700; }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .scores { padding-left: 1.2rem; margin: 0.25rem 0; font-size: 0.9rem; }
+  .scores :global(li.gagnant) { font-weight: 700; }
+</style>
