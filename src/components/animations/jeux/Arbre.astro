@@ -1,0 +1,109 @@
+---
+// Animation « L'arbre des coups » (module « Les IA qui jouent ») : une
+// partie de morpion contre minimax ; à chaque coup de l'IA, le nombre de
+// positions examinées, avec ou sans élagage alpha-bêta. Calcul réel.
+---
+<div class="anim arbre" data-arbre>
+  <div class="anim-repli">
+    <p>
+      Pour choisir son coup au morpion, l'IA imagine tous les coups possibles, toutes les réponses,
+      toutes les réponses aux réponses, jusqu'à la fin de la partie, en supposant que chacun·e joue
+      au mieux. Depuis la grille vide, cela fait 549 946 positions à examiner. Avec l'élagage
+      alpha-bêta, qui abandonne une branche dès qu'on sait qu'elle ne sera pas choisie, il n'en
+      reste que 18 297, pour le même coup. Jouée ainsi, une partie parfaite de morpion finit
+      toujours par un match nul.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="grille" role="group" aria-label="Grille de morpion : tu joues les ronds" data-grille></div>
+      <label class="case"><input type="checkbox" data-elagage checked /> Élagage alpha-bêta</label>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="ia-commence">Nouvelle partie : l'IA commence</button>
+        <button type="button" data-action="toi-commences">Nouvelle partie : tu commences</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">L'IA joue les croix et examine l'arbre complet des coups (minimax) dans ton navigateur.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { chercher, issue, jouer, vide, type Plateau } from '../../../lib/morpion';
+
+  const NOMS = ['en haut à gauche', 'en haut au milieu', 'en haut à droite', 'au milieu à gauche', 'au centre', 'au milieu à droite', 'en bas à gauche', 'en bas au milieu', 'en bas à droite'];
+  const nb = (n: number) => n.toLocaleString('fr-FR');
+
+  document.querySelectorAll<HTMLElement>('[data-arbre]').forEach((racine) => {
+    activerScene(racine);
+    const grille = racine.querySelector<HTMLElement>('[data-grille]')!;
+    const elagage = racine.querySelector<HTMLInputElement>('[data-elagage]')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let p: Plateau = vide();
+    const cases = Array.from({ length: 9 }, (_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.addEventListener('click', () => toi(i));
+      grille.append(b);
+      return b;
+    });
+
+    function dessiner() {
+      const fini = issue(p) !== 0;
+      cases.forEach((b, i) => {
+        b.textContent = p[i] === 1 ? '✕' : p[i] === 2 ? '◯' : '';
+        b.className = p[i] === 1 ? 'x' : p[i] === 2 ? 'o' : '';
+        b.disabled = fini || p[i] !== 0;
+        b.setAttribute('aria-label', `Case ${NOMS[i]} : ${p[i] === 1 ? 'croix' : p[i] === 2 ? 'rond' : 'libre'}`);
+      });
+      const r = issue(p);
+      if (r === 1) legende.textContent = 'L’IA a gagné : un seul faux pas suffit contre un arbre complet.';
+      else if (r === 2) legende.textContent = 'Tu as gagné ? Ce n’est pas censé arriver !';
+      else if (r === -1) legende.textContent = 'Match nul : contre un jeu parfait, c’est le mieux qu’on puisse faire au morpion.';
+    }
+
+    function ia() {
+      const { coup, valeur: v, positions } = chercher(p, 1, elagage.checked);
+      const sansOuAvec = elagage.checked ? 'avec' : 'sans';
+      p = jouer(p, coup, 1);
+      mesure.textContent = `L’IA joue ${NOMS[coup]} après avoir examiné ${nb(positions)} positions (${sansOuAvec} élagage). Elle prévoit : ${v === 1 ? 'victoire' : v === 0 ? 'match nul' : 'défaite'}.`;
+      if (issue(p) === 0) legende.textContent = 'À toi : clique sur une case libre.';
+      dessiner();
+    }
+
+    function toi(i: number) {
+      if (p[i] !== 0 || issue(p) !== 0) return;
+      p = jouer(p, i, 2);
+      dessiner();
+      if (issue(p) === 0) ia();
+    }
+
+    function nouvelle(iaCommence: boolean) {
+      p = vide();
+      mesure.textContent = '';
+      legende.textContent = 'À toi : clique sur une case libre.';
+      dessiner();
+      if (iaCommence) ia();
+    }
+
+    racine.querySelector('[data-action="ia-commence"]')!.addEventListener('click', () => nouvelle(true));
+    racine.querySelector('[data-action="toi-commences"]')!.addEventListener('click', () => nouvelle(false));
+    nouvelle(true);
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 14rem; margin: 0 auto 0.75rem; }
+  .grille :global(button) { aspect-ratio: 1; font: 700 2rem/1 var(--police); border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg); color: var(--fg); cursor: pointer; }
+  .grille :global(button:disabled) { cursor: default; }
+  .grille :global(button.x) { color: var(--ill-paquet); }
+  .grille :global(button.o) { color: var(--ill-secret-b); }
+  .grille :global(button:not(:disabled):hover), .grille :global(button:focus-visible) { border-color: var(--accent); }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .case input { accent-color: var(--accent); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

@@ -1,0 +1,304 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Arbre from '../../components/animations/jeux/Arbre.astro';
+import Menace from '../../components/animations/jeux/Menace.astro';
+import MonteCarlo from '../../components/animations/jeux/MonteCarlo.astro';
+
+// Faits sourcés : voir docs/sources/ia-jouer.md et docs/sources/ia-intro.md.
+const etapes = [
+  { ancre: 'arbre', court: 'L’arbre des coups' },
+  { ancre: 'apprendre', court: 'Apprendre en jouant' },
+  { ancre: 'go', court: 'Le go et le hasard' },
+  { ancre: 'cartes-cachees', court: 'Cartes cachées' },
+  { ancre: 'angles-morts', court: 'Pas invincibles' },
+  { ancre: 'bilan', court: 'Chercher ou apprendre', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui jouent"
+  description="Du morpion au go, en passant par les échecs, le backgammon et le poker : explorer l’arbre des coups, apprendre en jouant contre soi-même, et pourquoi même une IA surhumaine peut se faire piéger. Avec un minimax, MENACE et Monte-Carlo calculés dans ton navigateur."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui jouent</h1>
+  <MiseAJour date="2026-10-25" />
+  <p class="chapo seulement-debut">
+    Les jeux sont le terrain d'essai de l'IA depuis ses débuts. Affronte une IA qui voit toute la
+    partie d'avance, regarde des boîtes d'allumettes apprendre le morpion, puis choisis un coup en
+    jouant des centaines de parties au hasard.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="L’arbre des coups" ancre="arbre">
+    <Arbre slot="animation" />
+    <p slot="decouverte">
+      Pour jouer au morpion sans jamais perdre, il suffit de tout prévoir : chaque coup, chaque
+      réponse, jusqu'à la fin. Joue contre une IA qui fait exactement ça, et regarde combien de
+      positions elle examine.
+    </p>
+    <p slot="curieux">
+      L'IA dessine dans sa mémoire un arbre : la position actuelle, puis une branche par coup
+      possible, puis une branche par réponse, et ainsi de suite. Elle suppose que son adversaire
+      choisit toujours la réponse la pire pour elle, et elle choisit le coup dont la pire suite est
+      la meilleure. C'est la méthode <Terme id="minimax">minimax</Terme>. L'élagage alpha-bêta
+      permet d'abandonner une branche dès qu'on sait qu'elle ne sera pas choisie : même coup, bien
+      moins de calcul.
+    </p>
+    <p slot="ingenieur">
+      Depuis la grille vide, minimax examine 549 946 positions ; avec l'élagage alpha-bêta, 18 297
+      seulement, dans l'ordre où l'animation essaie les coups. Aux échecs, C. Shannon estime en
+      1950 qu'il y a environ 30 coups possibles par position et 40 coups par partie, soit de l'ordre
+      de 10<sup>120</sup> parties : à une par microseconde, il faudrait plus de 10<sup>90</sup>
+      ans pour jouer le premier coup. D'où son idée : chercher seulement quelques coups à l'avance,
+      puis évaluer la position avec une formule (matériel, mobilité, sécurité du roi), une <Terme
+      id="heuristique">heuristique</Terme>.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1914, l'ingénieur espagnol L. Torres Quevedo présente une machine qui joue la finale
+        roi et tour contre roi et force le mat, quelle que soit la défense. Shannon la cite en 1950
+        comme une tentative « plus honnête » que le célèbre « Turc » de Maelzel, un automate joueur
+        d'échecs manœuvré, selon la plupart des auteurs, par un maître caché à l'intérieur.
+      </p>
+      <p>
+        Le 11 mai 1997 à New York, Deep Blue, d'IBM, bat le champion du monde Garry Kasparov 3,5 à
+        2,5 en match revanche. Il ne l'a pas fait en apprenant, mais en cherchant : 200 millions de
+        positions par seconde, sur 480 puces d'échecs conçues par l'équipe de Feng-hsiung Hsu, avec
+        une évaluation réglée à la main.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le Turc mécanique était la première IA. »</strong> C'était un spectacle, avec
+      un joueur caché à l'intérieur. La machine de Torres Quevedo, elle, jouait vraiment seule,
+      mais une seule finale d'échecs, avec des règles fixées à l'avance.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Apprendre en jouant" ancre="apprendre">
+    <Menace slot="animation" />
+    <p slot="decouverte">
+      Et si, au lieu de tout calculer, on apprenait en jouant ? MENACE est fait de boîtes
+      d'allumettes et de perles de couleur. Fais-lui jouer des centaines de parties.
+    </p>
+    <p slot="curieux">
+      Personne n'explique les règles de stratégie à MENACE. Il tire ses coups au hasard, mais pas
+      tous avec la même chance : les coups qui ont mené à des victoires gagnent des perles, ceux qui
+      ont mené à des défaites en perdent. Partie après partie, les bons coups deviennent les plus
+      probables. C'est l'<Terme id="renforcement">apprentissage par renforcement</Terme> : des
+      essais, des erreurs, et une récompense à la fin.
+    </p>
+    <p slot="ingenieur">
+      MENACE confond les positions symétriques (une rotation ou un reflet de la grille) : il lui
+      suffit d'environ 300 boîtes. La récompense n'arrive qu'à la fin de la partie, et elle est
+      partagée entre tous les coups joués : c'est le problème de « l'attribution du mérite ».
+      TD-Gammon le résout mieux en apprenant à prédire, à chaque coup, la valeur de la position
+      suivante (apprentissage par différence temporelle).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1961, le chercheur britannique Donald Michie, qui avait participé au décryptage de codes
+        allemands pendant la guerre, décrit MENACE et le construit avec de vraies boîtes
+        d'allumettes. Deux ans plus tôt, en 1959, Arthur Samuel, chez IBM, avait publié son
+        programme de dames qui s'améliore en jouant ; Christopher Strachey avait écrit un programme
+        de dames dès 1951.
+      </p>
+      <p>
+        En 1992, TD-Gammon, de Gerald Tesauro (IBM), apprend le backgammon en jouant contre
+        lui-même. Fin 1991, sa première version avait perdu de peu (13 points en 51 parties) contre
+        des champions du monde comme Bill Robertie et Paul Magriel ; elle surpasse alors tous les
+        programmes, y compris Neurogammon, qui imitait des parties d'experts.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Pour apprendre, une IA a besoin d'un ordinateur. »</strong> MENACE n'en avait pas :
+      des boîtes, des perles, et une personne pour les déplacer. L'apprentissage par renforcement
+      est une idée, pas une machine.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le go et le hasard" ancre="go">
+    <MonteCarlo slot="animation" />
+    <p slot="decouverte">
+      Au go, il y a bien trop de coups possibles pour explorer l'arbre, même quelques coups à
+      l'avance. Une idée étonnante : jouer au hasard. Pour chaque coup, finis des parties au hasard,
+      et compte combien sont gagnées.
+    </p>
+    <p slot="curieux">
+      Une partie jouée au hasard ne veut rien dire. Mais des centaines de parties, si : un bon
+      coup laisse plus de chances de gagner, même quand la suite est jouée n'importe comment. C'est
+      la méthode de Monte-Carlo, du nom du casino. AlphaGo l'a combinée avec deux <Terme
+      id="neurone-artificiel">réseaux de neurones</Terme> : l'un propose les coups les plus
+      prometteurs à explorer, l'autre estime qui va gagner sans finir la partie.
+    </p>
+    <p slot="ingenieur">
+      La recherche arborescente Monte-Carlo construit l'arbre petit à petit, en explorant davantage
+      les coups qui ont le meilleur score, tout en gardant un peu de curiosité pour les autres. En
+      2017, AlphaZero a supprimé les parties jouées au hasard et toute connaissance humaine : à
+      partir des seules règles, en jouant contre lui-même, il atteint selon DeepMind un niveau
+      surhumain en moins de 24 heures aux échecs, au shogi (les échecs japonais) et au go, grâce à
+      une puissance de calcul considérable.
+    </p>
+    <div slot="histoire">
+      <p>
+        En octobre 2015, AlphaGo, de DeepMind, bat 5 à 0 Fan Hui, joueur professionnel d'origine
+        chinoise et triple champion d'Europe. En mars 2016 à Séoul, il bat le joueur Lee Sedol 4 parties
+        à 1. On retient le « coup 37 » d'AlphaGo dans la deuxième partie, et le « coup 78 » de Lee
+        Sedol dans la quatrième, sa seule victoire. Face au plateau, c'est un
+        chercheur de DeepMind, Aja Huang, qui pose les pierres pour AlphaGo.
+      </p>
+      <p>
+        En mai 2017, au « Sommet du futur du go » de Wuzhen, en Chine, AlphaGo affronte le Chinois
+        Ke Jie, alors numéro un mondial, qui ouvre la partie avec un coup qu'affectionne AlphaGo.
+        Des parties en paire mêlent joueur·ses et IA. DeepMind annonce que c'est la dernière
+        compétition d'AlphaGo, un jeu vieux de 3 000 ans selon son billet.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« AlphaGo a tout appris seul. »</strong> La version de 2016 a d'abord imité des
+      parties de joueur·ses humain·es avant de jouer contre elle-même. C'est AlphaZero, en 2017,
+      qui part des seules règles.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Cartes cachées" ancre="cartes-cachees">
+    <p slot="decouverte">
+      Aux échecs et au go, tout est sur le plateau. Au poker, tu ne vois pas les cartes des autres,
+      et eux bluffent. Comment une IA peut-elle jouer quand elle ne sait pas tout ?
+    </p>
+    <p slot="curieux">
+      Il ne suffit plus de trouver le meilleur coup : il faut une stratégie qu'on ne peut pas
+      deviner. Si l'IA misait fort seulement avec de bonnes cartes, ses adversaires le
+      remarqueraient vite. Elle doit donc parfois bluffer, au hasard mais dans des proportions
+      calculées.
+    </p>
+    <p slot="ingenieur">
+      Ces programmes cherchent une stratégie que personne ne peut exploiter, en jouant contre
+      eux-mêmes. Pendant la partie, Pluribus ne cherche que quelques coups à l'avance, pas jusqu'à
+      la fin de la main : c'est l'une des raisons pour lesquelles il demande si peu de calcul.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2017, Libratus, de l'université Carnegie-Mellon, bat des professionnel·les en tête à tête.
+        En 2019, Pluribus, de Carnegie-Mellon et de Facebook, bat des professionnel·les à six
+        joueur·ses, dont deux vainqueurs du tournoi principal des World Series of Poker. Selon ses
+        auteurs, il a appris en jouant contre lui-même, sans exemples humains, pour l'équivalent de
+        moins de 150 dollars de calcul.
+      </p>
+      <p>
+        Les jeux vidéo aussi : en 2013, une équipe de DeepMind fait apprendre sept jeux Atari à un
+        réseau de neurones qui ne voit que les pixels de l'écran.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Une IA qui bluffe ment, comme un humain. »</strong> Elle applique une stratégie
+      mixte : miser fort avec une certaine probabilité, parce que c'est ce qui rapporte le plus en
+      moyenne. Il n'y a pas d'intention de tromper au sens humain.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Pas invincibles" ancre="angles-morts">
+    <p slot="decouverte">
+      Une IA qui bat les champions du monde est-elle imbattable ? Pas forcément : elle peut avoir
+      des angles morts qu'aucun humain n'avait pensé à chercher.
+    </p>
+    <p slot="curieux">
+      Ces IA ont appris contre elles-mêmes et contre des adversaires sérieux. Un adversaire qui joue
+      très mal, mais d'une façon précise et inhabituelle, peut les mener vers des positions qu'elles
+      n'ont jamais appris à défendre. C'est le même principe que les exemples adverses du module <a
+      href="/modules/ia-trompe/">Les IA qu'on trompe exprès</a>.
+    </p>
+    <p slot="ingenieur">
+      Pour trouver ces failles, des chercheur·ses entraînent une IA dont le seul but est de battre
+      une autre IA précise, en la regardant jouer. Elle ne devient pas forte au go : elle devient
+      forte contre ce programme-là.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2022-2023, T. T. Wang, A. Gleave et leurs collègues battent KataGo, une IA de go réglée à
+        un niveau surhumain, dans plus de 97 % des parties. Leurs « politiques adverses » ne jouent
+        pas bien : elles piègent KataGo. Le piège est assez simple pour que des expert·es humain·es le
+        reproduisent sans aide et battent régulièrement des IA surhumaines, et il résiste même à un
+        entraînement défensif.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Surhumain veut dire sans faille. »</strong> Surhumain veut dire meilleur que les
+      meilleur·es humain·es dans les parties ordinaires. Une IA peut être à la fois imbattable par
+      un champion et battue par un amateur qui connaît sa faille.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Chercher ou apprendre</h2>
+    <div class="tableau">
+    <table>
+      <thead><tr><th scope="col">Année</th><th scope="col">Jeu</th><th scope="col">Programme</th><th scope="col">Cherche</th><th scope="col">Apprend</th></tr></thead>
+      <tbody>
+        <tr><td>1914</td><td>Finale d'échecs</td><td>Machine de Torres Quevedo</td><td>Non : des règles fixes</td><td>Non</td></tr>
+        <tr><td>1959-1961</td><td>Dames, morpion</td><td>Programme de Samuel, MENACE</td><td>Un peu (Samuel)</td><td>Oui, en jouant</td></tr>
+        <tr><td>1992</td><td>Backgammon</td><td>TD-Gammon</td><td>Très peu</td><td>Oui, contre lui-même</td></tr>
+        <tr><td>1997</td><td>Échecs</td><td>Deep Blue</td><td>Énormément</td><td>Non : évaluation réglée à la main</td></tr>
+        <tr><td>2016-2017</td><td>Go, échecs, shogi</td><td>AlphaGo, AlphaZero</td><td>Oui, guidé par des réseaux</td><td>Oui, contre lui-même</td></tr>
+        <tr><td>2019</td><td>Poker à six</td><td>Pluribus</td><td>Quelques coups</td><td>Oui, contre lui-même</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>
+      Les meilleurs programmes combinent les deux : apprendre ce qui ressemble à une bonne position,
+      et chercher dans l'arbre des coups à partir de là. Les mêmes idées servent hors des jeux : le
+      module <a href="/modules/ia-chercher/">Les IA qui cherchent et optimisent</a> montre la
+      recherche, et l'étape « Apprendre par essais et erreurs » de <a
+      href="/modules/ia/#recompenses">L'IA, c'est quoi ?</a> l'apprentissage par renforcement.
+    </p>
+
+  <Sources
+    verifie="2026-10-25"
+    sources={[
+      { auteur: 'C. E. Shannon', titre: 'Programming a Computer for Playing Chess (Philosophical Magazine 41, 1950), copie PDF', url: 'https://vision.unipv.it/IA1/ProgrammingaComputerforPlayingChess.pdf', type: 'primaire', annee: 1950, langue: 'en' },
+      { auteur: 'IBM', titre: 'Deep Blue', url: 'https://www.ibm.com/history/deep-blue', type: 'primaire', langue: 'en' },
+      { auteur: 'F.-H. Hsu (IBM Research)', titre: 'IBM’s Deep Blue Chess Grandmaster Chips (IEEE Micro, 1999), notice', url: 'https://research.ibm.com/publications/ibms-deep-blue-chess-grandmaster-chips', type: 'recherche', annee: 1999, langue: 'en' },
+      { auteur: 'R. S. Sutton, A. G. Barto', titre: 'Reinforcement Learning: An Introduction, 2ᵉ éd. (MENACE, Samuel)', url: 'http://incompleteideas.net/book/the-book-2nd.html', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'O. Child (Chalkdust)', titre: 'Menace: the Machine Educable Noughts And Crosses Engine', url: 'https://chalkdustmagazine.com/features/menace-machine-educable-noughts-crosses-engine/', type: 'presse', annee: 2016, langue: 'en' },
+      { auteur: 'A. L. Samuel', titre: 'Some Studies in Machine Learning Using the Game of Checkers (IBM J. Res. Dev., 1959)', url: 'https://people.csail.mit.edu/brooks/idocs/Samuel.pdf', type: 'primaire', annee: 1959, langue: 'en' },
+      { auteur: 'N. J. Nilsson', titre: 'The Quest for Artificial Intelligence (Strachey, Samuel)', url: 'https://ai.stanford.edu/~nilsson/QAI/qai.pdf', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'G. Tesauro', titre: 'Temporal Difference Learning and TD-Gammon (CACM, 1995)', url: 'https://bkgm.com/articles/tesauro/tdl.html', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'Google DeepMind', titre: 'AlphaGo', url: 'https://deepmind.google/research/breakthroughs/alphago/', type: 'primaire', langue: 'en' },
+      { auteur: 'British Go Association', titre: 'AlphaGo Match against Fan Hui', url: 'https://britgo.org/node/5401', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'D. Hassabis, D. Silver (DeepMind)', titre: 'AlphaGo’s next move', url: 'https://deepmind.google/discover/blog/alphagos-next-move/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'D. Silver et al.', titre: 'Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm, résumé', url: 'https://arxiv.org/abs/1712.01815', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'Meta AI', titre: 'Facebook, Carnegie Mellon build first AI that beats pros in 6-player poker', url: 'https://ai.meta.com/blog/pluribus-first-ai-to-beat-pros-in-6-player-poker/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'V. Mnih et al. (DeepMind)', titre: 'Playing Atari with Deep Reinforcement Learning, résumé', url: 'https://arxiv.org/abs/1312.5602', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'T. T. Wang, A. Gleave et al.', titre: 'Adversarial Policies Beat Superhuman Go AIs, résumé', url: 'https://arxiv.org/abs/2211.00241', type: 'recherche', annee: 2023, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

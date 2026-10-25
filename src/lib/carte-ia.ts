@@ -25,7 +25,7 @@ export const BUTS: { nom: string; exemples: string; mecanismes: Mecanisme[]; lie
   { nom: 'qui prédisent', exemples: 'météo, consommation', mecanismes: ['stats', 'neurones', 'probas'] },
   { nom: 'qui décident pour nous', exemples: 'crédit, aides sociales', mecanismes: ['regles', 'stats', 'probas', 'neurones'] },
   { nom: 'qui cherchent et optimisent', exemples: 'GPS, tournées, horaires', mecanismes: ['recherche', 'nature'], lien: '/modules/ia-chercher/', resume: 'GPS, tournées, sacs à dos : Dijkstra, A*, le voyageur de commerce, des fourmis et l’évolution.' },
-  { nom: 'qui jouent', exemples: 'échecs, go', mecanismes: ['recherche', 'renforcement', 'neurones'] },
+  { nom: 'qui jouent', exemples: 'échecs, go', mecanismes: ['recherche', 'renforcement', 'neurones'], lien: '/modules/ia-jouent/', resume: 'Affronte une IA qui voit toute la partie d’avance, regarde des boîtes d’allumettes apprendre le morpion, puis choisis un coup en jouant des parties au hasard.' },
   { nom: 'qui agissent', exemples: 'robots, voitures autonomes', mecanismes: ['neurones', 'renforcement', 'recherche', 'regles'] },
   { nom: 'qui surveillent', exemples: 'fraude, vidéosurveillance', mecanismes: ['stats', 'neurones', 'regles'] },
   { nom: 'qu’on trompe exprès', exemples: 'images piégées, instructions cachées', mecanismes: ['neurones'], lien: '/modules/ia-trompe/', resume: 'Fais voir une croix là où il y a un rond, cache un ordre dans une page web, puis glisse quelques dessins piégés dans un apprentissage.' },

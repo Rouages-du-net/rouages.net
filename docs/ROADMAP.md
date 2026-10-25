@@ -89,7 +89,7 @@ flowchart TB
 - [x] **Les IA qui recommandent** *(`/modules/ia-recommander/`, relecture humaine à faire ; procédures européennes à suivre)* — fil d'actualité, vidéos, achats : filtrage collaboratif (reprend le module « Les algorithmes du quotidien » prévu dans la vision)
 - [ ] **Les IA qui prédisent** — météo, consommation, police prédictive : séries temporelles, corrélation et causalité
 - [ ] **Les IA qui décident pour nous** — crédit, aides sociales, justice : boîte noire ou modèle explicable (réseaux bayésiens, arbres, systèmes experts), droit à l'explication, biais
-- [ ] **Les IA qui jouent** — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)
+- [x] **Les IA qui jouent** *(`/modules/ia-jouent/`, relecture humaine à faire)* — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)
 - [ ] **Les IA qui agissent** — robots, voitures autonomes : perception, planification, renforcement
 - [ ] **Les IA qui surveillent** — détection de fraude, vidéosurveillance algorithmique ; cadre légal
 - [x] **Les IA qu'on trompe exprès** *(`/modules/ia-trompe/`, relecture humaine à faire)* — images piégées, attaques par instructions cachées (*prompt injection*), empoisonnement des données

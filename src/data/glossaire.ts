@@ -488,6 +488,18 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Comportement caché installé dans un logiciel ou une IA : tout semble normal, sauf quand un signal précis, connu de l'attaquant, est présent.",
   },
+  'minimax': {
+    terme: 'Minimax',
+    definition:
+      "Méthode pour choisir un coup dans un jeu à deux : on imagine tous les coups et toutes les réponses, en supposant que l'adversaire choisit toujours la réponse la pire pour nous, et on prend le coup dont la pire suite est la meilleure. L'élagage alpha-bêta évite d'examiner les branches inutiles.",
+    voirAussi: ['heuristique'],
+  },
+  'renforcement': {
+    terme: 'Apprentissage par renforcement',
+    definition:
+      "Façon d'apprendre par essais et erreurs : la machine agit, reçoit une récompense ou une pénalité, souvent tard, et renforce peu à peu les actions qui rapportent le plus.",
+    voirAussi: ['apprentissage-automatique'],
+  },
 };
 
 export function entree(id: string): Entree {
