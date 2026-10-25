@@ -445,6 +445,13 @@ Abréviations : **FR** = existe en français. **Compte** = compte nécessaire po
 - **FR**. Livrets de mini-jeux à télécharger (CM2 à 3e), tirés du jeu immersif « Les Gardiens du numérique » (2019).
 - Note : le Groupe VYV est un groupe mutualiste, partenaire privé.
 
+**Hacksplaining** (gratuit pour un usage personnel) — ajouté le 25/10/2026
+- URL : https://www.hacksplaining.com/ — fonctionne (lu) ; pages /lessons et /about lues.
+- Fondateur et rédacteur en chef : Malcolm McDonald (auteur de *Grokking Web Application Security*, Manning) ; société à Seattle (États-Unis) (page « About »).
+- « Free for personal use » ; offre payante pour les équipes (essai de 14 jours). Compte facultatif « to track your progress ». **Anglais** (`lang="en"`).
+- « Browse All 45+ Lessons », « 15-30 minutes each » : OWASP Top 10 et vulnérabilités des applications à base de LLM (injection SQL, cross-site scripting, prompt injection, slopsquatting…).
+- Pisteurs : script Umami servi par le site (`/um/um.js`, mesure d'audience) et Sentry (suivi des erreurs). Pas de Google Analytics ni de pixel Facebook détectés sur l'accueil.
+
 **Grey Hack** (payant) — ajouté le 24/10/2026
 - URL : https://greyhackgame.com/ — fonctionne (lu) ; aucun pisteur détecté. Le site dit : « available on the Steam digital platform as Early Access ».
 - Loading Home (développeur et éditeur). Sorti en accès anticipé le 14 décembre 2017 (API Steam, app 605230). 19,99 € le 24/10/2026. Anglais et espagnol (traductions de la communauté via le Workshop). Windows, Mac, Linux.
