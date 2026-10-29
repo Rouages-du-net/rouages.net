@@ -1,0 +1,92 @@
+---
+// Animation « Qui est contrôlé ? » (module « Les IA qui décident pour
+// nous ») : deux groupes avec exactement le même taux d'erreurs ; on ne
+// connaît le résultat que des dossiers contrôlés. Selon la façon d'estimer
+// les taux, la répartition des contrôles corrige l'historique ou le
+// perpétue. Simulation générique, pas l'algorithme d'un organisme réel.
+---
+<div class="anim controles" data-controles>
+  <div class="anim-repli">
+    <p>
+      Deux groupes de dossiers ont exactement le même taux d'erreurs, 8 %. Le groupe B représente 40 %
+      des dossiers, mais l'historique lui a consacré 60 % des contrôles. Un modèle qui compte les
+      erreurs trouvées sur l'ensemble des dossiers (un dossier jamais contrôlé compte comme sans
+      erreur) croit que B fait 2,7 fois plus d'erreurs, et continue de lui envoyer 60 % des
+      contrôles. Un modèle qui compte les erreurs parmi les seuls dossiers contrôlés retrouve vite
+      la réalité. Des contrôles tirés au hasard corrigent lentement le premier modèle.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Comment le modèle estime le taux d'erreurs d'un groupe</legend>
+        <label><input type="radio" name="estimation" value="naive" checked /> Erreurs trouvées ÷ tous les dossiers du groupe</label>
+        <label><input type="radio" name="estimation" value="juste" /> Erreurs trouvées ÷ dossiers contrôlés</label>
+      </fieldset>
+      <label class="curseur">Part des contrôles tirés au hasard : <output data-h-sortie></output>
+        <input type="range" min="0" max="0.5" step="0.1" value="0" data-h />
+      </label>
+      <ol class="tours" data-tours aria-label="Part des contrôles faits dans le groupe B, tour par tour"></ol>
+      <p class="cle">Barre : part des contrôles dans le groupe B, tour par tour. Trait : sa part des dossiers (40 %).</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Simulation inventée : 10 000 dossiers, 600 contrôles par tour, 8 % d'erreurs dans les deux groupes. Elle illustre un mécanisme général, pas le fonctionnement d'un organisme précis.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { boucle } from '../../../lib/decider';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${(v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-controles]').forEach((racine) => {
+    activerScene(racine);
+    const h = racine.querySelector<HTMLInputElement>('[data-h]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const naive = () => racine.querySelector<HTMLInputElement>('input[name="estimation"]:checked')?.value !== 'juste';
+
+    function maj() {
+      const H = Number(h.value);
+      racine.querySelector<HTMLOutputElement>('[data-h-sortie]')!.value = pc(H);
+      const r = boucle(hasard(5), naive(), H);
+      racine.querySelector('[data-tours]')!.replaceChildren(
+        ...r.map((t, i) => {
+          const li = document.createElement('li');
+          li.title = `Tour ${i + 1} : ${pc(t.partB)} des contrôles dans B`;
+          const b = document.createElement('span');
+          b.style.height = `${t.partB * 100}%`;
+          li.append(b);
+          return li;
+        }),
+      );
+      const der = r.at(-1)!;
+      racine.querySelector('[data-mesure]')!.textContent = `Après 10 tours : ${pc(der.partB)} des contrôles dans B. Taux estimés : A ${pc(der.estA)}, B ${pc(der.estB)} (réel : 8 % dans les deux).`;
+      legende.textContent = naive()
+        ? H === 0
+          ? 'Le modèle croit que B fait bien plus d’erreurs, simplement parce que B a été plus contrôlé : l’historique se perpétue, tour après tour.'
+          : 'Les contrôles au hasard apportent de l’information sur tout le monde : la part de B baisse, mais lentement.'
+        : 'En ne comptant que les dossiers contrôlés, le modèle voit que les deux groupes font autant d’erreurs : les contrôles se répartissent selon la taille des groupes.';
+    }
+    h.addEventListener('input', maj);
+    racine.querySelectorAll('input[name="estimation"]').forEach((x) => x.addEventListener('change', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .tours { position: relative; list-style: none; padding: 0; margin: 0.5rem 0 0.25rem; height: 7rem; display: flex; align-items: flex-end; gap: 4px; background: linear-gradient(to top, transparent calc(40% - 1px), var(--fg) calc(40% - 1px), var(--fg) 40%, transparent 40%), var(--bg); border-radius: 0.3rem; }
+  .tours :global(li) { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+  .tours :global(li span) { display: block; width: 100%; background: var(--ill-paquet); opacity: 0.85; }
+  .cle { font-size: 0.85rem; color: var(--muted); margin: 0; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

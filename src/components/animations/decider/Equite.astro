@@ -1,0 +1,124 @@
+---
+// Animation « Juste, mais selon quelle définition ? » (module « Les IA qui
+// décident pour nous ») : un score de risque calibré, deux groupes qui
+// n'ont pas le même taux de base. On règle le seuil de chaque groupe et on
+// compare les taux d'erreur et la valeur prédictive (Chouldechova, 2017).
+// Personnes et risques inventés.
+---
+<div class="anim equite" data-equite>
+  <div class="anim-repli">
+    <p>
+      Deux groupes de 4 000 personnes ; l'événement à prédire touche 30 % du premier et 50 % du
+      second. Avec le même seuil, le score a à peu près la même valeur prédictive dans les deux
+      groupes (une personne signalée a une chance comparable d'être concernée), mais une personne non concernée du deuxième
+      groupe a trois fois plus de risques d'être signalée à tort. Si l'on change les seuils pour
+      égaliser les erreurs, la valeur prédictive se sépare. Tant que les taux de base diffèrent, on
+      ne peut pas tout égaliser à la fois : il faut choisir quelle équité on veut.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="case"><input type="checkbox" data-meme-seuil checked /> Même seuil pour les deux groupes</label>
+      <label class="case"><input type="checkbox" data-meme-base /> Même taux de base dans les deux groupes (40 %)</label>
+      <label class="curseur">Seuil du groupe A : <output data-sa-sortie></output>
+        <input type="range" min="0.2" max="0.8" step="0.02" value="0.5" data-sa />
+      </label>
+      <label class="curseur">Seuil du groupe B : <output data-sb-sortie></output>
+        <input type="range" min="0.2" max="0.8" step="0.02" value="0.5" data-sb />
+      </label>
+      <div class="tableau">
+        <table>
+          <thead><tr><th scope="col"></th><th scope="col">Groupe A</th><th scope="col">Groupe B</th></tr></thead>
+          <tbody data-corps></tbody>
+        </table>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">4 000 personnes inventées par groupe ; le score est le vrai risque de chaque personne (score calibré).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { groupe, mesures } from '../../../lib/decider';
+  import { hasard } from '../../../lib/minilm';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+  const LIGNES: [string, 'prevalence' | 'signales' | 'vpp' | 'tfp' | 'tfn'][] = [
+    ['Taux de base (personnes concernées)', 'prevalence'],
+    ['Personnes signalées « à risque »', 'signales'],
+    ['Parmi les signalées, vraiment concernées (valeur prédictive)', 'vpp'],
+    ['Parmi les non concernées, signalées à tort (faux positifs)', 'tfp'],
+    ['Parmi les concernées, non signalées (faux négatifs)', 'tfn'],
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-equite]').forEach((racine) => {
+    activerScene(racine);
+    const memeSeuil = racine.querySelector<HTMLInputElement>('[data-meme-seuil]')!;
+    const memeBase = racine.querySelector<HTMLInputElement>('[data-meme-base]')!;
+    const sa = racine.querySelector<HTMLInputElement>('[data-sa]')!;
+    const sb = racine.querySelector<HTMLInputElement>('[data-sb]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const groupes = {
+      differents: [groupe(hasard(1), 4000, 0.3), groupe(hasard(2), 4000, 0.5)],
+      egaux: [groupe(hasard(1), 4000, 0.4), groupe(hasard(2), 4000, 0.4)],
+    };
+
+    function maj(source?: HTMLInputElement) {
+      if (memeSeuil.checked) {
+        if (source === sb) sa.value = sb.value;
+        else sb.value = sa.value;
+      }
+      const [A, B] = memeBase.checked ? groupes.egaux : groupes.differents;
+      const ma = mesures(A, Number(sa.value)), mb = mesures(B, Number(sb.value));
+      racine.querySelector<HTMLOutputElement>('[data-sa-sortie]')!.value = Number(sa.value).toLocaleString('fr-FR');
+      racine.querySelector<HTMLOutputElement>('[data-sb-sortie]')!.value = Number(sb.value).toLocaleString('fr-FR');
+      racine.querySelector('[data-corps]')!.replaceChildren(
+        ...LIGNES.map(([nom, cle]) => {
+          const tr = document.createElement('tr');
+          const th = document.createElement('th');
+          th.scope = 'row';
+          th.textContent = nom;
+          tr.append(th);
+          for (const v of [ma[cle], mb[cle]]) {
+            const td = document.createElement('td');
+            td.textContent = pc(v);
+            tr.append(td);
+          }
+          if (cle !== 'prevalence' && cle !== 'signales') tr.className = Math.abs(ma[cle] - mb[cle]) <= 0.06 ? 'egal' : 'ecart';
+          return tr;
+        }),
+      );
+      const egal = (k: 'vpp' | 'tfp' | 'tfn') => Math.abs(ma[k] - mb[k]) <= 0.06;
+      legende.textContent = memeBase.checked
+        ? 'Avec le même taux de base, un même seuil égalise à la fois la valeur prédictive et les taux d’erreur : le dilemme disparaît.'
+        : egal('vpp') && egal('tfp') && egal('tfn')
+          ? 'Tout est égal ? Vérifie bien : avec des taux de base différents, c’est mathématiquement impossible, sauf cas extrêmes.'
+          : egal('tfp') && egal('tfn')
+            ? 'Les taux d’erreur sont égaux, mais une personne signalée n’a plus la même chance d’être concernée selon son groupe.'
+            : egal('vpp')
+              ? 'Le score a à peu près la même valeur prédictive dans les deux groupes, mais le groupe B compte bien plus de personnes signalées à tort : c’est le cœur du débat sur COMPAS.'
+              : 'Décoche « même seuil » et cherche des seuils qui égalisent tout. Tant que les taux de base diffèrent, tu n’y arriveras pas.';
+    }
+    sa.addEventListener('input', () => maj(sa));
+    sb.addEventListener('input', () => maj(sb));
+    [memeSeuil, memeBase].forEach((c) => c.addEventListener('input', () => maj()));
+    maj();
+  });
+</script>
+
+<style>
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .case input { accent-color: var(--accent); }
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin: 0.4rem 0; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody :global(th) { font-weight: 400; text-align: left; }
+  tbody :global(td) { font-family: var(--police-mono); white-space: nowrap; }
+  tbody :global(tr.egal td) { color: var(--ill-secret-b); font-weight: 700; }
+  tbody :global(tr.ecart td) { color: var(--ill-paquet); font-weight: 700; }
+</style>
