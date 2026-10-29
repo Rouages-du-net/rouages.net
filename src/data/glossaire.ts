@@ -500,6 +500,12 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Façon d'apprendre par essais et erreurs : la machine agit, reçoit une récompense ou une pénalité, souvent tard, et renforce peu à peu les actions qui rapportent le plus.",
     voirAussi: ['apprentissage-automatique'],
   },
+  'regression-logistique': {
+    terme: 'Régression logistique',
+    definition:
+      "Méthode statistique qui calcule une probabilité à partir d'une somme pondérée de critères : chaque critère a un coefficient, positif ou négatif, qu'on peut lire. Elle sert souvent à calculer des scores de risque.",
+    voirAussi: ['apprentissage-automatique'],
+  },
 };
 
 export function entree(id: string): Entree {

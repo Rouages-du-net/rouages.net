@@ -1,0 +1,261 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Score from '../../components/animations/decider/Score.astro';
+import Equite from '../../components/animations/decider/Equite.astro';
+import Controles from '../../components/animations/decider/Controles.astro';
+
+// Faits sourcés : voir docs/sources/ia-decider.md et docs/sources/ia-classer.md (§ 8 et 9).
+const etapes = [
+  { ancre: 'score', court: 'Un score qui décide' },
+  { ancre: 'equite', court: 'Juste, mais comment ?' },
+  { ancre: 'controles', court: 'Qui est contrôlé ?' },
+  { ancre: 'droit', court: 'Le droit de comprendre' },
+  { ancre: 'bilan', court: 'Cinq questions à poser', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui décident pour nous"
+  description="Crédit, contrôles des allocations, justice : des scores calculés aident à décider. Règle une grille de crédit, cherche une équité impossible entre deux groupes, regarde une boucle de contrôles se refermer, et découvre ton droit à l’explication."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui décident pour nous</h1>
+  <MiseAJour date="2026-10-29" evolutif />
+  <p class="chapo seulement-debut">
+    Un crédit accordé ou refusé, un dossier d'allocations contrôlé, une détention prolongée : des
+    scores calculés pèsent sur ces décisions. Règle une grille de crédit, cherche une équité
+    impossible entre deux groupes, puis regarde une boucle de contrôles se refermer.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Un score qui décide" ancre="score">
+    <Score slot="animation" />
+    <p slot="decouverte">
+      Pour accorder un crédit, un prêteur peut calculer un score : ici, une grille inventée qui
+      ajoute ou retire des points selon ta situation. Règle le dossier et regarde la décision, point par point.
+    </p>
+    <p slot="curieux">
+      La plupart des algorithmes qui décident pour nous ne sont pas des IA spectaculaires, mais des
+      calculs assez simples : une somme de points, une <Terme id="regression-logistique">régression
+      logistique</Terme>. Ils sont lisibles, à condition qu'on les montre. Et une explication utile
+      ne détaille pas forcément tout le calcul : elle peut dire ce qu'il aurait fallu changer pour
+      obtenir une autre décision.
+    </p>
+    <p slot="ingenieur">
+      C'est l'idée des explications <em>contrefactuelles</em>, proposées en 2017 par S. Wachter,
+      B. Mittelstadt et C. Russell : sans ouvrir la boîte noire, dire à la personne ce qui l'aurait
+      fait passer de l'autre côté du seuil. Elles servent trois buts : comprendre la décision,
+      pouvoir la contester, savoir quoi changer. Elles ont une limite : certains critères ne se
+      changent pas, comme un incident de paiement passé.
+    </p>
+    <div slot="histoire">
+      <p>
+        En décembre 2023, la Cour de justice de l'Union européenne juge, à propos de la société
+        allemande SCHUFA, que le calcul automatisé d'un score de solvabilité est déjà une « décision
+        individuelle automatisée » au sens du RGPD, dès lors qu'une banque s'y fie de manière
+        déterminante pour accorder ou refuser un crédit. Le module <a
+        href="/modules/ia-classer/#personnes">Les IA qui classent</a> détaille l'article 22 du RGPD.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Un algorithme ne peut pas discriminer : il ne fait que des calculs. »</strong> Il
+      calcule à partir des critères qu'on lui donne et des données du passé. Si ces critères suivent
+      de près une situation sociale, ou si le passé était inégal, le calcul reproduit l'inégalité,
+      sans jamais nommer personne.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Juste, mais selon quelle définition ?" ancre="equite">
+    <Equite slot="animation" />
+    <p slot="decouverte">
+      Un score prédit un risque pour deux groupes qui ne sont pas touchés au même taux. Règle les
+      seuils et essaie de rendre le score juste pour les deux groupes, selon toutes les définitions
+      à la fois.
+    </p>
+    <p slot="curieux">
+      On peut vouloir qu'une personne signalée « à risque » ait la même chance d'être vraiment
+      concernée, quel que soit son groupe. On peut aussi vouloir qu'une personne non concernée ait
+      la même chance d'être signalée à tort. Les deux semblent justes. Mais quand les deux groupes
+      n'ont pas le même taux de base, on ne peut pas avoir les deux : il faut choisir, et ce choix
+      est politique, pas technique.
+    </p>
+    <p slot="ingenieur">
+      A. Chouldechova montre en 2017 qu'avec une prévalence p, une valeur prédictive positive VPP et
+      un taux de faux négatifs TFN, le taux de faux positifs vaut TFP = p/(1−p) × (1−VPP)/VPP ×
+      (1−TFN). Si la VPP et le TFN sont égaux entre deux groupes de prévalences différentes, leurs
+      TFP ne peuvent pas l'être. J. Kleinberg, S. Mullainathan et M. Raghavan prouvent un résultat
+      voisin la même année : sauf cas très particuliers, trois conditions d'équité ne peuvent pas
+      être satisfaites ensemble.
+    </p>
+    <div slot="histoire">
+      <p>
+        En mai 2016, le média d'enquête américain ProPublica analyse COMPAS, un score de risque de
+        récidive vendu par l'entreprise Northpointe et utilisé par des tribunaux, sur plus de 10 000
+        personnes du comté de Broward, en Floride. Le score a raison à peu près aussi souvent pour
+        les prévenu·es noir·es et blanc·hes, mais il se trompe différemment : parmi celles et ceux
+        qui n'ont pas récidivé, 45 % des Noir·es avaient été classé·es à plus haut risque, contre
+        23 % des Blanc·hes. La race ne fait pas partie des 137 questions.
+      </p>
+      <p>
+        Northpointe conteste l'analyse : son score a la même valeur prédictive pour les deux groupes,
+        ce qu'elle considère comme le bon critère d'équité. Les deux constats sont exacts en même
+        temps ; c'est précisément ce que démontrent ensuite Chouldechova et Kleinberg.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Il suffit de retirer la couleur de peau ou le sexe des données. »</strong> COMPAS
+      ne posait aucune question sur la race. D'autres critères (quartier, emploi, antécédents de
+      l'entourage) peuvent la refléter en partie, et les taux de base différents suffisent à créer
+      le dilemme.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Qui est contrôlé ?" ancre="controles">
+    <Controles slot="animation" />
+    <p slot="decouverte">
+      Une caisse d'allocations veut cibler ses contrôles sur les dossiers où une erreur est la plus
+      probable. Mais elle ne sait si un dossier contient une erreur que si elle l'a contrôlé.
+      Regarde ce que cela change.
+    </p>
+    <p slot="curieux">
+      Un groupe plus contrôlé dans le passé a plus d'erreurs trouvées, même s'il n'en fait pas plus.
+      Un modèle qui confond « erreur trouvée » et « erreur commise » le jugera plus risqué, le
+      contrôlera encore plus, et confirmera ainsi sa propre idée. C'est une boucle, comme celle de
+      la popularité dans <a href="/modules/ia-recommander/#boucle">Les IA qui recommandent</a>.
+      Les contrôles tirés au hasard servent justement à mesurer la réalité.
+    </p>
+    <p slot="ingenieur">
+      C'est un piège bien connu des statisticien·nes : on ne connaît la bonne réponse que pour les
+      dossiers sur lesquels on a agi. Pour estimer un taux d'erreurs sans
+      biais, il faut le calculer sur un échantillon représentatif, par exemple des contrôles au
+      hasard. L'animation est une simulation générale : elle ne décrit pas l'algorithme d'un
+      organisme réel.
+    </p>
+    <div slot="histoire">
+      <p>
+        En France, les Caisses d'allocations familiales utilisent depuis au moins 2010 un algorithme qui
+        attribue un score aux dossiers pour cibler une partie des contrôles. En novembre 2023,
+        l'association La Quadrature du Net publie le code de deux anciennes versions (2010-2018),
+        obtenu après des mois de demandes : parmi les critères qui augmentaient le score figuraient
+        de faibles revenus, le chômage, le RSA ou le fait de toucher l'allocation aux adultes
+        handicapés tout en travaillant. Le 16 octobre 2024, quinze organisations, dont Amnesty
+        International France et la Fondation Abbé Pierre, saisissent le Conseil d'État au nom de la
+        protection des données et de la non-discrimination.
+      </p>
+      <p>
+        En janvier 2026, la Caisse nationale (CNAF) met en service un nouveau modèle et publie, pour
+        la première fois, son code source. Elle explique avoir écarté la nationalité, le genre,
+        l'adresse, le lieu de résidence et les données de « comportement », mais garder la situation
+        économique, jugée « inévitable ». Selon elle, le modèle vise les trop-perçus de plus de 600 €
+        sur six mois, sert à moins de 1 % des 31,5 millions de contrôles de 2024, et « la décision
+        d'un contrôle reste humaine ». État au 29 octobre 2026 : aucune décision du Conseil d'État
+        n'a été trouvée sur le recours.
+      </p>
+      <p>
+        Aux Pays-Bas, un système de détection des fraudes aux allocations de garde d'enfants, qui
+        utilisait la nationalité, a conduit à accuser à tort des dizaines de milliers de familles ;
+        le gouvernement a démissionné en 2021. Le module <a
+        href="/modules/ia-classer/#personnes">Les IA qui classent</a> raconte cette affaire.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ce sont les plus contrôlé·es qui fraudent le plus, les chiffres le prouvent. »</strong>
+      Les chiffres de contrôles montrent où l'on a cherché. Un indu (un trop-perçu) n'est pas non
+      plus une fraude : la CNAF elle-même parle d'erreurs à corriger, la réglementation étant
+      « parfois complexe ».
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Le droit de comprendre" ancre="droit">
+    <p slot="decouverte">
+      Quand un algorithme a pesé sur une décision qui te concerne, tu as des droits : savoir qu'il a
+      été utilisé, demander comment, et parfois refuser qu'une machine décide seule.
+    </p>
+    <ul slot="curieux">
+      <li><strong>Face à l'administration française</strong> : si un traitement algorithmique a fondé une décision individuelle te concernant, tu peux demander les règles qui le définissent et les principales caractéristiques de sa mise en œuvre. Les administrations doivent aussi publier les règles de leurs principaux algorithmes.</li>
+      <li><strong>Face à toute organisation, en Europe</strong> : le RGPD te donne le droit de ne pas faire l'objet d'une décision fondée exclusivement sur un traitement automatisé qui t'affecte de manière importante, sauf exceptions, avec alors le droit d'obtenir une intervention humaine et de contester.</li>
+      <li><strong>Pour les systèmes d'IA à haut risque</strong> : le règlement européen sur l'IA impose des obligations aux systèmes qu'il classe à haut risque, dont ceux de recrutement ; pour ces derniers (son annexe III), elles s'appliqueront à partir du 2 décembre 2027.</li>
+    </ul>
+    <p slot="ingenieur">
+      Ces droits s'arrêtent parfois aux secrets protégés par la loi. Pour Parcoursup, la loi
+      dispensait les établissements de communiquer leurs outils d'aide à la décision, au nom du
+      secret des délibérations. Le Conseil constitutionnel a jugé en 2020 que cette dispense était
+      conforme, à une condition : chaque établissement doit publier, après la procédure, les
+      critères d'examen des candidatures, en précisant « dans quelle mesure des traitements
+      algorithmiques ont été utilisés ».
+    </p>
+    <div slot="histoire">
+      <p>
+        Ces droits figurent dans le code des relations entre le public et l'administration (articles
+        L. 311-3-1 et L. 312-1-3), dans le RGPD (règlement européen de 2016) et dans le règlement
+        européen sur l'IA (2024, calendrier modifié en 2026). La décision Parcoursup du Conseil constitutionnel
+        date du 3 avril 2020.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« On ne peut rien savoir, c'est un secret de fabrication. »</strong> Face à
+      l'administration, les règles d'un algorithme qui a fondé une décision te concernant peuvent
+      être demandées, et la CNAF a fini par publier son code. Le secret existe, mais il n'est pas
+      la règle.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Cinq questions à poser à un algorithme qui décide</h2>
+    <ol class="questions">
+      <li><strong>Qui décide vraiment ?</strong> Le score décide-t-il seul, ou une personne peut-elle s'en écarter, et le fait-elle ?</li>
+      <li><strong>Avec quelles données ?</strong> Lesquelles suivent de près une situation sociale, une origine, un handicap ?</li>
+      <li><strong>Juste selon quelle définition ?</strong> Même valeur prédictive, mêmes erreurs : on ne peut pas toujours tout avoir.</li>
+      <li><strong>Apprend-il de ses propres choix ?</strong> Un modèle qui ne voit que ce qu'il a contrôlé peut s'auto-confirmer.</li>
+      <li><strong>Peut-on comprendre et contester ?</strong> Règles publiées, explication, recours humain.</li>
+    </ol>
+    <p>
+      Ces questions valent pour une grille de points comme pour un réseau de neurones. Le reste de la
+      section <a href="/ia/">L'IA</a> montre comment ces modèles apprennent.
+    </p>
+
+  <Sources
+    verifie="2026-10-29"
+    sources={[
+      { auteur: 'S. Wachter, B. Mittelstadt, C. Russell', titre: 'Counterfactual Explanations without Opening the Black Box: Automated Decisions and the GDPR, résumé', url: 'https://arxiv.org/abs/1711.00399', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'CJUE', titre: 'Arrêt C-634/21, SCHUFA Holding (Scoring), 7 décembre 2023', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:62021CJ0634', type: 'primaire', annee: 2023 },
+      { auteur: 'J. Angwin, J. Larson, S. Mattu, L. Kirchner (ProPublica)', titre: 'Machine Bias', url: 'https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing', type: 'presse', annee: 2016, langue: 'en' },
+      { auteur: 'J. Larson et al. (ProPublica)', titre: 'How We Analyzed the COMPAS Recidivism Algorithm', url: 'https://www.propublica.org/article/how-we-analyzed-the-compas-recidivism-algorithm', type: 'presse', annee: 2016, langue: 'en' },
+      { auteur: 'A. Chouldechova', titre: 'Fair prediction with disparate impact: A study of bias in recidivism prediction instruments', url: 'https://arxiv.org/abs/1703.00056', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'J. Kleinberg, S. Mullainathan, M. Raghavan', titre: 'Inherent Trade-Offs in the Fair Determination of Risk Scores, résumé', url: 'https://arxiv.org/abs/1609.05807', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'La Quadrature du Net (association, partie au recours)', titre: 'Notation des allocataires : l’indécence des pratiques de la CAF désormais indéniable', url: 'https://www.laquadrature.net/2023/11/27/notation-des-allocataires-lindecence-des-pratiques-de-la-caf-desormais-indeniable/', type: 'site', annee: 2023 },
+      { auteur: 'Amnesty International France', titre: 'L’algorithme de notation de la CNAF attaqué devant le Conseil d’État par 15 organisations', url: 'https://www.amnesty.fr/presse/lalgorithme-de-notation-de-la-cnaf-attaque-devant-le-conseil-detat-par-15-organisations', type: 'site', annee: 2024 },
+      { auteur: 'CNAF', titre: 'Transparence et garanties éthiques autour de l’algorithme d’appui aux contrôles des Caf (dossier de presse)', url: 'https://www.caf.fr/sites/default/files/medias/cnaf/Nous_connaitre/Presse/2026/260115%20DP%20Transparence%20et%20garanties%20%C3%A9thiques%20autour%20de%20l\'algorithme%20d\'appui%20aux%20contr%C3%B4les%20des%20Caf%20(2).pdf', type: 'primaire', annee: 2026 },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2020-834 QPC du 3 avril 2020 (Parcoursup)', url: 'https://www.conseil-constitutionnel.fr/decision/2020/2020834QPC.htm', type: 'primaire', annee: 2020 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2016/679 (RGPD), article 22', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32016R0679', type: 'primaire', annee: 2016 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2026/1744 (omnibus numérique sur l’IA), calendrier des systèmes à haut risque', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744', type: 'primaire', annee: 2026 },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

@@ -1,0 +1,119 @@
+---
+// Animation « Un score de crédit » (module « Les IA qui décident pour
+// nous ») : une grille de points, comme en utilisent les prêteurs ; chaque
+// critère apporte ou retire des points, la décision dépend d'un seuil. On
+// affiche l'explication point par point et une explication contrefactuelle.
+// Grille et dossiers inventés.
+---
+<div class="anim score" data-score>
+  <div class="anim-repli">
+    <p>
+      Une grille de score additionne des points : le revenu et l'ancienneté dans l'emploi en
+      ajoutent, l'endettement et les incidents de paiement en retirent, l'apport en ajoute. Au-dessus
+      de 500 points, le crédit est accordé. Un dossier à 494 points est refusé ; l'explication
+      contrefactuelle dit ce qui aurait suffi : 5 points d'endettement en moins, ou 5 points d'apport
+      en plus. Certains critères, comme un incident de paiement passé, ne se changent pas.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="criteres" data-criteres></div>
+      <div class="jauge" aria-hidden="true"><div data-jauge></div><span class="seuil"></span></div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <ul class="detail" data-detail aria-label="Points apportés par chaque critère"></ul>
+      <p class="contrefactuel" data-contre aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Grille inventée : 420 points de départ, seuil à 500.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { BASE, CRITERES, SEUIL, contrefactuels, contributions, score, type Dossier } from '../../../lib/decider';
+
+  const LIBELLES: Record<string, [string, (v: number) => string]> = {
+    revenu: ['Revenu mensuel', (v) => `${v.toLocaleString('fr-FR')} k€`],
+    anciennete: ['Ancienneté dans l’emploi', (v) => `${v} an${v > 1 ? 's' : ''}`],
+    endettement: ['Mensualités déjà en cours', (v) => `${v} % du revenu`],
+    incidents: ['Incidents de paiement passés', (v) => `${v}`],
+    apport: ['Apport personnel', (v) => `${v} % du prix`],
+  };
+  const DEPART: Dossier = { revenu: 2.5, anciennete: 3, endettement: 20, incidents: 0, apport: 10 };
+  const signe = (n: number) => (n > 0 ? `+${n}` : `${n}`).replace('-', '−');
+
+  document.querySelectorAll<HTMLElement>('[data-score]').forEach((racine) => {
+    activerScene(racine);
+    const d: Dossier = { ...DEPART };
+    const zone = racine.querySelector<HTMLElement>('[data-criteres]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const sorties: Record<string, HTMLOutputElement> = {};
+
+    CRITERES.forEach((c) => {
+      const [nom, fmt] = LIBELLES[c.id];
+      const label = document.createElement('label');
+      label.className = 'curseur';
+      const sortie = document.createElement('output');
+      sorties[c.id] = sortie;
+      const entree = document.createElement('input');
+      Object.assign(entree, { type: 'range', min: String(c.min), max: String(c.max), step: String(c.pas), value: String(d[c.id]) });
+      entree.addEventListener('input', () => {
+        d[c.id] = Number(entree.value);
+        maj();
+      });
+      label.append(`${nom} : `, sortie, entree);
+      zone.append(label);
+      sortie.value = fmt(d[c.id]);
+    });
+
+    function maj() {
+      CRITERES.forEach((c) => (sorties[c.id].value = LIBELLES[c.id][1](d[c.id])));
+      const s = score(d);
+      const accorde = s >= SEUIL;
+      const jauge = racine.querySelector<HTMLElement>('[data-jauge]')!;
+      jauge.style.width = `${Math.max(0, Math.min(100, ((s - 200) / 500) * 100))}%`;
+      jauge.className = accorde ? 'oui' : 'non';
+      racine.querySelector('[data-mesure]')!.textContent = `Score : ${s} points (seuil : ${SEUIL}). Crédit ${accorde ? 'accordé' : 'refusé'}.`;
+      racine.querySelector('[data-detail]')!.replaceChildren(
+        (() => {
+          const li = document.createElement('li');
+          li.textContent = `Points de départ : ${BASE}`;
+          return li;
+        })(),
+        ...contributions(d).map(({ id, points }) => {
+          const li = document.createElement('li');
+          li.textContent = `${LIBELLES[id][0]} : ${signe(Math.round(points))}`;
+          return li;
+        }),
+      );
+      const cf = contrefactuels(d);
+      racine.querySelector('[data-contre]')!.textContent = accorde
+        ? ''
+        : cf.length
+          ? `Ce qui aurait suffi : ${cf.map((x) => `${LIBELLES[x.id][0].toLowerCase()} à ${LIBELLES[x.id][1](x.a)} au lieu de ${LIBELLES[x.id][1](x.de)}`).join(', ou ')}.`
+          : 'Aucun changement d’un seul critère modifiable ne suffit : le refus tient à des critères que la personne ne peut pas changer seule.';
+      legende.textContent = accorde
+        ? 'Chaque point se lit dans la grille : on peut expliquer la décision ligne par ligne. Essaie un incident de paiement.'
+        : cf.length
+          ? 'L’explication contrefactuelle ne montre pas tout le calcul : elle dit quoi changer pour obtenir une autre décision. C’est souvent ce dont la personne a besoin.'
+          : 'Un incident de paiement pèse lourd et ne s’efface pas : la grille peut enfermer quelqu’un dans son passé.';
+    }
+    maj();
+  });
+</script>
+
+<style>
+  .criteres { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .criteres :global(.curseur) { display: grid; gap: 0.15rem; font-size: 0.9rem; }
+  .criteres :global(input) { width: 100%; accent-color: var(--accent); }
+  .criteres :global(output) { font-weight: 700; }
+  .jauge { position: relative; height: 0.9rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); overflow: hidden; }
+  .jauge > div { height: 100%; }
+  .jauge :global(.oui) { background: var(--ill-secret-b); }
+  .jauge :global(.non) { background: var(--ill-paquet); }
+  .jauge .seuil { position: absolute; top: 0; bottom: 0; left: 60%; width: 2px; background: var(--fg); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+  .detail { font: 0.8rem var(--police-mono); color: var(--muted); margin: 0.3rem 0; padding-left: 1.2rem; }
+  .contrefactuel { font-weight: 700; margin: 0.4rem 0 0; }
+</style>
