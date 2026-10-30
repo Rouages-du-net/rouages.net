@@ -110,6 +110,24 @@ flowchart TB
 - [x] **Délibérer avec des algorithmes** *(`/modules/deliberer/`, relecture humaine à faire)* — Polis et vTaiwan, Community Notes (algorithme de « pont », études divergentes, à dater), conventions citoyennes, Porto Alegre
 - [x] **L'IA, fruit d'une intelligence collective** *(`/modules/ia-collective/`, relecture humaine à faire)* — données du web, reCAPTCHA, annotation et travail invisible, retours humains (RLHF), IA d'aide à la délibération
 
+## Phase 5 quater — Penser la technique (expériences de pensée et philosophie)
+
+Les grandes questions sur l'IA, la technique, les télécommunications et
+internet, à partir d'expériences de pensée qu'on manipule : chaque module
+propose une animation (un petit monde où l'expérience se joue), puis les
+objections et les réponses. Toutes les positions présentées ; attributions
+vérifiées (pas de « premier·e » ni d'auteur unique sans source) ; penseuses et
+pensées non occidentales mises en avant. Dates et attributions ci-dessous à
+vérifier lors de la recherche.
+
+- [ ] Page d'entrée `/penser-la-technique/` et carte sur l'accueil ; dossier de sources `sources/penser-la-technique.md`
+- [ ] **Les objectifs mal posés** *(à faire en premier)* — le roi Midas et l'apprenti sorcier, le maximiseur de trombones (Bostrom), la loi de Goodhart, des cas réels d'IA qui « trichent » sur un objectif mal formulé ; débat sur le risque existentiel face aux torts actuels (toutes les positions). Animation : un optimiseur dans un petit monde, avec un objectif à corriger
+- [ ] **Une machine peut-elle penser ?** — le jeu de l'imitation de Turing (1950) et « l'objection de Lady Lovelace », la chambre chinoise (Searle, 1980), l'effet ELIZA (Weizenbaum), les « perroquets stochastiques » (Bender, Gebru et al., 2021). Animation : une chambre chinoise qui répond avec un livre de règles
+- [ ] **Les choix moraux** — le dilemme du tramway (Philippa Foot, Judith Jarvis Thomson), Moral Machine et ses limites, le voile d'ignorance (Rawls) appliqué aux algorithmes. Animation : tes choix comparés à ceux de Moral Machine
+- [ ] **La technique est-elle neutre ?** — lois de Kranzberg, « Les artefacts font-ils de la politique ? » (Winner, et la controverse sur les ponts de Moses), « Code is law » (Lessig) contre la Déclaration d'indépendance du cyberespace (Barlow), dilemme de Collingridge, « Le médium est le message » (McLuhan), paradoxe de Jevons. Animation : Jevons (plus d'efficacité, plus de consommation)
+- [ ] **Surveillance et vie privée** — le panoptique (Bentham, Foucault), « Je n'ai rien à cacher » et ses réfutations ; lien avec « Les IA qui surveillent »
+- [ ] **Des regards venus d'ailleurs** — éthique ubuntu et IA, « cosmotechnique » (Yuk Hui), protocoles autochtones pour l'IA, critiques de Ruha Benjamin et Kate Crawford
+
 ## En parallèle — Jeux et idées reçues
 
 - [x] Terminus : lien vers l'original du MIT
