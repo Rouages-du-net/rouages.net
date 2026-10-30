@@ -1,0 +1,99 @@
+---
+// Page d'entrée de la section « Penser la technique » (voir docs/ROADMAP.md,
+// phase 5 quater). Quand un module paraît, renseigner son lien et son résumé
+// dans MODULES.
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+
+const MODULES: { titre: string; idee: string; lien?: string; resume?: string }[] = [
+  { titre: 'Les objectifs mal posés', idee: 'l’apprenti sorcier, le maximiseur de trombones, la loi de Goodhart, les IA qui « trichent »', lien: '/modules/objectifs-mal-poses/', resume: 'Lâche un maximiseur de trombones dans un petit monde, récompense un indicateur jusqu’à ce qu’il ne mesure plus rien, et regarde un bateau apprendre à tourner en rond.' },
+  { titre: 'Une machine peut-elle penser ?', idee: 'le jeu de l’imitation de Turing et l’objection de Lady Lovelace, la chambre chinoise, ELIZA, les « perroquets stochastiques »' },
+  { titre: 'Les choix moraux', idee: 'le dilemme du tramway, Moral Machine, le voile d’ignorance' },
+  { titre: 'La technique est-elle neutre ?', idee: 'Kranzberg, Winner, « Code is law », Collingridge, McLuhan, le paradoxe de Jevons' },
+  { titre: 'Surveillance et vie privée', idee: 'le panoptique, « je n’ai rien à cacher »' },
+  { titre: 'Des regards venus d’ailleurs', idee: 'éthique ubuntu, cosmotechnique, protocoles autochtones pour l’IA' },
+];
+const disponibles = MODULES.filter((m) => m.lien);
+const aVenir = MODULES.filter((m) => !m.lien);
+---
+<Base
+  title="Penser la technique"
+  description="Expériences de pensée et grandes questions sur l’IA, la technique et internet : objectifs mal posés, machines qui pensent, choix moraux, neutralité de la technique. À manipuler, objections comprises."
+>
+  <p class="tag">Comment ça marche</p>
+  <h1>Penser la technique</h1>
+  <MiseAJour date="2026-10-30" />
+
+  <div class="intro">
+    <p>
+      Une expérience de pensée est un petit monde imaginaire où l'on pousse une idée jusqu'au bout,
+      pour voir où elle casse. Les philosophes en utilisent depuis longtemps ; les ingénieur·es
+      aussi, sans toujours le dire. Ici, on les fait tourner pour de vrai : chaque module propose un
+      petit monde à manipuler, puis les objections et les réponses.
+    </p>
+    <p>
+      En 1960, le mathématicien Norbert Wiener s'inquiétait déjà des machines qui apprennent :
+      il rappelait les contes de l'apprenti sorcier et du génie des <em>Mille et Une Nuits</em>, où
+      un souhait mal formulé est exaucé à la lettre. Ces questions ne sont pas réservées à l'IA :
+      elles touchent les indicateurs, les réseaux, la surveillance, et la façon dont chaque société
+      pense ses outils. Sur beaucoup d'entre elles, les spécialistes ne sont pas d'accord : on
+      présente leurs positions.
+    </p>
+  </div>
+
+  {disponibles.length > 0 && (
+    <section aria-labelledby="modules">
+      <h2 id="modules">Les modules</h2>
+      <div class="grid">
+        {disponibles.map((m) => (
+          <article class="card">
+            <h3><a href={m.lien}>{m.titre}</a></h3>
+            <p>{m.resume}</p>
+            <span class="tag">Disponible</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section aria-labelledby="bientot">
+    <h2 id="bientot">Bientôt</h2>
+    <ul class="a-venir">
+      {aVenir.map((m) => <li><strong>{m.titre}</strong> <span>({m.idee})</span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="ailleurs">
+    <h2 id="ailleurs">Déjà sur le site</h2>
+    <div class="grid">
+      <article class="card">
+        <h3><a href="/modules/ia-decident/">Les IA qui décident pour nous</a></h3>
+        <p>Pourquoi on ne peut pas être juste selon toutes les définitions à la fois.</p>
+      </article>
+      <article class="card">
+        <h3><a href="/modules/ia-recommander/#objectif">Les IA qui recommandent</a></h3>
+        <p>Ce qui arrive quand on optimise le temps passé plutôt que la satisfaction.</p>
+      </article>
+      <article class="card">
+        <h3><a href="/modules/construire-ensemble/#communs">Construire ensemble</a></h3>
+        <p>La tragédie des communs, et les règles d'Elinor Ostrom pour l'éviter.</p>
+      </article>
+    </div>
+  </section>
+
+  <Sources
+    verifie="2026-10-30"
+    sources={[
+      { auteur: 'N. Wiener', titre: 'Some Moral and Technical Consequences of Automation (Science 131, 1960), copie PDF', url: 'https://gwern.net/doc/reinforcement-learning/safe/1960-wiener.pdf', type: 'primaire', annee: 1960, langue: 'en' },
+    ]}
+  />
+</Base>
+
+<style>
+  .intro { max-width: var(--mesure); font-size: 1.1rem; }
+  section { margin-top: 3rem; }
+  .a-venir { max-width: var(--mesure); padding-left: 1.2rem; }
+  .a-venir li { margin-bottom: 0.35rem; }
+  .a-venir span { color: var(--muted); }
+</style>

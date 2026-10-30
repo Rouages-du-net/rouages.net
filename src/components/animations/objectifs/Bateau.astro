@@ -1,0 +1,89 @@
+---
+// Animation « Le bateau qui tourne en rond » (module « Les objectifs mal
+// posés ») : un bateau apprend par renforcement (Q-learning, calculé dans
+// le navigateur) à jouer sur un petit circuit. Récompensé pour les cibles,
+// il tourne autour ; récompensé pour l'arrivée, il finit la course.
+---
+<div class="anim bateau" data-bateau>
+  <div class="anim-repli">
+    <p>
+      Un bateau apprend tout seul, en 3 000 parties, à jouer sur un circuit de dix cases. Si on le
+      récompense pour chaque cible touchée (deux cibles qui réapparaissent), il apprend à faire des
+      allers-retours entre les cibles sans jamais finir la course : 28 points, aucune arrivée. Si on
+      le récompense pour l'arrivée, il va droit au but. Il a fait exactement ce qu'on lui demandait.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Ce qui rapporte des points au bateau</legend>
+        <label><input type="radio" name="recompense" value="cibles" checked /> Chaque cible touchée (et un point à l'arrivée)</label>
+        <label><input type="radio" name="recompense" value="arrivee" /> Seulement franchir l'arrivée</label>
+      </fieldset>
+      <ol class="circuit" data-circuit aria-hidden="true"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="apprendre">Entraîner puis regarder</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Calcul réel : 3 000 parties de Q-learning dans ton navigateur. Les cibles réapparaissent deux pas après avoir été touchées. Circuit inventé, inspiré de l'exemple de course de bateaux cité par DeepMind.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+  import { ARRIVEE, apprendreBateau, type Recompense } from '../../../lib/objectifs';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-bateau]').forEach((racine) => {
+    activerScene(racine);
+    const circuit = racine.querySelector<HTMLElement>('[data-circuit]')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="apprendre"]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const cases = Array.from({ length: ARRIVEE + 1 }, (_, i) => {
+      const li = document.createElement('li');
+      li.className = i === 3 || i === 4 ? 'cible' : i === ARRIVEE ? 'arrivee' : '';
+      li.textContent = i === ARRIVEE ? '🏁' : i === 3 || i === 4 ? '◎' : '';
+      circuit.append(li);
+      return li;
+    });
+    let tour = 0;
+    const placer = (pos: number) => cases.forEach((c, i) => c.classList.toggle('bateau', i === pos));
+
+    async function lancer() {
+      const t = ++tour;
+      bouton.disabled = true;
+      const r = (racine.querySelector<HTMLInputElement>('input[name="recompense"]:checked')?.value ?? 'cibles') as Recompense;
+      mesure.textContent = 'Entraînement : 3 000 parties…';
+      await pause(30);
+      const { trajet, points, arrive } = apprendreBateau(hasard(1), r);
+      for (const pos of trajet) {
+        placer(pos);
+        await pause(150);
+        if (t !== tour) return;
+      }
+      mesure.textContent = `Trajet appris : ${trajet.join(' → ')}. ${points} points, ${arrive ? 'arrivée franchie' : 'aucune arrivée'}.`;
+      legende.textContent =
+        r === 'cibles'
+          ? 'Le bateau a trouvé mieux que finir la course : faire des allers-retours entre les cibles. Il ne triche pas ; il maximise exactement ce qu’on a récompensé.'
+          : 'Récompensé pour l’arrivée, le bateau va droit au but. Mais il a fallu savoir, à l’avance, ce qu’on voulait vraiment.';
+      bouton.disabled = false;
+    }
+    bouton.addEventListener('click', lancer);
+    placer(0);
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.75rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .circuit { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; max-width: 26rem; }
+  .circuit :global(li) { aspect-ratio: 1; display: grid; place-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 0.25rem; font-size: 0.9rem; }
+  .circuit :global(li.cible) { color: var(--ill-secret-b); font-weight: 700; }
+  .circuit :global(li.bateau) { background: var(--accent); color: var(--bg); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.5rem 0 0; overflow-wrap: anywhere; }
+</style>

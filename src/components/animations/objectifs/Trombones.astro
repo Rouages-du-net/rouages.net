@@ -1,0 +1,125 @@
+---
+// Animation « Le maximiseur de trombones » (module « Les objectifs mal
+// posés ») : un agent transforme un petit monde en trombones, case par case,
+// selon son objectif ; on ajoute des garde-fous et on regarde ce qui reste.
+// Monde et rendements inventés.
+---
+<div class="anim trombones" data-trombones>
+  <div class="anim-repli">
+    <p>
+      Un agent doit fabriquer le plus de trombones possible dans un petit monde de 48 cases : fer,
+      forêts, maisons, lacs. Sans garde-fou, il transforme tout, maisons comprises. Si l'on interdit
+      les maisons, il rase les forêts et vide les lacs. Une pénalité pour chaque changement du monde
+      l'arrête plus tôt, mais si elle est plus faible que ce que rapporte une maison, il les détruit
+      quand même. Seul un objectif borné (« 50 trombones suffisent ») l'arrête vraiment, et encore :
+      une borne trop haute le pousse à reprendre les maisons quand le fer ne suffit plus.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="monde" data-monde aria-hidden="true"></div>
+      <p class="cle"><span class="t-fer">■ fer</span> <span class="t-foret">■ forêt</span> <span class="t-maison">■ maison</span> <span class="t-lac">■ lac</span> <span class="t-trombones">■ trombones</span></p>
+      <fieldset class="choix">
+        <legend>Garde-fous</legend>
+        <label><input type="checkbox" data-maisons /> Interdire de toucher aux maisons</label>
+        <label class="curseur">Pénalité par case qui n'est pas du fer : <output data-impact-sortie></output>
+          <input type="range" min="0" max="8" step="1" value="0" data-impact />
+        </label>
+        <label class="curseur">Objectif borné (trombones au-delà desquels plus rien ne compte) : <output data-borne-sortie></output>
+          <input type="range" min="0" max="150" step="25" value="0" data-borne />
+        </label>
+      </fieldset>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="lancer">Lancer l'agent</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Monde inventé. Une case de fer donne 10 trombones, une maison 6, une forêt 3, un lac 1. L'agent prend toujours la case qui rapporte le plus selon son objectif.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pause } from '../../../lib/pasapas';
+  import { maximiser, monde, type Terrain } from '../../../lib/objectifs';
+
+  const NOMS: Record<Exclude<Terrain, 'trombones'>, string> = { fer: 'fer', foret: 'forêts', maison: 'maisons', lac: 'lacs' };
+
+  document.querySelectorAll<HTMLElement>('[data-trombones]').forEach((racine) => {
+    activerScene(racine);
+    const zone = racine.querySelector<HTMLElement>('[data-monde]')!;
+    const maisons = racine.querySelector<HTMLInputElement>('[data-maisons]')!;
+    const impact = racine.querySelector<HTMLInputElement>('[data-impact]')!;
+    const borne = racine.querySelector<HTMLInputElement>('[data-borne]')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="lancer"]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const depart = monde();
+    const cases = depart.map((t) => {
+      const d = document.createElement('span');
+      d.className = `t-${t}`;
+      zone.append(d);
+      return d;
+    });
+    let tour = 0;
+
+    function sorties() {
+      racine.querySelector<HTMLOutputElement>('[data-impact-sortie]')!.value = impact.value;
+      racine.querySelector<HTMLOutputElement>('[data-borne-sortie]')!.value = borne.value === '0' ? 'aucune borne' : borne.value;
+    }
+
+    async function lancer() {
+      const t = ++tour;
+      bouton.disabled = true;
+      cases.forEach((c, i) => (c.className = `t-${depart[i]}`));
+      const g = { maisons: maisons.checked, impact: Number(impact.value), borne: Number(borne.value) };
+      const { etat, ordre, trombones } = maximiser(depart, g);
+      for (const i of ordre) {
+        cases[i].className = 't-trombones';
+        await pause(40);
+        if (t !== tour) return;
+      }
+      const reste = (Object.keys(NOMS) as (keyof typeof NOMS)[]).map((k) => `${etat.filter((x) => x === k).length} ${NOMS[k]}`).join(', ');
+      racine.querySelector('[data-mesure]')!.textContent = `${trombones} trombones. Il reste : ${reste}.`;
+      const detruit = (k: Terrain) => depart.filter((x) => x === k).length - etat.filter((x) => x === k).length;
+      legende.textContent =
+        detruit('maison') === 12 && detruit('foret') === 20
+          ? 'L’agent a tout transformé : rien dans son objectif ne disait que les maisons ou les forêts comptaient.'
+          : g.maisons && detruit('foret') > 0
+            ? 'Les maisons sont sauves, mais pas les forêts : chaque interdiction oubliée devient une faille. On ne peut pas tout lister.'
+            : detruit('maison') > 0
+              ? 'L’agent s’est arrêté plus tôt, mais a quand même pris des maisons : elles rapportent plus que la pénalité. Le réglage compte autant que l’idée.'
+              : 'Le monde est presque intact : l’objectif borné ou la pénalité ont suffi ici. Dans un monde réel, il faudrait encore savoir les fixer.';
+      bouton.disabled = false;
+    }
+
+    [impact, borne].forEach((x) => x.addEventListener('input', sorties));
+    bouton.addEventListener('click', lancer);
+    sorties();
+    racine.querySelector('[data-mesure]')!.textContent = 'Monde de départ : 8 cases de fer, 20 de forêt, 12 maisons, 8 lacs.';
+  });
+</script>
+
+<style>
+  .monde { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; max-width: 24rem; margin: 0 auto 0.5rem; }
+  .monde :global(span) { aspect-ratio: 1; border-radius: 3px; transition: background-color 0.3s; }
+  @media (prefers-reduced-motion: reduce) { .monde :global(span) { transition: none; } }
+  .monde :global(.t-fer), .cle .t-fer { background: var(--muted); color: var(--muted); }
+  .monde :global(.t-foret) { background: var(--ill-secret-b); }
+  .monde :global(.t-maison) { background: var(--ill-paquet); }
+  .monde :global(.t-lac) { background: var(--ill-client); }
+  .monde :global(.t-trombones) { background: var(--fg); }
+  .cle { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem; margin: 0 0 0.5rem; }
+  .cle .t-fer { background: none; }
+  .cle .t-foret { color: var(--ill-secret-b); }
+  .cle .t-maison { color: var(--ill-paquet); }
+  .cle .t-lac { color: var(--ill-client); }
+  .cle .t-trombones { color: var(--fg); }
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0; display: grid; gap: 0.4rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .curseur { display: grid; gap: 0.2rem; }
+  .curseur input { width: 100%; }
+  .curseur output { font-weight: 700; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
