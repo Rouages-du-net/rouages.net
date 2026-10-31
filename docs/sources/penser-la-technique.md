@@ -534,3 +534,98 @@ et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
 - Le détail des sous-principes CARE n'a pas été lu : rester sur les quatre
   intitulés et la tension avec l'ouverture des données.
 - L'animation des données d'une langue est inventée et ne décrit pas Te Hiku.
+
+## Thème 4 bis — Collingridge et McLuhan (complément de `/modules/technique-neutre/`)
+
+Recherche du 31 octobre 2026. Deux étapes ajoutées au module « La technique
+est-elle neutre ? ».
+
+### Formulation sûre
+
+En 1980, David Collingridge formule un dilemme : tant qu'une technique est
+jeune, on peut la changer facilement mais on ignore ses effets ; quand ses
+effets sont connus, elle est installée et la changer coûte cher. L'histoire des
+CFC et de la couche d'ozone montre le dilemme… et qu'on peut quand même agir,
+tard et à grand coût. En 1964, Marshall McLuhan écrit que « le médium est le
+message » : les effets d'un moyen de communication comptent plus que ce qu'il
+transporte. Raymond Williams lui reproche en 1974 un déterminisme technique
+qui efface les intentions et les usages.
+
+### Faits clés
+
+**Le dilemme de Collingridge (1980)** [37]
+- D. Collingridge, *The Social Control of Technology*, Frances Pinter /
+  St. Martin's Press, 1980 (livre **non lu** : prêt numérique seulement).
+- Phrase citée de façon concordante par deux sources indépendantes : « When
+  change is easy, the need for it cannot be foreseen; when the need for change
+  is apparent, change has become expensive, difficult and time consuming. »
+  (E. Morozov, Edge, 2012) ; l'IZEW de Tübingen cite la même phrase avec la
+  page 11 (« change has become expensive, difficult, and time-consuming »).
+- Pistes de Collingridge résumées par l'IZEW : garder les décisions de
+  développement corrigeables, suivre l'innovation en continu plutôt qu'une fois,
+  reconnaître l'incertitude des savoirs.
+- E. A. Parson (*UCLA Law Review*, 2016) : « a structural contradiction
+  between the conditions necessary for knowledge and for control » ; le
+  nucléaire civil est l'exemple qui l'illustre le plus pour Collingridge.
+
+**Les CFC et la couche d'ozone** [38]
+- Communiqué Nobel de chimie 1995 (Crutzen, Molina, Rowland) : en 1974, Molina
+  et Rowland publient dans *Nature* la menace des CFC (« freons » des bombes
+  aérosol, des réfrigérateurs, des mousses) ; leur stabilité et leur non-toxicité
+  les faisaient croire « environmentally ideal » ; « Many were critical of
+  Molina's and Rowland's calculations » ; quelques restrictions fin des années
+  1970 ; « Not until 1985, when the real shock came » (trou d'ozone, Joseph
+  Farman et ses collègues) ; recherches de Susan Solomon et James Anderson ;
+  Protocole de Montréal signé en 1987 sous l'égide de l'ONU ; les gaz les plus
+  dangereux totalement interdits à partir de 1996, délai pour les pays en
+  développement ; « at least 100 years » pour une récupération complète.
+- Fiche Nobel de Mario Molina : né le 19 mars 1943 à Mexico, mort le 7 octobre
+  2020 à Mexico.
+
+**McLuhan (1964)** [39]
+- M. McLuhan, *Understanding Media: The Extensions of Man*, 1964, chap. 1
+  « The Medium is the Message » (livre **non lu** ; citations via le
+  dictionnaire de citations de la succession McLuhan, compilé par W. Kuhns) :
+  « In a culture like ours, long accustomed to splitting and dividing all things
+  as a means of control, […] in operational and practical fact, the medium is
+  the message » (p. 7) ; « The electric light is pure information. It is a
+  medium without a message » (p. 8).
+
+**Williams (1974)** [40]
+- R. Williams, *Television: Technology and Cultural Form*, 1974 (livre **non
+  lu**), via la recension de F. Palácio de Azevedo, « Um libelo contra o
+  determinismo tecnológico », *Matrizes* 12(3), 2018, p. 321-329 (USP),
+  à propos de la traduction brésilienne : Williams classe la théorie de McLuhan
+  comme un formalisme esthétique qui se veut théorie sociale ; « se o efeito do
+  meio é sempre o mesmo, não importando quem o controle ou use, nem o conteúdo
+  que se tente inserir, então podemos […] deixar a tecnologia operar por si
+  mesma » (p. 137 de la traduction) ; la détermination comme « colocar limites
+  e exercer pressões » (p. 139).
+
+**Le Jikji (1377)** [41]
+- BnF, « “Jikji”, a treasure of the world of printing » : imprimé en 1377 à
+  Cheongju (République de Corée) « using movable, cast metal characters » ;
+  « the oldest known book in the world printed with movable metal type »,
+  « 78 years before the Gutenberg Bible » ; registre Mémoire du monde de
+  l'UNESCO depuis le 4 septembre 2001 ; conservé à la BnF (legs Vever en 1950,
+  entré dans les collections en 1952).
+
+### Sources (thème 4 bis)
+
+37. Morozov, E. (2012). « The Collingridge Dilemma ». Edge. https://edge.org/response-detail/10898 — Pr, en, **lu**. IZEW, Université de Tübingen. « Das schwierige Timing der Integration ethischer Aspekte ». https://uni-tuebingen.de/de/168594 — R, de, **lu**. Parson, E. A. (2016). *UCLA Law Review*. https://www.uclalawreview.org/social-control-of-technological-risks-the-dilemma-of-knowledge-and-control-in-practice-and-ways-to-surmount-it/ — R, en, **lu partiellement**. Collingridge (1980) : **non lu**.
+38. Académie royale des sciences de Suède (1995). Communiqué du prix Nobel de chimie. https://www.nobelprize.org/prizes/chemistry/1995/press-release/ — P, en, **lu**. Fiche de Mario Molina : https://www.nobelprize.org/prizes/chemistry/1995/molina/facts/ — P, en, **lu**.
+39. Kuhns, W. (comp.), succession McLuhan. *A dictionary of Marshall McLuhan's quotations* : https://themmm.marshallmcluhan.com/?p=105942 et https://themmm.marshallmcluhan.com/?p=105661 — P (extraits), en, **lu** ; *Understanding Media* : **non lu**.
+40. Palácio de Azevedo, F. (2018). *Matrizes* 12(3) : 321-329. https://www.redalyc.org/articulo.oa?id=143065736003 — R, pt, **lu partiellement** ; Williams (1974) : **non lu**.
+41. BnF. « “Jikji”, a treasure of the world of printing ». https://bnf.fr/en/jikji-treasure-world-printing — P, en, **lu**.
+
+### Points d'attention (thème 4 bis)
+
+- Ne pas citer Collingridge au-delà de la phrase concordante ; ses remèdes ne
+  sont connus que par le résumé de l'IZEW.
+- Les citations de Williams sont traduites depuis la traduction portugaise :
+  le dire.
+- Ne pas présenter McLuhan comme un prophète d'internet : rester sur ses
+  textes de 1964 et la critique de Williams.
+- Jikji : dire « le plus ancien livre conservé imprimé en caractères mobiles
+  métalliques », pas « la première imprimerie ».
+- L'animation du dilemme est un modèle inventé.

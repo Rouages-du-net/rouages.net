@@ -1,0 +1,118 @@
+---
+// Animation « Le dilemme de Collingridge » (module « La technique est-elle
+// neutre ? ») : une technique inventée se diffuse ; on choisit l'année où
+// l'on décide de la changer. Tôt, on ne sait pas quoi changer ; tard, changer
+// coûte cher. Suivre les effets et garder la technique réversible ouvrent une
+// fenêtre. Modèle inventé (src/lib/neutre.ts).
+import { ANNEES } from '../../../lib/neutre';
+const annees = Array.from({ length: ANNEES + 1 }, (_, i) => i);
+---
+<div class="anim collingridge" data-collingridge>
+  <div class="anim-repli">
+    <p>
+      Une nouvelle technique se répand en une trentaine d'années. Les premières années, la changer
+      serait facile, mais on ne connaît pas encore ses effets. Quand ses effets sont connus, elle est
+      partout : la changer coûte cher. Sans précaution, il n'existe aucun moment où l'on sait assez
+      pour un coût abordable. Si l'on suit ses effets dès le début et qu'on la garde réversible, une
+      fenêtre s'ouvre, de la 9ᵉ à la 16ᵉ année dans ce modèle inventé.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Année où l'on décide de changer la technique&nbsp;: <output data-a-sortie></output>
+        <input type="range" min="0" max={ANNEES} step="1" value="3" data-a />
+      </label>
+      <fieldset class="options">
+        <legend>Précautions prises dès le départ</legend>
+        <label><input type="checkbox" data-suivi /> suivre ses effets en continu</label>
+        <label><input type="checkbox" data-reversible /> la garder réversible (décisions corrigeables)</label>
+      </fieldset>
+      <div class="barres">
+        <div class="barre"><span class="nom">Diffusion</span><span class="piste"><span data-b="adoption"></span></span><span class="valeur" data-v="adoption"></span></div>
+        <div class="barre"><span class="nom">Ce qu'on sait de ses effets</span><span class="piste"><span data-b="savoir"></span></span><span class="valeur" data-v="savoir"></span></div>
+        <div class="barre"><span class="nom">Coût d'un changement</span><span class="piste"><span data-b="cout"></span></span><span class="valeur" data-v="cout"></span></div>
+      </div>
+      <p class="tag">Années où l'on sait assez et où changer reste abordable&nbsp;:</p>
+      <ol class="ruban" aria-hidden="true">
+        {annees.map((a) => <li data-annee={a}></li>)}
+      </ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">
+        Modèle inventé : diffusion en S sur 30 ans ; « on sait assez » au-delà de la moitié, « abordable »
+        en dessous de la moitié. Aucune technique réelle n'est décrite.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { collingridge, fenetre, type Precautions } from '../../../lib/neutre';
+
+  const pc = (v: number) => `${Math.round(v * 100)} %`;
+
+  document.querySelectorAll<HTMLElement>('[data-collingridge]').forEach((racine) => {
+    activerScene(racine);
+    const a = racine.querySelector<HTMLInputElement>('[data-a]')!;
+    const suivi = racine.querySelector<HTMLInputElement>('[data-suivi]')!;
+    const reversible = racine.querySelector<HTMLInputElement>('[data-reversible]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const cases = [...racine.querySelectorAll<HTMLElement>('[data-annee]')];
+
+    function maj() {
+      const annee = Number(a.value);
+      const p: Precautions = { suivi: suivi.checked, reversible: reversible.checked };
+      racine.querySelector<HTMLOutputElement>('[data-a-sortie]')!.value =
+        annee === 0 ? 'au lancement' : annee === 1 ? '1ʳᵉ année' : `${annee}ᵉ année`;
+      const r = collingridge(annee, p);
+      for (const k of ['adoption', 'savoir', 'cout'] as const) {
+        racine.querySelector<HTMLElement>(`[data-b="${k}"]`)!.style.width = pc(r[k]).replace(' ', '');
+        racine.querySelector(`[data-v="${k}"]`)!.textContent = pc(r[k]);
+      }
+      const f = fenetre(p);
+      cases.forEach((c) => {
+        const n = Number(c.dataset.annee);
+        c.classList.toggle('ouverte', !!f && n >= f.debut && n <= f.fin);
+        c.classList.toggle('ici', n === annee);
+      });
+      const moment = r.fenetre
+        ? 'Bon moment : on en sait assez sur ses effets, et la changer reste abordable.'
+        : r.savoir < 0.5 && r.cout <= 0.5
+          ? 'Trop tôt : la changer serait facile, mais on ne sait pas encore quoi changer.'
+          : r.savoir >= 0.5
+            ? 'Trop tard : on connaît ses effets, mais elle est partout ; la changer coûte cher.'
+            : 'On n’en sait pas encore assez, et la changer coûte déjà cher.';
+      const bilan = f
+        ? f.debut === f.fin
+          ? `Fenêtre : la ${f.debut}ᵉ année seulement.`
+          : `Fenêtre : de la ${f.debut}ᵉ à la ${f.fin}ᵉ année.`
+        : 'Sans précaution, aucune année ne permet de savoir assez pour un coût abordable : c’est le dilemme de Collingridge.';
+      legende.textContent = `${moment} ${bilan}`;
+    }
+    [a, suivi, reversible].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .options { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin: 0.5rem 0; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+  .options legend { font-weight: 700; padding: 0 0.25rem; }
+  .options input { accent-color: var(--accent); }
+  .barres { display: grid; gap: 0.5rem; margin: 0.75rem 0; }
+  .barre { display: grid; grid-template-columns: 12rem 1fr 3.5rem; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .piste { height: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; }
+  .piste span { display: block; height: 100%; background: var(--ill-client); }
+  .barre:nth-child(2) .piste span { background: var(--ill-commun); }
+  .barre:nth-child(3) .piste span { background: var(--ill-secret-a); }
+  .valeur { font-family: var(--police-mono); font-size: 0.85rem; text-align: right; }
+  .tag { margin: 0.5rem 0 0.25rem; }
+  .ruban { list-style: none; padding: 0; margin: 0 0 0.75rem; display: grid; grid-template-columns: repeat(31, 1fr); gap: 2px; }
+  .ruban li { height: 1.25rem; background: var(--bg); border: 1px solid var(--border); border-radius: 2px; }
+  .ruban li.ouverte { background: var(--ill-commun); }
+  .ruban li.ici { outline: 3px solid var(--fg); outline-offset: 0; }
+  @media (max-width: 30rem) { .barre { grid-template-columns: 1fr 3.5rem; } .barre .nom { grid-column: 1 / -1; } }
+</style>

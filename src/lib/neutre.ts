@@ -63,3 +63,35 @@ export function copier(alea: () => number, l: Leviers) {
   }
   return n / 1000;
 }
+
+// ---- Le dilemme de Collingridge ----
+
+export interface Precautions {
+  /** Garder la technique réversible : décisions corrigeables, options ouvertes. */
+  reversible: boolean;
+  /** Suivre ses effets en continu dès le début, plutôt qu'une fois. */
+  suivi: boolean;
+}
+
+export const ANNEES = 30;
+
+/**
+ * Une technique inventée se diffuse sur 30 ans (courbe en S). On apprend ses
+ * effets surtout en la voyant utilisée, et la changer coûte d'autant plus
+ * qu'elle est répandue (usines, habitudes, emplois, normes…). Le suivi fait
+ * apprendre plus tôt ; la réversibilité rend le changement moins coûteux.
+ * Toutes les valeurs sont entre 0 et 1. Modèle inventé.
+ */
+export function collingridge(annee: number, p: Precautions) {
+  const adoption = 1 / (1 + Math.exp(-(annee - 12) / 3));
+  const savoir = p.suivi ? 1 - Math.pow(1 - adoption, 2.5) : Math.pow(adoption, 1.5);
+  const cout = adoption * (p.reversible ? 0.6 : 1);
+  return { adoption, savoir, cout, fenetre: savoir >= 0.5 && cout <= 0.5 };
+}
+
+/** Années (entières) où l'on sait assez et où changer reste abordable. */
+export function fenetre(p: Precautions) {
+  const ans: number[] = [];
+  for (let a = 0; a <= ANNEES; a++) if (collingridge(a, p).fenetre) ans.push(a);
+  return ans.length ? { debut: ans[0], fin: ans[ans.length - 1] } : null;
+}
