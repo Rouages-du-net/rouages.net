@@ -1,0 +1,246 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Terme from '../../components/Terme.astro';
+import Eliza from '../../components/animations/penser/Eliza.astro';
+import Chambre from '../../components/animations/penser/Chambre.astro';
+import Perroquet from '../../components/animations/penser/Perroquet.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 2).
+const etapes = [
+  { ancre: 'imitation', court: 'Le jeu de l’imitation' },
+  { ancre: 'eliza', court: 'L’illusion d’ELIZA' },
+  { ancre: 'chambre', court: 'La chambre chinoise' },
+  { ancre: 'perroquets', court: 'Des perroquets ?' },
+  { ancre: 'bilan', court: 'Ce que la question demande', pastille: '✓' },
+];
+---
+<Base
+  title="Une machine peut-elle penser ?"
+  description="Le jeu de l’imitation de Turing et l’objection d’Ada Lovelace, ELIZA, la chambre chinoise de Searle, les « perroquets stochastiques » : parle à un petit ELIZA, enferme-toi dans la chambre chinoise, et distingue les phrases lues des phrases fabriquées."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>Une machine peut-elle penser ?</h1>
+  <MiseAJour date="2026-10-31" evolutif />
+  <p class="chapo seulement-debut">
+    Une machine qui parle comme nous comprend-elle ce qu'elle dit ? Parle à un petit ELIZA,
+    enferme-toi dans la chambre chinoise, puis essaie de distinguer les phrases qu'un modèle a lues
+    de celles qu'il fabrique.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le jeu de l’imitation" ancre="imitation">
+    <p slot="decouverte">
+      « Les machines peuvent-elles penser ? » En 1950, le mathématicien Alan Turing pose la
+      question, puis la met de côté : les mots « machine » et « penser » sont trop flous. Il propose
+      un jeu à la place.
+    </p>
+    <p slot="curieux">
+      Un interrogateur discute par écrit avec deux interlocuteurs qu'il ne voit pas, et doit deviner
+      qui est qui. Dans la version d'origine, il doit deviner lequel est un homme et laquelle est une
+      femme. Puis Turing demande : que se passe-t-il si une machine prend la place de l'un des deux ?
+      L'interrogateur se trompera-t-il aussi souvent ? Au lieu de définir « penser », on observe un
+      comportement.
+    </p>
+    <p slot="ingenieur">
+      Turing prédit qu'« dans environ cinquante ans », des ordinateurs dotés d'environ 10⁹ unités de
+      mémoire joueront si bien qu'un interrogateur moyen n'aura pas plus de 70 % de chances de les
+      identifier après cinq minutes de questions. Dans son exemple de dialogue, la machine répond à
+      34 957 + 70 764 après une pause d'environ 30 secondes : 105 621. La somme exacte est 105 721.
+      Imiter un humain, c'est aussi imiter ses lenteurs et ses erreurs.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'article, « Computing Machinery and Intelligence », paraît en 1950 dans la revue de
+        philosophie <em>Mind</em>. Turing y répond à neuf objections. L'une est tirée d'Ada Lovelace,
+        qui écrivait en 1843 dans ses notes sur la machine analytique de Babbage : « La machine
+        analytique n'a aucune prétention à créer quoi que ce soit. Elle peut faire tout ce que nous
+        savons lui ordonner. » Turing répond que les machines le prennent souvent par surprise, et
+        propose des machines qui apprennent.
+      </p>
+      <p>
+        En 2025, deux chercheurs, C. R. Jones et B. K. Bergen, font passer des tests de Turing à trois, avec des conversations de cinq minutes. Avec
+        une consigne lui demandant de jouer un personnage humain, GPT-4.5 est jugé humain dans 73 %
+        des cas, plus souvent que les vrais humains ; ELIZA, dans 23 % des cas. C'est une
+        prépublication, pas encore relue par des pairs.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Turing a inventé un test pour savoir si une machine pense. »</strong> Il jugeait la
+      question « trop dénuée de sens pour mériter d'être discutée » et proposait de la remplacer par
+      le jeu. Réussir le jeu montre qu'une machine imite bien une conversation, pas qu'elle pense.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="L’illusion d’ELIZA" ancre="eliza">
+    <Eliza slot="animation" />
+    <p slot="decouverte">
+      Parle à ce petit programme. Il a l'air de t'écouter. Coche ensuite la case pour voir comment
+      chaque réponse a été fabriquée.
+    </p>
+    <p slot="curieux">
+      ELIZA ne comprend rien : il repère un mot-clé (« mère », « je suis »), retourne la phrase
+      (« je » devient « tu ») et la glisse dans une phrase à trous. Quand il ne reconnaît rien, il
+      relance. Pourtant, une conversation avec lui peut donner l'impression d'une vraie écoute :
+      c'est nous qui prêtons du sens à ce qu'il écrit.
+    </p>
+    <p slot="ingenieur">
+      Chaque règle associe un motif (une <Terme id="expression-reguliere">expression
+      régulière</Terme>) à quelques modèles de réponse. Les règles sont essayées dans l'ordre ; la
+      première qui reconnaît la phrase l'emporte. Le script psychothérapeute avait été choisi parce
+      que l'interlocuteur peut y faire mine de ne presque rien savoir du monde.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1966, Joseph Weizenbaum, au MIT, publie ELIZA. Il note que « certaines personnes ont eu
+        beaucoup de mal à être convaincues qu'ELIZA n'est pas humain ». Troublé par l'attachement
+        de ses utilisateur·rices, il devient l'un des premiers critiques de l'IA : son livre de
+        1976 soutient qu'il y a des tâches que les ordinateurs ne devraient pas accomplir, qu'ils en
+        soient capables ou non. Le module <a href="/modules/ia-texte/">Les IA qui écrivent</a>
+        revient sur ELIZA.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Weizenbaum a inventé l'expression “effet ELIZA”. »</strong> Elle est postérieure, et
+      rien dans son article de 1966 ne l'emploie. Lui parlait d'une « illusion de compréhension ».
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="La chambre chinoise" ancre="chambre">
+    <Chambre slot="animation" />
+    <p slot="decouverte">
+      Tu es enfermé·e dans une chambre avec un livre de règles. Des symboles chinois arrivent sous la
+      porte. Trouve la règle qui correspond et renvoie la réponse.
+    </p>
+    <p slot="curieux">
+      Tes réponses sont parfaites, et pourtant tu ne comprends pas un mot de chinois : tu compares
+      des formes. Pour le philosophe John Searle, c'est exactement ce que fait un ordinateur : il
+      manipule des symboles selon des règles (la syntaxe) sans accès à leur sens (la sémantique). Se
+      comporter comme si l'on comprenait ne serait donc pas comprendre.
+    </p>
+    <div slot="ingenieur">
+      <p>Les objections sont nombreuses, et Searle leur a répondu :</p>
+      <ul>
+        <li><strong>Le système</strong> : ce n'est pas la personne qui comprend, mais la personne, le livre et la chambre ensemble. Searle : je pourrais apprendre tout le livre par cœur, et je ne comprendrais toujours pas.</li>
+        <li><strong>Le robot</strong> : donnons au programme des yeux et des bras, relions-le au monde ; il pourrait alors attacher les symboles aux choses.</li>
+        <li><strong>Le simulateur de cerveau</strong> : un programme qui reproduirait les neurones d'une personne qui parle chinois comprendrait-il ?</li>
+        <li><strong>Les autres esprits</strong> : nous jugeons les autres humains sur leur comportement ; pourquoi pas les machines ?</li>
+      </ul>
+    </div>
+    <div slot="histoire">
+      <p>
+        Searle publie l'expérience en 1980 dans la revue <em>Behavioral and Brain Sciences</em>, sous
+        le titre « Minds, Brains and Programs ». Il vise l'« IA forte », l'idée qu'un ordinateur bien
+        programmé aurait véritablement un esprit. L'argument est toujours discuté : la <em>Stanford
+        Encyclopedia of Philosophy</em> a encore révisé son article sur la chambre chinoise en 2024.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La chambre chinoise prouve qu'une IA ne pensera jamais. »</strong> Elle vise une
+      thèse précise : qu'un programme suffise à comprendre. Beaucoup de philosophes la contestent, et
+      la question de ce que serait « comprendre » reste ouverte.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Des perroquets ?" ancre="perroquets">
+    <Perroquet slot="animation" />
+    <p slot="decouverte">
+      Un tout petit modèle de langage a lu 38 phrases. Il en fabrique de nouvelles. Saurais-tu dire
+      lesquelles il a lues, et lesquelles il a fabriquées ?
+    </p>
+    <p slot="curieux">
+      Le modèle ne sait pas ce qu'est un chien ou la pluie : il sait seulement quels mots suivent
+      quels mots. Pourtant, ses phrases ont souvent l'air sensées, parce que nous les lisons avec
+      notre propre compréhension. Les grands modèles de langage font la même chose à une échelle
+      immensément plus grande, avec des résultats bien plus convaincants.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        <strong>Des perroquets stochastiques.</strong> En 2021, Emily M. Bender, Timnit Gebru,
+        Angelina McMillan-Major et une coautrice sous pseudonyme décrivent un modèle de langage comme
+        un système qui assemble « au petit bonheur des suites de formes linguistiques » observées
+        dans ses données, selon leurs probabilités, « sans aucune référence au sens ». Pour elles, la
+        compréhension que nous y voyons est une illusion qui vient de nous.
+      </p>
+      <p>
+        <strong>Des étincelles d'intelligence.</strong> En 2023, une équipe de Microsoft Research, qui
+        avait pu étudier le modèle avant sa sortie, estime au contraire qu'une version préliminaire de GPT-4
+        « pourrait raisonnablement être vue comme une version précoce (encore incomplète) d'un
+        système d'intelligence artificielle générale », au vu de sa réussite dans des tâches
+        nouvelles en mathématiques, en programmation ou en médecine.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        Le débat rejoue, avec des machines bien plus puissantes, celui de Turing et de Searle : faut-il
+        juger une machine sur ce qu'elle fait, ou sur ce qui se passe à l'intérieur ? Le module <a
+        href="/modules/ia-texte/">Les IA qui écrivent</a> montre comment fonctionne ce genre de modèle,
+        du comptage de mots aux réseaux de neurones.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« S'il parle bien, c'est qu'il comprend » / « Ce n'est qu'un perroquet, il ne fait
+      rien d'intéressant ».</strong> Les deux raccourcis sont trompeurs : parler bien ne prouve pas la
+      compréhension, et « ne pas comprendre » au sens humain n'empêche pas d'être très utile, ou très
+      trompeur.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce que la question demande vraiment</h2>
+    <p>« Une machine peut-elle penser ? » cache plusieurs questions, qui n'ont pas la même réponse :</p>
+    <table>
+      <thead><tr><th scope="col">Question</th><th scope="col">Qui l'a posée</th><th scope="col">Ce qu'on sait</th></tr></thead>
+      <tbody>
+        <tr><td>Peut-elle se faire passer pour un humain ?</td><td>Turing, 1950</td><td>Dans des conversations courtes, oui, selon une étude de 2025.</td></tr>
+        <tr><td>Peut-elle créer, ou seulement exécuter ?</td><td>Lovelace, 1843 ; Turing, 1950</td><td>Les machines qui apprennent surprennent même leurs auteur·rices.</td></tr>
+        <tr><td>Donne-t-elle seulement l'illusion de comprendre ?</td><td>Weizenbaum, 1966</td><td>Quelques règles suffisent à créer l'illusion : la prudence s'impose.</td></tr>
+        <tr><td>Manipuler des symboles, est-ce comprendre ?</td><td>Searle, 1980</td><td>Débat ouvert depuis plus de quarante ans.</td></tr>
+        <tr><td>Les grands modèles de langage comprennent-ils ?</td><td>Bender, Gebru et al., 2021 ; Microsoft Research, 2023</td><td>Les spécialistes sont divisé·es.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      La suite de la section <a href="/penser-la-technique/">Penser la technique</a> passe aux choix
+      moraux et à la neutralité de la technique.
+    </p>
+
+  <Sources
+    verifie="2026-10-31"
+    sources={[
+      { auteur: 'A. M. Turing', titre: 'Computing Machinery and Intelligence (Mind 59, 1950), transcription', url: 'https://www.abelard.org/turpap/turpap.php', type: 'primaire', annee: 1950, langue: 'en' },
+      { auteur: 'A. A. Lovelace', titre: 'Notes sur la machine analytique, note G (1843), transcription Fourmilab', url: 'https://www.fourmilab.ch/babbage/sketch.html', type: 'primaire', annee: 1843, langue: 'en' },
+      { auteur: 'J. Weizenbaum', titre: 'ELIZA — A Computer Program for the Study of Natural Language Communication Between Man and Machine (CACM 9, 1966)', url: 'https://web.stanford.edu/class/cs124/p36-weizenabaum.pdf', type: 'primaire', annee: 1966, langue: 'en' },
+      { auteur: 'Stanford Encyclopedia of Philosophy', titre: 'The Chinese Room Argument (révision 2024)', url: 'https://plato.stanford.edu/entries/chinese-room/', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'E. M. Bender, T. Gebru, A. McMillan-Major, S. Shmitchell', titre: 'On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? (FAccT ’21)', url: 'https://s10251.pcdn.co/pdf/2021-bender-parrots.pdf', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'S. Bubeck et al. (Microsoft Research)', titre: 'Sparks of Artificial General Intelligence: Early experiments with GPT-4, résumé', url: 'https://arxiv.org/abs/2303.12712', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'C. R. Jones, B. K. Bergen', titre: 'Large Language Models Pass the Turing Test (prépublication), résumé', url: 'https://arxiv.org/abs/2503.23674', type: 'recherche', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
