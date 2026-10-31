@@ -302,3 +302,84 @@ occupera, derrière un « voile d'ignorance ».
 - Ne pas dire que Thomson a « inventé » le dilemme ; ne pas lui attribuer le nom
   avec certitude (son article de 1976 n'a pas été lu).
 - Les variantes et les pourcentages viennent d'Awad et al. 2020.
+
+## Thème 4 — La technique est-elle neutre ? (`/modules/technique-neutre/`)
+
+Recherche du 1ᵉʳ novembre 2026.
+
+### Formulation sûre
+
+« La technique n'est ni bonne ni mauvaise ; elle n'est pas neutre non plus »,
+écrit l'historien Melvin Kranzberg en 1986 : ses effets dépassent ce pour quoi
+on l'a conçue, et varient selon les contextes. Le politologue Langdon Winner a
+défendu en 1980 que des objets techniques ont des qualités politiques, avec
+l'exemple, ensuite contesté, des ponts bas de Robert Moses. Pour le juriste
+Lawrence Lessig, le code informatique est un régulateur, comme la loi, les
+normes sociales et le marché. Et dès 1866, l'économiste William Stanley Jevons
+notait qu'une machine plus économe en charbon peut en faire consommer davantage.
+
+### Faits clés
+
+**Kranzberg (1986)** [20]
+- M. Kranzberg, « Technology and History: "Kranzberg's Laws" », *Technology
+  and Culture* 27(3), juillet 1986, p. 544-560 : « Technology is neither good
+  nor bad; nor is it neutral. By that I mean that technology's interaction with
+  the social ecology is such that technical developments frequently have
+  environmental, social, and human consequences that go far beyond the
+  immediate purposes of the technical devices and practices themselves, and the
+  same technology can have quite different results when introduced into
+  different contexts ».
+- Exemple : le DDT, interdit par les pays industrialisés occidentaux, que l'Inde
+  a continué d'employer, son rôle dans la prévention des maladies primant ;
+  selon l'OMS citée par Kranzberg, le paludisme y serait passé de 100 millions
+  de cas par an à 15 000 dans les années 1950-1960.
+
+**Winner et les ponts de Moses** [21]
+- L. Winner, « Do Artifacts Have Politics? », *Daedalus* 109(1), 1980 : texte
+  **non lu** (copies inaccessibles) ; connu par les résumés : les ponts bas des
+  parkways de Long Island, conçus sous Robert Moses, auraient empêché le passage
+  des bus, et donc des populations pauvres et noires, vers les plages.
+- B. Joerges, « Do Politics Have Artefacts? », *Social Studies of Science*
+  29(3), 1999, p. 411-431, conteste ce récit (résumé lu sur EconBiz) : une
+  « parable » transmise depuis longtemps ; « The story turns out to be
+  counterfactual » ; S. Woolgar et G. Cooper, « Do
+  artefacts have ambivalence? Moses' bridges, Winner's bridges and other urban
+  legends in STS », même numéro, p. 433-449. (**Métadonnées et résumés de
+  seconde main seulement.**)
+
+**Lessig (1999-2000)** [22]
+- L. Lessig, « Code Is Law: On Liberty in Cyberspace », *Harvard Magazine*,
+  janvier 2000 : chaque époque a son régulateur (l'État, les normes sociales
+  selon Mill, le marché) ; « Ours is the age of cyberspace. It, too, has a
+  regulator. […] This regulator is code--the software and hardware that make
+  cyberspace as it is. » Le code « determines how easy it is to protect privacy,
+  or how easy it is to censor speech ».
+
+**Barlow (1996)** [23]
+- J. P. Barlow, « A Declaration of the Independence of Cyberspace », Davos,
+  8 février 1996 : « Governments of the Industrial World, you weary giants of
+  flesh and steel, I come from Cyberspace, the new home of Mind. […] You have
+  no sovereignty where we gather. »
+
+**Jevons (1866)** [24]
+- W. S. Jevons, *The Coal Question*, 2ᵉ éd., Macmillan, 1866, chap. VII « Of the
+  economy of fuel » : « It is wholly a confusion of ideas to suppose that the
+  economical use of fuel is equivalent to a diminished consumption. The very
+  contrary is the truth. As a rule, new modes of economy will lead to an
+  increase of consumption ».
+
+### Sources (thème 4)
+
+20. Kranzberg, M. (1986). *Technology and Culture* 27(3) : 544-560. Copie PDF : https://www.cs.ucdavis.edu/~koehl/Teaching/ECS188/PDF_files/Kranzberg.pdf — P, en, **lu partiellement**.
+21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. Notice et résumé : https://www.econbiz.de/10010332936 — R, en, **résumé seulement**. Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner (1980) : **non lu**.
+22. Lessig, L. (janv. 2000). « Code Is Law ». *Harvard Magazine*. https://www.harvardmagazine.com/2000/01/code-is-law-html — P, en, **lu partiellement**.
+23. Barlow, J. P. (1996). https://www.eff.org/cyberspace-independence — P, en, **lu**.
+24. Jevons, W. S. (1866). *The Coal Question*, chap. VII. Econlib : https://www.econlib.org/library/YPDBooks/Jevons/jvnCQ7.html — P, en, **lu partiellement**.
+
+### Points d'attention (thème 4)
+
+- **Ponts de Moses** : présenter le récit comme contesté ; ne pas citer Winner
+  mot à mot (non lu) ; ne pas donner de hauteur de pont.
+- **Jevons** : l'« effet rebond » et le « paradoxe de Jevons » sont des noms
+  postérieurs ; l'ampleur réelle du rebond dépend des cas (débat d'économistes,
+  non sourcé ici) : l'animation montre un mécanisme.
