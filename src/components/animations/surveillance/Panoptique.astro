@@ -1,0 +1,85 @@
+---
+// Animation « Le panoptique » (module « Surveillance et vie privée ») : cent
+// cellules autour d'une tour. Si les détenu·es savent qui est regardé, seuls
+// ceux-là respectent la règle ; si la tour est opaque, presque tout le monde
+// la respecte, même quand personne ne regarde. Modèle inventé.
+---
+<div class="anim panoptique" data-panoptique>
+  <div class="anim-repli">
+    <p>
+      Cent cellules entourent une tour de surveillance. Si l'on voit où regarde le gardien, seules les
+      personnes regardées respectent la règle : quand il en surveille une sur dix, environ une sur dix
+      obéit. Si la tour est opaque, chacun·e doit supposer qu'il est peut-être regardé : presque tout
+      le monde respecte la règle, même si le gardien ne regarde personne. C'est l'idée du panoptique :
+      la possibilité d'être vu suffit.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Part des cellules réellement regardées : <output data-r-sortie></output>
+        <input type="range" min="0" max="1" step="0.1" value="0.1" data-r />
+      </label>
+      <label class="case"><input type="checkbox" data-opaque /> La tour est opaque : impossible de savoir si l'on est regardé·e</label>
+      <div class="prison" aria-hidden="true">
+        <div class="cellules" data-cellules></div>
+        <div class="tour" data-tour>👁</div>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : chaque personne respecte la règle si la chance qu'elle croit avoir d'être vue dépasse son envie de l'enfreindre.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { panoptique } from '../../../lib/surveillance';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-panoptique]').forEach((racine) => {
+    activerScene(racine);
+    const r = racine.querySelector<HTMLInputElement>('[data-r]')!;
+    const opaque = racine.querySelector<HTMLInputElement>('[data-opaque]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const zone = racine.querySelector<HTMLElement>('[data-cellules]')!;
+    const cellules = Array.from({ length: 100 }, () => {
+      const c = document.createElement('span');
+      zone.append(c);
+      return c;
+    });
+
+    function maj() {
+      const R = Number(r.value);
+      racine.querySelector<HTMLOutputElement>('[data-r-sortie]')!.value = `${Math.round(R * 100)} %`;
+      const part = panoptique(hasard(1), R, opaque.checked);
+      const n = Math.round(part * 100);
+      cellules.forEach((c, i) => (c.className = i < n ? 'respecte' : 'enfreint'));
+      racine.querySelector<HTMLElement>('[data-tour]')!.classList.toggle('opaque', opaque.checked);
+      racine.querySelector('[data-mesure]')!.textContent = `${n} personne${n > 1 ? 's' : ''} sur 100 respecte${n > 1 ? 'nt' : ''} la règle ; le gardien regarde ${R === 0 ? 'aucune cellule' : `${Math.round(R * 100)} cellules`}.`;
+      legende.textContent = opaque.checked
+        ? R === 0
+          ? 'Personne ne regarde, et pourtant presque tout le monde obéit : on ne sait jamais si l’on est vu. Le contrôle passe dans la tête des détenu·es.'
+          : 'Avec une tour opaque, regarder plus ou moins change peu de chose : la simple possibilité d’être vu suffit.'
+        : 'Chacun·e sait s’il est regardé : seules les personnes surveillées obéissent. Rends la tour opaque.';
+    }
+    [r, opaque].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .case input { accent-color: var(--accent); }
+  .prison { position: relative; max-width: 18rem; margin: 0.75rem auto; }
+  .cellules { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+  .cellules :global(span) { aspect-ratio: 1; border-radius: 2px; }
+  .cellules :global(.respecte) { background: var(--ill-secret-b); }
+  .cellules :global(.enfreint) { background: var(--ill-paquet); opacity: 0.6; }
+  .tour { position: absolute; inset: 35%; display: grid; place-items: center; background: var(--card); border: 2px solid var(--fg); border-radius: 50%; font-size: 1.6rem; }
+  .tour.opaque { background: var(--fg); color: var(--fg); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

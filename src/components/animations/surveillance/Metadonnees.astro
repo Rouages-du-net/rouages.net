@@ -1,0 +1,87 @@
+---
+// Animation « Rien que des métadonnées » (module « Surveillance et vie
+// privée ») : un journal d'appels sans aucun contenu ; en cherchant à qui
+// appartiennent les numéros, on devine beaucoup. Journal inventé, inspiré des
+// exemples de Mayer, Mutchler et Mitchell (2016).
+---
+<div class="anim metadonnees" data-metadonnees>
+  <div class="anim-repli">
+    <p>
+      Un journal d'appels ne contient que des numéros, des heures et des durées : aucun mot des
+      conversations. Mais si l'on cherche à qui appartiennent les numéros, on trouve un service de
+      cardiologie, un laboratoire d'analyses, une pharmacie, puis la ligne d'assistance d'un appareil
+      qui surveille le rythme du cœur. Sans avoir rien écouté, on devine un problème de santé. Une
+      étude de 2016 a fait exactement ce constat avec les appels de vrais volontaires.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+    <div class="tableau">
+      <table>
+        <thead><tr><th scope="col">Jour</th><th scope="col">Heure</th><th scope="col">Numéro appelé</th><th scope="col">Durée</th></tr></thead>
+        <tbody data-journal></tbody>
+      </table>
+    </div>
+    <div class="anim-commandes">
+      <button type="button" class="principal" data-action="chercher">Chercher à qui sont ces numéros</button>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+    <p class="anim-note">Journal inventé. Aucun contenu d'appel : seulement des métadonnées, et des informations publiques sur les numéros.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  const JOURNAL = [
+    ['lundi', '9 h 05', 'Numéro A', '4 min', 'Service de cardiologie de l’hôpital'],
+    ['lundi', '9 h 40', 'Numéro B', '2 min', 'Laboratoire d’analyses médicales'],
+    ['mardi', '18 h 12', 'Numéro C', '12 min', 'Un·e ami·e'],
+    ['mercredi', '11 h 30', 'Numéro D', '3 min', 'Pharmacie'],
+    ['mercredi', '11 h 52', 'Numéro E', '9 min', 'Assistance d’un moniteur de rythme cardiaque'],
+    ['jeudi', '8 h 15', 'Numéro A', '6 min', 'Service de cardiologie de l’hôpital'],
+    ['vendredi', '14 h 02', 'Numéro F', '5 min', 'Assurance maladie complémentaire'],
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-metadonnees]').forEach((racine) => {
+    activerScene(racine);
+    const corps = racine.querySelector<HTMLElement>('[data-journal]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const bouton = racine.querySelector<HTMLButtonElement>('[data-action="chercher"]')!;
+    let revele = false;
+
+    function dessiner() {
+      corps.replaceChildren(
+        ...JOURNAL.map(([jour, heure, num, duree, qui]) => {
+          const tr = document.createElement('tr');
+          [jour, heure, revele ? `${num} : ${qui}` : num, duree].forEach((v, i) => {
+            const td = document.createElement('td');
+            td.textContent = v;
+            if (i === 2 && revele) td.className = 'revele';
+            tr.append(td);
+          });
+          return tr;
+        }),
+      );
+      legende.textContent = revele
+        ? 'Personne n’a écouté une seule conversation. Pourtant, ces appels suggèrent fortement un problème cardiaque. Les métadonnées en disent souvent autant que le contenu.'
+        : 'Que peut-on savoir de cette personne avec ce seul journal ? Pas grand-chose… tant qu’on ne cherche pas à qui sont les numéros.';
+      bouton.textContent = revele ? 'Masquer' : 'Chercher à qui sont ces numéros';
+    }
+    bouton.addEventListener('click', () => {
+      revele = !revele;
+      dessiner();
+    });
+    dessiner();
+  });
+</script>
+
+<style>
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody :global(td) { font-family: var(--police-mono); }
+  tbody :global(td.revele) { font-family: var(--police); font-weight: 700; color: var(--accent); }
+</style>

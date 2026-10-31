@@ -383,3 +383,76 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
 - **Jevons** : l'« effet rebond » et le « paradoxe de Jevons » sont des noms
   postérieurs ; l'ampleur réelle du rebond dépend des cas (débat d'économistes,
   non sourcé ici) : l'animation montre un mécanisme.
+
+## Thème 5 — Surveillance et vie privée (`/modules/surveillance-vie-privee/`)
+
+Recherche du 2 novembre 2026.
+
+### Formulation sûre
+
+Le panoptique, prison imaginée par Jeremy Bentham, est devenu chez Michel
+Foucault (1975) le modèle d'un pouvoir qui contrôle par la simple possibilité
+d'être vu. À l'argument « je n'ai rien à cacher », le juriste Daniel Solove
+(2007) oppose une conception plus large de la vie privée. Les données dites
+« anonymes » le sont rarement : trois informations (code postal, sexe, date de
+naissance) suffisent à rendre unique une grande partie de la population
+(Latanya Sweeney), quatre points de localisation 95 % des personnes (de
+Montjoye et al., 2013), et les métadonnées d'appels révèlent des informations
+sensibles sans le contenu des conversations (Mayer et al., 2016).
+
+### Faits clés
+
+**Panoptique et Foucault** [25]
+- *Stanford Encyclopedia of Philosophy*, « Michel Foucault » : *Discipline and
+  Punish* (*Surveiller et punir*), publié en 1975 ; le Panopticon de Bentham
+  est pour Foucault « a paradigmatic architectural model of modern disciplinary
+  power » : chaque détenu·e est isolé·e dans sa cellule et toujours visible
+  depuis une tour centrale ; « Guards do not in fact always see each inmate; the
+  point is that they could at any time. Since inmates never know whether they
+  are being observed, they must behave as if they are always seen and
+  observed. » Textes de Bentham et de Foucault non lus directement.
+
+**« Rien à cacher »** [26]
+- D. J. Solove, « "I've Got Nothing to Hide" and Other Misunderstandings of
+  Privacy », *San Diego Law Review* 44, 2007, p. 745 (résumé) : selon
+  l'argument, « there is no threat to privacy unless the government uncovers
+  unlawful activity » ; Solove le juge très répandu et en critique les
+  « faulty underpinnings ». (Résumé seulement.)
+
+**Unicité des données** [27][28]
+- L. Sweeney, « Simple Demographics Often Identify People Uniquely » (Data
+  Privacy Lab), d'après le recensement américain de 1990 : « 87% (216 million
+  of 248 million) of the population in the United States had reported
+  characteristics that likely made them unique based only on {5-digit ZIP,
+  gender, date of birth} » ; 53 % avec {ville, sexe, date de naissance} ; 18 %
+  au niveau du comté.
+- Y.-A. de Montjoye et al., « Unique in the Crowd: The privacy bounds of human
+  mobility », *Scientific Reports* 3, 1376, 2013 : quinze mois de données de
+  mobilité, 1,5 million de personnes ; « four spatio-temporal points are enough
+  to uniquely identify 95% of the individuals ».
+
+**Métadonnées** [29]
+- J. Mayer, P. Mutchler, J. C. Mitchell, « Evaluating the privacy properties of
+  telephone metadata », *PNAS* 113(20), 2016, p. 5536-5541 : 823 volontaires,
+  251 788 appels, 1 234 231 SMS ; exemples : appels à un service de
+  cardiologie, à une pharmacie et à une ligne d'assistance pour un moniteur de
+  rythme cardiaque, puis confirmation d'une arythmie ; conclusion : les
+  métadonnées permettent des inférences sensibles, et la distinction juridique
+  entre contenu et métadonnées protège mal la vie privée. (Lu via un outil de
+  synthèse.)
+
+### Sources (thème 5)
+
+25. *Stanford Encyclopedia of Philosophy*, « Michel Foucault ». https://plato.stanford.edu/entries/foucault/ — R, en, **lu partiellement**.
+26. Solove, D. J. (2007). *San Diego Law Review* 44 : 745. Notice : https://scholarship.law.gwu.edu/faculty_publications/158/ — R, en, **résumé seulement**.
+27. Sweeney, L. « Simple Demographics Often Identify People Uniquely ». Data Privacy Lab. https://dataprivacylab.org/projects/identifiability/ — P, en, **lu** (page de présentation).
+28. de Montjoye, Y.-A. et al. (2013). *Scientific Reports* 3 : 1376. https://www.nature.com/articles/srep01376 — R, en, **lu partiellement**.
+29. Mayer, J., Mutchler, P., Mitchell, J. C. (2016). *PNAS* 113(20) : 5536-5541. https://pmc.ncbi.nlm.nih.gov/articles/PMC4878528/ — R, en, **lu** (via outil de synthèse).
+
+### Points d'attention (thème 5)
+
+- Sweeney : chiffres pour les États-Unis (recensement de 1990), à ne pas
+  transposer tels quels à la France ; l'animation utilise une population
+  inventée.
+- Ne pas donner de date pour le Panopticon de Bentham (non lue).
+- Aucune donnée réelle dans les animations ; aucun conseil de pistage.
