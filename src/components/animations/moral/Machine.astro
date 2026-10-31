@@ -1,0 +1,117 @@
+---
+// Animation « Ta Moral Machine » (module « Les choix moraux ») : trois
+// dilemmes de voiture autonome ; tes choix comparés aux préférences les plus
+// fortes de Moral Machine (2018) et aux règles de la commission d'éthique
+// allemande (2017).
+---
+<div class="anim machine" data-machine>
+  <div class="anim-repli">
+    <p>
+      Une voiture autonome sans freins doit choisir. Entre des humains et des animaux, la foule de
+      Moral Machine et la commission d'éthique allemande s'accordent : épargner les humains. Entre
+      une personne et plusieurs, la foule veut sauver le plus grand nombre, et la commission juge
+      qu'un programme qui réduit le nombre de victimes « peut se justifier ». Mais entre une personne
+      âgée et un enfant, la foule préfère épargner l'enfant, alors que la commission interdit toute
+      distinction selon l'âge : les préférences majoritaires ne font pas une règle.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="dilemmes" data-dilemmes></ol>
+      <div class="tableau">
+        <table>
+          <thead><tr><th scope="col">Dilemme</th><th scope="col">Toi</th><th scope="col">Moral Machine (la foule)</th><th scope="col">Commission allemande</th></tr></thead>
+          <tbody data-corps></tbody>
+        </table>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Moral Machine : préférences moyennes de millions de volontaires en ligne (Awad et al., 2018). Commission : règles 7 et 9 de son rapport de juin 2017.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { DILEMMES } from '../../../lib/moral';
+
+  const TEXTES: Record<string, { titre: string; a: string; b: string; question: string; commission: string }> = {
+    animaux: { titre: 'Humains ou animaux', question: 'La voiture doit heurter soit deux personnes, soit deux chiens.', a: 'Épargner les personnes', b: 'Épargner les chiens', commission: 'épargner les personnes (la vie humaine prime)' },
+    nombre: { titre: 'Une ou plusieurs', question: 'La voiture doit heurter soit une personne, soit trois.', a: 'Épargner les trois', b: 'Épargner la seule', commission: 'réduire le nombre de victimes « peut se justifier »' },
+    age: { titre: 'L’âge', question: 'La voiture doit heurter soit une personne âgée, soit un enfant.', a: 'Épargner l’enfant', b: 'Épargner la personne âgée', commission: 'aucune distinction selon l’âge : interdit' },
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-machine]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const choix: Record<string, 'a' | 'b'> = {};
+
+    function tableau() {
+      racine.querySelector('[data-corps]')!.replaceChildren(
+        ...DILEMMES.map((d) => {
+          const t = TEXTES[d.id];
+          const tr = document.createElement('tr');
+          const cellules = [
+            t.titre,
+            choix[d.id] ? t[choix[d.id]].toLowerCase() : '—',
+            d.foule ? t[d.foule].toLowerCase() : 'pas de préférence nette',
+            t.commission,
+          ];
+          cellules.forEach((c, i) => {
+            const cell = document.createElement(i === 0 ? 'th' : 'td');
+            if (i === 0) cell.setAttribute('scope', 'row');
+            cell.textContent = c;
+            tr.append(cell);
+          });
+          if (d.commission === 'aucune') tr.className = 'conflit';
+          return tr;
+        }),
+      );
+      const fait = Object.keys(choix).length;
+      legende.textContent =
+        fait < DILEMMES.length
+          ? 'Choisis dans les trois dilemmes, puis compare.'
+          : choix.age === 'a'
+            ? 'Comme la foule de Moral Machine, tu épargnes l’enfant. La commission allemande l’interdirait à une voiture : selon elle, une machine ne doit pas trier les vies selon l’âge. Qui doit décider : la majorité, ou des principes ?'
+            : 'Tu n’as pas suivi la préférence majoritaire sur l’âge. La commission allemande va plus loin : elle interdit à la voiture de distinguer selon l’âge, dans un sens comme dans l’autre.';
+    }
+
+    racine.querySelector('[data-dilemmes]')!.replaceChildren(
+      ...DILEMMES.map((d) => {
+        const t = TEXTES[d.id];
+        const li = document.createElement('li');
+        const q = document.createElement('p');
+        const s = document.createElement('strong');
+        s.textContent = `${t.titre} : `;
+        q.append(s, t.question);
+        const c = document.createElement('div');
+        c.className = 'anim-commandes';
+        (['a', 'b'] as const).forEach((k) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = t[k];
+          b.addEventListener('click', () => {
+            choix[d.id] = k;
+            c.querySelectorAll('button').forEach((x) => x.classList.toggle('principal', x === b));
+            tableau();
+          });
+          c.append(b);
+        });
+        li.append(q, c);
+        return li;
+      }),
+    );
+    tableau();
+  });
+</script>
+
+<style>
+  .dilemmes { list-style: none; padding: 0; margin: 0 0 0.75rem; display: grid; gap: 0.5rem; }
+  .dilemmes :global(p) { margin: 0; font-size: 0.95rem; }
+  .dilemmes :global(.anim-commandes) { margin-top: 0.25rem; }
+  .tableau { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody :global(th) { font-weight: 700; text-align: left; }
+  tbody :global(tr.conflit td:last-child) { color: var(--ill-paquet); font-weight: 700; }
+</style>

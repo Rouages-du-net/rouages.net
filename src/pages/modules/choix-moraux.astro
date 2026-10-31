@@ -1,0 +1,208 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Tramway from '../../components/animations/moral/Tramway.astro';
+import Machine from '../../components/animations/moral/Machine.astro';
+import Voile from '../../components/animations/moral/Voile.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 3).
+const etapes = [
+  { ancre: 'tramway', court: 'Le dilemme du tramway' },
+  { ancre: 'moral-machine', court: 'Moral Machine' },
+  { ancre: 'voile', court: 'Le voile d’ignorance' },
+  { ancre: 'bilan', court: 'Qui décide de la morale des machines ?', pastille: '✓' },
+];
+---
+<Base
+  title="Les choix moraux"
+  description="Le dilemme du tramway de Philippa Foot, Moral Machine et ses 40 millions de décisions, la commission d’éthique allemande et le voile d’ignorance de John Rawls : choisis, compare-toi à 42 pays, puis choisis une règle sans savoir quelle place sera la tienne."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>Les choix moraux</h1>
+  <MiseAJour date="2026-11-01" />
+  <p class="chapo seulement-debut">
+    Faut-il dévier un tramway pour sauver cinq personnes au prix d'une ? Et une voiture autonome,
+    qui doit-elle épargner ? Réponds, compare-toi à 70 000 personnes de 42 pays, puis choisis la
+    règle d'un algorithme sans savoir quelle place sera la tienne.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le dilemme du tramway" ancre="tramway">
+    <Tramway slot="animation" />
+    <p slot="decouverte">
+      Un tramway fou fonce vers cinq personnes. Tu peux agir, et une autre personne mourra. Réponds
+      aux trois versions du dilemme.
+    </p>
+    <p slot="curieux">
+      Dans les trois cas, le calcul est le même : une vie contre cinq. Pourtant, la plupart des gens
+      acceptent d'actionner l'aiguillage, beaucoup moins de pousser quelqu'un. Ce qui change : être
+      la cause directe, toucher la personne, l'utiliser comme un moyen pour arrêter le tramway.
+      Le dilemme sert à mettre à l'épreuve nos principes : compter les vies, ou respecter des
+      interdits ?
+    </p>
+    <p slot="ingenieur">
+      Les philosophes y voient la tension entre deux grandes familles de théories. Pour les
+      conséquentialistes, seul compte le résultat : cinq vies valent plus qu'une. Pour les
+      déontologistes, certains actes sont interdits quel que soit le résultat, comme tuer quelqu'un
+      pour s'en servir. La « doctrine du double effet », discutée par Philippa Foot, distingue ce
+      qu'on veut et ce qu'on prévoit seulement.
+    </p>
+    <div slot="histoire">
+      <p>
+        La philosophe Philippa Foot imagine le cas du tramway en 1967, dans un article sur
+        la doctrine du double effet. La philosophe Judith Jarvis Thomson le reprend et le
+        prolonge, notamment dans un article de 1985 intitulé « The Trolley Problem ». Deux femmes
+        sont donc à l'origine de l'une des expériences de pensée les plus célèbres de la philosophie.
+      </p>
+      <p>
+        En 2020, Edmond Awad et ses collègues publient les réponses de 70 000 personnes, dans 10
+        langues et 42 pays, à trois versions du dilemme. Partout, l'ordre est le même : aiguillage
+        (81 % d'acceptation en moyenne), boucle (72 %), passerelle (51 %). Mais les niveaux varient
+        beaucoup d'un pays à l'autre, et le sacrifice est plus souvent rejeté là où les gens doivent
+        davantage ménager des relations qu'ils ne peuvent pas facilement changer, notamment dans des
+        pays d'Asie de l'Est.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le dilemme du tramway a une bonne réponse, qu'il suffit de trouver. »</strong> Il
+      sert à révéler nos principes et leurs contradictions, pas à trancher. Et nos réponses varient
+      avec des détails qui ne changent pas le nombre de vies.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Moral Machine" ancre="moral-machine">
+    <Machine slot="animation" />
+    <p slot="decouverte">
+      Une voiture autonome sans freins doit choisir qui épargner. Fais tes choix, puis compare-les à
+      ceux de millions de personnes, et aux règles d'une commission d'éthique.
+    </p>
+    <p slot="curieux">
+      Demander à la foule ce qu'une voiture devrait faire semble démocratique. Mais une préférence
+      majoritaire n'est pas forcément juste : la plupart des gens préfèrent épargner un enfant plutôt
+      qu'une personne âgée, et une commission d'éthique a jugé qu'une machine ne devait faire aucune
+      distinction de ce genre. Faut-il programmer les machines selon les préférences de la
+      majorité, ou selon des principes ?
+    </p>
+    <p slot="ingenieur">
+      La commission allemande insiste : les systèmes doivent d'abord être conçus pour éviter les
+      accidents, et les vrais dilemmes, une vie contre une autre, « ne peuvent pas être clairement
+      standardisés », car ils dépendent de la situation précise et de comportements imprévisibles.
+      Programmer une préférence générale (épargner les jeunes, par exemple) revient à décider à
+      l'avance qui vaut plus que qui.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2018, Edmond Awad et ses collègues publient dans <em>Nature</em> les
+        résultats de Moral Machine, une expérience en ligne : 40 millions de décisions, dans dix
+        langues, venues de 233 pays et territoires. Les préférences les plus fortes : épargner des
+        humains plutôt que des animaux, le plus grand nombre, les jeunes plutôt que les personnes
+        âgées. Les pays se regroupent en trois ensembles culturels, « occidental », « oriental » et
+        « méridional », aux préférences plus ou moins marquées. Edmond Awad le précise lui-même : on
+        ne sait pas encore comment les voitures devraient en tenir compte.
+      </p>
+      <p>
+        Un an plus tôt, en juin 2017, une commission d'éthique nommée par le ministre allemand des
+        Transports publie vingt règles pour la conduite automatisée. La règle 7 fait primer la vie
+        humaine sur les animaux et les biens. La règle 9 interdit, en cas d'accident inévitable,
+        « toute distinction fondée sur des caractéristiques personnelles (âge, sexe, constitution
+        physique ou mentale) », tout en admettant qu'un programme qui réduit le nombre de victimes
+        « peut se justifier ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Moral Machine montre ce que les gens pensent vraiment. »</strong> Ce sont des
+      volontaires, en ligne, devant des choix forcés et simplifiés : pas un échantillon représentatif
+      de la population mondiale. Le jeu est dans la page <a href="/jeux/">Jeux</a>, avec cet
+      avertissement.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le voile d’ignorance" ancre="voile">
+    <Voile slot="animation" />
+    <p slot="decouverte">
+      Un algorithme va répartir des ressources entre cinq places. Tu choisis la règle, mais tu ne
+      sais pas encore quelle place sera la tienne. Laquelle choisis-tu ?
+    </p>
+    <p slot="curieux">
+      Quand on sait qu'on sera bien placé·e, on choisit volontiers une règle qui avantage les mieux
+      placé·es. L'idée du voile d'ignorance : choisir les règles comme si l'on pouvait se retrouver
+      n'importe où, à la meilleure comme à la pire place. C'est une façon de penser l'équité d'un
+      système, y compris d'un algorithme, sans savoir qui il avantagera.
+    </p>
+    <p slot="ingenieur">
+      La règle « le plus au total » maximise la moyenne : c'est un critère utilitariste. Rawls
+      défend, derrière le voile, le critère du « maximin » : choisir la règle dont la pire place est
+      la meilleure possible. Son principe de différence admet des inégalités, mais seulement si elles
+      améliorent le sort des plus défavorisé·es. Les modules <a href="/modules/ia-decident/">Les IA
+      qui décident pour nous</a> et <a href="/modules/deliberer/">Délibérer avec des algorithmes</a>
+      montrent ces choix dans de vrais systèmes.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le philosophe John Rawls propose la « position originelle » et le « voile
+        d'ignorance » dans <em>Théorie de la justice</em>, en 1971 : des personnes libres et égales
+        choisissent les principes de justice sans connaître leurs caractéristiques personnelles, leur
+        conception du bien ni leur situation sociale.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Être juste, c'est donner exactement la même chose à tout le monde. »</strong> Pour
+      Rawls, une inégalité peut être juste si elle profite aussi aux plus défavorisé·es. Dans
+      l'animation, l'égalité stricte laisse la place la moins bien lotie plus pauvre que la règle du
+      maximin.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Qui décide de la morale des machines ?</h2>
+    <table>
+      <thead><tr><th scope="col">Méthode</th><th scope="col">Ce qu'elle apporte</th><th scope="col">Sa limite</th></tr></thead>
+      <tbody>
+        <tr><td>Les expériences de pensée (tramway)</td><td>Révéler nos principes et leurs contradictions.</td><td>Des situations simplifiées, rares dans la réalité.</td></tr>
+        <tr><td>Demander à la foule (Moral Machine)</td><td>Connaître les préférences, et leurs variations entre cultures.</td><td>Une préférence majoritaire n'est pas une règle juste.</td></tr>
+        <tr><td>Des principes fixés par une commission</td><td>Protéger contre des discriminations, même voulues par la majorité.</td><td>Les vrais dilemmes ne se standardisent pas.</td></tr>
+        <tr><td>Le voile d'ignorance</td><td>Choisir des règles sans savoir qui elles avantagent.</td><td>On ne sait jamais vraiment s'abstraire de sa place.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      La suite de la section <a href="/penser-la-technique/">Penser la technique</a> demande si la
+      technique elle-même est neutre.
+    </p>
+
+  <Sources
+    verifie="2026-11-01"
+    sources={[
+      { auteur: 'E. Awad et al.', titre: 'Universals and variations in moral decisions made in 42 countries by 70,000 participants (PNAS 117, 2020)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7007553/', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'E. Awad et al.', titre: 'The Moral Machine experiment (Nature 563, 2018), résumé', url: 'https://www.nature.com/articles/s41586-018-0637-6', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'MIT News', titre: 'How should autonomous vehicles be programmed?', url: 'https://news.mit.edu/2018/how-autonomous-vehicles-programmed-1024', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'Ethics Commission Automated and Connected Driving (Allemagne)', titre: 'Rapport, juin 2017 (extrait publié par Dechert)', url: 'https://www.dechert.com/content/dam/dechert%20files/knowledge/onpoint/2017/9/PreviewAutomatedPageGermanyEthicsReport.pdf', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Stanford Encyclopedia of Philosophy', titre: 'Original Position', url: 'https://plato.stanford.edu/entries/original-position/', type: 'recherche', langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>

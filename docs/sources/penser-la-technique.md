@@ -218,3 +218,87 @@ humain plus souvent que les humains eux-mêmes dans un test de Turing.
 - Présenter « perroquets » et « étincelles » comme deux positions ; l'étude de
   2025 est une prépublication.
 - Auteur de l'article SEP : non vu dans l'extrait ; ne pas le nommer sur la page.
+
+## Thème 3 — Les choix moraux (`/modules/choix-moraux/`)
+
+Recherche du 1ᵉʳ novembre 2026.
+
+### Formulation sûre
+
+Le « dilemme du tramway » vient de la philosophe Philippa Foot (1967) ; Judith
+Jarvis Thomson l'a repris et prolongé (1985). Faut-il dévier un tramway pour
+sauver cinq personnes au prix d'une ? Et pousser quelqu'un pour l'arrêter ?
+Dans 42 pays, la plupart des gens acceptent la première action, beaucoup moins
+la seconde. L'expérience en ligne Moral Machine a appliqué l'idée aux voitures
+autonomes : 40 millions de décisions, des préférences communes et des
+différences entre cultures. Mais une commission d'éthique allemande a posé en
+2017 qu'une voiture ne doit faire aucune distinction selon l'âge ou le sexe :
+les préférences de la foule ne font pas une règle. Le philosophe John Rawls
+propose une autre méthode : choisir les règles sans savoir quelle place on
+occupera, derrière un « voile d'ignorance ».
+
+### Faits clés
+
+**Origines** [15]
+- P. Foot, « The problem of abortion and the doctrine of the double effect »,
+  *Oxford Review* 5, 1967, p. 5-15 ; J. J. Thomson, « The trolley problem »,
+  *Yale Law Journal* 94, 1985, p. 1395-1415 (références citées par Awad et
+  al. 2020 ; textes non lus).
+
+**Trois variantes dans 42 pays** [15]
+- E. Awad et al., « Universals and variations in moral decisions made in 42
+  countries by 70,000 participants », *PNAS* 117(5), 2020 : 70 000
+  participant·es, 10 langues, 42 pays ; même ordre partout (« Switch–Loop–
+  Footbridge ») ; acceptation moyenne par pays : aiguillage 81 %, boucle 72 %,
+  passerelle 51 % ; la part varie beaucoup selon les pays ; une faible
+  « mobilité relationnelle » est associée au rejet du sacrifice, surtout dans
+  les pays d'Asie de l'Est (« Eastern countries ») ; données publiques.
+
+**Moral Machine** [16][17]
+- Awad et al., « The Moral Machine experiment », *Nature* 563, 2018,
+  p. 59-64 (résumé) : 40 millions de décisions, dix langues, 233 pays et
+  territoires ; trois grands groupes de pays.
+- MIT News (24 oct. 2018) : préférences globales les plus fortes : épargner
+  des humains plutôt que des animaux, le plus grand nombre, les jeunes plutôt
+  que les personnes âgées ; groupes « Western », « Eastern », « Southern » ;
+  E. Awad : « We don't know yet how they should do that » (programmer les
+  véhicules). Lu via un outil de synthèse.
+- Une réponse critique (Y. E. Bigman, K. Gray, *Nature* 579, 2020, « Life
+  and death decisions of autonomous vehicles ») existe : contenu **non lu**,
+  ne pas résumer.
+
+**Commission d'éthique allemande (juin 2017)** [18]
+- « Ethics Commission Automated and Connected Driving », rapport de juin 2017,
+  nommée par le ministre fédéral des Transports ; 20 règles. Règle 7 : la vie
+  humaine prime sur les dommages aux animaux ou aux biens. Règle 8 : les vrais
+  dilemmes (une vie contre une autre) « can thus not be clearly standardized ».
+  Règle 9 : « In the event of unavoidable accident situations, any distinction
+  based on personal features (age, gender, physical or mental constitution) is
+  strictly prohibited. It is also prohibited to offset victims against one
+  another. General programming to reduce the number of personal injuries may be
+  justifiable. Those parties involved in the generation of mobility risks must
+  not sacrifice non-involved parties. »
+
+**Rawls** [19]
+- *Stanford Encyclopedia of Philosophy*, « Original Position » : dans *A Theory
+  of Justice* (1971), la « position originelle » et le « veil of ignorance » :
+  les parties ignorent leurs caractéristiques personnelles ; principe de
+  différence : les inégalités doivent profiter au maximum aux plus
+  défavorisé·es ; argument du « maximin ».
+
+### Sources (thème 3)
+
+15. Awad, E. et al. (2020). *PNAS* 117(5) : 2332-2337. https://pmc.ncbi.nlm.nih.gov/articles/PMC7007553/ — R, en, **lu partiellement** (résumé, introduction, résultats).
+16. Awad, E. et al. (2018). « The Moral Machine experiment ». *Nature* 563 : 59-64. https://www.nature.com/articles/s41586-018-0637-6 — R, en, **résumé seulement**.
+17. MIT News (24 oct. 2018). « How should autonomous vehicles be programmed? ». https://news.mit.edu/2018/how-autonomous-vehicles-programmed-1024 — P (communiqué), en, **lu** (via outil de synthèse).
+18. Ethics Commission Automated and Connected Driving (juin 2017). Rapport, ministère fédéral allemand des Transports et des Infrastructures numériques. Extrait publié par Dechert : https://www.dechert.com/content/dam/dechert%20files/knowledge/onpoint/2017/9/PreviewAutomatedPageGermanyEthicsReport.pdf — P, en, **lu partiellement** (règles 6 à 10). Le site du ministère (bmdv.bund.de) n'a pas répondu.
+19. *Stanford Encyclopedia of Philosophy*, « Original Position ». https://plato.stanford.edu/entries/original-position/ — R, en, **lu partiellement**.
+
+### Points d'attention (thème 3)
+
+- Moral Machine mesure des préférences exprimées en ligne, par des personnes
+  volontaires ; ce n'est ni un échantillon représentatif, ni une règle (le jeu
+  est listé sur `/jeux/` avec cet avertissement).
+- Ne pas dire que Thomson a « inventé » le dilemme ; ne pas lui attribuer le nom
+  avec certitude (son article de 1976 n'a pas été lu).
+- Les variantes et les pourcentages viennent d'Awad et al. 2020.
