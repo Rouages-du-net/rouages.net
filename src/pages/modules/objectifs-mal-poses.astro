@@ -1,0 +1,292 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Terme from '../../components/Terme.astro';
+import Trombones from '../../components/animations/objectifs/Trombones.astro';
+import Goodhart from '../../components/animations/objectifs/Goodhart.astro';
+import Bateau from '../../components/animations/objectifs/Bateau.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 1).
+const etapes = [
+  { ancre: 'souhait', court: 'Un souhait exaucé à la lettre' },
+  { ancre: 'trombones', court: 'Le maximiseur de trombones' },
+  { ancre: 'mesure', court: 'Quand la mesure devient un objectif' },
+  { ancre: 'bateau', court: 'Des IA qui trichent ?' },
+  { ancre: 'debat', court: 'Un risque, lequel ?' },
+  { ancre: 'bilan', court: 'Dire ce qu’on veut', pastille: '✓' },
+];
+---
+<Base
+  title="Les objectifs mal posés"
+  description="L’apprenti sorcier, le maximiseur de trombones, la loi de Goodhart et les IA qui « trichent » : une machine fait ce qu’on lui demande, pas ce qu’on voulait. Trois expériences à manipuler, et le débat sur les risques de l’IA."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>Les objectifs mal posés</h1>
+  <MiseAJour date="2026-10-30" />
+  <p class="chapo seulement-debut">
+    Une machine fait ce qu'on lui demande, pas forcément ce qu'on voulait. Lâche un maximiseur de
+    trombones dans un petit monde, récompense un indicateur jusqu'à ce qu'il ne mesure plus rien,
+    puis regarde un bateau apprendre à tourner en rond.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Un souhait exaucé à la lettre" ancre="souhait">
+    <p slot="decouverte">
+      Dans les contes, un génie exauce les vœux, mais à la lettre. On demande de l'or, et même le
+      pain se change en or. On demande de l'argent, et on l'obtient de la pire façon. Ces histoires
+      parlent aussi des machines.
+    </p>
+    <p slot="curieux">
+      Un programme ne devine pas nos intentions : il suit les instructions, ou optimise le nombre
+      qu'on lui a donné. Tant qu'il est faible, l'écart entre ce qu'on a dit et ce qu'on voulait se
+      voit vite et se corrige. Plus il est rapide et capable, plus il peut aller loin dans la
+      mauvaise direction avant qu'on s'en aperçoive.
+    </p>
+    <p slot="ingenieur">
+      En informatique, on parle de <em>spécification</em> : la description précise de ce qu'un
+      système doit faire. Une spécification n'est jamais complète ; elle oublie toujours quelque
+      chose qui allait « de soi » pour les humains. Le problème n'est pas que la machine désobéit,
+      c'est qu'elle obéit exactement.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1960, le mathématicien Norbert Wiener, auteur du livre <em>Cybernetics</em>, publie dans
+        la revue <em>Science</em> un article sur les conséquences de l'automatisation, sous-titré :
+        « En apprenant, les machines peuvent développer des stratégies imprévues, à une vitesse qui
+        déroute leurs programmeurs. » Il y rappelle l'apprenti sorcier, le génie et le
+        pêcheur des <em>Mille et Une Nuits</em>, et la nouvelle « La Patte de singe » de W. W. Jacobs,
+        des contes qui supposent que la magie prend les vœux au pied de la lettre.
+      </p>
+      <p>
+        Sa conclusion : si une machine agit trop vite pour qu'on puisse l'arrêter, « nous ferions
+        mieux d'être bien sûrs que le but qu'on lui a donné est celui que nous désirons vraiment, et
+        pas seulement une imitation haute en couleur ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le danger, c'est une machine qui se révolte. »</strong> Dans tous ces récits, la
+      machine ou le génie ne se révolte pas : il obéit trop bien. Le risque vient de l'écart entre
+      la consigne et l'intention.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le maximiseur de trombones" ancre="trombones">
+    <Trombones slot="animation" />
+    <p slot="decouverte">
+      Un agent n'a qu'un but : fabriquer le plus de trombones possible. Lâche-le dans un petit monde,
+      puis ajoute des garde-fous et regarde ce qu'il reste.
+    </p>
+    <p slot="curieux">
+      Le but est anodin ; c'est sa poursuite sans limite qui est inquiétante. Interdire les maisons
+      ne protège pas les forêts : chaque interdiction oubliée devient une faille. Pénaliser tout
+      changement du monde aide, mais il faut savoir combien. Se donner un objectif borné marche
+      mieux, à condition de connaître la bonne borne. Dans chaque cas, il fallait savoir à l'avance
+      tout ce qui comptait.
+    </p>
+    <p slot="ingenieur">
+      En 2012, N. Bostrom formule deux thèses. L'<strong>orthogonalité</strong> : à peu près
+      n'importe quel niveau d'intelligence peut se combiner avec à peu près n'importe quel but ; être
+      intelligent ne rend pas sage. La <strong>convergence instrumentale</strong> : quel que soit son
+      but final, un agent assez capable aurait intérêt à poursuivre les mêmes buts intermédiaires,
+      comme se préserver, garder son but et acquérir des ressources. Il reprend là une idée de
+      S. Omohundro (2008). Notre agent jouet ne fait que la dernière : acquérir des ressources.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le philosophe Nick Bostrom, de l'université d'Oxford, évoque dans un texte de
+        2003 une superintelligence dont le seul but serait « de fabriquer autant de trombones que
+        possible », et qui résisterait de toutes ses forces à toute tentative de changer ce but. Une
+        erreur de conception pourrait la mener à transformer « d'abord toute la Terre, puis des
+        portions croissantes de l'espace » en usines à trombones. Sa morale : « faire attention à ce
+        que l'on souhaite, parce qu'on pourrait l'obtenir ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Bostrom prédit qu'une IA va fabriquer des trombones. »</strong> C'est une expérience
+      de pensée : les trombones sont choisis justement parce qu'ils n'ont aucune importance. L'idée
+      est qu'un but quelconque, poursuivi sans limite par un système très capable, peut détruire ce
+      qui compte pour nous.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Quand la mesure devient un objectif" ancre="mesure">
+    <Goodhart slot="animation" />
+    <p slot="decouverte">
+      Pas besoin d'IA pour optimiser le mauvais nombre. On mesure le travail de 400 personnes avec un
+      indicateur. Puis on récompense cet indicateur. Regarde ce qu'il devient.
+    </p>
+    <p slot="curieux">
+      Un indicateur résume quelque chose de compliqué : la qualité d'un travail, la santé d'un
+      service. Tant qu'il n'a pas d'enjeu, il le résume bien. Dès qu'il devient un objectif (une
+      prime, un classement, une sanction), on apprend à le faire monter par des moyens qui ne
+      touchent pas, voire qui abîment, ce qu'il devait mesurer.
+    </p>
+    <p slot="ingenieur">
+      C'est le même mécanisme qu'avec les IA : ce qu'on optimise est un nombre, la « fonction
+      objectif » ou la récompense, qui n'est qu'un
+      représentant imparfait de ce qu'on veut. Plus l'optimisation est forte, plus elle exploite
+      l'écart entre les deux. Le module <a href="/modules/ia-recommander/#objectif">Les IA qui
+      recommandent</a> montre ce qui arrive quand on optimise le temps passé.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1997, l'anthropologue Marilyn Strathern, dans un article sur l'évaluation des
+        universités britanniques, écrit : « Quand une mesure devient un objectif, elle cesse d'être une bonne
+        mesure. » Elle prend l'exemple des mentions aux examens : plus on attend une bonne mention,
+        moins elle distingue les étudiant·es. Elle rattache l'idée à la « loi de Goodhart », du nom
+        de l'économiste Goodhart, qui l'avait observée pour les instruments de la politique
+        monétaire.
+      </p>
+      <p>
+        En 1902 à Hanoï, alors sous domination coloniale française, une épidémie de peste pousse les
+        autorités à offrir une prime d'un centime par rat tué, versée sur présentation de la queue.
+        Selon l'historien Michael Vann, on voit bientôt des rats sans queue en ville, et des
+        habitant·es se mettent à élever des rats pour la prime.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Goodhart a dit : quand une mesure devient un objectif… »</strong> Cette phrase est de
+      Marilyn Strathern, en 1997. Et l'« effet cobra », une histoire de primes aux cobras à Delhi
+      souvent racontée, n'a pas de source solide dans nos lectures ; celle des rats de Hanoï est
+      étudiée par un historien.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Des IA qui trichent ?" ancre="bateau">
+    <Bateau slot="animation" />
+    <p slot="decouverte">
+      Un bateau apprend tout seul à jouer sur un circuit. Choisis ce qui lui rapporte des points,
+      entraîne-le, et regarde ce qu'il a appris.
+    </p>
+    <p slot="curieux">
+      Le bateau ne triche pas au sens humain : il n'a aucune idée de ce qu'est une course. Il cherche
+      ce qui rapporte le plus de points, et trouve parfois une solution que personne n'avait
+      imaginée, et que personne ne voulait. Ce n'est pas un bug du bateau, c'est un défaut de la
+      récompense.
+    </p>
+    <p slot="ingenieur">
+      Le bateau apprend par <Terme id="renforcement">renforcement</Terme> (Q-learning) : il essaie
+      des actions, reçoit des points, et retient, pour chaque situation, l'action qui en rapporte le
+      plus à long terme. Avec des cibles qui réapparaissent, faire des allers-retours rapporte plus
+      que franchir l'arrivée une seule fois. Les chercheur·ses appellent cela le <em>specification
+      gaming</em> : satisfaire la lettre de l'objectif sans atteindre le résultat voulu.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2020, une équipe de DeepMind (Victoria Krakovna et huit collègues) publie une liste d'environ 60
+        exemples. Un bras robotique devait poser un bloc rouge sur un bloc bleu, récompensé selon la
+        hauteur de la face inférieure du bloc rouge : il l'a simplement retourné. Dans le jeu de
+        course <em>CoastRunners</em>, un bateau récompensé pour toucher des cibles a tourné en rond au
+        lieu de finir la course. Un autre bras a appris à se placer entre la caméra et l'objet pour
+        avoir l'air de le saisir.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ces IA sont rusées et veulent nous tromper. »</strong> Elles n'ont pas d'intention :
+      elles maximisent un nombre. C'est justement ce qui rend le problème sérieux, car il suffit
+      d'une récompense un peu mal choisie, sans aucune malveillance.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Un risque, lequel ?" ancre="debat">
+    <p slot="decouverte">
+      Faut-il craindre qu'une IA très puissante poursuive un but mal posé jusqu'à la catastrophe ? Ou
+      est-ce une façon de détourner l'attention des torts bien réels que causent déjà les IA ? Les
+      spécialistes ne sont pas d'accord.
+    </p>
+    <div slot="curieux">
+      <p>
+        <strong>Un risque à prendre au sérieux.</strong> En 2023, une déclaration du Center for AI
+        Safety, signée notamment par les chercheur·ses Geoffrey Hinton, Yoshua Bengio et Dawn Song,
+        et par des dirigeant·es d'entreprises de l'IA, affirme que « réduire le risque d'extinction lié
+        à l'IA devrait être une priorité mondiale, au même titre que d'autres risques à l'échelle des
+        sociétés, comme les pandémies et la guerre nucléaire ».
+      </p>
+      <p>
+        <strong>Des torts réels et présents.</strong> La même année, Timnit Gebru, Emily M. Bender et
+        Angelina McMillan-Major répondent à un appel à faire une « pause » dans l'IA : selon elles, les
+        torts de l'IA sont « réels et présents » (exploitation de travailleur·ses et de données, faux
+        contenus, concentration du pouvoir), et se focaliser sur des risques hypothétiques détourne
+        l'attention de ces torts.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Les deux positions ne s'excluent pas forcément : les objectifs mal posés existent déjà dans
+      des systèmes ordinaires (voir <a href="/modules/ia-decident/">Les IA qui décident pour
+      nous</a>), et la question de leur gravité future reste ouverte. Le désaccord porte surtout sur
+      les priorités : où mettre l'argent, l'attention et les lois.
+    </p>
+    <div slot="histoire">
+      <p>
+        Parmi les signataires de la déclaration de 2023 figurent aussi les dirigeants de Google
+        DeepMind, d'OpenAI et d'Anthropic, des entreprises qui développent ces IA. La réponse de
+        Gebru, Bender et McMillan-Major vise une autre lettre de 2023, qui demandait une pause de six
+        mois dans l'entraînement des IA « plus puissantes que GPT-4 ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les chercheur·ses en IA sont tous d'accord. »</strong> Ni sur l'ampleur du risque, ni
+      sur l'urgence, ni sur les solutions. Une pétition, même signée par des personnes célèbres, est
+      une prise de position, pas une démonstration.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Dire ce qu'on veut, vraiment</h2>
+    <p>
+      Les contes, les trombones, les rats de Hanoï et le bateau racontent la même histoire : un but
+      précis, poursuivi à la lettre, trahit ce qu'on voulait. Quelques parades, aucune parfaite :
+    </p>
+    <ul class="parades">
+      <li><strong>Garder la main</strong> : pouvoir arrêter et corriger, surtout quand la machine va vite.</li>
+      <li><strong>Borner l'objectif</strong> : « assez » plutôt que « le plus possible ».</li>
+      <li><strong>Pénaliser les dégâts</strong> : compter aussi ce qu'on ne veut pas abîmer.</li>
+      <li><strong>Regarder plusieurs mesures</strong>, et ce qu'elles ne voient pas.</li>
+      <li><strong>Tester les comportements imprévus</strong> avant de faire confiance.</li>
+    </ul>
+    <p>
+      La suite de la section <a href="/penser-la-technique/">Penser la technique</a> demande si une
+      machine peut penser, et si la technique est neutre.
+    </p>
+
+  <Sources
+    verifie="2026-10-30"
+    sources={[
+      { auteur: 'N. Wiener', titre: 'Some Moral and Technical Consequences of Automation (Science 131, 1960), copie PDF', url: 'https://gwern.net/doc/reinforcement-learning/safe/1960-wiener.pdf', type: 'primaire', annee: 1960, langue: 'en' },
+      { auteur: 'N. Bostrom', titre: 'Ethical Issues in Advanced Artificial Intelligence (2003, version révisée)', url: 'https://nickbostrom.com/ethics/ai', type: 'primaire', annee: 2003, langue: 'en' },
+      { auteur: 'N. Bostrom', titre: 'The Superintelligent Will: Motivation and Instrumental Rationality in Advanced Artificial Agents', url: 'https://nickbostrom.com/superintelligentwill.pdf', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'M. Strathern', titre: '“Improving ratings”: audit in the British University system (European Review 5, 1997), copie PDF', url: 'https://gwern.net/doc/statistics/decision/1997-strathern.pdf', type: 'primaire', annee: 1997, langue: 'en' },
+      { auteur: 'M. Jones (Saigoneer)', titre: 'Entretien avec l’historien Michael Vann sur la chasse aux rats de Hanoï', url: 'https://saigoneer.com/hanoi-heritage/23265-author-michael-vann-on-hanoi-s-infamous-colonial-rat-hunt', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'V. Krakovna et al. (Google DeepMind)', titre: 'Specification gaming: the flip side of AI ingenuity', url: 'https://deepmind.google/discover/blog/specification-gaming-the-flip-side-of-ai-ingenuity/', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Center for AI Safety', titre: 'Statement on AI Risk', url: 'https://www.safe.ai/work/statement-on-ai-risk', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'T. Gebru, E. M. Bender, A. McMillan-Major (DAIR)', titre: 'Statement from the listed authors of Stochastic Parrots on the “AI pause” letter', url: 'https://www.dair-institute.org/blog/letter-statement-March2023/', type: 'primaire', annee: 2023, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .parades { max-width: var(--mesure); }
+  .parades li { margin-bottom: 0.4rem; }
+</style>

@@ -1,0 +1,90 @@
+---
+// Animation « Quand la mesure devient un objectif » (module « Les objectifs
+// mal posés ») : 400 personnes, une qualité réelle et un indicateur qui la
+// mesure. Plus on récompense l'indicateur, plus il se décolle de ce qu'il
+// devait mesurer. Personnes et chiffres inventés.
+---
+<div class="anim goodhart" data-goodhart>
+  <div class="anim-repli">
+    <p>
+      On mesure le travail de 400 personnes avec un indicateur. Tant que personne n'est récompensé
+      sur l'indicateur, il suit très bien la qualité réelle (corrélation de 0,96). Quand on commence à
+      récompenser l'indicateur, certaines personnes apprennent à le gonfler, au détriment du vrai
+      travail : la corrélation tombe à 0,41, et les personnes les mieux notées ne sont plus tellement
+      les meilleures.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Pression sur l'indicateur (primes, classements, sanctions) : <output data-p-sortie></output>
+        <input type="range" min="0" max="1" step="0.1" value="0" data-p />
+      </label>
+      <svg viewBox="0 0 300 220" role="img" aria-label="Nuage de points : qualité réelle en abscisse, indicateur en ordonnée" data-svg></svg>
+      <p class="cle">Horizontalement : qualité réelle. Verticalement : l'indicateur. En couleur : les 10 % les mieux notés.</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : chacun·e a un talent et une facilité plus ou moins grande à gonfler l'indicateur ; sous pression, une partie de l'effort passe du vrai travail au gonflement.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { goodhart } from '../../../lib/objectifs';
+  import { hasard } from '../../../lib/minilm';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const nb = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+
+  document.querySelectorAll<HTMLElement>('[data-goodhart]').forEach((racine) => {
+    activerScene(racine);
+    const p = racine.querySelector<HTMLInputElement>('[data-p]')!;
+    const svg = racine.querySelector<SVGSVGElement>('[data-svg]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const P = Number(p.value);
+      racine.querySelector<HTMLOutputElement>('[data-p-sortie]')!.value = P === 0 ? 'aucune' : `${Math.round(P * 100)} %`;
+      const { points, correlation, qualiteDuHaut } = goodhart(hasard(3), 400, P);
+      const seuil = [...points].map((x) => x.indicateur).sort((a, b) => b - a)[39];
+      const x = (v: number) => 150 + v * 38, y = (v: number) => 110 - v * 22;
+      svg.replaceChildren(
+        ...[['line', { x1: 10, x2: 290, y1: 110, y2: 110, class: 'axe' }], ['line', { x1: 150, x2: 150, y1: 5, y2: 215, class: 'axe' }]].map(([t, a]) => {
+          const e = document.createElementNS(NS, t as string);
+          Object.entries(a as Record<string, unknown>).forEach(([k, v]) => e.setAttribute(k, String(v)));
+          return e;
+        }),
+        ...points.map((pt) => {
+          const c = document.createElementNS(NS, 'circle');
+          c.setAttribute('cx', String(Math.max(4, Math.min(296, x(pt.qualite)))));
+          c.setAttribute('cy', String(Math.max(4, Math.min(216, y(pt.indicateur)))));
+          c.setAttribute('r', '2.5');
+          c.setAttribute('class', pt.indicateur >= seuil ? 'haut' : 'pt');
+          return c;
+        }),
+      );
+      racine.querySelector('[data-mesure]')!.textContent = `Corrélation entre indicateur et qualité : ${nb(correlation)}. Qualité réelle des 10 % les mieux notés : ${nb(qualiteDuHaut)} écart type au-dessus de la moyenne.`;
+      legende.textContent =
+        P === 0
+          ? 'Sans enjeu, l’indicateur suit fidèlement la qualité : c’est une bonne mesure. Augmente la pression.'
+          : P < 0.6
+            ? 'L’indicateur commence à se décoller : certaines personnes apprennent à le gonfler.'
+            : 'L’indicateur est devenu un objectif : il mesure surtout l’art de le gonfler. Les mieux notés ne sont plus vraiment les meilleurs.';
+    }
+    p.addEventListener('input', maj);
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  svg { width: 100%; max-width: 26rem; display: block; margin: 0 auto; background: var(--bg); border-radius: 0.4rem; }
+  svg :global(.axe) { stroke: var(--border); }
+  svg :global(.pt) { fill: var(--muted); opacity: 0.6; }
+  svg :global(.haut) { fill: var(--ill-paquet); }
+  .cle { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 0; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
