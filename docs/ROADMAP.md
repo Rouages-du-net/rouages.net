@@ -126,7 +126,7 @@ vérifier lors de la recherche.
 - [x] **Les choix moraux** *(`/modules/choix-moraux/`, relecture humaine à faire)* — le dilemme du tramway (Philippa Foot, Judith Jarvis Thomson), Moral Machine et ses limites, le voile d'ignorance (Rawls) appliqué aux algorithmes. Animation : tes choix comparés à ceux de Moral Machine
 - [x] **La technique est-elle neutre ?** *(`/modules/technique-neutre/`, relecture humaine à faire ; Collingridge et McLuhan non traités)* — lois de Kranzberg, « Les artefacts font-ils de la politique ? » (Winner, et la controverse sur les ponts de Moses), « Code is law » (Lessig) contre la Déclaration d'indépendance du cyberespace (Barlow), dilemme de Collingridge, « Le médium est le message » (McLuhan), paradoxe de Jevons. Animation : Jevons (plus d'efficacité, plus de consommation)
 - [x] **Surveillance et vie privée** *(`/modules/surveillance-vie-privee/`, relecture humaine à faire)* — le panoptique (Bentham, Foucault), « Je n'ai rien à cacher » et ses réfutations ; lien avec « Les IA qui surveillent »
-- [ ] **Des regards venus d'ailleurs** — éthique ubuntu et IA, « cosmotechnique » (Yuk Hui), protocoles autochtones pour l'IA, critiques de Ruha Benjamin et Kate Crawford
+- [x] **Des regards venus d'ailleurs** *(`/modules/regards-ailleurs/`, relecture humaine à faire)* — éthique ubuntu et IA, « cosmotechnique » (Yuk Hui), protocoles autochtones pour l'IA, critiques de Ruha Benjamin et Kate Crawford
 
 ## En parallèle — Jeux et idées reçues
 

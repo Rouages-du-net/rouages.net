@@ -1,0 +1,131 @@
+---
+// Animation « Les voix d'une langue » (module « Des regards venus
+// d'ailleurs ») : une communauté a enregistré des heures de sa langue. Comment
+// les partager ? Les choix sont évalués selon les principes FAIR et CARE
+// (Carroll et al., 2020). Projet et barème inventés.
+---
+<div class="anim langue" data-langue>
+  <div class="anim-repli">
+    <p>
+      Une communauté a enregistré des centaines d'heures de sa langue, menacée de disparaître. Si l'on
+      met tout en ligne, librement réutilisable, les données sont faciles à trouver et à réutiliser
+      (principes FAIR), mais la communauté n'a plus aucun contrôle : une entreprise pourrait en tirer
+      un produit sans rien lui rendre. Si tout reste fermé, la communauté garde le contrôle mais
+      personne ne sait que ces données existent. Les principes CARE proposent de viser les deux :
+      « Be FAIR and CARE » : décrire publiquement les données, mais laisser la communauté décider de
+      leur usage, et lui en faire profiter.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="intro">Une communauté a enregistré des centaines d'heures de sa langue, que parlent surtout les aîné·es. Des chercheur·ses et des entreprises voudraient s'en servir pour entraîner des IA de reconnaissance vocale.</p>
+      <fieldset class="choix">
+        <legend>Comment partager ces enregistrements ?</legend>
+        <label><input type="checkbox" data-c="metadonnees" checked /> Publier en ligne la description des enregistrements (ce qu'il y a, d'où ça vient)</label>
+        <label>Accès aux enregistrements :
+          <select data-c="acces">
+            <option value="ouvert">ouvert à tout le monde</option>
+            <option value="demande">sur demande motivée</option>
+            <option value="communaute">réservé à la communauté</option>
+          </select>
+        </label>
+        <label>Licence :
+          <select data-c="licence">
+            <option value="libre">libre, toute réutilisation permise</option>
+            <option value="non-commerciale">pas d'usage commercial sans accord</option>
+            <option value="tutelle">licence de tutelle : la communauté garde la main</option>
+          </select>
+        </label>
+        <label>Qui décide des usages :
+          <select data-c="decision">
+            <option value="chercheurs">les chercheur·ses</option>
+            <option value="partagee">chercheur·ses et communauté ensemble</option>
+            <option value="communaute">la communauté</option>
+          </select>
+        </label>
+        <label><input type="checkbox" data-c="retour" /> Ce qui est construit avec les données profite d'abord à la communauté</label>
+      </fieldset>
+      <div class="scores">
+        <div><p class="titre">FAIR <span>(données)</span></p><ul data-fair></ul><p class="total" data-tfair></p></div>
+        <div><p class="titre">CARE <span>(personnes)</span></p><ul data-care></ul><p class="total" data-tcare></p></div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Barème inventé pour illustrer la tension décrite par Carroll et al. (2020) entre ouverture des données et droits des peuples autochtones. Il ne décrit aucun projet réel.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { evaluer, type Choix } from '../../../lib/ailleurs';
+
+  const NOMS: Record<string, string> = {
+    trouvable: 'Trouvable', accessible: 'Accessible', interoperable: 'Interopérable', reutilisable: 'Réutilisable',
+    benefice: 'Bénéfice collectif', autorite: 'Autorité de contrôle', responsabilite: 'Responsabilité', ethique: 'Éthique',
+  };
+  const nb = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+
+  document.querySelectorAll<HTMLElement>('[data-langue]').forEach((racine) => {
+    activerScene(racine);
+    const champs = [...racine.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-c]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    const liste = (ul: HTMLElement, o: Record<string, number>) =>
+      ul.replaceChildren(
+        ...Object.entries(o).map(([k, v]) => {
+          const li = document.createElement('li');
+          const t = document.createElement('span');
+          t.textContent = NOMS[k];
+          const j = document.createElement('span');
+          j.className = 'jauge';
+          j.setAttribute('aria-hidden', 'true');
+          const b = document.createElement('span');
+          b.style.width = `${v * 100}%`;
+          j.append(b);
+          const n = document.createElement('span');
+          n.className = 'n';
+          n.textContent = nb(v);
+          li.append(t, j, n);
+          return li;
+        }),
+      );
+
+    function maj() {
+      const c = Object.fromEntries(champs.map((x) => [x.dataset.c, x instanceof HTMLInputElement ? x.checked : x.value])) as unknown as Choix;
+      const r = evaluer(c);
+      liste(racine.querySelector('[data-fair]')!, r.fair);
+      liste(racine.querySelector('[data-care]')!, r.care);
+      racine.querySelector('[data-tfair]')!.textContent = `${nb(r.totalFair)} / 4`;
+      racine.querySelector('[data-tcare]')!.textContent = `${nb(r.totalCare)} / 4`;
+      legende.textContent =
+        r.totalFair >= 3.5 && r.totalCare <= 1
+          ? 'Tout est ouvert : les données sont faciles à réutiliser, mais la communauté n’a plus son mot à dire, et rien ne lui revient. C’est la tension que soulignent les principes CARE.'
+          : r.totalCare >= 3.5 && r.totalFair >= 2.5
+            ? 'Les deux à la fois : les données sont connues et peuvent être utilisées, mais selon les règles de la communauté, et à son profit. C’est le « Be FAIR and CARE » des auteur·rices.'
+            : r.totalCare >= 3 && r.totalFair < 2
+              ? 'La communauté garde le contrôle, mais personne ne sait que ces données existent : publier leur description ne retire aucun contrôle.'
+              : 'Cherche des choix qui rendent les données utiles sans retirer à la communauté le contrôle de sa langue.';
+    }
+    champs.forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .intro { font-size: 0.95rem; margin: 0 0 0.5rem; }
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.75rem; display: grid; gap: 0.4rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .choix select { display: block; width: 100%; margin-top: 0.15rem; font: inherit; padding: 0.25rem; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg); color: var(--fg); }
+  .scores { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  @media (max-width: 34rem) { .scores { grid-template-columns: 1fr; } }
+  .titre { font-weight: 700; margin: 0 0 0.25rem; }
+  .titre span { font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+  .scores ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.25rem; font-size: 0.85rem; }
+  .scores :global(li) { display: grid; grid-template-columns: 9rem 1fr 2rem; gap: 0.4rem; align-items: center; }
+  .scores :global(.jauge) { height: 0.6rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .scores :global(.jauge span) { display: block; height: 100%; background: var(--accent); }
+  .scores :global(.n) { font-family: var(--police-mono); text-align: right; }
+  .total { font: 700 0.95rem var(--police-mono); margin: 0.25rem 0 0; }
+</style>

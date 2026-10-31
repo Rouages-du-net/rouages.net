@@ -1,0 +1,230 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Langue from '../../components/animations/ailleurs/Langue.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 6).
+const etapes = [
+  { ancre: 'ubuntu', court: 'Je suis parce que nous sommes' },
+  { ancre: 'cosmotechniques', court: 'Plusieurs techniques, plusieurs mondes' },
+  { ancre: 'donnees', court: 'À qui sont les données ?' },
+  { ancre: 'extraction', court: 'Ce que l’IA prend' },
+  { ancre: 'bilan', court: 'Élargir les questions', pastille: '✓' },
+];
+---
+<Base
+  title="Des regards venus d’ailleurs"
+  description="L’éthique ubuntu, les cosmotechniques de Yuk Hui, la souveraineté des données autochtones (principes CARE, Te Hiku Media), les critiques de Ruha Benjamin et Kate Crawford : d’autres façons de penser l’IA et la technique, et une langue dont il faut partager les voix."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>Des regards venus d'ailleurs</h1>
+  <MiseAJour date="2026-11-02" />
+  <p class="chapo seulement-debut">
+    Les débats sur l'IA viennent surtout d'Europe et d'Amérique du Nord. D'autres traditions posent
+    d'autres questions : qui est une personne, à qui appartiennent les données, ce que l'IA prend à la
+    terre et aux gens. Et toi, comment partagerais-tu les voix d'une langue menacée ?
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Je suis parce que nous sommes" ancre="ubuntu">
+    <p slot="decouverte">
+      La plupart des règles sur l'IA protègent l'individu : sa vie privée, ses droits, ses choix.
+      Une philosophie d'Afrique subsaharienne, l'ubuntu, part d'une autre idée : on devient une
+      personne à travers ses relations avec les autres.
+    </p>
+    <p slot="curieux">
+      Vue sous cet angle, une décision automatisée ne nuit pas seulement à une personne isolée : elle
+      abîme des liens. Classer quelqu'un comme « à risque », c'est aussi toucher sa famille, son
+      entourage, sa communauté. La question n'est plus seulement « mes droits sont-ils respectés ? »,
+      mais « ce système renforce-t-il ou défait-il les relations entre les gens ? ».
+    </p>
+    <p slot="ingenieur">
+      Les grilles d'évaluation habituelles mesurent des effets individuels : taux d'erreur par
+      personne, consentement de chacun·e. Une approche relationnelle demanderait aussi de mesurer les
+      effets sur les groupes et les liens, et d'associer les communautés concernées à la conception.
+      Le module <a href="/modules/ia-decident/">Les IA qui décident pour nous</a> montre des décisions
+      automatisées qui touchent des familles entières.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2020, Sabelo Mhlambi publie, dans la série de documents de travail du Carr Center for Human
+        Rights Policy (Harvard Kennedy School), un texte intitulé « From Rationality to
+        Relationality ». Il s'appuie sur l'ubuntu, « philosophie relationnelle d'Afrique
+        subsaharienne », pour montrer que les torts causés par l'IA, en particulier par les décisions
+        automatisées, sont « par essence des violations » de la conception relationnelle de la personne
+        portée par l'ubuntu.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'éthique de l'IA est universelle, il suffit de l'appliquer partout. »</strong> Les
+      principes les plus cités viennent de quelques pays. D'autres traditions changent les questions
+      elles-mêmes : la personne, la communauté, la relation.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Plusieurs techniques, plusieurs mondes" ancre="cosmotechniques">
+    <p slot="decouverte">
+      On parle souvent de « la » technique, comme s'il n'y en avait qu'une, qui avancerait partout de
+      la même façon. Un philosophe propose de parler plutôt de techniques au pluriel.
+    </p>
+    <p slot="curieux">
+      Chaque culture relie à sa manière sa vision du monde, sa morale et ses outils. Une même
+      technique, importée ailleurs, n'a pas le même sens. Penser la technique au pluriel, c'est se
+      demander quels autres chemins auraient été possibles, et lesquels restent à inventer.
+    </p>
+    <p slot="ingenieur">
+      Pour les ingénieur·es, la question devient concrète : un système conçu dans un pays, avec ses
+      données et ses valeurs, est-il adapté ailleurs ? Les modules <a
+      href="/modules/construire-ensemble/#qui-participe">Construire ensemble</a> (Masakhane, Common Voice)
+      et <a href="/modules/ia-collective/">L'IA, fruit d'une intelligence collective</a> montrent des
+      communautés qui construisent leurs propres outils.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2017, le philosophe Yuk Hui propose dans la revue <em>e-flux</em> la notion de
+        « cosmotechnique » : « l'unification du cosmos et de la morale à travers les activités
+        techniques ». « Il n'y a pas eu une ou deux techniques, mais de nombreuses cosmotechniques »,
+        écrit-il. Il y voit une réponse à la fin d'une mondialisation restée « largement à sens unique ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le progrès technique suit une seule voie, la même partout. »</strong> L'histoire
+      montre des techniques nées de visions du monde différentes. Celle que l'on présente comme
+      universelle n'en est qu'une parmi d'autres.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="À qui sont les données ?" ancre="donnees">
+    <Langue slot="animation" />
+    <p slot="decouverte">
+      Une communauté a enregistré les voix de sa langue. Des chercheur·ses et des entreprises veulent
+      s'en servir pour entraîner des IA. Choisis comment les partager, et regarde ce que cela donne
+      selon deux familles de principes.
+    </p>
+    <p slot="curieux">
+      Les principes FAIR, très utilisés en science, demandent que les données soient trouvables,
+      accessibles, interopérables et réutilisables : ils poussent à l'ouverture. Les principes CARE,
+      élaborés par des réseaux autochtones, rappellent qu'il y a des personnes derrière les données :
+      bénéfice collectif, autorité de contrôle, responsabilité, éthique. Les deux ne s'opposent pas
+      forcément : on peut décrire publiquement des données tout en laissant la communauté décider de
+      leur usage.
+    </p>
+    <p slot="ingenieur">
+      Une licence peut traduire ces choix en règles : interdire l'usage commercial sans accord, ou,
+      comme une licence de « tutelle », exiger que les usages profitent à la communauté. Les grands
+      jeux de données ramassés sur le web, au contraire, prennent les voix et les textes sans demander.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2020, un groupe international de réseaux autochtones, au sein de la Research Data Alliance,
+        publie les principes CARE pour la gouvernance des données autochtones. Ils s'appuient
+        notamment sur le travail du réseau māori Te Mana Raraunga et complètent les principes FAIR :
+        leur mot d'ordre est « Be FAIR and CARE ».
+      </p>
+      <p>
+        En Aotearoa-Nouvelle-Zélande, le média māori Te Hiku Media, qui travaille à la revitalisation
+        de la langue māorie (te reo Māori) avec l'IA, protège ses données par une « licence
+        Kaitiakitanga » (de tutelle) et donne la priorité aux demandes des communautés autochtones.
+        En 2020, un groupe de travail réunissant des personnes autochtones d'Aotearoa,
+        d'Australie, d'Amérique du Nord et du Pacifique publie, en ʻōlelo Hawaiʻi et en anglais, un
+        texte de référence pour concevoir l'IA à partir des préoccupations autochtones.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Des données ouvertes, c'est forcément mieux pour tout le monde. »</strong> L'ouverture
+      profite d'abord à celles et ceux qui ont les moyens de s'en servir. Pour une communauté, garder
+      le contrôle de sa langue ou de ses savoirs peut être une condition pour en profiter.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Ce que l’IA prend" ancre="extraction">
+    <p slot="decouverte">
+      Derrière une IA, il y a des métaux extraits du sol, du travail mal payé, des données prises à des
+      millions de personnes. Deux chercheuses ont rendu visibles ces coûts cachés et ces inégalités.
+    </p>
+    <p slot="curieux">
+      On présente souvent l'IA comme immatérielle et neutre. Pour Kate Crawford, c'est une technique
+      d'« extraction » : de minerais, de travail, de données. Pour Ruha Benjamin, des technologies
+      présentées comme objectives peuvent reproduire, et même cacher, des discriminations raciales
+      anciennes, ce qu'elle appelle le « New Jim Code ».
+    </p>
+    <p slot="ingenieur">
+      Ces analyses rejoignent ce que montrent d'autres modules : le travail des annotateur·rices
+      (<a href="/modules/ia-collective/#annoter">L'IA, fruit d'une intelligence collective</a>), les
+      biais des décisions automatisées (<a href="/modules/ia-decident/">Les IA qui décident pour
+      nous</a>), et une technique jamais neutre (<a href="/modules/technique-neutre/">La technique
+      est-elle neutre ?</a>).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2019, Ruha Benjamin publie <em>Race After Technology: Abolitionist Tools for the
+        New Jim Code</em> ; le livre reçoit en 2020 le prix Oliver Cromwell Cox de l'American
+        Sociological Association pour la recherche antiraciste. En 2021, Kate Crawford publie <em>Atlas
+        of AI</em> : elle y montre l'IA comme une technique d'extraction, « des minerais tirés de la terre
+        au travail extrait de travailleur·ses de l'information mal payé·es, jusqu'aux données prises dans chaque action
+        et chaque expression ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'IA est dématérialisée. »</strong> Elle repose sur des mines, des centres de données,
+      de l'électricité, de l'eau et du travail humain, souvent loin de celles et ceux qui l'utilisent.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Élargir les questions</h2>
+    <table>
+      <thead><tr><th scope="col">Regard</th><th scope="col">La question qu'il ajoute</th></tr></thead>
+      <tbody>
+        <tr><td>L'ubuntu (Sabelo Mhlambi)</td><td>Ce système renforce-t-il ou défait-il les relations entre les gens ?</td></tr>
+        <tr><td>Les cosmotechniques (Yuk Hui)</td><td>Quelle vision du monde cette technique porte-t-elle, et quelles autres sont possibles ?</td></tr>
+        <tr><td>Les principes CARE, Te Hiku Media</td><td>Qui décide de l'usage des données, et à qui profitent-elles ?</td></tr>
+        <tr><td>Ruha Benjamin, Kate Crawford</td><td>Quelles inégalités et quelles extractions se cachent derrière la promesse d'objectivité ?</td></tr>
+      </tbody>
+    </table>
+    <p>
+      C'est le dernier module de la section <a href="/penser-la-technique/">Penser la technique</a> :
+      des objectifs mal posés aux regards venus d'ailleurs, autant de façons de ne pas laisser la
+      technique décider seule.
+    </p>
+
+  <Sources
+    verifie="2026-11-02"
+    sources={[
+      { auteur: 'Berkman Klein Center', titre: 'From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance (présentation du texte de S. Mhlambi)', url: 'https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial', type: 'site', annee: 2020, langue: 'en' },
+      { auteur: 'Y. Hui', titre: 'Cosmotechnics as Cosmopolitics (e-flux journal 86)', url: 'https://www.e-flux.com/journal/86/161887/cosmotechnics-as-cosmopolitics/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'S. R. Carroll et al.', titre: 'The CARE Principles for Indigenous Data Governance (Data Science Journal 19)', url: 'https://datascience.codata.org/articles/10.5334/dsj-2020-043', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'Indigenous Protocol and AI Working Group', titre: 'Position Paper on Indigenous Protocol and Artificial Intelligence', url: 'https://www.indigenous-ai.net/position-paper/', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Te Hiku Media', titre: 'Data Sovereignty and the Kaitiakitanga License', url: 'https://tehiku.nz/te-hiku-tech/te-hiku-dev-korero/25141/data-sovereignty-and-the-kaitiakitanga-license', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'R. Benjamin', titre: 'Race After Technology: Abolitionist Tools for the New Jim Code (page de l’autrice)', url: 'https://www.ruhabenjamin.com/race-after-technology', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'K. Crawford', titre: 'Atlas of AI (page de l’éditeur, Yale University Press)', url: 'https://yalebooks.yale.edu/book/9780300264630/atlas-of-ai/', type: 'primaire', annee: 2021, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
