@@ -1,0 +1,73 @@
+---
+// Animation « Lue ou fabriquée ? » (module « Une machine peut-elle
+// penser ? ») : le petit modèle de langage du site (bigrammes) fabrique des
+// phrases nouvelles. Saurais-tu les distinguer des phrases qu'il a lues ?
+---
+<div class="anim perroquet" data-perroquet>
+  <div class="anim-repli">
+    <p>
+      Un tout petit modèle de langage a lu une quarantaine de phrases simples (« le chat dort sur le
+      canapé », « la pluie tombe sur la ville »…). En tirant chaque mot selon ce qui suit
+      habituellement le précédent, il fabrique des phrases qu'il n'a jamais lues : « la nuit tombe sur
+      le jardin », « le chien dort sur le canapé ». Souvent, on ne peut pas les distinguer des vraies.
+      Parfois, il dérape : « la fermière nourrit les poules mangent les graines ». Il ne sait pas ce
+      qu'est un chien : il sait seulement quels mots se suivent.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="phrase" data-phrase aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-choix="lue">Lue dans le corpus</button>
+        <button type="button" data-choix="fabriquee">Fabriquée par le modèle</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Le modèle est celui du module <a href="/modules/ia-texte/">Les IA qui écrivent</a> : il compte quel mot suit quels deux mots, dans un corpus de 38 phrases écrites pour le site.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { PHRASES, phraseFabriquee } from '../../../lib/penser';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-perroquet]').forEach((racine) => {
+    activerScene(racine);
+    const alea = hasard(17);
+    const phrase = racine.querySelector<HTMLElement>('[data-phrase]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let actuelle = { texte: '', fabriquee: false };
+    let graine = 1, essais = 0, justes = 0;
+
+    function suivante() {
+      const fabriquee = alea() < 0.5;
+      const texte = fabriquee ? phraseFabriquee(graine++) : PHRASES[Math.floor(alea() * PHRASES.length)];
+      actuelle = { texte, fabriquee };
+      phrase.textContent = `« ${texte.charAt(0).toUpperCase()}${texte.slice(1)}. »`;
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-choix]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const dit = b.dataset.choix === 'fabriquee';
+        essais++;
+        if (dit === actuelle.fabriquee) justes++;
+        racine.querySelector('[data-mesure]')!.textContent = `${dit === actuelle.fabriquee ? 'Juste' : 'Raté'} : cette phrase était ${actuelle.fabriquee ? 'fabriquée par le modèle' : 'dans le corpus'}. Score : ${justes} sur ${essais}.`;
+        legende.textContent =
+          essais < 5
+            ? 'Continue : les phrases fabriquées qui ont l’air justes sont les plus troublantes.'
+            : `${justes} bonne${justes > 1 ? 's' : ''} réponse${justes > 1 ? 's' : ''} sur ${essais}. Quand la phrase est courte et banale, impossible de savoir si quelqu’un l’a pensée : c’est ce que Bender, Gebru et leurs collègues appellent un « perroquet stochastique ».`;
+        suivante();
+      }),
+    );
+    suivante();
+  });
+</script>
+
+<style>
+  .phrase { font-size: 1.4rem; text-align: center; margin: 0.5rem 0 0.75rem; padding: 0.75rem; background: var(--bg); border-radius: 0.4rem; }
+  .anim-commandes { justify-content: center; }
+  .mesure { font-size: 0.95rem; margin: 0.5rem 0 0; text-align: center; }
+</style>

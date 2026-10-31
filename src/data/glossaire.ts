@@ -506,6 +506,11 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Méthode statistique qui calcule une probabilité à partir d'une somme pondérée de critères : chaque critère a un coefficient, positif ou négatif, qu'on peut lire. Elle sert souvent à calculer des scores de risque.",
     voirAussi: ['apprentissage-automatique'],
   },
+  'expression-reguliere': {
+    terme: 'Expression régulière',
+    definition:
+      "Petit langage pour décrire un motif de texte, par exemple « le mot je suis, puis n'importe quoi ». Un programme s'en sert pour reconnaître des phrases et en extraire des morceaux.",
+  },
 };
 
 export function entree(id: string): Entree {

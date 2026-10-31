@@ -1,0 +1,116 @@
+---
+// Animation « La chambre chinoise » (module « Une machine peut-elle
+// penser ? ») : tu es dans la chambre de J. Searle (1980). Des symboles
+// arrivent sous la porte ; tu cherches dans le livre la règle qui a la même
+// forme et tu recopies la réponse. Dehors, on croit que tu parles chinois.
+---
+<div class="anim chambre" data-chambre>
+  <div class="anim-repli">
+    <p>
+      Tu es enfermé·e dans une pièce avec un livre de règles. Sous la porte arrive une suite de
+      symboles chinois. Le livre dit : « si tu reçois ces symboles-là, renvoie ceux-ci ». Tu
+      compares les formes, tu recopies la réponse, tu la glisses sous la porte. Dehors, une personne
+      qui parle chinois lit « Je vais très bien, merci » en réponse à « Comment vas-tu ? » et croit
+      parler avec quelqu'un qui comprend. Toi, tu n'as rien compris : tu as seulement suivi des
+      règles.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="porte">
+        <p class="etiquette">Sous la porte arrive :</p>
+        <p class="symboles" lang="zh" data-question></p>
+        <p class="traduction" data-q-fr hidden></p>
+      </div>
+      <p class="etiquette">Ton livre de règles : clique sur la règle dont la question a exactement la même forme.</p>
+      <ol class="livre" data-livre></ol>
+      <label class="case"><input type="checkbox" data-traduire /> Voir ce que tout cela veut dire (ce que la personne dans la chambre ne voit pas)</label>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Expérience de pensée de J. Searle (1980), en miniature : quatre règles au lieu d'un livre immense.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { LIVRE } from '../../../lib/penser';
+
+  document.querySelectorAll<HTMLElement>('[data-chambre]').forEach((racine) => {
+    activerScene(racine);
+    const traduire = racine.querySelector<HTMLInputElement>('[data-traduire]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const ordre = [2, 0, 3, 1];
+    let i = 0, reussites = 0;
+
+    const livre = racine.querySelector<HTMLElement>('[data-livre]')!;
+    LIVRE.forEach((f, k) => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'regle';
+      b.setAttribute('aria-label', `Règle ${k + 1}`);
+      const q = document.createElement('span');
+      q.lang = 'zh';
+      q.className = 'symboles';
+      q.textContent = f.question;
+      const fl = document.createElement('span');
+      fl.textContent = ' → renvoyer : ';
+      const r = document.createElement('span');
+      r.lang = 'zh';
+      r.className = 'symboles';
+      r.textContent = f.reponse;
+      const tr = document.createElement('span');
+      tr.className = 'traduction';
+      tr.hidden = true;
+      tr.textContent = `(« ${f.questionFr} » → « ${f.reponseFr} »)`;
+      b.append(q, fl, r, tr);
+      b.addEventListener('click', () => choisir(k));
+      li.append(b);
+      livre.append(li);
+    });
+
+    function afficher() {
+      const f = LIVRE[ordre[i % ordre.length]];
+      racine.querySelector('[data-question]')!.textContent = f.question;
+      racine.querySelector('[data-q-fr]')!.textContent = `« ${f.questionFr} »`;
+    }
+
+    function choisir(k: number) {
+      const attendu = ordre[i % ordre.length];
+      if (k !== attendu) {
+        mesure.textContent = 'Les formes ne correspondent pas : regarde symbole par symbole.';
+        return;
+      }
+      reussites++;
+      const f = LIVRE[k];
+      mesure.textContent = `Tu glisses sous la porte : ${f.reponse}${traduire.checked ? ` (« ${f.reponseFr} »)` : ''}`;
+      legende.textContent =
+        reussites < 3
+          ? 'Dehors, la personne lit ta réponse : elle est parfaitement juste. Continue.'
+          : `${reussites} réponses parfaites. Dehors, on est sûr que quelqu’un dans la chambre comprend le chinois. Toi, as-tu compris quoi que ce soit ? C’est la question de Searle.`;
+      i++;
+      afficher();
+    }
+
+    traduire.addEventListener('input', () => racine.querySelectorAll<HTMLElement>('.traduction').forEach((t) => (t.hidden = !traduire.checked)));
+    afficher();
+  });
+</script>
+
+<style>
+  .porte { border: 2px dashed var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem; text-align: center; }
+  .etiquette { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.25rem; }
+  .symboles { font-size: 1.4rem; letter-spacing: 0.05em; }
+  .porte .symboles { font-size: 2rem; margin: 0.25rem 0; }
+  .traduction { display: block; font-size: 0.85rem; color: var(--muted); }
+  .livre { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; }
+  .livre :global(.regle) { width: 100%; text-align: left; font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); cursor: pointer; }
+  .livre :global(.regle:hover), .livre :global(.regle:focus-visible) { border-color: var(--accent); }
+  .livre :global(.symboles) { font-size: 1.15rem; }
+  .case { display: flex; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+  .case input { accent-color: var(--accent); }
+  .mesure { font-size: 0.95rem; margin: 0.5rem 0 0; }
+</style>
