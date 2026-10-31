@@ -1,0 +1,231 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Jevons from '../../components/animations/neutre/Jevons.astro';
+import Pont from '../../components/animations/neutre/Pont.astro';
+import Code from '../../components/animations/neutre/Code.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 4).
+const etapes = [
+  { ancre: 'kranzberg', court: 'Ni bonne, ni mauvaise, ni neutre' },
+  { ancre: 'artefacts', court: 'Les objets font-ils de la politique ?' },
+  { ancre: 'code', court: 'Le code est la loi' },
+  { ancre: 'jevons', court: 'Plus efficace, plus consommé' },
+  { ancre: 'bilan', court: 'Questions à poser à une technique', pastille: '✓' },
+];
+---
+<Base
+  title="La technique est-elle neutre ?"
+  description="Les lois de Kranzberg, les ponts de Robert Moses et leur controverse, « Code is law » de Lessig face à la déclaration de Barlow, le paradoxe de Jevons : règle la hauteur d’un pont, choisis les régulateurs d’internet, et regarde l’efficacité faire consommer plus."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>La technique est-elle neutre ?</h1>
+  <MiseAJour date="2026-11-01" />
+  <p class="chapo seulement-debut">
+    « Ce n'est qu'un outil, tout dépend de ce qu'on en fait. » Vraiment ? Règle la hauteur d'un pont
+    et regarde qui ne passe plus, choisis qui règle internet, puis rends une technique plus efficace
+    et regarde la consommation… augmenter.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Ni bonne, ni mauvaise, ni neutre" ancre="kranzberg">
+    <p slot="decouverte">
+      On entend souvent qu'une technique est neutre : un couteau sert à couper le pain ou à blesser.
+      Un historien des techniques a proposé une formule plus subtile, devenue célèbre.
+    </p>
+    <p slot="curieux">
+      « La technique n'est ni bonne ni mauvaise ; elle n'est pas neutre non plus. » Autrement dit :
+      une technique n'a pas de morale en elle-même, mais elle n'est pas indifférente. Elle a des
+      effets qui dépassent ce pour quoi on l'a conçue, et ces effets changent selon le pays, le moment
+      et les personnes qui l'utilisent.
+    </p>
+    <p slot="ingenieur">
+      Pour Kranzberg, beaucoup de problèmes viennent des conséquences imprévues de techniques
+      apparemment bénignes, une fois employées à grande échelle. Il invite à comparer les effets à
+      court et à long terme, et selon les contextes : le même choix technique peut être raisonnable
+      ici et désastreux ailleurs.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1986, l'historien Melvin Kranzberg publie ses « lois » dans la revue <em>Technology and
+        Culture</em>. Son exemple : le DDT, employé pour augmenter les récoltes et tuer les insectes qui
+        transmettent des maladies, s'est révélé menacer les oiseaux, les poissons et toute la chaîne
+        alimentaire. Les pays industrialisés occidentaux l'ont interdit ; ils pouvaient se payer
+        d'autres moyens. L'Inde a continué à l'employer, parce que la lutte contre le paludisme passait
+        avant : selon l'Organisation mondiale de la santé, citée par Kranzberg, le nombre de cas y
+        serait passé de 100 millions par an à 15 000 dans les années 1950-1960.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La technique est neutre, seul compte l'usage. »</strong> Une technique rend certains
+      usages faciles et d'autres difficiles, et ses effets dépendent du contexte. La même décision,
+      interdire le DDT, n'avait pas le même sens dans un pays riche et dans un pays frappé par le
+      paludisme.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Les objets font-ils de la politique ?" ancre="artefacts">
+    <Pont slot="animation" />
+    <p slot="decouverte">
+      La route vers la plage passe sous des ponts. Règle leur hauteur et regarde qui peut encore y
+      aller.
+    </p>
+    <p slot="curieux">
+      Un objet peut produire un effet politique sans aucune loi : une hauteur, une marche d'escalier,
+      un tourniquet, un paramètre par défaut dans un logiciel. Ceux qui le conçoivent décident, parfois
+      sans y penser, qui pourra s'en servir. C'est pour cela qu'on parle d'accessibilité : une rampe
+      ou un sous-titrage changent qui peut participer.
+    </p>
+    <p slot="ingenieur">
+      En informatique, les choix « techniques » ont souvent ce genre d'effet : la taille minimale
+      d'un texte, une connexion obligatoire, une seule langue, un formulaire qui n'accepte pas certains
+      noms. Le choix par défaut est celui que la plupart des gens garderont : il fixe de fait la règle.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1980, Langdon Winner publie « Do Artifacts Have Politics? » (« Les artefacts
+        font-ils de la politique ? »). Son exemple le plus célèbre : les ponts très bas des routes de
+        Long Island, près de New York, construits sous la direction de Robert Moses, auraient
+        empêché le passage des bus, et donc des habitant·es pauvres et noir·es, vers les plages.
+      </p>
+      <p>
+        En 1999, Bernward Joerges conteste ce récit dans un article intitulé « Do Politics Have
+        Artefacts? » : selon lui, cette « parabole » répétée depuis longtemps « se révèle contraire aux
+        faits ». D'autres chercheurs, Steve Woolgar et Geoff Cooper, lui répondent dans le même
+        numéro de la revue. La controverse montre qu'une belle histoire, même très citée, doit être
+        vérifiée, et que l'idée de Winner peut être juste même si son exemple est discutable.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Moses a construit des ponts bas exprès pour exclure les Noirs. »</strong> C'est le
+      récit popularisé par Winner, mais Joerges le juge contraire aux faits depuis 1999, et la
+      discussion continue. Notre animation ne raconte pas
+      ce qui s'est passé à Long Island : elle montre seulement le mécanisme, dans une ville inventée.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le code est la loi" ancre="code">
+    <Code slot="animation" />
+    <p slot="decouverte">
+      Mille personnes veulent copier un fichier protégé. Choisis ce qui va les en dissuader : la loi,
+      la pression des proches, une offre bon marché… ou le code lui-même.
+    </p>
+    <p slot="curieux">
+      La loi punit après coup ; les normes jouent sur la réputation ; le marché sur l'intérêt. Le code
+      agit autrement : il rend une action possible ou impossible, avant même qu'on y pense. Ceux qui
+      écrivent les logiciels et conçoivent les plateformes fixent donc, en partie, les règles de ce
+      qu'on peut y faire.
+    </p>
+    <p slot="ingenieur">
+      Lawrence Lessig donne des exemples : le code détermine s'il est facile de protéger
+      sa vie privée ou de censurer une parole, qui voit quoi, ce qui est surveillé. Un réglage peut
+      être changé par une mise à jour, sans débat public : d'où l'importance de savoir qui écrit le
+      code, et selon quelles valeurs.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le 8 février 1996, à Davos, John Perry Barlow publie une « Déclaration
+        d'indépendance du cyberespace » : « Gouvernements du monde industriel, géants fatigués de chair
+        et d'acier, je viens du cyberespace, le nouveau foyer de l'esprit. […] Vous n'avez aucune
+        souveraineté là où nous nous rassemblons. »
+      </p>
+      <p>
+        En janvier 2000, Lawrence Lessig lui répond en quelque sorte dans un essai intitulé « Code Is
+        Law » : chaque époque a son régulateur ; celle du cyberespace en a un aussi, le code, « le
+        logiciel et le matériel qui font le cyberespace tel qu'il est ». Internet n'échappe pas aux
+        règles : elles sont écrites dans ses programmes.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Internet est un espace sans règles. »</strong> Il en a beaucoup : celles des lois, des
+      communautés, des entreprises, et surtout celles inscrites dans le code des plateformes, souvent
+      invisibles.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Plus efficace, plus consommé" ancre="jevons">
+    <Jevons slot="animation" />
+    <p slot="decouverte">
+      Une technique devient plus efficace : elle demande moins d'énergie pour le même service. On
+      devrait consommer moins d'énergie, non ? Règle l'efficacité et la réaction de la demande.
+    </p>
+    <p slot="curieux">
+      Quand un service devient moins cher, on en consomme davantage. Si l'usage augmente plus vite que
+      l'efficacité, la consommation totale monte. C'est une question pour le numérique : des vidéos plus
+      légères, des réseaux plus efficaces, des écrans plus économes peuvent nourrir encore plus d'usages.
+      Un futur module sur la matérialité d'internet y reviendra.
+    </p>
+    <p slot="ingenieur">
+      Dans l'animation, le coût du service est proportionnel à l'énergie qu'il demande, et la demande
+      réagit au coût avec une « élasticité » ε. L'énergie totale varie comme l'efficacité à la
+      puissance ε − 1 : elle baisse si ε &lt; 1, reste stable si ε = 1, monte si ε &gt; 1. On parle
+      aujourd'hui d'« effet rebond » ; son ampleur réelle dépend des cas et fait débat.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1866, dans la deuxième édition de <em>The Coal Question</em>, l'économiste
+        William Stanley Jevons s'inquiète de l'épuisement du charbon anglais. Il répond à ceux qui
+        comptent sur des machines plus économes : « C'est une complète confusion d'idées de supposer que
+        l'usage économe du combustible équivaut à une consommation réduite. C'est tout le contraire. En
+        règle générale, les nouvelles façons d'économiser conduiront à une augmentation de la
+        consommation. »
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le progrès technique suffira à réduire notre consommation. »</strong> Il peut y
+      contribuer, mais rien ne le garantit : une technique plus efficace peut aussi faire consommer
+      plus. Les choix d'usage et les règles comptent autant que l'efficacité.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Questions à poser à une technique</h2>
+    <ol class="questions">
+      <li><strong>Qu'est-ce qu'elle rend facile, et difficile ?</strong> Un objet favorise certains usages.</li>
+      <li><strong>Pour qui ?</strong> Qui ne peut pas s'en servir, ou s'en trouve exclu·e ?</li>
+      <li><strong>Qui en a fixé les règles ?</strong> Loi, normes, marché, ou code écrit par quelqu'un ?</li>
+      <li><strong>Dans quel contexte ?</strong> Les mêmes effets ne se produisent pas partout.</li>
+      <li><strong>À grande échelle ?</strong> Une technique efficace peut changer les usages, et la consommation.</li>
+    </ol>
+    <p>
+      La suite de la section <a href="/penser-la-technique/">Penser la technique</a> s'intéresse à la
+      surveillance et à la vie privée.
+    </p>
+
+  <Sources
+    verifie="2026-11-01"
+    sources={[
+      { auteur: 'M. Kranzberg', titre: 'Technology and History: “Kranzberg’s Laws” (Technology and Culture 27, 1986), copie PDF', url: 'https://www.cs.ucdavis.edu/~koehl/Teaching/ECS188/PDF_files/Kranzberg.pdf', type: 'primaire', annee: 1986, langue: 'en' },
+      { auteur: 'B. Joerges', titre: 'Do Politics Have Artefacts? (Social Studies of Science 29, 1999), notice et résumé', url: 'https://www.econbiz.de/10010332936', type: 'recherche', annee: 1999, langue: 'en' },
+      { auteur: 'L. Lessig', titre: 'Code Is Law: On Liberty in Cyberspace (Harvard Magazine)', url: 'https://www.harvardmagazine.com/2000/01/code-is-law-html', type: 'primaire', annee: 2000, langue: 'en' },
+      { auteur: 'J. P. Barlow', titre: 'A Declaration of the Independence of Cyberspace', url: 'https://www.eff.org/cyberspace-independence', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'W. S. Jevons', titre: 'The Coal Question, 2ᵉ éd., chap. VII « Of the economy of fuel »', url: 'https://www.econlib.org/library/YPDBooks/Jevons/jvnCQ7.html', type: 'primaire', annee: 1866, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

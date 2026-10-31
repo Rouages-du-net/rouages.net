@@ -1,0 +1,83 @@
+---
+// Animation « Le paradoxe de Jevons » (module « La technique est-elle
+// neutre ? ») : quand une technique devient plus efficace, son service coûte
+// moins cher, on en consomme plus ; selon la réaction de la demande, la
+// consommation d'énergie baisse… ou monte. Modèle inventé.
+---
+<div class="anim jevons" data-jevons>
+  <div class="anim-repli">
+    <p>
+      Une technique devient deux fois plus efficace : regarder une heure de vidéo, par exemple,
+      demande deux fois moins d'énergie, donc coûte moins cher. Si les gens n'en regardent pas
+      beaucoup plus, la consommation d'énergie baisse. Mais si la demande réagit fortement à la
+      baisse du coût, on regarde tellement plus de vidéos que la consommation totale augmente :
+      c'est ce que l'économiste William Stanley Jevons observait dès 1866 pour le charbon.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Efficacité de la technique : <output data-e-sortie></output>
+        <input type="range" min="1" max="4" step="0.5" value="1" data-e />
+      </label>
+      <label class="curseur">Réaction de la demande quand le coût baisse : <output data-d-sortie></output>
+        <input type="range" min="0.2" max="2" step="0.1" value="1.5" data-d />
+      </label>
+      <div class="barres">
+        <div class="barre"><span class="nom">Service consommé</span><span class="piste"><span data-b-service></span></span><span class="valeur" data-v-service></span></div>
+        <div class="barre"><span class="nom">Énergie consommée</span><span class="piste"><span data-b-energie></span></span><span class="valeur" data-v-energie></span></div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : coût proportionnel à l'énergie, demande qui suit le coût avec une élasticité réglable. Valeurs rapportées à la situation de départ (efficacité 1).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { jevons } from '../../../lib/neutre';
+
+  const fois = (v: number) => `× ${v.toLocaleString('fr-FR', { maximumFractionDigits: 2 })}`;
+
+  document.querySelectorAll<HTMLElement>('[data-jevons]').forEach((racine) => {
+    activerScene(racine);
+    const e = racine.querySelector<HTMLInputElement>('[data-e]')!;
+    const d = racine.querySelector<HTMLInputElement>('[data-d]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const E = Number(e.value), D = Number(d.value);
+      racine.querySelector<HTMLOutputElement>('[data-e-sortie]')!.value = fois(E);
+      racine.querySelector<HTMLOutputElement>('[data-d-sortie]')!.value = D < 1 ? `faible (${D.toLocaleString('fr-FR')})` : D > 1 ? `forte (${D.toLocaleString('fr-FR')})` : 'moyenne (1)';
+      const { demande, energie } = jevons(E, D);
+      const max = Math.max(demande, energie, 1) * 1.05;
+      racine.querySelector<HTMLElement>('[data-b-service]')!.style.width = `${(demande / max) * 100}%`;
+      racine.querySelector<HTMLElement>('[data-b-energie]')!.style.width = `${(energie / max) * 100}%`;
+      racine.querySelector('[data-v-service]')!.textContent = fois(demande);
+      racine.querySelector('[data-v-energie]')!.textContent = fois(energie);
+      legende.textContent =
+        E === 1
+          ? 'Augmente l’efficacité de la technique.'
+          : energie > 1.01
+            ? 'La technique est plus efficace, et pourtant on consomme plus d’énergie qu’avant : la baisse du coût a fait exploser l’usage. C’est le paradoxe de Jevons.'
+            : energie < 0.99
+              ? 'Ici, l’usage augmente un peu, mais l’efficacité l’emporte : la consommation d’énergie baisse. Tout dépend de la réaction de la demande.'
+              : 'Les deux effets s’annulent exactement : on consomme autant d’énergie qu’avant, pour bien plus de service.';
+    }
+    [e, d].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .barres { display: grid; gap: 0.5rem; margin: 0.75rem 0; }
+  .barre { display: grid; grid-template-columns: 9rem 1fr 4rem; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .piste { height: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; }
+  .piste span { display: block; height: 100%; background: var(--accent); }
+  .barre:last-child .piste span { background: var(--ill-paquet); }
+  .valeur { font-family: var(--police-mono); font-size: 0.85rem; text-align: right; }
+  @media (max-width: 30rem) { .barre { grid-template-columns: 1fr 4rem; } .barre .nom { grid-column: 1 / -1; } }
+</style>

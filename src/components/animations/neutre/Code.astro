@@ -1,0 +1,68 @@
+---
+// Animation « Quatre régulateurs » (module « La technique est-elle
+// neutre ? ») : selon Lawrence Lessig, la loi, les normes sociales, le marché
+// et le code (l'architecture) règlent les comportements. Ici, 1 000 personnes
+// veulent copier un fichier protégé. Modèle inventé.
+---
+<div class="anim code" data-code>
+  <div class="anim-repli">
+    <p>
+      Mille personnes veulent copier un fichier protégé. Sans rien, 81 % le font. Une loi qui punit
+      (quand on est pris) en dissuade une partie : il en reste 52 %. Ajouter la désapprobation des
+      proches fait descendre à 32 %. Une offre légale bon marché fait aussi baisser l'envie. Mais une
+      protection technique qui rend la copie impossible agit autrement : elle ne punit pas après,
+      elle empêche avant ; seules quelques personnes capables de la contourner copient encore (3 %).
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Les régulateurs en place</legend>
+        <label><input type="checkbox" data-l="loi" /> La loi : une amende si l'on est pris</label>
+        <label><input type="checkbox" data-l="normes" /> Les normes : les proches désapprouvent</label>
+        <label><input type="checkbox" data-l="marche" /> Le marché : une offre légale bon marché</label>
+        <label><input type="checkbox" data-l="architecture" /> Le code : une protection rend la copie impossible</label>
+      </fieldset>
+      <div class="jauge" aria-hidden="true"><span data-jauge></span></div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : chaque personne compare ce qu'elle gagne à copier à ce que cela lui coûte ; 5 % savent contourner une protection technique.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { copier, type Leviers } from '../../../lib/neutre';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-code]').forEach((racine) => {
+    activerScene(racine);
+    const cases = [...racine.querySelectorAll<HTMLInputElement>('[data-l]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const l = Object.fromEntries(cases.map((c) => [c.dataset.l, c.checked])) as unknown as Leviers;
+      const part = copier(hasard(3), l);
+      racine.querySelector<HTMLElement>('[data-jauge]')!.style.width = `${part * 100}%`;
+      racine.querySelector('[data-mesure]')!.textContent = `${Math.round(part * 1000)} personnes sur 1 000 copient le fichier.`;
+      legende.textContent = l.architecture
+        ? 'Le code ne punit pas : il rend la copie impossible, pour presque tout le monde, sans juge ni débat. C’est pourquoi Lessig dit que « le code est la loi » du cyberespace : celui qui l’écrit fixe les règles.'
+        : l.loi || l.normes || l.marche
+          ? 'La loi punit après coup, les normes jouent sur la réputation, le marché sur l’intérêt : chacun réduit la copie sans l’empêcher. Essaie le code.'
+          : 'Sans régulateur, la plupart des gens copient. Coche une ou plusieurs cases.';
+    }
+    cases.forEach((c) => c.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.75rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .jauge { height: 1rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); overflow: hidden; }
+  .jauge span { display: block; height: 100%; background: var(--ill-paquet); }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>

@@ -1,0 +1,85 @@
+---
+// Animation « Un pont trop bas » (module « La technique est-elle neutre ? ») :
+// la hauteur d'un pont décide quels véhicules passent, donc qui accède à la
+// plage. Ville et chiffres inventés ; l'histoire des ponts de Robert Moses,
+// dont s'inspire l'animation, est contestée.
+---
+<div class="anim pont" data-pont-moses>
+  <div class="anim-repli">
+    <p>
+      La route vers la plage passe sous des ponts. Si l'on fixe leur hauteur à trois mètres, les
+      voitures, les vélos et les camionnettes passent, mais pas les bus. Dans notre ville inventée,
+      30 % des habitant·es n'ont que le bus pour aller à la plage : une simple hauteur décide qui peut
+      y aller. Personne n'a écrit de règle d'interdiction ; l'objet suffit.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Hauteur des ponts : <output data-h-sortie></output>
+        <input type="range" min="2" max="4.5" step="0.1" value="3" data-h />
+      </label>
+      <ul class="vehicules" data-vehicules aria-label="Véhicules et accès à la plage"></ul>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Ville, hauteurs et parts inventées. L'histoire réelle des ponts de Long Island est discutée ci-dessous.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { VEHICULES, passe } from '../../../lib/neutre';
+
+  const NOMS = { velo: 'Vélo', voiture: 'Voiture', camionnette: 'Camionnette', bus: 'Bus' } as const;
+  const SYMBOLES = { velo: '🚲', voiture: '🚗', camionnette: '🚐', bus: '🚌' } as const;
+  const m = (v: number) => `${v.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} m`;
+
+  document.querySelectorAll<HTMLElement>('[data-pont-moses]').forEach((racine) => {
+    activerScene(racine);
+    const h = racine.querySelector<HTMLInputElement>('[data-h]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const H = Number(h.value);
+      racine.querySelector<HTMLOutputElement>('[data-h-sortie]')!.value = m(H);
+      racine.querySelector('[data-vehicules]')!.replaceChildren(
+        ...VEHICULES.map((v) => {
+          const li = document.createElement('li');
+          const ok = passe(v, H);
+          li.className = ok ? 'passe' : 'bloque';
+          const s = document.createElement('span');
+          s.className = 'symbole';
+          s.setAttribute('aria-hidden', 'true');
+          s.textContent = SYMBOLES[v.id];
+          const t = document.createElement('span');
+          t.textContent = `${NOMS[v.id]} (${m(v.hauteur)}) : ${ok ? 'passe' : 'bloqué'} — seul moyen pour ${Math.round(v.part * 100)} % des habitant·es`;
+          li.append(s, t);
+          return li;
+        }),
+      );
+      const exclus = VEHICULES.filter((v) => !passe(v, H)).reduce((s, v) => s + v.part, 0);
+      racine.querySelector('[data-mesure]')!.textContent = `Habitant·es privé·es de plage : ${Math.round(exclus * 100)} %.`;
+      legende.textContent =
+        exclus === 0
+          ? 'Tout le monde passe. Baisse la hauteur des ponts.'
+          : VEHICULES.find((v) => v.id === 'bus') && !passe(VEHICULES[3], H) && passe(VEHICULES[1], H)
+            ? 'Les voitures passent, pas les bus : celles et ceux qui n’ont pas de voiture ne vont plus à la plage. Aucune loi ne l’interdit ; la hauteur du pont suffit.'
+            : 'Même les voitures ne passent plus : la route ne sert presque plus à personne.';
+    }
+    h.addEventListener('input', maj);
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .vehicules { list-style: none; padding: 0; margin: 0.5rem 0; display: grid; gap: 0.3rem; font-size: 0.9rem; }
+  .vehicules :global(li) { display: flex; gap: 0.5rem; align-items: center; padding: 0.3rem 0.5rem; border-left: 3px solid var(--border); }
+  .vehicules :global(li.passe) { border-left-color: var(--ill-secret-b); }
+  .vehicules :global(li.bloque) { border-left-color: var(--ill-paquet); opacity: 0.75; }
+  .vehicules :global(.symbole) { font-size: 1.3rem; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.4rem 0 0; }
+</style>
