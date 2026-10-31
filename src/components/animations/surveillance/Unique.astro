@@ -1,0 +1,75 @@
+---
+// Animation « Unique dans la foule » (module « Surveillance et vie
+// privée ») : dans une ville inventée de 20 000 habitant·es, combien de
+// personnes partagent tes caractéristiques ? L'idée vient des travaux de
+// Latanya Sweeney ; les données sont inventées.
+---
+<div class="anim unique" data-unique>
+  <div class="anim-repli">
+    <p>
+      Dans une ville inventée de 20 000 habitant·es, connaître ton quartier laisse environ mille
+      personnes possibles. Ajouter ton sexe divise par deux. Ton année de naissance en laisse une
+      dizaine. Et avec ton jour de naissance, tu es presque toujours la seule personne : 98 % des
+      habitant·es sont uniques avec ces quatre informations, qui n'ont pourtant rien de secret.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="cible" data-cible></p>
+      <fieldset class="choix">
+        <legend>Ce que quelqu'un sait de toi</legend>
+        <label><input type="checkbox" data-k="quartier" /> Ton quartier</label>
+        <label><input type="checkbox" data-k="sexe" /> Ton sexe</label>
+        <label><input type="checkbox" data-k="annee" /> Ton année de naissance</label>
+        <label><input type="checkbox" data-k="jour" /> Ton jour et ton mois de naissance</label>
+      </fieldset>
+      <p class="grand" data-grand aria-live="polite"></p>
+      <p class="mesure" data-mesure></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Ville inventée : 20 000 personnes, 20 quartiers, naissances de 1940 à 2009. Aucune donnée réelle.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { partUnique, semblables, ville, type Cle } from '../../../lib/surveillance';
+  import { hasard } from '../../../lib/minilm';
+
+  const nb = (n: number) => n.toLocaleString('fr-FR');
+
+  document.querySelectorAll<HTMLElement>('[data-unique]').forEach((racine) => {
+    activerScene(racine);
+    const pop = ville(hasard(2));
+    const toi = pop[0];
+    const cases = [...racine.querySelectorAll<HTMLInputElement>('[data-k]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const date = new Date(2001, 0, 1 + toi.jour);
+    racine.querySelector('[data-cible]')!.textContent = `Toi (dans cette ville inventée) : quartier ${toi.quartier + 1}, ${toi.sexe ? 'femme' : 'homme'}, né·e le ${date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} ${toi.annee}.`;
+
+    function maj() {
+      const connues = cases.filter((c) => c.checked).map((c) => c.dataset.k as Cle);
+      const n = semblables(pop, toi, connues);
+      racine.querySelector('[data-grand]')!.textContent = n === 1 ? 'Tu es la seule personne à correspondre.' : `${nb(n)} personnes correspondent.`;
+      racine.querySelector('[data-mesure]')!.textContent = connues.length ? `Avec ces informations, ${Math.round(partUnique(pop, connues) * 100)} % des habitant·es sont uniques.` : '';
+      legende.textContent =
+        n === 1
+          ? 'Aucune de ces informations n’est secrète, mais ensemble elles te désignent. Un fichier « anonyme » qui les contient n’est pas anonyme.'
+          : connues.length
+            ? 'Ajoute une information : le groupe fond très vite.'
+            : 'Sans rien savoir, tu es noyé·e dans la foule. Coche ce qu’une entreprise ou une administration pourrait savoir de toi.';
+    }
+    cases.forEach((c) => c.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .cible { font-size: 0.95rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 0.3rem; margin: 0 0 0.5rem; }
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .grand { font-size: 1.3rem; font-weight: 700; text-align: center; margin: 0.75rem 0 0.25rem; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; text-align: center; margin: 0; }
+</style>

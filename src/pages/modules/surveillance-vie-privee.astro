@@ -1,0 +1,225 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Panoptique from '../../components/animations/surveillance/Panoptique.astro';
+import Unique from '../../components/animations/surveillance/Unique.astro';
+import Metadonnees from '../../components/animations/surveillance/Metadonnees.astro';
+
+// Faits sourcés : voir docs/sources/penser-la-technique.md (thème 5).
+const etapes = [
+  { ancre: 'panoptique', court: 'Le panoptique' },
+  { ancre: 'rien-a-cacher', court: '« Je n’ai rien à cacher »' },
+  { ancre: 'unique', court: 'Unique dans la foule' },
+  { ancre: 'metadonnees', court: 'Rien que des métadonnées' },
+  { ancre: 'bilan', court: 'Ce que protège la vie privée', pastille: '✓' },
+];
+---
+<Base
+  title="Surveillance et vie privée"
+  description="Le panoptique de Bentham et Foucault, l’argument « je n’ai rien à cacher », les données « anonymes » qui ne le sont pas (Latanya Sweeney) et les métadonnées qui en disent long : allume la tour, sois reconnu·e par trois informations, lis un journal d’appels."
+>
+  <p class="tag"><a href="/penser-la-technique/">Penser la technique</a> · module en construction</p>
+  <h1>Surveillance et vie privée</h1>
+  <MiseAJour date="2026-11-02" />
+  <p class="chapo seulement-debut">
+    Être peut-être regardé·e suffit-il à changer nos comportements ? Et si l'on n'a « rien à
+    cacher » ? Rends une tour de surveillance opaque, découvre que trois informations banales te
+    désignent, puis lis un journal d'appels sans un mot de conversation.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le panoptique" ancre="panoptique">
+    <Panoptique slot="animation" />
+    <p slot="decouverte">
+      Cent cellules autour d'une tour de garde. Règle combien de cellules le gardien regarde vraiment,
+      puis rends la tour opaque.
+    </p>
+    <p slot="curieux">
+      Quand on ne peut pas savoir si l'on est observé·e, on se comporte comme si on l'était toujours.
+      Il n'est plus nécessaire de regarder tout le monde : la possibilité d'être vu·e suffit. Les
+      caméras, les traces numériques et les historiques jouent ce rôle aujourd'hui, même quand
+      personne ne les consulte.
+    </p>
+    <p slot="ingenieur">
+      Pour Foucault, ce pouvoir « disciplinaire » repose sur trois techniques : l'observation
+      hiérarchique, le jugement par rapport à une norme, et l'examen, qui transforme chaque personne
+      en « cas » documenté. Les bases de données, les notes et les tableaux de bord prolongent ces
+      techniques : elles permettent de comparer chacun·e à une moyenne.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le philosophe Jeremy Bentham a imaginé le panoptique, une prison où chaque détenu·e est isolé·e
+        dans sa cellule et toujours visible depuis une tour centrale. En 1975, dans <em>Surveiller et
+        punir</em>, le philosophe Michel Foucault en fait le modèle d'un pouvoir moderne : les gardiens
+        ne voient pas toujours chaque détenu·e, mais ils le pourraient à tout moment, et les détenu·es,
+        ne sachant jamais s'ils sont observés, doivent se comporter comme s'ils l'étaient.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La surveillance ne gêne que ceux qu'on regarde. »</strong> Le panoptique montre
+      l'inverse : c'est la possibilité d'être vu·e qui change les comportements de tout le monde,
+      y compris quand personne ne regarde.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="« Je n’ai rien à cacher »" ancre="rien-a-cacher">
+    <p slot="decouverte">
+      « Je n'ai rien à cacher, donc la surveillance ne me dérange pas. » C'est l'une des réponses les
+      plus fréquentes quand on parle de vie privée. Que vaut cet argument ?
+    </p>
+    <div slot="curieux">
+      <p>
+        Les défenseurs de la surveillance mettent en avant la sécurité : prévenir des attentats,
+        retrouver des criminels, protéger des victimes. Le débat porte sur l'équilibre entre cette
+        sécurité et les libertés. À l'argument « rien à cacher », on oppose plusieurs objections :
+      </p>
+      <ul>
+        <li><strong>Ce qui est « à cacher » change</strong> : avec les lois, les régimes, les époques, ou simplement quand on change de travail.</li>
+        <li><strong>La vie privée n'est pas seulement le secret</strong> : c'est aussi le droit de ne pas être classé·e, deviné·e, jugé·e sur des données qu'on n'a pas choisi de donner.</li>
+        <li><strong>On ne contrôle pas ce qu'on en déduit</strong> : comme le montrent les deux étapes suivantes, des informations banales permettent de te reconnaître ou de deviner ta santé.</li>
+        <li><strong>Ce n'est pas qu'une affaire personnelle</strong> : journalistes, militant·es, minorités ont besoin que la vie privée de tout le monde soit protégée.</li>
+      </ul>
+    </div>
+    <p slot="ingenieur">
+      L'argument suppose que la seule menace est la découverte d'une faute. Mais les traitements
+      de données agissent autrement : ils agrègent, recoupent, prédisent, et prennent des décisions
+      (crédit, contrôle, prix) sur la base de profils. Le module <a href="/modules/ia-decident/">Les
+      IA qui décident pour nous</a> montre ces décisions.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2007, Daniel J. Solove, professeur de droit à l'université George Washington, publie dans la <em>San Diego Law Review</em> un essai
+        intitulé « “I've Got Nothing to Hide” and Other Misunderstandings of Privacy ». Il y examine
+        cet argument, selon lequel il n'y aurait aucune menace pour la vie privée tant que l'État ne
+        découvre pas d'activité illégale, et en critique les fondements.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Protéger sa vie privée, c'est avoir quelque chose à se reprocher. »</strong> On ferme
+      bien la porte des toilettes sans rien avoir à se reprocher. La vie privée protège une liberté,
+      pas une faute.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Unique dans la foule" ancre="unique">
+    <Unique slot="animation" />
+    <p slot="decouverte">
+      Dans une ville inventée de 20 000 habitant·es, coche ce qu'on sait de toi et regarde combien de
+      personnes te ressemblent encore.
+    </p>
+    <p slot="curieux">
+      Retirer le nom d'un fichier ne le rend pas anonyme. Quelques informations banales, combinées,
+      suffisent souvent à désigner une seule personne, qu'on retrouve ensuite en croisant avec un
+      autre fichier (une liste électorale, un réseau social). C'est pourquoi on parle de données
+      « pseudonymisées » plutôt qu'anonymes.
+    </p>
+    <p slot="ingenieur">
+      Le calcul est simple : 20 quartiers × 2 sexes × 70 années × 365 jours font environ un million de
+      combinaisons pour 20 000 personnes. La plupart des combinaisons ne contiennent donc qu'une
+      personne. Pour protéger un fichier, on regroupe les valeurs (l'année plutôt que la date, la
+      région plutôt que le quartier) ou on ajoute du bruit, au prix d'un peu de précision.
+    </p>
+    <div slot="histoire">
+      <p>
+        La chercheuse Latanya Sweeney montre, à partir du recensement américain de 1990, que 87 %
+        des habitant·es des États-Unis (216 millions sur 248) étaient probablement uniques avec seulement
+        leur code postal, leur sexe et leur date de naissance. En 2013, Yves-Alexandre de Montjoye et ses
+        collègues étudient quinze mois de données de mobilité de 1,5 million de personnes : quatre
+        points de localisation (un lieu, une heure) suffisent à reconnaître 95 % d'entre elles.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les données sont anonymes : il n'y a pas de nom. »</strong> Sans nom, mais avec un code
+      postal, une date de naissance ou quelques lieux, la plupart des gens restent reconnaissables.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Rien que des métadonnées" ancre="metadonnees">
+    <Metadonnees slot="animation" />
+    <p slot="decouverte">
+      Voici le journal d'appels d'une personne : des numéros, des heures, des durées, rien d'autre.
+      Que peut-on en déduire ?
+    </p>
+    <p slot="curieux">
+      Les métadonnées sont les données qui décrivent une communication sans en donner le contenu : qui
+      appelle qui, quand, combien de temps, d'où. On dit souvent qu'elles sont moins sensibles que le
+      contenu. Mais à qui l'on parle et quand en dit souvent beaucoup : un médecin, une association,
+      un avocat, un appel à trois heures du matin.
+    </p>
+    <p slot="ingenieur">
+      Les métadonnées sont plus faciles à collecter, à stocker et à analyser que des conversations :
+      elles sont structurées, peu volumineuses et se recoupent automatiquement. Un algorithme peut les
+      croiser par millions, ce qu'aucun humain ne ferait avec des enregistrements.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2016, Jonathan Mayer, Patrick Mutchler et John C. Mitchell analysent
+        les métadonnées de 823 volontaires : plus de 250 000 appels et 1,2 million de SMS. Chez un
+        participant, des appels à un service de cardiologie, à une pharmacie et à la ligne d'assistance
+        d'un moniteur de rythme cardiaque laissent deviner une arythmie, ce que les chercheurs ont pu
+        confirmer. Leur conclusion : distinguer en droit le contenu et les métadonnées protège mal la
+        vie privée.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« On ne collecte que des métadonnées, pas le contenu : c'est sans danger. »</strong> Ce
+      sont justement les métadonnées qui permettent de reconstituer les relations, les habitudes et
+      parfois la santé d'une personne.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce que protège la vie privée</h2>
+    <table>
+      <thead><tr><th scope="col">Idée reçue</th><th scope="col">Ce que montre le module</th></tr></thead>
+      <tbody>
+        <tr><td>On ne surveille que les suspects.</td><td>La possibilité d'être vu·e change le comportement de tout le monde (le panoptique).</td></tr>
+        <tr><td>Je n'ai rien à cacher.</td><td>La vie privée protège une liberté, pas une faute ; ce qui est « à cacher » change.</td></tr>
+        <tr><td>Sans nom, c'est anonyme.</td><td>Trois informations banales suffisent souvent à te désigner.</td></tr>
+        <tr><td>Les métadonnées ne disent rien.</td><td>À qui l'on parle et quand peut révéler la santé, les relations, les opinions.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Sur la vidéosurveillance algorithmique, voir <a href="/modules/ia-voir/">Les IA qui voient</a>. La
+      suite de la section <a href="/penser-la-technique/">Penser la technique</a> donne la parole à des
+      pensées de la technique venues d'ailleurs.
+    </p>
+
+  <Sources
+    verifie="2026-11-02"
+    sources={[
+      { auteur: 'Stanford Encyclopedia of Philosophy', titre: 'Michel Foucault (Discipline and Punish, le Panopticon)', url: 'https://plato.stanford.edu/entries/foucault/', type: 'recherche', langue: 'en' },
+      { auteur: 'D. J. Solove', titre: '“I’ve Got Nothing to Hide” and Other Misunderstandings of Privacy (San Diego Law Review 44, 2007), notice', url: 'https://scholarship.law.gwu.edu/faculty_publications/158/', type: 'recherche', annee: 2007, langue: 'en' },
+      { auteur: 'L. Sweeney (Data Privacy Lab)', titre: 'Simple Demographics Often Identify People Uniquely', url: 'https://dataprivacylab.org/projects/identifiability/', type: 'recherche', langue: 'en' },
+      { auteur: 'Y.-A. de Montjoye et al.', titre: 'Unique in the Crowd: The privacy bounds of human mobility (Scientific Reports 3, 2013)', url: 'https://www.nature.com/articles/srep01376', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'J. Mayer, P. Mutchler, J. C. Mitchell', titre: 'Evaluating the privacy properties of telephone metadata (PNAS 113, 2016)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4878528/', type: 'recherche', annee: 2016, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p { max-width: var(--mesure); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+</style>
