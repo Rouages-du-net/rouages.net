@@ -456,3 +456,81 @@ sensibles sans le contenu des conversations (Mayer et al., 2016).
   inventée.
 - Ne pas donner de date pour le Panopticon de Bentham (non lue).
 - Aucune donnée réelle dans les animations ; aucun conseil de pistage.
+
+## Thème 6 — Des regards venus d'ailleurs (`/modules/regards-ailleurs/`)
+
+Recherche du 2 novembre 2026.
+
+### Formulation sûre
+
+Les débats sur l'éthique de l'IA viennent surtout d'Europe et d'Amérique du
+Nord. D'autres traditions proposent d'autres questions. Sabelo Mhlambi s'appuie
+sur l'ubuntu, philosophie relationnelle d'Afrique subsaharienne, pour juger les
+décisions automatisées. Le philosophe Yuk Hui parle de « cosmotechniques » :
+chaque culture unit à sa façon le cosmos, la morale et la technique. Des
+communautés autochtones défendent la gouvernance de leurs données (principes
+CARE, 2020) et des façons de concevoir l'IA (Indigenous Protocol and AI,
+2020) ; en Aotearoa-Nouvelle-Zélande, le média māori Te Hiku Media protège ses
+enregistrements par une licence de « kaitiakitanga » (tutelle). Ruha Benjamin
+et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
+
+### Faits clés
+
+- **Mhlambi** [30] : Berkman Klein Center (8 juillet 2020) : dans un document
+  de travail du Carr Center, S. Mhlambi « uses the relational Sub-Saharan
+  African philosophy of Ubuntu to show that the harms caused by artificial
+  intelligence, with a particular focus on automated decision making systems,
+  are in essence violations of ubuntu's relational personhood and relational
+  model of the universe ». Texte complet **non lu** (PDF inaccessible).
+- **Yuk Hui** [31] : « Cosmotechnics as Cosmopolitics », *e-flux journal* 86,
+  novembre 2017 : « a preliminary definition of cosmotechnics: it is the
+  unification of the cosmos and the moral through technical activities […].
+  There hasn't been one or two technics, but many cosmotechnics. » Fin d'une
+  mondialisation « largely one-sided ».
+- **CARE** [32] : S. R. Carroll et al., « The CARE Principles for Indigenous
+  Data Governance », *Data Science Journal* 19, 43, 2020 (CC BY) : Collective
+  Benefit, Authority to Control, Responsibility, Ethics ; élaborés par
+  l'International Indigenous Data Sovereignty Interest Group (Research Data
+  Alliance) ; tension entre protéger les droits des peuples autochtones sur
+  leurs données et soutenir l'ouverture des données ; complètent les principes
+  FAIR (Findable, Accessible, Interoperable, Reusable) ; s'appuient notamment
+  sur Te Mana Raraunga (réseau māori) ; « Be FAIR and CARE ».
+- **Indigenous Protocol and AI** [33] : « a starting place for those who want
+  to design and create AI from an ethical position that centers Indigenous
+  concerns » ; discussions sur 20 mois, 20 fuseaux horaires, deux ateliers,
+  personnes autochtones d'Aotearoa, d'Australie, d'Amérique du Nord et du
+  Pacifique ; version en ʻōlelo Hawaiʻi et en anglais ; citation d'Olana Kaipo
+  Ai : « Aloha is the intelligence with which we meet life. »
+- **Te Hiku Media** [34] : page du 6 mai 2022 (mise à jour le 11 octobre
+  2023) : licence Kaitiakitanga ; priorité aux communautés autochtones ;
+  travail de revitalisation du te reo Māori ; renvoie aux principes de Te Mana
+  Raraunga et à un texte critiquant Whisper (OpenAI) comme « another case study
+  in Colonisation ».
+- **Ruha Benjamin** [35] : *Race After Technology: Abolitionist Tools for the
+  New Jim Code*, Polity, 2019 ; prix Oliver Cromwell Cox 2020 (American
+  Sociological Association).
+- **Kate Crawford** [36] : *Atlas of AI*, Yale University Press, 2021 (poche
+  2022) : l'IA comme « technology of extraction: from the minerals drawn from
+  the earth to the labor pulled from low-wage information workers to the data
+  taken from every action and expression ».
+
+### Sources (thème 6)
+
+30. Berkman Klein Center (8 juill. 2020). « From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance ». https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial — P (présentation), en, **lu** ; document de travail lui-même **non lu**.
+31. Hui, Y. (nov. 2017). « Cosmotechnics as Cosmopolitics ». *e-flux journal* 86. https://www.e-flux.com/journal/86/161887/cosmotechnics-as-cosmopolitics/ — P, en, **lu partiellement**.
+32. Carroll, S. R. et al. (2020). *Data Science Journal* 19 : 43. https://datascience.codata.org/articles/10.5334/dsj-2020-043 — R, en, **lu partiellement** (résumé, introduction).
+33. Indigenous Protocol and AI Working Group (2020), dir. J. E. Lewis. Page : https://www.indigenous-ai.net/position-paper/ — P, en, **lu partiellement** (présentation).
+34. Te Hiku Media (2022, mise à jour 2023). « Data Sovereignty and the Kaitiakitanga License ». https://tehiku.nz/te-hiku-tech/te-hiku-dev-korero/25141/data-sovereignty-and-the-kaitiakitanga-license — P, en, **lu**.
+35. Benjamin, R. *Race After Technology* (2019). Page de l'autrice : https://www.ruhabenjamin.com/race-after-technology — P, en, **lu partiellement**.
+36. Crawford, K. *Atlas of AI* (2021). Page de l'éditeur : https://yalebooks.yale.edu/book/9780300264630/atlas-of-ai/ — P, en, **lu partiellement**.
+
+### Points d'attention (thème 6)
+
+- Ne pas réduire l'ubuntu, les cosmotechniques ou les savoirs autochtones à des
+  slogans : présenter ce que disent les auteur·rices, avec leurs mots, et
+  renvoyer à leurs textes.
+- Ne pas parler « au nom » des peuples autochtones ; citer leurs propres
+  documents (CARE, IP AI, Te Hiku).
+- Le détail des sous-principes CARE n'a pas été lu : rester sur les quatre
+  intitulés et la tension avec l'ouverture des données.
+- L'animation des données d'une langue est inventée et ne décrit pas Te Hiku.
