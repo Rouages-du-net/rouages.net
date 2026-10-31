@@ -1,0 +1,97 @@
+---
+// Animation « Le voile d'ignorance » (module « Les choix moraux ») : choisir
+// la règle de répartition qu'appliquera un algorithme, sans savoir quelle
+// place on occupera ; puis lever le voile, au hasard, cent fois.
+// Règles et parts inventées.
+---
+<div class="anim voile" data-voile>
+  <div class="anim-repli">
+    <p>
+      Un algorithme va répartir des ressources entre cinq places, selon une règle que tu choisis
+      sans savoir quelle place sera la tienne. La règle « le plus au total » donne 55 parts en tout,
+      mais seulement 2 à la place la moins bien lotie. La règle « le mieux pour la moins bien lotie »
+      donne 47 parts en tout, et au moins 8 à chacune. L'égalité stricte donne 7 à chacune. Derrière
+      le voile, selon le philosophe John Rawls, on choisirait la deuxième : elle protège le mieux
+      celle ou celui qui aura la pire place.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>La règle que l'algorithme appliquera</legend>
+        <label><input type="radio" name="regle-voile" value="total" checked /> Le plus au total</label>
+        <label><input type="radio" name="regle-voile" value="maximin" /> Le mieux possible pour la place la moins bien lotie</label>
+        <label><input type="radio" name="regle-voile" value="egalite" /> La même part pour toutes et tous</label>
+      </fieldset>
+      <ol class="places" data-places aria-label="Parts des cinq places"></ol>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="lever">Lever le voile (100 fois)</button>
+      </div>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Parts inventées. Chaque levée du voile te place au hasard sur l'une des cinq places.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { REGLES, somme, tirages } from '../../../lib/moral';
+  import { hasard } from '../../../lib/minilm';
+
+  document.querySelectorAll<HTMLElement>('[data-voile]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
+    const regle = () => REGLES.find((r) => r.id === (racine.querySelector<HTMLInputElement>('input[name="regle-voile"]:checked')?.value ?? 'total'))!;
+    let graine = 1;
+
+    function dessiner() {
+      const r = regle();
+      racine.querySelector('[data-places]')!.replaceChildren(
+        ...r.parts.map((p, i) => {
+          const li = document.createElement('li');
+          const b = document.createElement('span');
+          b.style.height = `${(p / 25) * 100}%`;
+          const t = document.createElement('span');
+          t.className = 'nombre';
+          t.textContent = String(p);
+          li.append(b, t);
+          li.title = `Place ${i + 1} : ${p} parts`;
+          return li;
+        }),
+      );
+      mesure.textContent = `Total : ${somme(r.parts)} parts. Place la moins bien lotie : ${Math.min(...r.parts)}.`;
+      legende.textContent = 'Tu ne sais pas encore quelle place sera la tienne. Choisis une règle, puis lève le voile.';
+    }
+
+    function lever() {
+      const r = regle();
+      const { moyenne, pire, places } = tirages(hasard(graine++), r, 100);
+      const mal = places.filter((p) => p <= 5).length;
+      mesure.textContent = `Sur 100 levées du voile : en moyenne ${moyenne.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} parts ; au pire ${pire} ; ${mal} fois 5 parts ou moins.`;
+      legende.textContent =
+        r.id === 'total'
+          ? 'En moyenne, tu as le plus. Mais une fois sur cinq environ, tu te retrouves avec 2 parts. Accepterais-tu ce risque pour ta vie entière ?'
+          : r.id === 'maximin'
+            ? 'Un peu moins en moyenne, mais jamais moins de 8 : c’est le choix que Rawls pense raisonnable derrière le voile. Les inégalités restent, parce qu’elles profitent aussi à la place la moins bien lotie.'
+            : 'Tout le monde a 7, mais tout le monde a moins que la place la moins bien lotie de la règle précédente : l’égalité stricte n’est pas forcément la plus favorable aux plus défavorisé·es.';
+    }
+
+    racine.querySelectorAll('input[name="regle-voile"]').forEach((x) => x.addEventListener('change', dessiner));
+    racine.querySelector('[data-action="lever"]')!.addEventListener('click', lever);
+    dessiner();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; margin: 0 0 0.75rem; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+  .choix legend { padding: 0 0.3rem; font-weight: 700; }
+  .choix input { accent-color: var(--accent); }
+  .places { list-style: none; padding: 0; margin: 0 auto; display: flex; gap: 6px; height: 8rem; max-width: 20rem; align-items: flex-end; }
+  .places :global(li) { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; }
+  .places :global(li span:first-child) { display: block; width: 100%; background: var(--accent); border-radius: 0.25rem 0.25rem 0 0; }
+  .places :global(.nombre) { font: 700 0.85rem var(--police-mono); margin-top: 0.2rem; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.5rem 0 0; }
+</style>

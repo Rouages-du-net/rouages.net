@@ -1,0 +1,108 @@
+---
+// Animation « Le dilemme du tramway » (module « Les choix moraux ») : trois
+// variantes ; on répond, puis on compare à la part de personnes qui
+// acceptent d'agir dans 42 pays (Awad et al., 2020).
+---
+<div class="anim tramway" data-tramway>
+  <div class="anim-repli">
+    <p>
+      Un tramway fou fonce vers cinq personnes. Dans la première version, tu peux actionner un
+      aiguillage : il part sur une autre voie et tue une personne. Dans la deuxième, la voie forme
+      une boucle : le corps de la personne arrête le tramway. Dans la troisième, tu peux pousser
+      quelqu'un d'une passerelle pour l'arrêter. Le calcul est le même (une vie contre cinq), mais
+      dans 42 pays, 81 % des gens en moyenne acceptent l'aiguillage, 72 % la boucle, et seulement
+      51 % la passerelle.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="variantes" data-variantes></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Chiffres : moyenne par pays de 70 000 réponses dans 42 pays et 10 langues (Awad et al., 2020). Tes réponses restent dans ton navigateur.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { VARIANTES } from '../../../lib/moral';
+
+  const TEXTES: Record<string, [string, string]> = {
+    aiguillage: ['L’aiguillage', 'Le tramway fonce vers cinq personnes. Tu peux actionner un aiguillage : il partira sur une autre voie, où il tuera une personne. Actionnes-tu l’aiguillage ?'],
+    boucle: ['La boucle', 'Même situation, mais la voie de dérivation revient sur la voie principale : c’est le corps de la personne qui arrêtera le tramway avant les cinq. Actionnes-tu l’aiguillage ?'],
+    passerelle: ['La passerelle', 'Tu es sur une passerelle au-dessus de la voie. Pousser la personne à côté de toi arrêterait le tramway avant les cinq ; elle mourrait. La pousses-tu ?'],
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-tramway]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const reponses: Record<string, boolean> = {};
+
+    racine.querySelector('[data-variantes]')!.replaceChildren(
+      ...VARIANTES.map((v) => {
+        const li = document.createElement('li');
+        const [titre, texte] = TEXTES[v.id];
+        const h = document.createElement('p');
+        h.className = 'titre';
+        h.textContent = titre;
+        const p = document.createElement('p');
+        p.textContent = texte;
+        const choix = document.createElement('div');
+        choix.className = 'anim-commandes';
+        const resultat = document.createElement('div');
+        resultat.className = 'resultat';
+        resultat.hidden = true;
+        for (const [label, oui] of [['Oui', true], ['Non', false]] as const) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = label;
+          b.addEventListener('click', () => {
+            reponses[v.id] = oui;
+            choix.querySelectorAll('button').forEach((x) => x.classList.toggle('principal', x === b));
+            resultat.hidden = false;
+            resultat.replaceChildren(
+              (() => {
+                const j = document.createElement('div');
+                j.className = 'jauge';
+                j.setAttribute('aria-hidden', 'true');
+                const s = document.createElement('span');
+                s.style.width = `${v.accord * 100}%`;
+                j.append(s);
+                return j;
+              })(),
+              (() => {
+                const t = document.createElement('p');
+                t.textContent = `Dans 42 pays, ${Math.round(v.accord * 100)} % des gens en moyenne répondent « oui ». Toi : « ${oui ? 'oui' : 'non'} ».`;
+                return t;
+              })(),
+            );
+            const n = Object.keys(reponses).length;
+            legende.textContent =
+              n < 3
+                ? 'Réponds aux trois versions : le calcul est toujours le même, une vie contre cinq.'
+                : reponses.aiguillage && !reponses.passerelle
+                  ? 'Comme la plupart des gens, tu acceptes l’aiguillage mais pas la passerelle. Pourquoi, si le nombre de vies est le même ? Être la cause directe, utiliser une personne comme un moyen : c’est ce que les philosophes discutent depuis Philippa Foot.'
+                  : reponses.aiguillage && reponses.passerelle
+                    ? 'Tu choisis toujours de sauver le plus grand nombre : une position cohérente, que partage à peu près la moitié des gens pour la passerelle.'
+                    : 'Tu refuses d’agir même pour l’aiguillage : pour toi, provoquer une mort n’est pas la même chose que la laisser arriver. Beaucoup de philosophes défendent cette différence.';
+          });
+          choix.append(b);
+        }
+        li.append(h, p, choix, resultat);
+        return li;
+      }),
+    );
+  });
+</script>
+
+<style>
+  .variantes { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.75rem; }
+  .variantes :global(li) { border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.5rem 0.75rem; }
+  .variantes :global(.titre) { font-weight: 700; margin: 0 0 0.25rem; }
+  .variantes :global(p) { margin: 0 0 0.25rem; font-size: 0.95rem; }
+  .variantes :global(.anim-commandes) { margin-top: 0.25rem; }
+  .variantes :global(.jauge) { height: 0.7rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
+  .variantes :global(.jauge span) { display: block; height: 100%; background: var(--accent); }
+  .variantes :global(.resultat p) { font-family: var(--police-mono); font-size: 0.85rem; margin-top: 0.25rem; }
+</style>
