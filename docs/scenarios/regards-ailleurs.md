@@ -31,8 +31,8 @@ autochtones et des chercheuses (Ruha Benjamin, Kate Crawford).
 - Le barème de `src/lib/ailleurs.ts` est **inventé** pour faire sentir la
   tension entre FAIR et CARE ; il ne vient d'aucune grille officielle, et la
   page le dit. Les principes, eux, sont résumés d'après Carroll et al. (2020).
-- Le texte complet de Mhlambi n'a pas été lu (PDF inaccessible) : la page ne
-  cite que le résumé publié par le Berkman Klein Center.
+- Le document de travail de Mhlambi a été lu (PDF transmis par le
+  mainteneur) : ses cinq critiques et ses propositions sont résumées.
 - L'essai de Yuk Hui n'a été lu qu'en partie : pas d'exemple détaillé tiré de
   ses travaux sur la Chine.
 - L'ubuntu est présenté comme une famille de pensées, sans prétendre en

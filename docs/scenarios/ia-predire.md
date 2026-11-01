@@ -30,9 +30,10 @@ prédictive, où la prédiction fabrique ses propres données.
 - La boucle de police reprend le mécanisme décrit par Ensign et al. (2018) en
   version « le quartier le plus enregistré gagne tout » ; ce n'est pas le
   fonctionnement d'un logiciel précis.
-- L'article de Lum et Isaac n'a pas été lu (accès refusé) : la page s'appuie
-  sur la FAQ et la communication de K. Lum.
-- Le rôle de Klara von Neumann dans les prévisions de 1950 n'a pas pu être
-  vérifié dans l'article : non publié.
+- Les articles de Lum et Isaac, de Mohler et al. et de Messerli ont été lus
+  (PDF transmis par le mainteneur) : chiffres d'Oakland, déclaration des liens
+  des auteurs de l'essai de 2015 avec PredPol, corrélation chocolat-Nobel.
+- Klára von Neumann : son rôle (enseigner la programmation de l'ENIAC,
+  vérifier le programme final) vient des remerciements de l'article de 1950.
 - L'étape 3 renvoie à l'animation des contrôles du module « Les IA qui
   décident pour nous », qui montre une boucle voisine.

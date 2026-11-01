@@ -37,9 +37,19 @@ confirmer elle-même.
 **ENIAC (1950)** [2] [3] [4]
 - J. G. Charney, R. Fjörtoft, J. von Neumann, « Numerical Integration of the
   Barotropic Vorticity Equation », *Tellus* 2(4), 1950, p. 237-254 (CC BY ;
-  **résumé seulement**, site de la revue indisponible) : « The results of a
-  series of four 24-hour forecasts computed from actual data at the 500 mb
-  level are presented ».
+  **lu**, PDF transmis par le mainteneur) : « The results of a series of four
+  24-hour forecasts computed from actual data at the 500 mb level are
+  presented » ; ENIAC des Ballistic Research Laboratories d'Aberdeen
+  (Maryland), demande faite par le U. S. Weather Bureau (p. 238) ; « the
+  computation time for a 24-hour forecast was about 24 hours, that is, we were
+  just able to keep pace with the weather » ; « about 100,000 standard I.B.M.
+  punch cards were produced and 1,000,000 multiplications and divisions were
+  performed » ; « Richardson's dream (1922) of advancing the computation faster
+  than the weather may soon be realized » ; « as little as 12 hours » avec une
+  routine bien rodée (p. 245) ; remerciements (p. 254) : « The writers wish to
+  thank Mrs K. von Neumann for instruction in the technique of coding for the
+  Eniac and for checking the final code », puis G. Platzman, J. Freeman,
+  J. Smagorinsky et le personnel du Computing Laboratory des BRL.
 - ENIAC et durée du calcul : C. Yang (arXiv, 2025) : 24 heures de calcul pour
   une prévision à 24 heures, « 33 days and nights » de travail sur l'ENIAC ;
   Guinness World Records cite l'article : « with a thorough routinization of
@@ -47,9 +57,10 @@ confirmer elle-même.
   as 12 hours ». (Deux sources secondaires concordantes ; la fiche Guinness
   qualifie l'ENIAC de « first digital programmable computer » : affirmation
   non reprise.)
-- Rôle de Klara von Neumann (remerciée dans l'article pour l'enseignement du
-  codage sur l'ENIAC et la vérification du code, selon un résumé de recherche) :
-  **non vérifié** dans le texte de l'article ; non publié.
+- « Mrs K. von Neumann » est identifiée comme Klára (Klari) Dán von Neumann,
+  programmeuse de l'ENIAC, par G. Dyson, *Turing's Cathedral* (2012), p. 104,
+  cité par K. Coyle (blog, 2012) : identification de seconde main, cohérente
+  avec l'article.
 
 **GraphCast (2023)** [5]
 - R. Lam et al., « Learning skillful medium-range global weather
@@ -76,10 +87,17 @@ confirmer elle-même.
 
 **Corrélation : chocolat et prix Nobel** [8]
 - F. H. Messerli, « Chocolate Consumption, Cognitive Function, and Nobel
-  Laureates », *NEJM* 367(16), 2012, p. 1562-1564 (**résumé seulement**,
-  OpenAlex) : « Could there be a correlation between a country's level of
-  chocolate consumption and its total number of Nobel laureates per capita? »
-  Le coefficient trouvé n'est pas repris (article non lu).
+  Laureates », *NEJM* 367(16), 18 oct. 2012, p. 1562-1564 (**lu**, PDF transmis
+  par le mainteneur) : « a close, significant linear correlation (r = 0.791,
+  P<0.0001) between chocolate consumption per capita and the number of Nobel
+  laureates per 10 million persons in a total of 23 countries » ; Suisse en tête
+  des deux ; « about 0.4 kg of chocolate per capita per year to increase the
+  number of Nobel laureates in a given country by 1 » ; « a correlation between
+  X and Y does not prove causation » ; trois hypothèses (chocolat → Nobel,
+  causalité inverse, cause commune : « Differences in socioeconomic status […]
+  fall short of fully explaining the close correlation ») ; liste des lauréats
+  tirée de Wikipédia. Ton humoristique manifeste, mais non qualifié comme tel
+  dans la page faute de source le disant.
 
 **Essais de police prédictive (2015)** [9]
 - G. O. Mohler, M. B. Short, S. Malinowski, M. Johnson, G. E. Tita,
@@ -90,12 +108,26 @@ confirmer elle-même.
   much crime compared to a dedicated crime analyst » ; « Police patrols using
   ETAS forecasts led to an average 7.4% reduction in crime volume as a function
   of patrol time, whereas patrols based upon analyst predictions showed no
-  significant effect ».
+  significant effect ». Article **lu** (copie eScholarship transmise par le
+  mainteneur). Remerciements : « G.M. and P.J.B. are co-founders of PredPol, a
+  company offering predictive policing services to law enforcement agencies.
+  G.M., P.J.B., M.B.S., A.L.B., and G.E.T. hold stock in PredPol. »
 
 **Lum et Isaac (2016)** [10] [11] [12]
 - K. Lum, W. Isaac, « To Predict and Serve? », *Significance* 13(5), 2016,
-  p. 14-19 (article **non lu**, accès refusé ; chapeau : « what happens when
-  these systems are trained using biased data? »).
+  p. 14-19 (**lu**, PDF transmis par le mainteneur) : arrestations pour drogue
+  de 2010 (police d'Oakland) comparées à une population synthétique et à
+  l'enquête NSDUH 2011 ; West Oakland et International Boulevard, « two areas
+  with largely non-white and low-income populations », « about 200 times more
+  drug-related arrests than areas outside of these clusters » ; consommation
+  estimée « much more evenly distributed across the city » ; algorithme PredPol
+  publié (réf. 9 = Mohler et al. 2015) appliqué à 2011 : « black people would be
+  targeted by predictive policing at roughly twice the rate of whites », autres
+  groupes 1,5 fois, alors que « drug use is roughly equivalent across racial
+  classifications » ; simulation : +20 % de délits observés dans les zones
+  ciblées, boucle de rétroaction ; « it is predicting future policing, not
+  future crime » ; affiliations : HRDAG (K. Lum), Michigan State University
+  (W. Isaac).
 - FAQ de HRDAG (K. Lum, 4 nov. 2016) : données 2010-2011 de la police
   d'Oakland, population synthétique (recensement) et enquête NSDUH ; « if police
   find additional crime in the targeted locations » l'algorithme continue de
@@ -138,15 +170,15 @@ confirmer elle-même.
 ## Sources
 
 1. Richardson, L. F. (1922). *Weather Prediction by Numerical Process*. https://archive.org/details/weatherpredictio00richrich — P, en, **lu partiellement** (ch. 11, essai du ch. 9).
-2. Charney, J. G., Fjörtoft, R., von Neumann, J. (1950). *Tellus* 2(4). https://doi.org/10.3402/tellusa.v2i4.8607 — P, en, **résumé seulement**.
+2. Charney, J. G., Fjörtoft, R., von Neumann, J. (1950). *Tellus* 2(4). https://doi.org/10.3402/tellusa.v2i4.8607 — P, en, **lu**.
 3. Yang, C. (2025). « The First Compute Arms Race ». https://arxiv.org/abs/2506.21816 — R, en, **lu partiellement**.
 4. Guinness World Records. « First computer-assisted weather forecast ». https://www.guinnessworldrecords.com/world-records/775520-first-computer-assisted-weather-forecast — site, en, **lu**.
 5. Lam, R. et al. (2023). *Science* 382. https://doi.org/10.1126/science.adi2336 — R, en, **résumé seulement**.
 6. ECMWF (25 févr. 2025). https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ai-forecasts-become-operational — P, en, **lu**.
 7. Connaissance des énergies (2019). https://www.connaissancedesenergies.org/reseau-electrique-quelle-securite-dapprovisionnement-cet-hiver-et-dici-2025-241104 — Pr, fr, **lu partiellement**.
-8. Messerli, F. H. (2012). *NEJM* 367. https://doi.org/10.1056/NEJMon1211064 — R, en, **résumé seulement**.
-9. Mohler, G. O. et al. (2015). *JASA* 110. https://doi.org/10.1080/01621459.2015.1077710 ; copie libre https://escholarship.org/uc/item/1br4975j — R, en, **résumé seulement**.
-10. Lum, K., Isaac, W. (2016). *Significance* 13(5). https://doi.org/10.1111/j.1740-9713.2016.00960.x — R, en, **non lu** (chapeau seulement).
+8. Messerli, F. H. (2012). *NEJM* 367. https://doi.org/10.1056/NEJMon1211064 — R, en, **lu**.
+9. Mohler, G. O. et al. (2015). *JASA* 110. https://doi.org/10.1080/01621459.2015.1077710 ; copie libre https://escholarship.org/uc/item/1br4975j — R, en, **lu** (résumé, résultats, remerciements).
+10. Lum, K., Isaac, W. (2016). *Significance* 13(5). https://doi.org/10.1111/j.1740-9713.2016.00960.x — R, en, **lu**.
 11. Lum, K. (2016). « FAQs on Predictive Policing and Bias ». HRDAG. https://hrdag.org/2016/11/04/faqs-predpol/ — P, en, **lu**.
 12. Lum, K. (2017). « Societal Consequences of Biased Data in Predictive Policing ». AAAS. https://aaas.confex.com/aaas/2017/webprogram/Paper18706.html — P, en, **lu** (résumé de communication).
 13. Ensign, D. et al. (2018). PMLR 81. https://proceedings.mlr.press/v81/ensign18a.html — R, en, **résumé seulement**.
@@ -159,10 +191,10 @@ confirmer elle-même.
   favorables) et les critiques (Lum et Isaac, Ensign et al., The Markup), avec
   la réponse de l'entreprise. Ne pas dire que l'étude de Lum et Isaac porte sur
   un déploiement réel : c'est une application rétrospective et une simulation.
-- Ne pas affirmer de lien entre des auteurs de l'essai de 2015 et l'entreprise
-  PredPol (non vérifié).
+- Lien entre les auteurs de l'essai de 2015 et PredPol : **vérifié** dans
+  l'article lui-même (cofondateurs, actionnaires) ; le mentionner.
 - Règlement IA : l'interdiction vise l'évaluation de personnes ; ne pas dire
   qu'elle interdit la police prédictive en général. Sujet évolutif.
 - Chiffres d'électricité : l'animation est inventée ; seul l'ordre de grandeur
   de 2,4 GW par degré vient de RTE.
-- Klara von Neumann : à ajouter si le texte de l'article de 1950 peut être lu.
+- Klára von Neumann : mentionnée d'après les remerciements de l'article de 1950 (vérifié).

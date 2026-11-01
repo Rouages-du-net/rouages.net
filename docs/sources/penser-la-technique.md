@@ -335,17 +335,34 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
   de cas par an à 15 000 dans les années 1950-1960.
 
 **Winner et les ponts de Moses** [21]
-- L. Winner, « Do Artifacts Have Politics? », *Daedalus* 109(1), 1980 : texte
-  **non lu** (copies inaccessibles) ; connu par les résumés : les ponts bas des
-  parkways de Long Island, conçus sous Robert Moses, auraient empêché le passage
-  des bus, et donc des populations pauvres et noires, vers les plages.
+- L. Winner, « Do Artifacts Have Politics? », *Daedalus* 109(1), 1980,
+  p. 121-136 (**lu**, copie JSTOR transmise par le mainteneur) : « Many of the
+  overpasses are extraordinarily low, having as little as nine feet of clearance
+  at the curb » ; « the two hundred or so low-hanging overpasses on Long Island
+  were deliberately designed to achieve a particular social effect » ; « According
+  to evidence provided by Robert A. Caro in his biography of Moses, the reasons
+  reflect Moses's social-class bias and racial prejudice » ; « Poor people and
+  blacks, who normally used public transit, were kept off the roads because the
+  twelve-foot tall buses could not get through the overpasses » ; Jones Beach ;
+  « Moses made doubly sure of this result by vetoing a proposed extension of the
+  Long Island Railroad to Jones Beach » (p. 123-124). Conversion : 9 pieds ≈
+  2,7 m, 12 pieds ≈ 3,7 m.
 - B. Joerges, « Do Politics Have Artefacts? », *Social Studies of Science*
-  29(3), 1999, p. 411-431, conteste ce récit (résumé lu sur EconBiz) : une
-  « parable » transmise depuis longtemps ; « The story turns out to be
-  counterfactual » ; S. Woolgar et G. Cooper, « Do
-  artefacts have ambivalence? Moses' bridges, Winner's bridges and other urban
-  legends in STS », même numéro, p. 433-449. (**Métadonnées et résumés de
-  seconde main seulement.**)
+  29(3), 1999, p. 411-431 (**lu**, PDF transmis par le mainteneur, p. 411-421) :
+  résumé : « The story turns out to be counterfactual » ; Winner cité p. 412 :
+  « some two hundred or so low-hanging overpasses on Long Island […] built his
+  overpasses according to specifications that would discourage the presence of
+  buses on his parkways » ; déformations successives du récit (« Chinese
+  Whispers », p. 414) ; « How It Really Was » (p. 417-418) : chemin de fer
+  Manhattan–Long Island depuis 1877, réseau dense de routes ordinaires, accès
+  aux plages « via many routes » ; Moses a bloqué une branche ferroviaire vers
+  Jones Beach (interprétée par Caro comme un biais de classe) ; Moses
+  « without doubt […] what one might call a 'structural racist' », politiques
+  laissant intactes les relations de race et de classe (p. 418) ; « In the USA,
+  trucks, buses and other commercial vehicles were prohibited on all
+  parkways » ; « Moses could hardly have let buses on his parkways, even if he
+  had wanted differently » (p. 419). S. Woolgar et G. Cooper, « Do artefacts
+  have ambivalence? », même numéro, p. 433-449 : **métadonnées seulement**.
 
 **Lessig (1999-2000)** [22]
 - L. Lessig, « Code Is Law: On Liberty in Cyberspace », *Harvard Magazine*,
@@ -371,7 +388,7 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
 ### Sources (thème 4)
 
 20. Kranzberg, M. (1986). *Technology and Culture* 27(3) : 544-560. Copie PDF : https://www.cs.ucdavis.edu/~koehl/Teaching/ECS188/PDF_files/Kranzberg.pdf — P, en, **lu partiellement**.
-21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. Notice et résumé : https://www.econbiz.de/10010332936 — R, en, **résumé seulement**. Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner (1980) : **non lu**.
+21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. https://doi.org/10.1177/030631299029003004 — R, en, **lu** (p. 411-421). Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner, L. (1980). *Daedalus* 109(1) : 121-136. https://www.jstor.org/stable/20024652 — P, en, **lu** (p. 121-125).
 22. Lessig, L. (janv. 2000). « Code Is Law ». *Harvard Magazine*. https://www.harvardmagazine.com/2000/01/code-is-law-html — P, en, **lu partiellement**.
 23. Barlow, J. P. (1996). https://www.eff.org/cyberspace-independence — P, en, **lu**.
 24. Jevons, W. S. (1866). *The Coal Question*, chap. VII. Econlib : https://www.econlib.org/library/YPDBooks/Jevons/jvnCQ7.html — P, en, **lu partiellement**.
@@ -476,12 +493,27 @@ et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
 
 ### Faits clés
 
-- **Mhlambi** [30] : Berkman Klein Center (8 juillet 2020) : dans un document
-  de travail du Carr Center, S. Mhlambi « uses the relational Sub-Saharan
-  African philosophy of Ubuntu to show that the harms caused by artificial
-  intelligence, with a particular focus on automated decision making systems,
-  are in essence violations of ubuntu's relational personhood and relational
-  model of the universe ». Texte complet **non lu** (PDF inaccessible).
+- **Mhlambi** [30] : S. Mhlambi, « From Rationality to Relationality: Ubuntu as
+  an Ethical and Human Rights Framework for Artificial Intelligence
+  Governance », Carr Center Discussion Paper 2020-009, Harvard Kennedy School,
+  8 juillet 2020 (**lu**, PDF transmis par le mainteneur). Auteur : « Technology
+  and Human Rights Fellow, Carr Center for Human Rights Policy ». Résumé :
+  « The development of artificial intelligence has depended on the traditional
+  Western view of personhood as rationality » ; « The relational Sub-Saharan
+  African philosophy of ubuntu […] » ; les torts des systèmes de décision
+  automatisée « are in essence violations of ubuntu's relational personhood ».
+  Aristote, Descartes, Kant, Lull, Turing (introduction). Ubuntu « a profoundly
+  southern African manifestation » ; usage centré sur la philosophie nguni
+  (section « Ubuntu as Relational Personhood ») ; « Umu-Ntu ngumu-Ntu nga
+  ba-Ntu – A person is a person through other persons ». Cinq critiques :
+  « Exclusion of marginalized communities in the design of ADMS », « Biases in
+  procedure and data », « The failure to recognize the interconnectedness of
+  society », « The commodification of our digital selves », « The
+  centralization of data and resources ». Propositions : participation des plus
+  défavorisé·es ; « Communities should be able to treat their data as
+  intellectual property that can be licensed or revoked from online
+  platforms » ; apprentissage décentralisé, confidentialité différentielle,
+  « pods » de données personnelles.
 - **Yuk Hui** [31] : « Cosmotechnics as Cosmopolitics », *e-flux journal* 86,
   novembre 2017 : « a preliminary definition of cosmotechnics: it is the
   unification of the cosmos and the moral through technical activities […].
@@ -516,7 +548,7 @@ et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
 
 ### Sources (thème 6)
 
-30. Berkman Klein Center (8 juill. 2020). « From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance ». https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial — P (présentation), en, **lu** ; document de travail lui-même **non lu**.
+30. Berkman Klein Center (8 juill. 2020). « From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance ». https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial — P (présentation), en, **lu**. Document de travail : Mhlambi, S. (2020), Carr Center Discussion Paper 2020-009 — P, en, **lu**.
 31. Hui, Y. (nov. 2017). « Cosmotechnics as Cosmopolitics ». *e-flux journal* 86. https://www.e-flux.com/journal/86/161887/cosmotechnics-as-cosmopolitics/ — P, en, **lu partiellement**.
 32. Carroll, S. R. et al. (2020). *Data Science Journal* 19 : 43. https://datascience.codata.org/articles/10.5334/dsj-2020-043 — R, en, **lu partiellement** (résumé, introduction).
 33. Indigenous Protocol and AI Working Group (2020), dir. J. E. Lewis. Page : https://www.indigenous-ai.net/position-paper/ — P, en, **lu partiellement** (présentation).
@@ -554,19 +586,90 @@ qui efface les intentions et les usages.
 ### Faits clés
 
 **Le dilemme de Collingridge (1980)** [37]
-- D. Collingridge, *The Social Control of Technology*, Frances Pinter /
-  St. Martin's Press, 1980 (livre **non lu** : prêt numérique seulement).
-- Phrase citée de façon concordante par deux sources indépendantes : « When
-  change is easy, the need for it cannot be foreseen; when the need for change
-  is apparent, change has become expensive, difficult and time consuming. »
-  (E. Morozov, Edge, 2012) ; l'IZEW de Tübingen cite la même phrase avec la
-  page 11 (« change has become expensive, difficult, and time-consuming »).
-- Pistes de Collingridge résumées par l'IZEW : garder les décisions de
-  développement corrigeables, suivre l'innovation en continu plutôt qu'une fois,
-  reconnaître l'incertitude des savoirs.
+- D. Collingridge, *The Social Control of Technology*, Londres, Frances Pinter,
+  1980 ; New York, St. Martin's Press, 1982 (réimpr. 1982). **Lu** pour la
+  préface, les chapitres 1 (p. 13-22), 3 (p. 47-61), 9 (p. 141 et suiv.) et 11
+  (p. 171-182), d'après des pages scannées transmises le 1ᵉʳ novembre 2026.
+- Préface (p. 11-12, non numérotées ; le chap. 1 commence p. 13) : « This is
+  the *dilemma of control*. When change is easy, the need for it cannot be
+  foreseen; when the need for change is apparent, change has become expensive,
+  difficult and time consuming. » Les efforts pour mieux prévoir « are
+  wasted » ; « Decisions, in other words, ought to be reversible, corrigible,
+  and flexible. » Un expert est « best seen as a committed advocate ».
+  Remerciements au Technology Policy Unit et à son directeur Ernest Braun.
+- Chap. 1 : la British Royal Commission on the Motor Car de 1908 voit le
+  problème le plus grave dans « the dust thrown up from untarred roads »
+  (p. 16) ; la microélectronique et l'emploi (p. 17) ; l'adaptation de la
+  société à la voiture (p. 18-19) ; la révolution verte, citant Pauline
+  Marstrand (1979) (p. 13-15) ; « A pessimist like myself » (p. 19) ; « ways
+  must be found of ensuring that harm is detected as early as possible, and
+  that the technology remains controllable despite its development and
+  diffusion » (p. 20) ; « The essence of controlling technology is not in
+  forecasting its social consequences, but in retaining the ability to change
+  a technology, even when it is fully developed and diffused » (p. 20-21).
+  Bibliographie (p. 21) : D. Collingridge (1979), *The Fallibilist Theory of
+  Value and Its Application to Decision Making*, Ph.D. Thesis, University of
+  Aston.
+- Chap. 3, « Entrenchment », plomb dans l'essence : ajouté au Royaume-Uni
+  depuis 1923, puis partout ; inquiétude limitée aux personnes exposées par
+  leur métier (p. 47) ; environ 70 % des voitures européennes conçues pour du
+  98 RON (75 % au Royaume-Uni), renouvellement d'environ 10 % du parc par an
+  (p. 49-50) ; changement des moteurs faisable en dix ans, « enormously
+  expensive » en cinq, impossible en trois (p. 51) ; au moins cinq ans pour
+  adapter les raffineries (p. 56) ; tableau 3.1 des coûts (estimations des
+  raffineurs, non reprises) ; filtres à plomb financés par l'industrie et
+  mis en avant pour le statu quo (p. 57) ; leçons (a) à (g) (p. 58-59), dont
+  « the status quo has an unfair advantage » et « 'fixes' are strongly
+  favoured » ; « If there were fifty independent ways of travelling, then a
+  disruption of one would mean only minor adjustments to the remaining
+  forty-nine » (p. 54) ; remèdes : augmenter la variété, petits changements
+  matériels (p. 60).
+- Chap. 9, « Keeping Control » (p. 141-151) : « by the buying of flexibility,
+  controllability, corrigibility or insensitivity of performance to error »
+  (p. 141) ; transports : moteurs moins comprimés, transfert progressif vers le
+  train et le bus, diversification des carburants, R & D (p. 142-143) ;
+  concurrence : « each side seeing itself as being forced to adopt the
+  technology whatever its social cost, because the cost of not having it when a
+  rival has it is even higher » ; remèdes : accords de non-concurrence
+  (maîtrise des armements), préparation par la R & D, protection sélective ;
+  exemple de la « Superbomb » d'après York (p. 144-145) ; « what is called for
+  is action which reduces the cost of its error » (p. 145) ; « Flexibility or
+  ease of control varies inversely with lead time and unit size » (p. 146) ;
+  dogmatisme : surveillance « in the minimum of secrecy », personnes de
+  formations variées dont certaines « not closely associated with the
+  technology », citation du Council for Science and Society (*Superstar
+  Technologies*, 1976, p. 27) sur la « critical scrutiny inside and outside the
+  corporate agencies of technical change » (p. 147) ; R & D énergétique britannique et scénarios (Marshall, 1976)
+  (p. 147-158, non repris).
+- Chap. 10, « The Logic of Monitoring » (p. 161-169) : les décisions doivent
+  être « falsifiable by facts » ; un fait ne peut pas réfuter un seul jugement
+  de valeur, seulement une conjonction de jugements (p. 165-166) ; projet
+  Manhattan : décidé pour répondre à une bombe allemande ; le renseignement
+  établit que l'Allemagne n'en a pas, et le projet continue parce qu'on
+  abandonne l'autre jugement (la bombe vaudrait d'être développée même sans
+  menace) (p. 166-167) ; « all important issues over which an evaluative
+  debate ranges are nearly always purely factual » (p. 169).
+- Chap. 11, *EPA v. Ethyl Corporation* (p. 171-181) : propositions de l'EPA du
+  23 février 1972 (37 Federal Register 3882-84) ; Ethyl « faced ruin » ; débat
+  sur des valeurs mené « concerns facts and facts alone » (p. 172) ; règles
+  finales du 6 décembre 1973 ; arrêt de la cour d'appel favorable à Ethyl le
+  28 janvier 1975, nouvel examen en mai 1975 : « the EPA won their case and
+  their final draft regulations were eventually approved and are now in
+  force » (p. 181).
+- Concordance : E. Morozov (Edge, 2012) et l'IZEW de Tübingen citent la même
+  phrase de la préface.
 - E. A. Parson (*UCLA Law Review*, 2016) : « a structural contradiction
-  between the conditions necessary for knowledge and for control » ; le
-  nucléaire civil est l'exemple qui l'illustre le plus pour Collingridge.
+  between the conditions necessary for knowledge and for control ».
+
+**Fin de l'essence plombée** [37 bis]
+- ONU Info, 30 août 2021 : « The world officially said goodbye to leaded
+  petrol in July, when service stations in Algeria stopped offering it » ;
+  plomb ajouté depuis 1922 ; « Most high-income nations had prohibited leaded
+  petrol use by the 1980s, but almost all low and middle-income countries were
+  still using it as late as 2002 » ; campagne du PNUE (Partenariat pour des
+  carburants et véhicules propres) lancée en 2002 ; A. Guterres : plus d'un
+  million de décès prématurés évités par an, 2 450 milliards de dollars
+  d'économies attendues (déclarations, non reprises dans la page).
 
 **Les CFC et la couche d'ozone** [38]
 - Communiqué Nobel de chimie 1995 (Crutzen, Molina, Rowland) : en 1974, Molina
@@ -612,7 +715,7 @@ qui efface les intentions et les usages.
 
 ### Sources (thème 4 bis)
 
-37. Morozov, E. (2012). « The Collingridge Dilemma ». Edge. https://edge.org/response-detail/10898 — Pr, en, **lu**. IZEW, Université de Tübingen. « Das schwierige Timing der Integration ethischer Aspekte ». https://uni-tuebingen.de/de/168594 — R, de, **lu**. Parson, E. A. (2016). *UCLA Law Review*. https://www.uclalawreview.org/social-control-of-technological-risks-the-dilemma-of-knowledge-and-control-in-practice-and-ways-to-surmount-it/ — R, en, **lu partiellement**. Collingridge (1980) : **non lu**.
+37. Morozov, E. (2012). « The Collingridge Dilemma ». Edge. https://edge.org/response-detail/10898 — Pr, en, **lu**. IZEW, Université de Tübingen. « Das schwierige Timing der Integration ethischer Aspekte ». https://uni-tuebingen.de/de/168594 — R, de, **lu**. Parson, E. A. (2016). *UCLA Law Review*. https://www.uclalawreview.org/social-control-of-technological-risks-the-dilemma-of-knowledge-and-control-in-practice-and-ways-to-surmount-it/ — R, en, **lu partiellement**. Collingridge, D. (1980). *The Social Control of Technology*. https://archive.org/details/socialcontroloft0000coll — P, en, **lu partiellement** (préface, chap. 1, 3, 9 [p. 141-158], 10, 11). ONU Info (30 août 2021). https://news.un.org/en/story/2021/08/1098792 — P, en, **lu** [37 bis].
 38. Académie royale des sciences de Suède (1995). Communiqué du prix Nobel de chimie. https://www.nobelprize.org/prizes/chemistry/1995/press-release/ — P, en, **lu**. Fiche de Mario Molina : https://www.nobelprize.org/prizes/chemistry/1995/molina/facts/ — P, en, **lu**.
 39. Kuhns, W. (comp.), succession McLuhan. *A dictionary of Marshall McLuhan's quotations* : https://themmm.marshallmcluhan.com/?p=105942 et https://themmm.marshallmcluhan.com/?p=105661 — P (extraits), en, **lu** ; *Understanding Media* : **non lu**.
 40. Palácio de Azevedo, F. (2018). *Matrizes* 12(3) : 321-329. https://www.redalyc.org/articulo.oa?id=143065736003 — R, pt, **lu partiellement** ; Williams (1974) : **non lu**.
@@ -620,8 +723,11 @@ qui efface les intentions et les usages.
 
 ### Points d'attention (thème 4 bis)
 
-- Ne pas citer Collingridge au-delà de la phrase concordante ; ses remèdes ne
-  sont connus que par le résumé de l'IZEW.
+- Collingridge : les chiffres de coûts du tableau 3.1 sont des estimations des
+  raffineurs ; ne pas les publier sans le dire. Son jugement sur la révolution
+  verte est celui de 1980, non repris.
+- Collingridge ne croit pas à une meilleure prévision ; la « surveillance »
+  qu'il défend vise à détecter tôt les dégâts (p. 20).
 - Les citations de Williams sont traduites depuis la traduction portugaise :
   le dire.
 - Ne pas présenter McLuhan comme un prophète d'internet : rester sur ses
