@@ -609,6 +609,14 @@ qui efface les intentions et les usages.
   Technologies*, 1976, p. 27) sur la « critical scrutiny inside and outside the
   corporate agencies of technical change » (p. 147) ; R & D énergétique britannique et scénarios (Marshall, 1976)
   (p. 147-158, non repris).
+- Chap. 10, « The Logic of Monitoring » (p. 161-169) : les décisions doivent
+  être « falsifiable by facts » ; un fait ne peut pas réfuter un seul jugement
+  de valeur, seulement une conjonction de jugements (p. 165-166) ; projet
+  Manhattan : décidé pour répondre à une bombe allemande ; le renseignement
+  établit que l'Allemagne n'en a pas, et le projet continue parce qu'on
+  abandonne l'autre jugement (la bombe vaudrait d'être développée même sans
+  menace) (p. 166-167) ; « all important issues over which an evaluative
+  debate ranges are nearly always purely factual » (p. 169).
 - Chap. 11, *EPA v. Ethyl Corporation* (p. 171-181) : propositions de l'EPA du
   23 février 1972 (37 Federal Register 3882-84) ; Ethyl « faced ruin » ; débat
   sur des valeurs mené « concerns facts and facts alone » (p. 172) ; règles
@@ -675,7 +683,7 @@ qui efface les intentions et les usages.
 
 ### Sources (thème 4 bis)
 
-37. Morozov, E. (2012). « The Collingridge Dilemma ». Edge. https://edge.org/response-detail/10898 — Pr, en, **lu**. IZEW, Université de Tübingen. « Das schwierige Timing der Integration ethischer Aspekte ». https://uni-tuebingen.de/de/168594 — R, de, **lu**. Parson, E. A. (2016). *UCLA Law Review*. https://www.uclalawreview.org/social-control-of-technological-risks-the-dilemma-of-knowledge-and-control-in-practice-and-ways-to-surmount-it/ — R, en, **lu partiellement**. Collingridge, D. (1980). *The Social Control of Technology*. https://archive.org/details/socialcontroloft0000coll — P, en, **lu partiellement** (préface, chap. 1, 3, 9 [p. 141-151], 11). ONU Info (30 août 2021). https://news.un.org/en/story/2021/08/1098792 — P, en, **lu** [37 bis].
+37. Morozov, E. (2012). « The Collingridge Dilemma ». Edge. https://edge.org/response-detail/10898 — Pr, en, **lu**. IZEW, Université de Tübingen. « Das schwierige Timing der Integration ethischer Aspekte ». https://uni-tuebingen.de/de/168594 — R, de, **lu**. Parson, E. A. (2016). *UCLA Law Review*. https://www.uclalawreview.org/social-control-of-technological-risks-the-dilemma-of-knowledge-and-control-in-practice-and-ways-to-surmount-it/ — R, en, **lu partiellement**. Collingridge, D. (1980). *The Social Control of Technology*. https://archive.org/details/socialcontroloft0000coll — P, en, **lu partiellement** (préface, chap. 1, 3, 9 [p. 141-158], 10, 11). ONU Info (30 août 2021). https://news.un.org/en/story/2021/08/1098792 — P, en, **lu** [37 bis].
 38. Académie royale des sciences de Suède (1995). Communiqué du prix Nobel de chimie. https://www.nobelprize.org/prizes/chemistry/1995/press-release/ — P, en, **lu**. Fiche de Mario Molina : https://www.nobelprize.org/prizes/chemistry/1995/molina/facts/ — P, en, **lu**.
 39. Kuhns, W. (comp.), succession McLuhan. *A dictionary of Marshall McLuhan's quotations* : https://themmm.marshallmcluhan.com/?p=105942 et https://themmm.marshallmcluhan.com/?p=105661 — P (extraits), en, **lu** ; *Understanding Media* : **non lu**.
 40. Palácio de Azevedo, F. (2018). *Matrizes* 12(3) : 321-329. https://www.redalyc.org/articulo.oa?id=143065736003 — R, pt, **lu partiellement** ; Williams (1974) : **non lu**.

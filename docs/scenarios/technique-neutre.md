@@ -32,7 +32,7 @@ efficacité qui fait consommer plus (Jevons). Démonter au passage un mythe des
   comme un récit, avec le résumé de Joerges (1999) qui le juge contraire aux
   faits ; l'animation ne prétend pas raconter Long Island.
 - Collingridge et McLuhan ajoutés en complément (étapes 4 et 5). Collingridge
-  (1980) **lu** pour la préface et les chapitres 1, 3, 9 (p. 141-151) et 11, d'après
+  (1980) **lu** pour la préface et les chapitres 1, 3, 9 (p. 141-158), 10 et 11, d'après
   des pages scannées transmises par le mainteneur : citations directes.
   McLuhan (1964) et Williams (1974) non lus : McLuhan d'après le dictionnaire
   de citations de sa succession, Williams d'après une recension brésilienne
