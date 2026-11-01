@@ -123,8 +123,8 @@ Raphael 1968 ; IEEE Milestone).
 5. Brady, J. (6 déc. 2025). NPR, repris par OPB. https://www.opb.org/article/2025/12/06/waymo-updating-software-after-self-driving-cars-passed-stopped-school-buses/ — Pr, en, **lu**.
 6. CICR (12 mai 2021). https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems — P, en, **lu partiellement**.
 7. ONU, A/RES/78/241. https://digitallibrary.un.org/record/4033027 — P, **résumé seulement** (fiche).
-9. Larousse. Encyclopédie, « robot ». https://www.larousse.fr/encyclopedie/divers/robot/88768 — site (encyclopédie), fr, **lu**. Orthodidacte, « Robot : étymologie » : https://www.orthodidacte.com/ressources/dictionnaire/etymologie/robot-etymologie/ — **non ouvert** (403).
 8. UN Project. A/RES/80/57. https://un-project.org/votes/resolution/A-RES-80-57/ — site, en, **lu**.
+9. Larousse. Encyclopédie, « robot ». https://www.larousse.fr/encyclopedie/divers/robot/88768 — site (encyclopédie), fr, **lu**. Orthodidacte, « Robot : étymologie » : https://www.orthodidacte.com/ressources/dictionnaire/etymologie/robot-etymologie/ — **non ouvert** (403).
 
 ## Points d'attention
 
