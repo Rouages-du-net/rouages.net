@@ -51,8 +51,8 @@ depuis le 2 février 2025 plusieurs usages de surveillance.
   par le Conseil constitutionnel le 24 avril 2025 : Amnesty International
   France [8] et presse (LCP, Club des juristes, résumés de recherche) ; décision
   elle-même **non ouverte**.
-- Liste exacte des événements du décret n° 2023-828 : **non ouverte** (Légifrance
-  inaccessible) ; la page cite les cas d'usage évalués dans le rapport du Sénat.
+- Liste des événements du décret du 28 août 2023 : citée par le rapport du
+  comité (Légifrance inaccessible).
 
 **Évaluation** [4] [5]
 - Rapport d'information du Sénat n° 374 (2024-2025), F. Dumont et M.-P. de La
@@ -69,8 +69,45 @@ depuis le 2 février 2025 plusieurs usages de surveillance.
   (mouvements de foule) ; intérêt opérationnel « limité mais réel » selon le
   comité ; proposition n° 1 : prolonger l'expérimentation avant toute
   pérennisation.
-- Rapport du comité d'évaluation (janvier 2025), PDF sur vie-publique.fr :
-  téléchargement **interrompu** (fichier incomplet) ; non lu directement.
+- **Rapport du comité d'évaluation** (janvier 2025, 122 p.), **lu** (PDF
+  transmis par le mainteneur, le téléchargement direct échouant) :
+  - huit événements de l'article 3 du décret du 28 août 2023 : « présence
+    d'objets abandonnés ; présence ou utilisation d'armes ; non-respect par une
+    personne ou un véhicule, du sens de circulation commun ; franchissement ou
+    présence d'une personne ou d'un véhicule dans une zone interdite ou
+    sensible ; présence d'une personne au sol à la suite d'une chute ; mouvement
+    de foule ; densité trop importante de personnes ; départs de feux » ;
+  - 33 événements testés (préfecture de police 14, RATP 8, SNCF 7, Cannes 4),
+    environ 800 caméras ; évaluation « principalement centrée sur le dispositif
+    de la société Wintics » ;
+  - § 2.3.5 (données « à interpréter avec précaution ») : RATP pendant les JO,
+    intrusion 1222 vrais positifs / 324 faux positifs / 11 cas pertinents au
+    plan opérationnel ; objets délaissés 42 / 151 / 2 ; densité 305 / 41 / 1.
+    SNCF, 1 552 signalements sur 56 jours (58 % intrusions, 40 % objets, 2 %
+    surdensité) ; objets : 206 vrais positifs sur 629 alertes (≈ 33 %) ;
+    intrusions : 660 vrais positifs, 233 faux positifs (≈ 74 %). Préfecture de
+    police (Jeux paralympiques) : densité 401 détections, 42 faux positifs ;
+    contresens 21 / 0 ; départ de feu 7 / 3 ; mouvement de foule 2 / 0 ;
+    55 détections d'intérêt opérationnel. Cannes (Festival) : 37 194 alarmes,
+    25 639 traitées, « aucune n'a nécessité l'intervention d'un agent de
+    terrain » ; essais ultérieurs « plus concluants » ;
+  - confusions : mobilier urbain, matériel de nettoyage, « des personnes
+    assises ou statiques, notamment des sans domicile fixe » ; la Défenseure des
+    droits évoque des équipements de personnes en situation de handicap
+    assimilés à des objets non autorisés ;
+  - titres : performances « globalement satisfaisantes » (intrusion,
+    circulation, densité), « encore incertains » (mouvements de foule),
+    « inégales » (objets abandonnés et armes à feu), « très insatisfaisantes »
+    (départs de feu, personne au sol) ; « Un intérêt opérationnel limité mais
+    réel » ; « Un dispositif expérimental qui, en l'état, ne heurte les libertés
+    publiques ni dans sa conception ni dans sa mise en œuvre » ;
+    « L'abandon, la prolongation ou la pérennisation : un choix politique qui ne
+    relève pas de la mission du comité d'évaluation ».
+- **Écarts avec le rapport du Sénat** : le Sénat donne 23 % de vrais positifs
+  pour les objets abandonnés à la SNCF (le comité : 206 sur 629, ≈ 33 %), « sur
+  1 302 signalements » pour les objets à la RATP (le comité : 193) et 100 % sur
+  28 signalements pour la surdensité à la SNCF (absent du texte du comité). La
+  page suit le rapport du comité.
 
 **Positions** [7] [8]
 - Proposition de loi n° 221 (Sénat, I. Florennes, 12 décembre 2025) : le comité
@@ -113,7 +150,7 @@ depuis le 2 février 2025 plusieurs usages de surveillance.
 2. Banque de France (9 sept. 2025). Communiqué de presse OSMP 2024. https://www.banque-france.fr/system/files/2025-09/CP-OSMP-2024_20250909.pdf — P, fr, **lu**.
 3. Conseil constitutionnel. Décision n° 2023-850 DC du 17 mai 2023. https://www.conseil-constitutionnel.fr/decision/2023/2023850DC.htm — P, fr, **lu partiellement**.
 4. Sénat. Rapport d'information n° 374 (2024-2025). https://www.senat.fr/rap/r24-374/r24-3745.html — P, fr, **lu partiellement**.
-5. Comité d'évaluation (janv. 2025). https://www.vie-publique.fr/files/rapport/pdf/297322.pdf — P, fr, **non lu** (téléchargement interrompu).
+5. Comité d'évaluation (janv. 2025). https://www.vie-publique.fr/files/rapport/pdf/297322.pdf — P, fr, **lu** (§ 2.3, 3, 5 et conclusions ; PDF transmis par le mainteneur).
 6. Conseil constitutionnel. Décision n° 2026-902 DC du 19 mars 2026. https://www.conseil-constitutionnel.fr/decision/2026/2026902DC.htm — P, fr, **lu partiellement** (§ 177-181) ; communiqué : https://www.conseil-constitutionnel.fr/actualites/communique/decision-n-2026-902-dc-du-19-mars-2026-communique-de-presse — **lu**.
 7. Sénat. Proposition de loi n° 221 (2025-2026). https://www.senat.fr/leg/ppl25-221.pdf — P, fr, **lu partiellement** (exposé des motifs, article 1ᵉʳ).
 8. Amnesty International France. https://www.amnesty.fr/actualites/voici-comment-le-gouvernement-a-prolonge-la-videosurveillance-algorithmique/ — site, fr, **lu partiellement**.

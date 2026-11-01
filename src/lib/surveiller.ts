@@ -41,16 +41,27 @@ export function alarme(seuil: number, ecart = 3) {
 
 // ---- Vidéosurveillance algorithmique ----
 
-export interface CasUsage {
-  id: string;
-  /** Part des signalements correspondant à un vrai événement (vrais positifs), en %. */
-  ratp?: number;
-  sncf?: number;
+export interface Bilan {
+  vrais: number; // vrais positifs
+  faux: number; // faux positifs
+  utiles?: number; // cas jugés pertinents au plan opérationnel
 }
 
-/** Rapport d'information du Sénat n° 374 (2024-2025), d'après le comité d'évaluation. */
+export interface CasUsage {
+  id: 'intrusion' | 'surdensite' | 'objets';
+  ratp?: Bilan;
+  sncf?: Bilan;
+}
+
+/**
+ * Rapport du comité d'évaluation (janvier 2025), § 2.3.5 : RATP pendant les
+ * Jeux olympiques ; SNCF sur l'ensemble de l'expérimentation. Le rapport ne
+ * détaille pas la surdensité à la SNCF (environ 2 % des signalements).
+ */
 export const CAS: CasUsage[] = [
-  { id: 'intrusion', ratp: 79, sncf: 74 },
-  { id: 'surdensite', ratp: 88, sncf: 100 },
-  { id: 'objets', ratp: 22, sncf: 23 },
+  { id: 'intrusion', ratp: { vrais: 1222, faux: 324, utiles: 11 }, sncf: { vrais: 660, faux: 233 } },
+  { id: 'surdensite', ratp: { vrais: 305, faux: 41, utiles: 1 } },
+  { id: 'objets', ratp: { vrais: 42, faux: 151, utiles: 2 }, sncf: { vrais: 206, faux: 423 } },
 ];
+
+export const partVrais = (b: Bilan) => Math.round((100 * b.vrais) / (b.vrais + b.faux));
