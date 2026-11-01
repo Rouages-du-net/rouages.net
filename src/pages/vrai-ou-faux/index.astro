@@ -1,0 +1,48 @@
+---
+// Page d'entrée de la rubrique « Vrai ou faux ? » (voir docs/VISION.md, § 4).
+// Les fiches sont dans src/data/vrai-ou-faux.ts.
+import Base from '../../layouts/Base.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import { FICHES, LIBELLES } from '../../data/vrai-ou-faux';
+---
+<Base
+  title="Vrai ou faux ?"
+  description="Idées reçues sur internet, l’informatique et l’IA : le dark net, Tor, l’origine d’internet, Hedy Lamarr, le premier bug, l’IA qui comprend, « rien à cacher »… On vérifie, sources à l’appui."
+>
+  <p class="tag">Idées reçues</p>
+  <h1>Vrai ou faux ?</h1>
+  <MiseAJour date="2026-11-01" />
+  <div class="intro">
+    <p>
+      Chaque fiche part d'une idée qu'on entend souvent, et dit ce qui est vrai, ce qui est faux,
+      et pourquoi on y croit. Pas de moquerie : la plupart de ces idées ont un fond de vérité, ou
+      viennent d'une belle histoire qui a dérivé en passant de main en main.
+    </p>
+    <p>
+      Les verdicts : <span class="verdict faux">Faux</span>, <span class="verdict nuance">C’est plus
+      compliqué</span> quand l'idée mélange du vrai et du faux, et <span class="verdict debat">En
+      débat</span> quand les spécialistes ne sont pas d'accord.
+    </p>
+  </div>
+
+  <ul class="fiches">
+    {FICHES.map((f) => (
+      <li class="card">
+        <span class={`verdict ${f.verdict}`}>{LIBELLES[f.verdict]}</span>
+        <h2><a href={`/vrai-ou-faux/${f.slug}/`}>«&nbsp;{f.idee}&nbsp;»</a></h2>
+        <p>{f.enBref}</p>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .intro { max-width: var(--mesure); }
+  .fiches { list-style: none; padding: 0; margin: 2rem 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+  .fiches h2 { font-size: 1.1rem; margin: 0.5rem 0; }
+  .fiches p { margin: 0; color: var(--muted); }
+  .verdict { display: inline-block; font-size: 0.85rem; font-weight: 700; padding: 0.1rem 0.55rem; border-radius: 999px; border: 2px solid currentColor; }
+  .verdict.faux { color: var(--ill-paquet); }
+  .verdict.nuance { color: var(--ill-serveur); }
+  .verdict.debat { color: var(--ill-secret-a); }
+</style>

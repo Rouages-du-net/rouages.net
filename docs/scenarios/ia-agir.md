@@ -31,4 +31,4 @@ d'un modèle (le robot qui suit une ligne), puis d'un accident réel documenté
 - La victime et l'opératrice ne sont pas nommées.
 - L'apprentissage par renforcement et la planification renvoient aux modules
   « Les IA qui jouent » et « Les IA qui cherchent et optimisent ».
-- Non traités faute de source ouverte : WABOT-1, origine du mot « robot ».
+- Non traités faute de source ouverte : WABOT-1, rôle de Josef Čapek dans le mot « robot ».
