@@ -1,0 +1,262 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Serie from '../../components/animations/predire/Serie.astro';
+import Correlation from '../../components/animations/predire/Correlation.astro';
+import Boucle from '../../components/animations/predire/Boucle.astro';
+
+// Faits sourcés : voir docs/sources/ia-predire.md.
+const etapes = [
+  { ancre: 'meteo', court: 'Prévoir le temps' },
+  { ancre: 'consommation', court: 'Prévoir la consommation' },
+  { ancre: 'correlation', court: 'Prédire n’est pas expliquer' },
+  { ancre: 'police', court: 'Prédire les délits ?' },
+  { ancre: 'bilan', court: 'Questions à poser à une prédiction', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui prédisent"
+  description="Météo, consommation d’électricité, police prédictive : prévois une semaine de consommation, découvre qu’une corrélation prédit sans expliquer, et regarde une patrouille s’enfermer dans un quartier."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui prédisent</h1>
+  <MiseAJour date="2026-11-01" evolutif />
+  <p class="chapo seulement-debut">
+    Le temps qu'il fera demain, l'électricité qu'il faudra produire, et même l'endroit où des délits
+    seraient commis : on demande aux machines de prévoir. Prévois une semaine de consommation,
+    découvre qu'une corrélation peut prédire sans rien expliquer, puis regarde une patrouille
+    s'enfermer dans un quartier.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Prévoir le temps" ancre="meteo">
+    <p slot="decouverte">
+      Prévoir la météo, c'est calculer l'état de l'atmosphère de demain à partir de celui
+      d'aujourd'hui. Pendant des décennies, on l'a fait avec les équations de la physique. Depuis
+      peu, des IA apprennent aussi à prévoir à partir de la météo du passé.
+    </p>
+    <p slot="curieux">
+      Les deux approches ne s'opposent pas. Les modèles physiques calculent comment l'air, l'eau et la
+      chaleur se déplacent. Les IA ont appris, sur des décennies de données passées, à quoi ressemble
+      la météo du lendemain : elles calculent une prévision bien plus vite, avec beaucoup moins
+      d'énergie. Mais elles ont besoin de ces données, et donc du travail de celles et ceux qui observent le
+      temps.
+    </p>
+    <p slot="ingenieur">
+      GraphCast (publié dans <em>Science</em> en 2023) est entraîné sur des
+      « réanalyses », des archives de la météo passée. Il prévoit des centaines de variables pour les
+      dix jours suivants, sur une grille de 0,25° couvrant le globe, en moins d'une minute ; il fait
+      mieux que le meilleur système classique sur 90 % des 1 380 critères testés. Le 25 février 2025,
+      le Centre européen pour les prévisions météorologiques à moyen terme (ECMWF) met en service son
+      modèle d'IA, l'AIFS : jusqu'à 20 % de mieux sur certains critères comme la trajectoire des
+      cyclones, pour environ 1 000 fois moins d'énergie par prévision.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1922, Lewis Fry Richardson publie <em>Weather Prediction by Numerical Process</em>. Il a
+        calculé à la main, pendant la majeure partie de six semaines, une prévision à six heures : elle annonce une hausse de
+        pression de 145 millibars, alors que le baromètre n'a presque pas bougé. Il imagine pourtant
+        une « usine à prévisions » : un grand théâtre où 64 000 « calculateurs », des personnes qui
+        calculent, suivraient le temps de la planète entière.
+      </p>
+      <p>
+        En 1950, Jule Charney, Ragnar Fjørtoft et John von Neumann publient quatre prévisions à
+        24 heures calculées à partir de données réelles, avec l'ordinateur ENIAC. Le calcul prend à
+        peu près autant de temps que le temps qu'il prévoit.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Avec l'IA, on n'a plus besoin de la physique pour prévoir la météo. »</strong> L'ECMWF
+      présente son modèle d'IA et son modèle physique comme complémentaires, et fait de leur combinaison
+      un sujet de recherche pour les années à venir.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Prévoir la consommation" ancre="consommation">
+    <Serie slot="animation" />
+    <p slot="decouverte">
+      L'électricité se stocke mal : il faut en produire, à chaque instant, autant qu'on en consomme.
+      D'où l'importance de prévoir la consommation de demain. Choisis une méthode et compare-la à la
+      réalité.
+    </p>
+    <p slot="curieux">
+      Une suite de mesures prises dans le temps s'appelle une <em>série temporelle</em>. Les méthodes
+      les plus simples recopient le passé. Elles ne voient pas venir ce qui ne s'est pas encore
+      produit, comme une vague de froid. Un modèle qui a appris d'où viennent les variations (le jour de
+      la semaine, la température) peut utiliser une autre prévision, celle de la météo.
+    </p>
+    <p slot="ingenieur">
+      Le modèle de l'animation est une régression linéaire : consommation ≈ a + b × (week-end) +
+      c × (15 °C − température), les coefficients étant ajustés sur les quatre semaines connues par la
+      méthode des moindres carrés. En France, RTE, le gestionnaire du réseau de transport d'électricité,
+      indiquait en 2019 une hausse de la consommation pouvant aller jusqu'à 2 400 mégawatts par degré en
+      moins lors d'une vague de froid sévère et durable.
+    </p>
+    <div slot="histoire">
+      <p>
+        Pour juger une prévision, on la compare à une méthode naïve, comme « demain sera comme
+        aujourd'hui ». Une IA compliquée qui ne bat pas cette référence ne sert à rien : c'est la
+        première question à poser à toute prédiction.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Plus il y a de données du passé, mieux on prédit. »</strong> Pas si l'avenir ne
+      ressemble pas au passé : ici, quatre semaines d'hiver doux n'apprennent rien d'une vague de froid
+      aux méthodes qui se contentent de recopier.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Prédire n’est pas expliquer" ancre="correlation">
+    <Correlation slot="animation" />
+    <p slot="decouverte">
+      Deux choses qui varient ensemble permettent de prédire l'une à partir de l'autre. Mais l'une
+      cause-t-elle l'autre ? Regarde les glaces et les coups de soleil, puis compare à température
+      égale.
+    </p>
+    <p slot="curieux">
+      Une IA qui prédit trouve des <em>corrélations</em> : des choses qui varient ensemble. Elle ne dit
+      pas pourquoi. Souvent, une troisième cause (ici la chaleur) explique les deux. Pour prédire, la
+      corrélation suffit ; pour agir, il faut connaître la cause. Interdire les glaces ne protège
+      personne du soleil.
+    </p>
+    <p slot="ingenieur">
+      La corrélation de Pearson va de −1 à 1. « Comparer à température égale » revient ici à calculer
+      une corrélation partielle : on retire de chaque grandeur ce que la température permet d'en
+      prédire, puis on corrèle ce qui reste. Pour établir une cause, on compare des groupes tirés au
+      hasard (un essai contrôlé), ou on s'appuie sur des méthodes d'inférence causale.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2012, un article du <em>New England Journal of Medicine</em> pose une question :
+        existe-t-il une corrélation entre la consommation de chocolat d'un pays et son nombre de prix
+        Nobel par habitant ? Même si c'est le cas, une telle corrélation ne dit pas que le chocolat rend
+        savant : d'autres facteurs, comme la richesse d'un pays, peuvent jouer sur les deux.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Si l'IA le prédit, c'est que c'est la cause. »</strong> Une IA peut prédire très bien à
+      partir d'un indice qui n'est qu'un symptôme. S'en servir pour décider d'une action peut ne rien
+      changer, ou nuire.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Prédire les délits ?" ancre="police">
+    <Boucle slot="animation" />
+    <p slot="decouverte">
+      Des logiciels de « police prédictive » indiquent les lieux où des délits risquent d'être commis,
+      pour y envoyer des patrouilles. Mais ils apprennent sur les délits <em>enregistrés</em>, pas sur
+      tous les délits commis. Choisis la réalité, puis la méthode.
+    </p>
+    <div slot="curieux">
+      <p>
+        La police enregistre surtout les délits qu'elle voit, là où elle patrouille. Si un modèle envoie
+        les patrouilles là où l'on a déjà enregistré des délits, elles en trouvent d'autres… au même
+        endroit. La prévision se confirme d'elle-même : c'est une boucle de rétroaction. Le module <a
+        href="/modules/ia-decident/#controles">Les IA qui décident pour nous</a> montre la même boucle
+        pour des contrôles d'allocations.
+      </p>
+    </div>
+    <div slot="ingenieur">
+      <p>
+        En 2018, D. Ensign, S. A. Friedler, S. Neville, C. Scheidegger et S. Venkatasubramanian
+        démontrent mathématiquement cette « boucle de rétroaction qui s'emballe » : les patrouilles
+        reviennent dans les mêmes quartiers « quel que soit le taux réel de délits ». Les signalements
+        des habitant·es l'atténuent sans la supprimer ; il faut corriger ce qu'on donne au modèle, par
+        exemple en tenant compte de la présence policière, comme dans la méthode corrigée de
+        l'animation.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        En 2015, des chercheur·ses publient deux essais contrôlés menés avec la police de Los Angeles et
+        celle du Kent (Royaume-Uni). Leur modèle prédit 1,4 à 2,2 fois plus de délits que les cartes
+        d'analystes, et les patrouilles guidées par ses prévisions sont associées à une baisse moyenne de
+        7,4 % des délits.
+      </p>
+      <p>
+        En 2016, Kristian Lum et William Isaac, du Human Rights Data Analysis Group, appliquent un
+        algorithme de ce type aux données de la police d'Oakland (Californie) sur la drogue. Selon les
+        enquêtes de santé publique, la consommation de drogue n'y est pas plus fréquente dans les
+        quartiers pauvres et non blancs ; c'est pourtant là que l'algorithme concentre les
+        patrouilles, et une simulation montre la boucle qui s'ensuit.
+      </p>
+      <p>
+        En 2021, le média d'enquête The Markup analyse 5,9 millions de prévisions du logiciel PredPol
+        dans 38 services de police américains : dans au moins 84 % d'entre eux, les zones les plus
+        visées comptent une plus forte proportion d'habitant·es noir·es ou latinos. L'entreprise
+        conteste des données « erronées » et « incomplètes », et rappelle que son logiciel n'utilise
+        aucune donnée démographique.
+      </p>
+      <p>
+        État au 1ᵉʳ novembre 2026 : depuis le 2 février 2025, le règlement européen sur l'IA interdit
+        les systèmes qui évaluent le risque qu'une personne commette une infraction « uniquement sur la
+        base du profilage » ou de ses traits de personnalité. L'interdiction porte sur des personnes ;
+        elle ne mentionne pas les prévisions par lieux.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les données ne mentent pas. »</strong> Les données de police disent où la police a
+      cherché autant qu'où les délits ont eu lieu. Un modèle entraîné dessus peut reproduire, et
+      amplifier, ces choix passés.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Questions à poser à une prédiction</h2>
+    <ol class="questions">
+      <li><strong>Fait-elle mieux qu'une méthode naïve ?</strong> « Comme hier », « comme la semaine dernière ».</li>
+      <li><strong>L'avenir ressemble-t-il au passé ?</strong> Un modèle ne sait que ce que ses données lui ont montré.</li>
+      <li><strong>Prédire ou expliquer ?</strong> Une corrélation suffit pour prévoir, pas pour décider d'une action.</li>
+      <li><strong>Que mesurent vraiment les données ?</strong> Des délits commis, ou des délits découverts ?</li>
+      <li><strong>La prédiction change-t-elle ce qu'elle prédit ?</strong> Une patrouille envoyée quelque part y trouve ce qu'elle cherche.</li>
+    </ol>
+    <p>
+      Le module <a href="/modules/ia-decident/">Les IA qui décident pour nous</a> prolonge ces questions
+      avec les scores de crédit, d'allocations et de récidive.
+    </p>
+
+  <Sources
+    verifie="2026-11-01"
+    sources={[
+      { auteur: 'L. F. Richardson', titre: 'Weather Prediction by Numerical Process (Cambridge University Press), texte intégral', url: 'https://archive.org/details/weatherpredictio00richrich', type: 'primaire', annee: 1922, langue: 'en' },
+      { auteur: 'J. G. Charney, R. Fjörtoft, J. von Neumann', titre: 'Numerical Integration of the Barotropic Vorticity Equation (Tellus 2-4), résumé', url: 'https://doi.org/10.3402/tellusa.v2i4.8607', type: 'primaire', annee: 1950, langue: 'en' },
+      { auteur: 'C. Yang', titre: 'The First Compute Arms Race: the Early History of Numerical Weather Prediction', url: 'https://arxiv.org/abs/2506.21816', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'R. Lam et al.', titre: 'Learning skillful medium-range global weather forecasting (Science 382), résumé', url: 'https://doi.org/10.1126/science.adi2336', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'ECMWF', titre: 'ECMWF’s AI forecasts become operational', url: 'https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ai-forecasts-become-operational', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Connaissance des énergies', titre: 'Réseau électrique : quelle sécurité d’approvisionnement cet hiver et d’ici 2025 ? (analyses de RTE)', url: 'https://www.connaissancedesenergies.org/reseau-electrique-quelle-securite-dapprovisionnement-cet-hiver-et-dici-2025-241104', type: 'presse', annee: 2019 },
+      { auteur: 'F. H. Messerli', titre: 'Chocolate Consumption, Cognitive Function, and Nobel Laureates (NEJM 367), notice', url: 'https://doi.org/10.1056/NEJMon1211064', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'G. O. Mohler et al.', titre: 'Randomized Controlled Field Trials of Predictive Policing (JASA 110), copie en libre accès', url: 'https://escholarship.org/uc/item/1br4975j', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'K. Lum, W. Isaac', titre: 'To Predict and Serve? (Significance 13-5)', url: 'https://doi.org/10.1111/j.1740-9713.2016.00960.x', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'K. Lum, W. Isaac (HRDAG)', titre: 'FAQs on Predictive Policing and Bias', url: 'https://hrdag.org/2016/11/04/faqs-predpol/', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'D. Ensign et al.', titre: 'Runaway Feedback Loops in Predictive Policing (PMLR 81)', url: 'https://proceedings.mlr.press/v81/ensign18a.html', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'D. Mehrotra, S. Mattu, A. Gilbertson, A. Sankin (The Markup)', titre: 'How We Determined Crime Prediction Software Disproportionately Targeted Low-Income, Black, and Latino Neighborhoods', url: 'https://themarkup.org/show-your-work/2021/12/02/how-we-determined-crime-prediction-software-disproportionately-targeted-low-income-black-and-latino-neighborhoods', type: 'presse', annee: 2021, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 sur l’intelligence artificielle, article 5', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202401689', type: 'primaire', annee: 2024 },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

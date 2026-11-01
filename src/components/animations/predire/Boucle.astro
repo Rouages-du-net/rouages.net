@@ -1,0 +1,106 @@
+---
+// Animation « La boucle de la police prédictive » (module « Les IA qui
+// prédisent ») : la police n'enregistre que les délits qu'elle découvre là où
+// elle patrouille. D'après le mécanisme décrit par D. Ensign et al. (2018) ;
+// simulation inventée (src/lib/predire.ts), pas un logiciel réel.
+import { JOURS } from '../../../lib/predire';
+const jours = Array.from({ length: JOURS }, (_, i) => i);
+---
+<div class="anim boucle" data-boucle>
+  <div class="anim-repli">
+    <p>
+      Deux quartiers, A et B, ont autant de délits l'un que l'autre. L'historique en a simplement
+      enregistré un peu plus en A. Chaque jour, une patrouille va là où l'on a enregistré le plus de
+      délits, et la police n'enregistre que ce qu'elle découvre là où elle passe. Résultat : en 60 jours,
+      la patrouille va toujours en A, et aucun délit n'est enregistré en B. Même si B a en réalité
+      deux fois plus de délits, la patrouille reste en A. Comparer les délits par jour de patrouille, et
+      envoyer de temps en temps la patrouille dans le quartier le moins visité, corrige la boucle.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Dans la réalité</legend>
+        <label><input type="radio" name="realite-boucle" value="egal" checked /> autant de délits en A et en B</label>
+        <label><input type="radio" name="realite-boucle" value="plus" /> deux fois plus de délits en B</label>
+      </fieldset>
+      <fieldset class="choix">
+        <legend>Où envoyer la patrouille ?</legend>
+        <label><input type="radio" name="methode-boucle" value="naive" checked /> là où l'on a enregistré le plus de délits</label>
+        <label><input type="radio" name="methode-boucle" value="corrigee" /> là où l'on trouve le plus de délits par jour de patrouille, et un jour sur cinq dans le quartier le moins visité</label>
+      </fieldset>
+      <p class="tag">Quartier patrouillé, jour après jour (60 jours) :</p>
+      <ol class="ruban" aria-hidden="true">
+        {jours.map((j) => <li data-jour={j}></li>)}
+      </ol>
+      <p class="cle"><span class="pastille a"></span> quartier A · <span class="pastille b"></span> quartier B</p>
+      <table class="bilan">
+        <thead><tr><th scope="col"></th><th scope="col">A</th><th scope="col">B</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Délits commis</th><td data-v="reelA"></td><td data-v="reelB"></td></tr>
+          <tr><th scope="row">Délits enregistrés</th><td data-v="enrA"></td><td data-v="enrB"></td></tr>
+          <tr><th scope="row">Jours de patrouille</th><td data-v="patA"></td><td data-v="patB"></td></tr>
+        </tbody>
+      </table>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Simulation inventée : 5 délits par jour en moyenne dans chaque quartier (ou 10 en B), historique de départ de 6 délits enregistrés en A et 4 en B. Elle illustre un mécanisme, pas un logiciel ni une ville réels.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { boucle } from '../../../lib/predire';
+
+  document.querySelectorAll<HTMLElement>('[data-boucle]').forEach((racine) => {
+    activerScene(racine);
+    const radios = [...racine.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    const cases = [...racine.querySelectorAll<HTMLElement>('[data-jour]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const val = (name: string) => radios.find((r) => r.name === name && r.checked)?.value;
+    const ecrire = (k: string, v: number) => (racine.querySelector(`[data-v="${k}"]`)!.textContent = String(v));
+
+    function maj() {
+      const plus = val('realite-boucle') === 'plus';
+      const corrigee = val('methode-boucle') === 'corrigee';
+      const r = boucle(plus, corrigee);
+      cases.forEach((c, i) => {
+        c.classList.toggle('a', r.patrouilles[i] === 'A');
+        c.classList.toggle('b', r.patrouilles[i] === 'B');
+      });
+      const patB = r.patrouilles.filter((q) => q === 'B').length;
+      ecrire('reelA', r.reels.A); ecrire('reelB', r.reels.B);
+      ecrire('enrA', r.enregistres.A); ecrire('enrB', r.enregistres.B);
+      ecrire('patA', r.patrouilles.length - patB); ecrire('patB', patB);
+      legende.textContent = !corrigee
+        ? plus
+          ? 'B a deux fois plus de délits, et pourtant la patrouille ne quitte jamais A : on ne trouve des délits que là où l’on cherche, ce qui « confirme » la prévision.'
+          : 'Un petit écart dans l’historique suffit : la patrouille va toujours en A, y trouve des délits, et B semble calme. La prévision se confirme d’elle-même.'
+        : plus
+          ? 'En comparant à présence égale, le modèle découvre que B a plus de délits et y envoie la patrouille la plupart du temps.'
+          : 'À présence égale, les deux quartiers ont à peu près le même taux de délits : le modèle ne s’enferme plus dans A.';
+    }
+    radios.forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+  .choix legend { font-weight: 700; padding: 0 0.25rem; }
+  .choix input { accent-color: var(--accent); }
+  .tag { margin: 0.5rem 0 0.25rem; }
+  .ruban { list-style: none; padding: 0; margin: 0 0 0.25rem; display: grid; grid-template-columns: repeat(30, 1fr); gap: 2px; }
+  .ruban li { height: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 2px; }
+  .ruban li.a { background: var(--ill-client); }
+  .ruban li.b { background: var(--ill-commun); }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.25rem 0 0.5rem; }
+  .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; vertical-align: middle; }
+  .pastille.a { background: var(--ill-client); }
+  .pastille.b { background: var(--ill-commun); }
+  .bilan { border-collapse: collapse; font-size: 0.9rem; margin: 0.25rem 0; }
+  .bilan th, .bilan td { border: 1px solid var(--border); padding: 0.25rem 0.6rem; text-align: right; }
+  .bilan th[scope='row'] { text-align: left; font-weight: 600; }
+  .bilan td { font-family: var(--police-mono); }
+</style>

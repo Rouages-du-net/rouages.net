@@ -1,0 +1,120 @@
+---
+// Animation « Prévoir la consommation » (module « Les IA qui prédisent ») :
+// 28 jours d'hiver connus, 7 jours à prévoir ; quatre méthodes, avec ou
+// sans vague de froid. Données inventées (src/lib/predire.ts).
+---
+<div class="anim serie" data-serie>
+  <div class="anim-repli">
+    <p>
+      On connaît la consommation d'électricité d'un pays imaginaire pendant quatre semaines d'hiver, et
+      on veut prévoir la semaine suivante. Répéter le dernier jour connu donne une erreur moyenne de
+      8,2 GW ; recopier la semaine précédente, 4,8 GW ; prendre la moyenne des sept derniers jours,
+      2,8 GW. Un modèle qui tient compte du jour de la semaine et de la température prévue se trompe
+      de 0,6 GW seulement. Si une vague de froid arrive, les trois premières méthodes se trompent de
+      19 à 27 GW, le modèle à température de 0,8 GW.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Méthode de prévision</legend>
+        <label><input type="radio" name="methode-serie" value="hier" checked /> comme le dernier jour connu</label>
+        <label><input type="radio" name="methode-serie" value="semaine" /> comme la semaine précédente</label>
+        <label><input type="radio" name="methode-serie" value="moyenne" /> moyenne des 7 derniers jours</label>
+        <label><input type="radio" name="methode-serie" value="temperature" /> modèle : jour de la semaine et température prévue</label>
+      </fieldset>
+      <label class="case"><input type="checkbox" data-vague /> une vague de froid arrive la semaine à prévoir</label>
+      <svg viewBox="0 0 340 190" role="img" aria-labelledby="serie-titre">
+        <title id="serie-titre">Consommation d'électricité, jour par jour : quatre semaines connues, puis la semaine prévue et la réalité</title>
+        <rect class="futur" x="0" y="10" width="0" height="150" data-zone />
+        <g data-axes></g>
+        <polyline class="reel" data-reel points="" />
+        <polyline class="prevu" data-prevu points="" />
+      </svg>
+      <p class="cle"><span class="trait reel"></span> consommation réelle · <span class="trait prevu"></span> prévision · zone grisée : la semaine à prévoir</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Données inventées : un pays imaginaire dont la consommation monte d'environ 2,4 GW par degré en moins (l'ordre de grandeur donné par RTE pour la France en hiver), et baisse le week-end.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { serie, prevoir, HISTOIRE, HORIZON, type Methode } from '../../../lib/predire';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const gw = (v: number) => `${v.toLocaleString('fr-FR', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} GW`;
+  const N = HISTOIRE + HORIZON;
+  const X = (j: number) => 30 + (j * 300) / (N - 1);
+  const Y = (v: number) => 160 - ((v - 40) / 55) * 150;
+
+  document.querySelectorAll<HTMLElement>('[data-serie]').forEach((racine) => {
+    activerScene(racine);
+    const vague = racine.querySelector<HTMLInputElement>('[data-vague]')!;
+    const radios = [...racine.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const axes = racine.querySelector<SVGGElement>('[data-axes]')!;
+
+    for (const v of [40, 55, 70, 85]) {
+      const l = document.createElementNS(NS, 'line');
+      l.setAttribute('x1', '30'); l.setAttribute('x2', '330');
+      l.setAttribute('y1', String(Y(v))); l.setAttribute('y2', String(Y(v)));
+      l.setAttribute('class', 'grille');
+      const t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', '26'); t.setAttribute('y', String(Y(v) + 3));
+      t.setAttribute('text-anchor', 'end');
+      t.textContent = String(v);
+      axes.append(l, t);
+    }
+    const unite = document.createElementNS(NS, 'text');
+    unite.setAttribute('x', '30'); unite.setAttribute('y', '182');
+    unite.textContent = 'GW · un point par jour';
+    axes.append(unite);
+    const zone = racine.querySelector<SVGRectElement>('[data-zone]')!;
+    zone.setAttribute('x', String(X(HISTOIRE) - 4));
+    zone.setAttribute('width', String(X(N - 1) - X(HISTOIRE) + 8));
+
+    function maj() {
+      const m = (radios.find((r) => r.checked)?.value ?? 'hier') as Methode;
+      const jours = serie(vague.checked);
+      const { prevision, erreur } = prevoir(jours, m);
+      racine.querySelector('[data-reel]')!.setAttribute('points', jours.map((d) => `${X(d.jour)},${Y(d.conso)}`).join(' '));
+      const pts = [`${X(HISTOIRE - 1)},${Y(jours[HISTOIRE - 1].conso)}`, ...prevision.map((p, i) => `${X(HISTOIRE + i)},${Y(p)}`)];
+      racine.querySelector('[data-prevu]')!.setAttribute('points', pts.join(' '));
+      racine.querySelector('[data-mesure]')!.textContent = `Erreur moyenne sur la semaine prévue : ${gw(erreur)}.`;
+      legende.textContent =
+        m === 'temperature'
+          ? vague.checked
+            ? 'Le modèle a appris de l’historique combien la consommation monte quand il fait froid : avec la température prévue par la météo, il voit venir le pic.'
+            : 'Le modèle tient compte du week-end et de la température prévue : il colle à la réalité.'
+          : vague.checked
+            ? 'Cette méthode ne regarde que le passé : elle ne peut pas voir venir la vague de froid, et se trompe lourdement.'
+            : m === 'hier'
+              ? 'Le dernier jour connu était un dimanche, où l’on consomme moins : le répéter sous-estime toute la semaine.'
+              : m === 'semaine'
+                ? 'Recopier la semaine précédente respecte le rythme de la semaine, mais pas les variations du temps.'
+                : 'La moyenne lisse tout : ni week-end, ni météo.';
+    }
+    [vague, ...radios].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+  .choix legend { font-weight: 700; padding: 0 0.25rem; }
+  .choix input, .case input { accent-color: var(--accent); }
+  .case { display: block; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  svg { width: 100%; max-width: 36rem; height: auto; display: block; margin: 0 auto; }
+  .futur { fill: var(--border); opacity: 0.5; }
+  svg :global(.grille) { stroke: var(--border); stroke-width: 1; }
+  svg :global(text) { fill: var(--muted); font-size: 9px; font-family: var(--police); }
+  .reel { fill: none; stroke: var(--ill-client); stroke-width: 2; }
+  .prevu { fill: none; stroke: var(--ill-paquet); stroke-width: 2.5; stroke-dasharray: 5 3; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.25rem 0; }
+  .trait { display: inline-block; width: 1.5rem; height: 0; border-top: 3px solid var(--ill-client); vertical-align: middle; }
+  .trait.prevu { border-top: 3px dashed var(--ill-paquet); }
+  .mesure { font-family: var(--police-mono); font-size: 0.9rem; margin: 0.25rem 0; }
+</style>
