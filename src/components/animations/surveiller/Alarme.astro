@@ -1,0 +1,96 @@
+---
+// Animation « Repérer la fraude » (module « Les IA qui surveillent ») :
+// 100 000 paiements dont 34 fraudes ; un détecteur inventé donne un score
+// de suspicion ; on règle le seuil de blocage et la qualité du détecteur.
+// Fréquence de la fraude d'après l'OSMP (2024) ; détecteur inventé.
+---
+<div class="anim alarme" data-alarme>
+  <div class="anim-repli">
+    <p>
+      Sur 100 000 paiements par carte, environ 34 sont frauduleux : c'est l'ordre de grandeur relevé en
+      France en 2024. Un détecteur qui bloque les paiements les plus suspects repère, avec un seuil
+      moyen, la moitié des fraudes (17), mais bloque aussi 135 paiements honnêtes : seule une alerte
+      sur neuf est une vraie fraude. Plus sévère, il ne bloque presque plus d'innocent·es, mais laisse
+      passer la plupart des fraudes. Plus la fraude est rare, plus les fausses alertes dominent.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Sévérité du blocage (seuil de suspicion) : <output data-s-sortie></output>
+        <input type="range" min="1" max="5" step="0.5" value="3" data-s />
+      </label>
+      <label class="curseur">Qualité du détecteur : <output data-q-sortie></output>
+        <input type="range" min="2" max="5" step="0.5" value="3" data-q />
+      </label>
+      <div class="chiffres">
+        <p><span class="n" data-v="reperees"></span> fraudes repérées sur 34</p>
+        <p><span class="n" data-v="manquees"></span> fraudes passées inaperçues</p>
+        <p><span class="n" data-v="bloques"></span> paiements honnêtes bloqués</p>
+      </div>
+      <p class="tag">Sur 100 alertes, combien sont de vraies fraudes ?</p>
+      <ol class="grille" aria-hidden="true">
+        {Array.from({ length: 100 }, (_, i) => <li data-i={i}></li>)}
+      </ol>
+      <p class="cle"><span class="pastille vraie"></span> vraie fraude · <span class="pastille fausse"></span> paiement honnête bloqué</p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Fréquence de la fraude : environ 1 paiement par carte sur 2 900 en 2024 (Observatoire de la sécurité des moyens de paiement). Le détecteur est inventé : il donne aux fraudes un score plus élevé en moyenne, mais les deux groupes se chevauchent.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { alarme } from '../../../lib/surveiller';
+
+  const entier = (v: number) => Math.round(v).toLocaleString('fr-FR');
+
+  document.querySelectorAll<HTMLElement>('[data-alarme]').forEach((racine) => {
+    activerScene(racine);
+    const s = racine.querySelector<HTMLInputElement>('[data-s]')!;
+    const q = racine.querySelector<HTMLInputElement>('[data-q]')!;
+    const cases = [...racine.querySelectorAll<HTMLElement>('[data-i]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const S = Number(s.value), Q = Number(q.value);
+      racine.querySelector<HTMLOutputElement>('[data-s-sortie]')!.value = S <= 2 ? 'faible' : S >= 4 ? 'forte' : 'moyenne';
+      racine.querySelector<HTMLOutputElement>('[data-q-sortie]')!.value = Q <= 2.5 ? 'médiocre' : Q >= 4.5 ? 'excellente' : 'bonne';
+      const a = alarme(S, Q);
+      racine.querySelector('[data-v="reperees"]')!.textContent = entier(a.reperees);
+      racine.querySelector('[data-v="manquees"]')!.textContent = entier(a.manquees);
+      racine.querySelector('[data-v="bloques"]')!.textContent = entier(a.bloques);
+      const vraies = Math.round(a.precision * 100);
+      cases.forEach((c, i) => c.classList.toggle('vraie', i < vraies));
+      legende.textContent =
+        a.alertes < 1
+          ? 'Le seuil est si sévère que presque rien n’est bloqué : les fraudes passent.'
+          : vraies < 1
+            ? 'Moins d’une alerte sur 100 est une vraie fraude : on bloque des milliers de paiements honnêtes pour une trentaine de fraudes.'
+            : a.reperees < 16.5
+              ? `Les alertes sont plus souvent justes (${vraies} sur 100), mais la majorité des fraudes passe inaperçue.`
+              : vraies < 50
+                ? `${entier(a.reperees)} fraudes sur 34 sont repérées, mais ${vraies} alertes sur 100 seulement sont justes : la fraude est si rare que les paiements honnêtes un peu inhabituels dominent les alertes.`
+                : `Bon compromis : ${vraies} alertes sur 100 sont justes, et ${entier(a.reperees)} fraudes sur 34 sont repérées. Il faut un détecteur excellent.`;
+    }
+    [s, q].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .chiffres { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.5rem; margin: 0.5rem 0; }
+  .chiffres p { margin: 0; padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 0.9rem; }
+  .n { display: block; font-family: var(--police-mono); font-size: 1.3rem; font-weight: 700; }
+  .tag { margin: 0.5rem 0 0.25rem; }
+  .grille { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; max-width: 30rem; }
+  .grille li { aspect-ratio: 1; background: var(--ill-paquet); border-radius: 2px; opacity: 0.55; }
+  .grille li.vraie { background: var(--ill-secret-b); opacity: 1; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.4rem 0; }
+  .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; vertical-align: middle; }
+  .pastille.vraie { background: var(--ill-secret-b); }
+  .pastille.fausse { background: var(--ill-paquet); opacity: 0.55; }
+</style>

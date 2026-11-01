@@ -91,7 +91,7 @@ flowchart TB
 - [x] **Les IA qui décident pour nous** *(`/modules/ia-decident/`, relecture humaine à faire ; recours contre l'algorithme de la CNAF à suivre)* — crédit, aides sociales, justice : boîte noire ou modèle explicable (réseaux bayésiens, arbres, systèmes experts), droit à l'explication, biais
 - [x] **Les IA qui jouent** *(`/modules/ia-jouent/`, relecture humaine à faire)* — recherche dans l'arbre des coups (Deep Blue), apprentissage par renforcement (AlphaGo)
 - [ ] **Les IA qui agissent** — robots, voitures autonomes : perception, planification, renforcement
-- [ ] **Les IA qui surveillent** — détection de fraude, vidéosurveillance algorithmique ; cadre légal
+- [x] **Les IA qui surveillent** *(`/modules/ia-surveiller/`, relecture humaine à faire ; cadre légal de la vidéosurveillance algorithmique à suivre)* — détection de fraude, vidéosurveillance algorithmique ; cadre légal
 - [x] **Les IA qu'on trompe exprès** *(`/modules/ia-trompe/`, relecture humaine à faire)* — images piégées, attaques par instructions cachées (*prompt injection*), empoisonnement des données
 
 ## Phase 5 bis — Recommander (avec ou sans IA)
