@@ -1,0 +1,83 @@
+---
+// Animation « Des caméras qui signalent » (module « Les IA qui surveillent ») :
+// part des signalements exacts de la vidéosurveillance algorithmique pendant
+// l'expérimentation des JO de Paris 2024, par cas d'usage et par exploitant.
+// Données réelles : rapport du Sénat n° 374 (2024-2025).
+---
+<div class="anim signalements" data-signalements>
+  <div class="anim-repli">
+    <p>
+      Pendant l'expérimentation des Jeux de Paris 2024, sur 100 signalements d'« intrusion » envoyés
+      par les algorithmes, 79 correspondaient à une vraie intrusion à la RATP et 74 à la SNCF. Pour la
+      « surdensité » de foule, 88 à la RATP et 100 à la SNCF (sur 28 signalements). Pour les « objets
+      abandonnés », 22 seulement à la RATP et 23 à la SNCF : le reste désignait par exemple des
+      personnes assises ou immobiles, notamment des personnes sans domicile.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix">
+        <legend>Ce que l'algorithme devait repérer</legend>
+        <label><input type="radio" name="cas-vsa" value="intrusion" checked /> une intrusion dans une zone interdite</label>
+        <label><input type="radio" name="cas-vsa" value="surdensite" /> une foule trop dense</label>
+        <label><input type="radio" name="cas-vsa" value="objets" /> un objet abandonné</label>
+      </fieldset>
+      <fieldset class="choix">
+        <legend>Exploitant</legend>
+        <label><input type="radio" name="exploitant-vsa" value="ratp" checked /> RATP</label>
+        <label><input type="radio" name="exploitant-vsa" value="sncf" /> SNCF</label>
+      </fieldset>
+      <p class="tag">Sur 100 signalements, combien correspondaient à un vrai événement ?</p>
+      <ol class="grille" aria-hidden="true">
+        {Array.from({ length: 100 }, (_, i) => <li data-i={i}></li>)}
+      </ol>
+      <p class="cle"><span class="pastille vraie"></span> vrai événement · <span class="pastille fausse"></span> fausse alerte</p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Données réelles : rapport d'information du Sénat n° 374 (2024-2025), d'après le comité d'évaluation de l'expérimentation. Un signalement exact n'est pas forcément utile : à la SNCF, 35 % des signalements traités ont été jugés pertinents par les opérateur·rices.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { CAS } from '../../../lib/surveiller';
+
+  document.querySelectorAll<HTMLElement>('[data-signalements]').forEach((racine) => {
+    activerScene(racine);
+    const radios = [...racine.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    const cases = [...racine.querySelectorAll<HTMLElement>('[data-i]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const val = (name: string) => radios.find((r) => r.name === name && r.checked)!.value;
+
+    function maj() {
+      const cas = CAS.find((c) => c.id === val('cas-vsa'))!;
+      const exploitant = val('exploitant-vsa') as 'ratp' | 'sncf';
+      const vrais = cas[exploitant] ?? 0;
+      cases.forEach((c, i) => c.classList.toggle('vraie', i < vrais));
+      const qui = exploitant === 'ratp' ? 'À la RATP' : 'À la SNCF';
+      legende.textContent =
+        cas.id === 'objets'
+          ? `${qui}, ${vrais} signalements sur 100 seulement désignaient un vrai objet abandonné. Parmi les erreurs relevées : des personnes assises ou immobiles, notamment des personnes sans domicile.`
+          : cas.id === 'surdensite'
+            ? `${qui}, ${vrais} signalements sur 100 étaient exacts${exploitant === 'sncf' ? ' (mais sur 28 signalements seulement)' : ''} : compter une foule est une tâche à la portée de ces algorithmes.`
+            : `${qui}, ${vrais} signalements d’intrusion sur 100 étaient exacts : un des cas d’usage jugés « globalement satisfaisants ».`;
+    }
+    radios.forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .choix { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+  .choix legend { font-weight: 700; padding: 0 0.25rem; }
+  .choix input { accent-color: var(--accent); }
+  .tag { margin: 0.5rem 0 0.25rem; }
+  .grille { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(20, 1fr); gap: 2px; max-width: 30rem; }
+  .grille li { aspect-ratio: 1; background: var(--ill-paquet); border-radius: 2px; opacity: 0.55; }
+  .grille li.vraie { background: var(--ill-secret-b); opacity: 1; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.4rem 0; }
+  .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; vertical-align: middle; }
+  .pastille.vraie { background: var(--ill-secret-b); }
+  .pastille.fausse { background: var(--ill-paquet); opacity: 0.55; }
+</style>
