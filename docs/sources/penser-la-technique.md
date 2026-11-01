@@ -340,12 +340,21 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
   parkways de Long Island, conçus sous Robert Moses, auraient empêché le passage
   des bus, et donc des populations pauvres et noires, vers les plages.
 - B. Joerges, « Do Politics Have Artefacts? », *Social Studies of Science*
-  29(3), 1999, p. 411-431, conteste ce récit (résumé lu sur EconBiz) : une
-  « parable » transmise depuis longtemps ; « The story turns out to be
-  counterfactual » ; S. Woolgar et G. Cooper, « Do
-  artefacts have ambivalence? Moses' bridges, Winner's bridges and other urban
-  legends in STS », même numéro, p. 433-449. (**Métadonnées et résumés de
-  seconde main seulement.**)
+  29(3), 1999, p. 411-431 (**lu**, PDF transmis par le mainteneur, p. 411-421) :
+  résumé : « The story turns out to be counterfactual » ; Winner cité p. 412 :
+  « some two hundred or so low-hanging overpasses on Long Island […] built his
+  overpasses according to specifications that would discourage the presence of
+  buses on his parkways » ; déformations successives du récit (« Chinese
+  Whispers », p. 414) ; « How It Really Was » (p. 417-418) : chemin de fer
+  Manhattan–Long Island depuis 1877, réseau dense de routes ordinaires, accès
+  aux plages « via many routes » ; Moses a bloqué une branche ferroviaire vers
+  Jones Beach (interprétée par Caro comme un biais de classe) ; Moses
+  « without doubt […] what one might call a 'structural racist' », politiques
+  laissant intactes les relations de race et de classe (p. 418) ; « In the USA,
+  trucks, buses and other commercial vehicles were prohibited on all
+  parkways » ; « Moses could hardly have let buses on his parkways, even if he
+  had wanted differently » (p. 419). S. Woolgar et G. Cooper, « Do artefacts
+  have ambivalence? », même numéro, p. 433-449 : **métadonnées seulement**.
 
 **Lessig (1999-2000)** [22]
 - L. Lessig, « Code Is Law: On Liberty in Cyberspace », *Harvard Magazine*,
@@ -371,7 +380,7 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
 ### Sources (thème 4)
 
 20. Kranzberg, M. (1986). *Technology and Culture* 27(3) : 544-560. Copie PDF : https://www.cs.ucdavis.edu/~koehl/Teaching/ECS188/PDF_files/Kranzberg.pdf — P, en, **lu partiellement**.
-21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. Notice et résumé : https://www.econbiz.de/10010332936 — R, en, **résumé seulement**. Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner (1980) : **non lu**.
+21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. https://doi.org/10.1177/030631299029003004 — R, en, **lu** (p. 411-421). Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner (1980) : **non lu**.
 22. Lessig, L. (janv. 2000). « Code Is Law ». *Harvard Magazine*. https://www.harvardmagazine.com/2000/01/code-is-law-html — P, en, **lu partiellement**.
 23. Barlow, J. P. (1996). https://www.eff.org/cyberspace-independence — P, en, **lu**.
 24. Jevons, W. S. (1866). *The Coal Question*, chap. VII. Econlib : https://www.econlib.org/library/YPDBooks/Jevons/jvnCQ7.html — P, en, **lu partiellement**.
@@ -476,12 +485,27 @@ et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
 
 ### Faits clés
 
-- **Mhlambi** [30] : Berkman Klein Center (8 juillet 2020) : dans un document
-  de travail du Carr Center, S. Mhlambi « uses the relational Sub-Saharan
-  African philosophy of Ubuntu to show that the harms caused by artificial
-  intelligence, with a particular focus on automated decision making systems,
-  are in essence violations of ubuntu's relational personhood and relational
-  model of the universe ». Texte complet **non lu** (PDF inaccessible).
+- **Mhlambi** [30] : S. Mhlambi, « From Rationality to Relationality: Ubuntu as
+  an Ethical and Human Rights Framework for Artificial Intelligence
+  Governance », Carr Center Discussion Paper 2020-009, Harvard Kennedy School,
+  8 juillet 2020 (**lu**, PDF transmis par le mainteneur). Auteur : « Technology
+  and Human Rights Fellow, Carr Center for Human Rights Policy ». Résumé :
+  « The development of artificial intelligence has depended on the traditional
+  Western view of personhood as rationality » ; « The relational Sub-Saharan
+  African philosophy of ubuntu […] » ; les torts des systèmes de décision
+  automatisée « are in essence violations of ubuntu's relational personhood ».
+  Aristote, Descartes, Kant, Lull, Turing (introduction). Ubuntu « a profoundly
+  southern African manifestation » ; usage centré sur la philosophie nguni
+  (section « Ubuntu as Relational Personhood ») ; « Umu-Ntu ngumu-Ntu nga
+  ba-Ntu – A person is a person through other persons ». Cinq critiques :
+  « Exclusion of marginalized communities in the design of ADMS », « Biases in
+  procedure and data », « The failure to recognize the interconnectedness of
+  society », « The commodification of our digital selves », « The
+  centralization of data and resources ». Propositions : participation des plus
+  défavorisé·es ; « Communities should be able to treat their data as
+  intellectual property that can be licensed or revoked from online
+  platforms » ; apprentissage décentralisé, confidentialité différentielle,
+  « pods » de données personnelles.
 - **Yuk Hui** [31] : « Cosmotechnics as Cosmopolitics », *e-flux journal* 86,
   novembre 2017 : « a preliminary definition of cosmotechnics: it is the
   unification of the cosmos and the moral through technical activities […].
@@ -516,7 +540,7 @@ et Kate Crawford montrent les inégalités et les extractions derrière l'IA.
 
 ### Sources (thème 6)
 
-30. Berkman Klein Center (8 juill. 2020). « From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance ». https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial — P (présentation), en, **lu** ; document de travail lui-même **non lu**.
+30. Berkman Klein Center (8 juill. 2020). « From Rationality to Relationality: Ubuntu as an Ethical and Human Rights Framework for Artificial Intelligence Governance ». https://cyber.harvard.edu/story/2020-07/rationality-relationality-ubuntu-ethical-and-human-rights-framework-artificial — P (présentation), en, **lu**. Document de travail : Mhlambi, S. (2020), Carr Center Discussion Paper 2020-009 — P, en, **lu**.
 31. Hui, Y. (nov. 2017). « Cosmotechnics as Cosmopolitics ». *e-flux journal* 86. https://www.e-flux.com/journal/86/161887/cosmotechnics-as-cosmopolitics/ — P, en, **lu partiellement**.
 32. Carroll, S. R. et al. (2020). *Data Science Journal* 19 : 43. https://datascience.codata.org/articles/10.5334/dsj-2020-043 — R, en, **lu partiellement** (résumé, introduction).
 33. Indigenous Protocol and AI Working Group (2020), dir. J. E. Lewis. Page : https://www.indigenous-ai.net/position-paper/ — P, en, **lu partiellement** (présentation).
