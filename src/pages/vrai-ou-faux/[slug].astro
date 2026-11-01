@@ -1,0 +1,64 @@
+---
+// Une fiche « Vrai ou faux ? » (données dans src/data/vrai-ou-faux.ts).
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import { FICHES, LIBELLES, type Fiche } from '../../data/vrai-ou-faux';
+
+export function getStaticPaths() {
+  return FICHES.map((f, i) => ({ params: { slug: f.slug }, props: { fiche: f, i } }));
+}
+
+const { fiche, i } = Astro.props as { fiche: Fiche; i: number };
+const suivante = FICHES[(i + 1) % FICHES.length];
+---
+<Base title={`«\u00a0${fiche.idee}\u00a0» Vrai ou faux\u00a0?`} description={fiche.enBref}>
+  <p class="tag"><a href="/vrai-ou-faux/">Vrai ou faux ?</a></p>
+  <h1>«&nbsp;{fiche.idee}&nbsp;»</h1>
+  <MiseAJour date={fiche.verifie} />
+  <p class="verdict-ligne"><span class={`verdict ${fiche.verdict}`}>{LIBELLES[fiche.verdict]}</span></p>
+  <p class="en-bref">{fiche.enBref}</p>
+
+  <section class="colonnes">
+    <div class="bloc vrai">
+      <h2>Ce qui est vrai</h2>
+      <ul>{fiche.vrai.map((v) => <li>{v}</li>)}</ul>
+    </div>
+    <div class="bloc faux">
+      <h2>Ce qui est faux</h2>
+      <ul>{fiche.faux.map((v) => <li>{v}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="texte">
+    <h2>Pourquoi on y croit</h2>
+    <p>{fiche.pourquoi}</p>
+    <h2>Pour comprendre le mécanisme</h2>
+    {fiche.module ? (
+      <p>Le module <a href={fiche.module.lien}>{fiche.module.titre}</a> explique et fait manipuler ce qui se cache derrière.</p>
+    ) : (
+      <p>Le module «&nbsp;{fiche.aVenir}&nbsp;» est en préparation.</p>
+    )}
+    <p class="suite">Fiche suivante : <a href={`/vrai-ou-faux/${suivante.slug}/`}>«&nbsp;{suivante.idee}&nbsp;»</a> · <a href="/vrai-ou-faux/">toutes les fiches</a></p>
+  </section>
+
+  <Sources verifie={fiche.verifie} sources={fiche.sources} />
+</Base>
+
+<style>
+  .verdict-ligne { margin: 0.5rem 0; }
+  .verdict { display: inline-block; font-size: 1rem; font-weight: 700; padding: 0.15rem 0.7rem; border-radius: 999px; border: 2px solid currentColor; }
+  .verdict.faux { color: var(--ill-paquet); }
+  .verdict.nuance { color: var(--ill-serveur); }
+  .verdict.debat { color: var(--ill-secret-a); }
+  .en-bref { font-size: 1.15rem; max-width: var(--mesure); }
+  .colonnes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin: 2rem 0; }
+  .bloc { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 1rem; border-top: 4px solid; }
+  .bloc.vrai { border-top-color: var(--ill-secret-b); }
+  .bloc.faux { border-top-color: var(--ill-paquet); }
+  .bloc h2 { font-size: 1.1rem; margin: 0.25rem 0 0.5rem; }
+  .bloc li { margin-bottom: 0.5rem; }
+  .texte { max-width: var(--mesure); }
+  .texte h2 { font-size: 1.2rem; }
+  .suite { margin-top: 1.5rem; color: var(--muted); }
+</style>

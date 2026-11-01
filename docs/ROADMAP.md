@@ -143,7 +143,7 @@ vérifier lors de la recherche.
 - [x] Terminus : histoire « La Machine à remonter le temps » (`git`)
 - [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
 - [x] ~~Terminus : suites possibles~~ — déplacé dans le dépôt de Quêtes de Sysadmin (feuille de route du jeu)
-- [ ] Idées reçues : 10 premières fiches « Vrai ou faux ? »
+- [x] Idées reçues : 10 premières fiches « Vrai ou faux ? » *(`/vrai-ou-faux/`, relecture humaine à faire ; à venir : navigation privée, cloud dématérialisé, fichier supprimé, mails et streaming)*
 - [x] Page `/jeux/` : jeux pour apprendre, classés par thème (74 jeux vérifiés les 17, 24 et 25 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
 - [x] Terminus devient un projet séparé, « Quêtes de Sysadmin » (dépôt `Rouages-du-net/quetes-de-sysadmin`, site sysadmin.rouages.net) ; la page `/jeux/quetes-de-sysadmin/` l'intègre sans copier son code, `/jeux/terminus/` y redirige, et la progression des joueur·ses est gardée (clé `rouages-terminus`)
 
