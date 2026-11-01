@@ -1,0 +1,248 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Ligne from '../../components/animations/agir/Ligne.astro';
+import Freinage from '../../components/animations/agir/Freinage.astro';
+
+// Faits sourcés : voir docs/sources/ia-agir.md.
+const etapes = [
+  { ancre: 'boucle', court: 'Percevoir, décider, agir' },
+  { ancre: 'freiner', court: 'Voir n’est pas comprendre' },
+  { ancre: 'robotaxis', court: 'Plus sûrs que nous ?' },
+  { ancre: 'armes', court: 'Des machines qui tirent ?' },
+  { ancre: 'bilan', court: 'Questions à poser à une machine qui agit', pastille: '✓' },
+];
+---
+<Base
+  title="Les IA qui agissent"
+  description="Robots et voitures autonomes : règle la boucle « percevoir, décider, agir » d’un robot, revis seconde par seconde l’accident de Tempe (2018), puis pèse la sécurité des robotaxis et le débat sur les armes autonomes."
+>
+  <p class="tag">Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <h1>Les IA qui agissent</h1>
+  <MiseAJour date="2026-11-01" evolutif />
+  <p class="chapo seulement-debut">
+    Une IA qui écrit peut se tromper sans rien casser. Une IA qui conduit une voiture ou pilote un
+    robot agit dans le monde réel, en quelques fractions de seconde. Règle la boucle d'un petit robot,
+    revis l'accident de Tempe seconde par seconde, puis pèse les promesses des robotaxis.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Percevoir, décider, agir" ancre="boucle">
+    <Ligne slot="animation" />
+    <p slot="decouverte">
+      Un robot tourne en boucle : il perçoit (capteurs), décide (calcul), agit (moteurs), puis perçoit
+      le résultat de son action. Règle la force de sa réaction et le retard de sa perception.
+    </p>
+    <p slot="curieux">
+      Le retard est l'ennemi des machines qui agissent : le monde a bougé entre le moment où le
+      capteur a mesuré et celui où le moteur réagit. Réagir fort à une information périmée fait
+      osciller ; réagir mollement fait arriver trop tard. Les ingénieur·es cherchent le bon réglage,
+      et c'est encore plus difficile quand la machine va vite.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        Le robot de l'animation utilise un correcteur « proportionnel » : il tourne d'autant plus que
+        l'écart est grand. Les vrais robots ajoutent d'autres termes (par exemple selon la vitesse à
+        laquelle l'écart change) et combinent plusieurs capteurs.
+      </p>
+      <p>
+        Au-dessus de ces réflexes, un robot peut planifier : chercher un chemin (voir l'algorithme A*
+        dans <a href="/modules/ia-chercher/">Les IA qui cherchent et optimisent</a>), ou apprendre
+        par essais et erreurs, en étant récompensé quand il réussit (l'apprentissage par
+        renforcement, présenté dans <a href="/modules/ia-jouent/">Les IA qui jouent</a>).
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        Entre 1948 et 1949, au Burden Neurological Institute de Bristol (Royaume-Uni), William Grey
+        Walter construit deux robots mobiles autonomes, Elmer et Elsie, surnommés « tortues » pour
+        leur forme et leur lenteur. Leur carapace sensible à la lumière leur permet de la suivre, et
+        ils savent contourner des obstacles.
+      </p>
+      <p>
+        De 1966 à 1972, le Stanford Research Institute (Californie) étudie Shakey, présenté par l'IEEE
+        comme le premier robot mobile « intelligent ». C'est pour lui que l'algorithme A*, qui trouve
+        le plus court chemin, est mis au point en 1968.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Pour bien agir, un robot doit tout comprendre. »</strong> Les tortues de Grey Walter
+      avaient des comportements étonnants avec presque rien. À l'inverse, comprendre parfaitement une
+      scène ne suffit pas si la réaction arrive trop tard.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Voir n’est pas comprendre" ancre="freiner">
+    <Freinage slot="animation" />
+    <p slot="decouverte">
+      Une voiture autonome doit détecter les obstacles, comprendre ce qu'ils sont, prévoir leur
+      trajectoire, puis freiner ou éviter. Revis un accident réel, seconde par seconde : quand
+      fallait-il freiner ?
+    </p>
+    <div slot="curieux">
+      <p>
+        On classe l'automatisation des voitures en six niveaux, de 0 (aucune automatisation) à 5
+        (automatisation complète en toutes circonstances). Jusqu'au niveau 2, c'est une aide : la
+        personne au volant conduit et surveille en permanence. À partir du niveau 3, c'est le système
+        qui conduit, dans certaines conditions.
+      </p>
+      <p>
+        La voiture de Tempe était un prototype en essai, avec une conductrice de sécurité chargée de
+        surveiller. Or surveiller une machine qui marche presque toujours est très difficile pour un
+        humain : l'attention décroche.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le système avait détecté la piétonne à 5,6 secondes, d'abord comme un véhicule, puis comme un
+      objet inconnu et comme un cycliste. À chaque changement de catégorie, il oubliait la trajectoire
+      déjà observée, et il n'était pas conçu pour envisager un piéton traversant hors d'un passage.
+      Par crainte des fausses alertes, il attendait une seconde avant de freiner en urgence, sans
+      prévenir l'opératrice. Une IA qui agit doit choisir entre freiner pour rien et freiner trop tard.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le 18 mars 2018, à Tempe (Arizona), une voiture d'essai d'Uber en mode autonome heurte une
+        femme de 49 ans qui traverse à pied en poussant son vélo, hors d'un passage piéton, de nuit ;
+        elle meurt. Selon le rapport du National Transportation Safety Board américain (NTSB, 2019), la
+        cause probable est l'inattention de l'opératrice de sécurité, qui regardait son téléphone, et
+        des défaillances de l'entreprise : évaluation des risques insuffisante, surveillance inefficace
+        des opérateur·rices, absence de mécanismes contre la « complaisance envers l'automatisation »,
+        le tout conséquence d'une culture de la sécurité jugée inadéquate. Le rapport relève aussi que
+        la piétonne était sous l'effet de substances pouvant altérer la perception.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Une voiture autonome voit tout, donc elle ne peut pas rater un piéton. »</strong> À
+      Tempe, le système avait bien « vu » la piétonne, plus de cinq secondes à l'avance. Il ne l'a pas
+      comprise, et sa conception l'empêchait de freiner à fond à temps.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Plus sûrs que nous ?" ancre="robotaxis">
+    <p slot="decouverte">
+      Des taxis sans conducteur circulent déjà dans plusieurs villes américaines. Sont-ils plus sûrs
+      que des humains ? Les chiffres disponibles viennent surtout… des entreprises elles-mêmes.
+    </p>
+    <div slot="curieux">
+      <p>
+        Une étude publiée en 2025 dans la revue <em>Traffic Injury Prevention</em> compare les
+        accidents des taxis sans conducteur de Waymo sur 56,7 millions de miles à ceux des
+        conducteur·rices humain·es dans les mêmes villes et sur les mêmes types de routes. Elle trouve
+        beaucoup moins d'accidents avec blessés, par exemple 96 % de moins aux intersections entre
+        véhicules, et aucun type d'accident où Waymo ferait pire.
+      </p>
+      <p>
+        Mais ses six auteur·rices travaillent pour Waymo, et le kilométrage vient de l'entreprise. Les
+        accidents graves restent trop rares pour des conclusions solides sur eux. Et des problèmes
+        apparaissent sur le terrain : fin 2025, après des cas de robotaxis dépassant des bus scolaires
+        à l'arrêt, au Texas et en Géorgie, l'agence fédérale de sécurité routière (NHTSA) ouvre une
+        enquête et Waymo annonce un rappel logiciel, sans blessé signalé.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Pour comparer, il faut des « kilomètres équivalents » : mêmes routes, même météo, mêmes heures.
+      Les robotaxis roulent dans des zones choisies ; comparer leurs chiffres à la moyenne nationale
+      des humains serait trompeur. C'est pourquoi l'étude construit des références locales, à partir
+      des accidents déclarés à la police.
+    </p>
+    <div slot="histoire">
+      <p>
+        Face aux bus scolaires, Waymo dit son responsable de la sécurité : « avoir les plus hauts
+        standards de sécurité, c'est reconnaître quand notre comportement devrait être meilleur ». La
+        NHTSA estime de son côté que « la probabilité d'autres incidents similaires antérieurs est
+        élevée ». État au 1ᵉʳ novembre 2026.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les voitures autonomes sont soit parfaitement sûres, soit dangereuses. »</strong> Elles
+      peuvent être plus sûres en moyenne et commettre des erreurs qu'aucun humain ne ferait. Ce qui
+      compte : des données vérifiées par d'autres que le constructeur, et des corrections rapides.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Des machines qui tirent ?" ancre="armes">
+    <p slot="decouverte">
+      Certaines armes peuvent déjà choisir et frapper une cible sans intervention humaine. Faut-il les
+      interdire ? Le débat est mondial.
+    </p>
+    <div slot="curieux">
+      <p>
+        Le Comité international de la Croix-Rouge (CICR) définit les systèmes d'armes autonomes comme
+        ceux qui « sélectionnent et appliquent la force à des cibles sans intervention humaine ». En
+        mai 2021, il demande aux États d'interdire les systèmes imprévisibles et ceux qui visent des
+        êtres humains, et d'encadrer les autres.
+      </p>
+      <p>
+        À l'ONU, l'Assemblée générale adopte en décembre 2023 une première résolution sur les
+        « systèmes d'armes létaux autonomes » (152 voix pour, 4 contre, 11 abstentions). En décembre
+        2025, une nouvelle résolution recueille 164 voix pour, 6 contre (dont les États-Unis, la
+        Russie et Israël) et 7 abstentions. État au 1ᵉʳ novembre 2026 : aucun traité ne les interdit.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Les problèmes vus plus haut prennent ici une gravité extrême : une erreur de classification
+      (confondre un civil et un combattant), une situation imprévue, un temps de réaction qui ne
+      laisse plus à un humain la possibilité de juger. Le règlement européen sur l'IA ne s'applique
+      pas aux usages militaires.
+    </p>
+    <p slot="mythes">
+      <strong>« Les robots tueurs, c'est de la science-fiction. »</strong> Le débat porte sur des
+      systèmes qui existent ou sont en développement, et il occupe l'ONU depuis plusieurs années.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Questions à poser à une machine qui agit</h2>
+    <ol class="questions">
+      <li><strong>Qui surveille, et peut-il vraiment le faire ?</strong> Un humain décroche face à une machine qui marche presque toujours.</li>
+      <li><strong>Que fait-elle face à l'imprévu ?</strong> Un piéton hors du passage, un bus scolaire, une situation jamais vue.</li>
+      <li><strong>Comment arbitre-t-elle entre fausse alerte et réaction tardive ?</strong> Ce réglage peut coûter des vies.</li>
+      <li><strong>Qui fournit les chiffres de sécurité ?</strong> Le constructeur, ou des organismes indépendants ?</li>
+      <li><strong>Un humain garde-t-il la décision quand une vie est en jeu ?</strong></li>
+    </ol>
+    <p>
+      Pour aller plus loin, le module <a href="/modules/choix-moraux/">Les choix moraux</a> discute les
+      dilemmes posés aux voitures autonomes.
+    </p>
+
+  <Sources
+    verifie="2026-11-01"
+    sources={[
+      { auteur: 'Université de Bristol', titre: 'Grey Walter and his tortoises', url: 'https://www.bristol.ac.uk/news/2008/212017945378.html', type: 'site', annee: 2008, langue: 'en' },
+      { auteur: 'IEEE Milestones', titre: 'Shakey: The World’s First Mobile, Intelligent Robot, 1972', url: 'https://ieeemilestones.ethw.org/Milestones:Shakey:_The_World%E2%80%99s_First_Mobile,_Intelligent_Robot,_1972', type: 'site', langue: 'en' },
+      { auteur: 'SAE International', titre: 'J3016 : Taxonomy and Definitions for Terms Related to Driving Automation Systems (révision 2021)', url: 'https://www.sae.org/standards/content/j3016_202104/', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'National Transportation Safety Board', titre: 'Collision Between Vehicle Controlled by Developmental Automated Driving System and Pedestrian, Tempe, Arizona (HAR-19/03)', url: 'https://www.ntsb.gov/investigations/accidentreports/reports/har1903.pdf', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'K. D. Kusano et al. (Waymo)', titre: 'Comparison of Waymo Rider-Only crash rates by crash type to human benchmarks at 56.7 million miles (Traffic Injury Prevention 26)', url: 'https://doi.org/10.1080/15389588.2025.2499887', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'J. Brady (NPR, repris par OPB)', titre: 'Waymo will recall software after its self-driving cars passed stopped school buses', url: 'https://www.opb.org/article/2025/12/06/waymo-updating-software-after-self-driving-cars-passed-stopped-school-buses/', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Comité international de la Croix-Rouge', titre: 'ICRC position on autonomous weapon systems', url: 'https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'Assemblée générale des Nations unies', titre: 'Résolution 78/241, Systèmes d’armes létaux autonomes', url: 'https://digitallibrary.un.org/record/4033027', type: 'primaire', annee: 2023 },
+      { auteur: 'UN Project', titre: 'Vote sur la résolution A/RES/80/57 (1er décembre 2025)', url: 'https://un-project.org/votes/resolution/A-RES-80-57/', type: 'site', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

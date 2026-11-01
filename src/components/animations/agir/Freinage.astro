@@ -1,0 +1,116 @@
+---
+// Animation « Freiner à temps » (module « Les IA qui agissent ») : à partir
+// des chiffres du rapport du NTSB sur l'accident de Tempe (2018), on choisit
+// le moment où le freinage commence et la force de freinage.
+---
+<div class="anim freinage" data-freinage>
+  <div class="anim-repli">
+    <p>
+      En mars 2018, à Tempe (Arizona), une voiture d'essai autonome roule à environ 70 km/h quand son
+      système détecte une piétonne, 5,6 secondes avant l'impact. Freiner à fond (0,92 g) demande
+      environ 21 mètres, soit un peu plus d'une seconde de route à cette vitesse : en freinant
+      n'importe quand avant 1,1 seconde de l'impact, la voiture s'arrêtait à temps. Mais le système
+      ne reconnaît l'urgence qu'à 1,2 seconde, sa conception limite le freinage automatique (0,71 g),
+      et il attend encore une seconde avant d'agir. Freiner 0,2 seconde avant l'impact, c'est le
+      heurter à environ 66 km/h.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Le freinage commence <output data-t-sortie></output> avant l'impact
+        <input type="range" min="0" max="5.6" step="0.1" value="5.6" data-t />
+      </label>
+      <div class="reperes" role="group" aria-label="Moments clés de l'accident">
+        <button type="button" class="anim-bouton" data-aller="5.6">Première détection (5,6 s)</button>
+        <button type="button" class="anim-bouton" data-aller="1.2">Urgence reconnue (1,2 s)</button>
+        <button type="button" class="anim-bouton" data-aller="0.2">Après une seconde d'attente (0,2 s)</button>
+      </div>
+      <fieldset class="choix">
+        <legend>Force du freinage</legend>
+        <label><input type="radio" name="force-freinage" value="0.92" checked /> maximale de la voiture (0,92 g)</label>
+        <label><input type="radio" name="force-freinage" value="0.71" /> plafond du système automatique (0,71 g)</label>
+      </fieldset>
+      <svg viewBox="0 0 340 70" role="img" aria-labelledby="freinage-titre">
+        <title id="freinage-titre">Route vue de dessus : distance restante jusqu'au point d'impact et distance de freinage</title>
+        <rect class="route" x="10" y="20" width="320" height="30" rx="4" />
+        <rect class="arret" data-arret x="10" y="28" width="0" height="14" />
+        <line class="pieton" data-pieton x1="0" y1="14" x2="0" y2="56" />
+        <circle class="voiture" data-voiture cx="10" cy="35" r="7" />
+      </svg>
+      <p class="cle"><span class="pastille voiture"></span> voiture au début du freinage · <span class="pastille arret"></span> distance de freinage · trait vertical : point d'impact</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Chiffres du rapport du NTSB (HAR-19/03) : vitesse d'environ 44 mph (71 km/h) à la détection, freinage maximal possible de 0,92 g sur cette chaussée, plafond de 0,71 g pour le freinage automatique. Calcul simplifié : vitesse constante jusqu'au début du freinage. En réalité, l'impact a eu lieu à 39 mph (63 km/h).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { freiner, V0 } from '../../../lib/agir';
+
+  const kmh = (v: number) => Math.round(v * 3.6).toLocaleString('fr-FR');
+  const m = (d: number) => d.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+
+  document.querySelectorAll<HTMLElement>('[data-freinage]').forEach((racine) => {
+    activerScene(racine);
+    const t = racine.querySelector<HTMLInputElement>('[data-t]')!;
+    const radios = [...racine.querySelectorAll<HTMLInputElement>('input[type=radio]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const echelle = 320 / (V0 * 5.6); // pixels par mètre : 5,6 s de route = toute la largeur
+
+    function maj() {
+      const T = Number(t.value);
+      const g = Number(radios.find((r) => r.checked)!.value);
+      racine.querySelector<HTMLOutputElement>('[data-t-sortie]')!.value = `${T.toLocaleString('fr-FR')} s`;
+      const f = freiner(T, g);
+      const xImpact = 330;
+      const xVoiture = xImpact - f.dispo * echelle;
+      racine.querySelector('[data-pieton]')!.setAttribute('x1', String(xImpact));
+      racine.querySelector('[data-pieton]')!.setAttribute('x2', String(xImpact));
+      const v = racine.querySelector('[data-voiture]')!;
+      v.setAttribute('cx', xVoiture.toFixed(1));
+      const a = racine.querySelector('[data-arret]')!;
+      a.setAttribute('x', xVoiture.toFixed(1));
+      a.setAttribute('width', Math.max(0, f.arret * echelle).toFixed(1));
+      racine.querySelector('[data-mesure]')!.textContent =
+        `Distance jusqu'au point d'impact : ${m(f.dispo)} m · distance de freinage : ${m(f.arret)} m`;
+      legende.textContent = f.sArrete
+        ? `La voiture s’arrête ${m(f.marge)} m avant le point d’impact. Il suffisait de freiner au plus tard ${f.tMin.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} s avant.`
+        : T === 0
+          ? `Sans aucun freinage, l’impact a lieu à ${kmh(V0)} km/h.`
+          : `Trop tard : la voiture heurte la piétonne à environ ${kmh(f.vImpact)} km/h.`;
+    }
+    t.addEventListener('input', maj);
+    radios.forEach((x) => x.addEventListener('input', maj));
+    racine.querySelectorAll<HTMLButtonElement>('[data-aller]').forEach((b) =>
+      b.addEventListener('click', () => {
+        t.value = b.dataset.aller!;
+        if (b.dataset.aller !== '5.6') radios.find((r) => r.value === '0.71')!.checked = true;
+        maj();
+      }),
+    );
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  .reperes { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.25rem 0 0.5rem; }
+  .choix { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.75rem; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
+  .choix legend { font-weight: 700; padding: 0 0.25rem; }
+  .choix input { accent-color: var(--accent); }
+  svg { width: 100%; max-width: 36rem; height: auto; display: block; margin: 0.5rem auto; }
+  .route { fill: var(--border); }
+  .arret { fill: var(--ill-commun); opacity: 0.8; }
+  .pieton { stroke: var(--ill-paquet); stroke-width: 4; }
+  .voiture { fill: var(--ill-client); stroke: var(--bg); stroke-width: 2; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.25rem 0; }
+  .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 50%; vertical-align: middle; }
+  .pastille.voiture { background: var(--ill-client); }
+  .pastille.arret { background: var(--ill-commun); border-radius: 2px; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.25rem 0; }
+</style>

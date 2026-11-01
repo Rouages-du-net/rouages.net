@@ -1,0 +1,86 @@
+---
+// Animation « Percevoir, décider, agir » (module « Les IA qui agissent ») :
+// un robot suit une ligne ; on règle la force de sa réaction (gain) et le
+// retard de sa perception. Modèle inventé (src/lib/agir.ts).
+---
+<div class="anim ligne" data-ligne>
+  <div class="anim-repli">
+    <p>
+      Un petit robot doit suivre une ligne. À chaque instant, il mesure son écart à la ligne, décide
+      de tourner, et agit sur ses roues : c'est une boucle « percevoir, décider, agir ». S'il réagit
+      trop mollement, il met longtemps à rejoindre la ligne. S'il réagit vivement et que sa
+      perception est en retard, il la dépasse, revient, la redépasse : il zigzague sans fin. Les
+      robots et les voitures autonomes doivent régler ce même équilibre.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Force de la réaction : <output data-g-sortie></output>
+        <input type="range" min="0.4" max="8" step="0.4" value="2" data-g />
+      </label>
+      <label class="curseur">Retard de la perception : <output data-r-sortie></output>
+        <input type="range" min="0" max="8" step="1" value="0" data-r />
+      </label>
+      <svg viewBox="0 0 340 130" role="img" aria-labelledby="ligne-titre">
+        <title id="ligne-titre">Trajectoire du robot (vue de dessus) par rapport à la ligne à suivre</title>
+        <line class="cible" x1="10" y1="65" x2="330" y2="65" />
+        <polyline class="trajet" data-trajet points="" />
+        <circle class="robot" data-robot r="5" cx="10" cy="25" />
+      </svg>
+      <p class="cle"><span class="trait cible"></span> ligne à suivre · <span class="trait trajet"></span> trajet du robot, de gauche à droite</p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Modèle inventé : le robot avance à vitesse constante et s'oriente vers la ligne proportionnellement à l'écart qu'il mesure, avec un angle maximal. Le retard va de 0 à 0,8 seconde.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { suivre, bilanSuivi } from '../../../lib/agir';
+
+  document.querySelectorAll<HTMLElement>('[data-ligne]').forEach((racine) => {
+    activerScene(racine);
+    const g = racine.querySelector<HTMLInputElement>('[data-g]')!;
+    const r = racine.querySelector<HTMLInputElement>('[data-r]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const G = Number(g.value), R = Number(r.value);
+      racine.querySelector<HTMLOutputElement>('[data-g-sortie]')!.value = G < 1 ? 'molle' : G > 4.5 ? 'très vive' : 'moyenne';
+      racine.querySelector<HTMLOutputElement>('[data-r-sortie]')!.value = R === 0 ? 'aucun' : `${(R / 10).toLocaleString('fr-FR')} s`;
+      const e = suivre(G, R);
+      const X = (i: number) => 10 + (i * 320) / (e.length - 1);
+      const Y = (y: number) => 65 - y * 40;
+      racine.querySelector('[data-trajet]')!.setAttribute('points', e.map((y, i) => `${X(i).toFixed(1)},${Y(y).toFixed(1)}`).join(' '));
+      const robot = racine.querySelector('[data-robot]')!;
+      robot.setAttribute('cx', X(e.length - 1).toFixed(1));
+      robot.setAttribute('cy', Y(e[e.length - 1]).toFixed(1));
+      const b = bilanSuivi(e);
+      legende.textContent =
+        b.fin > 0.1
+          ? 'Le robot zigzague sans fin : il réagit fort à une information déjà périmée, dépasse la ligne, puis corrige trop tard dans l’autre sens.'
+          : b.depassement > 0.05
+            ? 'Le robot dépasse la ligne avant de s’y stabiliser : le retard de perception le fait corriger trop tard.'
+            : b.rejoint > 40
+              ? 'Le robot rejoint la ligne, mais lentement : sa réaction est trop molle.'
+              : 'Le robot rejoint la ligne vite et sans la dépasser : réaction et perception sont bien accordées.';
+    }
+    [g, r].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .curseur input { width: 100%; accent-color: var(--accent); }
+  .curseur output { font-weight: 700; }
+  svg { width: 100%; max-width: 36rem; height: auto; display: block; margin: 0.5rem auto; background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; }
+  .cible { stroke: var(--fg); stroke-width: 3; stroke-dasharray: 8 5; }
+  .trajet { fill: none; stroke: var(--ill-client); stroke-width: 2.5; }
+  .robot { fill: var(--ill-paquet); stroke: var(--bg); stroke-width: 1.5; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.25rem 0; }
+  .trait { display: inline-block; width: 1.5rem; height: 0; vertical-align: middle; }
+  .trait.cible { border-top: 3px dashed var(--fg); }
+  .trait.trajet { border-top: 3px solid var(--ill-client); }
+</style>
