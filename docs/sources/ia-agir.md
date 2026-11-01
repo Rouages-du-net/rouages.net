@@ -27,6 +27,16 @@ certaines armes autonomes ; l'ONU en débat, sans traité à ce jour.
   obstacles » ; « described as tortoises due to their shape and slow rate of
   movement ».
 
+**Le mot « robot »** [9]
+- Larousse, Encyclopédie, article « robot » : « du tchèque robota, travail
+  forcé » ; « mot créé en 1920 par K. Čapek » dans sa pièce *R.U.R.*
+  (*Rossum's Universal Robots*), où il désigne un androïde fabriqué par un
+  savant, capable de faire tous les travaux d'un humain.
+- Rôle de Josef Čapek (qui aurait suggéré le mot, selon un article de Karel
+  Čapek dans *Lidové noviny* en décembre 1933, d'après des résumés de
+  recherche) : **non vérifié**, sources inaccessibles (Britannica 403, Blackbird
+  503, PDF de l'université Masaryk) ; non publié.
+
 **Shakey et A*** : voir `ia-chercher.md` § 2 (SRI 1966-1972 ; Hart, Nilsson,
 Raphael 1968 ; IEEE Milestone).
 
@@ -113,6 +123,7 @@ Raphael 1968 ; IEEE Milestone).
 5. Brady, J. (6 déc. 2025). NPR, repris par OPB. https://www.opb.org/article/2025/12/06/waymo-updating-software-after-self-driving-cars-passed-stopped-school-buses/ — Pr, en, **lu**.
 6. CICR (12 mai 2021). https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems — P, en, **lu partiellement**.
 7. ONU, A/RES/78/241. https://digitallibrary.un.org/record/4033027 — P, **résumé seulement** (fiche).
+9. Larousse. Encyclopédie, « robot ». https://www.larousse.fr/encyclopedie/divers/robot/88768 — site (encyclopédie), fr, **lu**. Orthodidacte, « Robot : étymologie » : https://www.orthodidacte.com/ressources/dictionnaire/etymologie/robot-etymologie/ — **non ouvert** (403).
 8. UN Project. A/RES/80/57. https://un-project.org/votes/resolution/A-RES-80-57/ — site, en, **lu**.
 
 ## Points d'attention
@@ -122,5 +133,5 @@ Raphael 1968 ; IEEE Milestone).
 - Études de sécurité des robotaxis : signaler l'affiliation des auteur·rices.
 - Armes autonomes : ne pas affirmer qu'elles sont déjà utilisées sans source
   primaire ; rester sur le CICR et les votes de l'ONU.
-- WABOT-1 (Waseda, 1973) et l'origine du mot « robot » (Čapek, 1920) : sources
-  non ouvertes, non publiés.
+- WABOT-1 (Waseda, 1973) : source non ouverte, non publié. Josef Čapek : à
+  ajouter si une source fiable est lue.
