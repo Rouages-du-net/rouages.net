@@ -221,7 +221,7 @@ humain plus souvent que les humains eux-mêmes dans un test de Turing.
 
 ## Thème 3 — Les choix moraux (`/modules/choix-moraux/`)
 
-Recherche du 1ᵉʳ novembre 2026.
+Recherche du 31 octobre 2026.
 
 ### Formulation sûre
 
@@ -305,7 +305,7 @@ occupera, derrière un « voile d'ignorance ».
 
 ## Thème 4 — La technique est-elle neutre ? (`/modules/technique-neutre/`)
 
-Recherche du 1ᵉʳ novembre 2026.
+Recherche du 31 octobre 2026.
 
 ### Formulation sûre
 
@@ -403,7 +403,7 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
 
 ## Thème 5 — Surveillance et vie privée (`/modules/surveillance-vie-privee/`)
 
-Recherche du 2 novembre 2026.
+Recherche du 31 octobre 2026.
 
 ### Formulation sûre
 
@@ -476,7 +476,7 @@ sensibles sans le contenu des conversations (Mayer et al., 2016).
 
 ## Thème 6 — Des regards venus d'ailleurs (`/modules/regards-ailleurs/`)
 
-Recherche du 2 novembre 2026.
+Recherche du 31 octobre 2026.
 
 ### Formulation sûre
 
