@@ -2,16 +2,17 @@
 // Animation « Des caméras qui signalent » (module « Les IA qui surveillent ») :
 // part des signalements exacts de la vidéosurveillance algorithmique pendant
 // l'expérimentation des JO de Paris 2024, par cas d'usage et par exploitant.
-// Données réelles : rapport du Sénat n° 374 (2024-2025).
+// Données réelles : rapport du comité d'évaluation (janvier 2025), § 2.3.5.
 ---
 <div class="anim signalements" data-signalements>
   <div class="anim-repli">
     <p>
       Pendant l'expérimentation des Jeux de Paris 2024, sur 100 signalements d'« intrusion » envoyés
-      par les algorithmes, 79 correspondaient à une vraie intrusion à la RATP et 74 à la SNCF. Pour la
-      « surdensité » de foule, 88 à la RATP et 100 à la SNCF (sur 28 signalements). Pour les « objets
-      abandonnés », 22 seulement à la RATP et 23 à la SNCF : le reste désignait par exemple des
-      personnes assises ou immobiles, notamment des personnes sans domicile.
+      par l'algorithme, 79 correspondaient à une vraie intrusion à la RATP, et 74 à la SNCF. Pour une
+      foule trop dense, 88 à la RATP. Pour les objets abandonnés, 22 seulement à la RATP et 33 à la
+      SNCF : l'algorithme confondait notamment des bancs, des seaux ou des personnes assises,
+      y compris des personnes sans domicile. Et exact ne veut pas dire utile : à la RATP, sur 1 222
+      vraies intrusions signalées, 11 ont été jugées pertinentes pour une intervention.
     </p>
   </div>
 
@@ -25,43 +26,58 @@
       </fieldset>
       <fieldset class="choix">
         <legend>Exploitant</legend>
-        <label><input type="radio" name="exploitant-vsa" value="ratp" checked /> RATP</label>
-        <label><input type="radio" name="exploitant-vsa" value="sncf" /> SNCF</label>
+        <label><input type="radio" name="exploitant-vsa" value="ratp" checked /> RATP (pendant les Jeux olympiques)</label>
+        <label><input type="radio" name="exploitant-vsa" value="sncf" /> SNCF (toute l'expérimentation)</label>
       </fieldset>
       <p class="tag">Sur 100 signalements, combien correspondaient à un vrai événement ?</p>
       <ol class="grille" aria-hidden="true">
         {Array.from({ length: 100 }, (_, i) => <li data-i={i}></li>)}
       </ol>
       <p class="cle"><span class="pastille vraie"></span> vrai événement · <span class="pastille fausse"></span> fausse alerte</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
       <p class="anim-legende" aria-live="polite"></p>
-      <p class="anim-note">Données réelles : rapport d'information du Sénat n° 374 (2024-2025), d'après le comité d'évaluation de l'expérimentation. Un signalement exact n'est pas forcément utile : à la SNCF, 35 % des signalements traités ont été jugés pertinents par les opérateur·rices.</p>
+      <p class="anim-note">Données réelles : rapport du comité d'évaluation de l'expérimentation (janvier 2025), qui invite à les interpréter avec précaution : elles dépendent des caméras, du calibrage et des indicateurs de chaque exploitant.</p>
     </div>
   </div>
 </div>
 
 <script>
   import { activerScene } from '../../../lib/pasapas';
-  import { CAS } from '../../../lib/surveiller';
+  import { CAS, partVrais } from '../../../lib/surveiller';
+
+  const n = (v: number) => v.toLocaleString('fr-FR');
 
   document.querySelectorAll<HTMLElement>('[data-signalements]').forEach((racine) => {
     activerScene(racine);
     const radios = [...racine.querySelectorAll<HTMLInputElement>('input[type=radio]')];
     const cases = [...racine.querySelectorAll<HTMLElement>('[data-i]')];
+    const grille = racine.querySelector<HTMLElement>('.grille')!;
+    const mesure = racine.querySelector<HTMLElement>('[data-mesure]')!;
     const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
     const val = (name: string) => radios.find((r) => r.name === name && r.checked)!.value;
 
     function maj() {
       const cas = CAS.find((c) => c.id === val('cas-vsa'))!;
       const exploitant = val('exploitant-vsa') as 'ratp' | 'sncf';
-      const vrais = cas[exploitant] ?? 0;
-      cases.forEach((c, i) => c.classList.toggle('vraie', i < vrais));
+      const b = cas[exploitant];
       const qui = exploitant === 'ratp' ? 'À la RATP' : 'À la SNCF';
+      if (!b) {
+        grille.style.opacity = '0.25';
+        cases.forEach((c) => c.classList.remove('vraie'));
+        mesure.textContent = '';
+        legende.textContent = 'Le rapport ne détaille pas ce cas pour la SNCF : il ne représentait qu’environ 2 % de ses signalements.';
+        return;
+      }
+      grille.style.opacity = '1';
+      const p = partVrais(b);
+      cases.forEach((c, i) => c.classList.toggle('vraie', i < p));
+      mesure.textContent = `${n(b.vrais)} vrais signalements, ${n(b.faux)} fausses alertes` + (b.utiles !== undefined ? ` · ${n(b.utiles)} jugés utiles pour une intervention` : '');
       legende.textContent =
         cas.id === 'objets'
-          ? `${qui}, ${vrais} signalements sur 100 seulement désignaient un vrai objet abandonné. Parmi les erreurs relevées : des personnes assises ou immobiles, notamment des personnes sans domicile.`
-          : cas.id === 'surdensite'
-            ? `${qui}, ${vrais} signalements sur 100 étaient exacts${exploitant === 'sncf' ? ' (mais sur 28 signalements seulement)' : ''} : compter une foule est une tâche à la portée de ces algorithmes.`
-            : `${qui}, ${vrais} signalements d’intrusion sur 100 étaient exacts : un des cas d’usage jugés « globalement satisfaisants ».`;
+          ? `${qui}, ${p} signalements sur 100 seulement désignaient un vrai objet abandonné. L’algorithme confondait du mobilier, du matériel de nettoyage, et des personnes assises ou immobiles, notamment des personnes sans domicile.`
+          : b.utiles !== undefined
+            ? `${qui}, ${p} signalements sur 100 étaient exacts. Mais exact ne veut pas dire utile : ${n(b.utiles)} seulement ont été jugés pertinents pour intervenir.`
+            : `${qui}, ${p} signalements d’intrusion sur 100 étaient exacts : un des cas d’usage jugés « globalement satisfaisants ».`;
     }
     radios.forEach((x) => x.addEventListener('input', maj));
     maj();
@@ -80,4 +96,5 @@
   .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; vertical-align: middle; }
   .pastille.vraie { background: var(--ill-secret-b); }
   .pastille.fausse { background: var(--ill-paquet); opacity: 0.55; }
+  .mesure { font-family: var(--police-mono); font-size: 0.85rem; margin: 0.25rem 0; }
 </style>

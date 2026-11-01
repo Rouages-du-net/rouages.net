@@ -18,7 +18,7 @@ avant de présenter le cadre légal et ses débats.
 | # | Étape | Animation | Ce qu'on manipule |
 |---|---|---|---|
 | 0 | Repérer la fraude | `Alarme` | sévérité du blocage, qualité du détecteur ; fraudes repérées, manquées, paiements honnêtes bloqués, part des alertes justes (100 000 paiements, 34 fraudes) |
-| 1 | Des caméras qui signalent | `Signalements` | cas d'usage (intrusion, surdensité, objets abandonnés), exploitant (RATP, SNCF) ; part des signalements exacts (données du Sénat) |
+| 1 | Des caméras qui signalent | `Signalements` | cas d'usage (intrusion, surdensité, objets abandonnés), exploitant (RATP, SNCF) ; part des signalements exacts et cas jugés utiles (données du comité d'évaluation) |
 | 2 | Ce que la loi interdit | texte | article 5 du règlement sur l'IA ; mythe du « score social » chinois |
 | ✓ | Questions à poser à une surveillance | liste | cinq questions |
 
@@ -26,8 +26,9 @@ avant de présenter le cadre légal et ses débats.
 
 - Le détecteur de fraude est inventé (scores gaussiens, `src/lib/surveiller.ts`) ;
   la fréquence de la fraude suit l'OSMP 2024.
-- Les chiffres de la VSA sont réels (rapport du Sénat n° 374) ; le rapport du
-  comité d'évaluation n'a pas pu être téléchargé en entier.
+- Les chiffres de la VSA sont réels et tirés du rapport du comité d'évaluation
+  (§ 2.3.5), qui diffèrent sur quelques points du rapport du Sénat (voir le
+  dossier) ; la surdensité à la SNCF n'y est pas détaillée.
 - La reconnaissance faciale est renvoyée au module « Les IA qui voient », la
   surveillance des allocataires au module « Les IA qui décident pour nous ».
 - Sujet évolutif : la date de fin de l'expérimentation (31 décembre 2027) et

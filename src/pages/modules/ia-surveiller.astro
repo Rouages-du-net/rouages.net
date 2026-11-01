@@ -86,10 +86,10 @@ const etapes = [
     </p>
     <div slot="curieux">
       <p>
-        Ces logiciels ne reconnaissent pas les visages : la loi l'interdit. Ils repèrent des
-        situations, par exemple une personne dans une zone interdite, une circulation à contresens,
-        une foule trop dense, un objet abandonné, un départ de feu, une personne au sol ou un mouvement
-        de foule. Ils ne décident rien : ils envoient un signalement à une personne, qui juge.
+        Ces logiciels ne reconnaissent pas les visages : la loi l'interdit. Ils repèrent huit types de
+        situations fixés par décret : un objet abandonné, la présence ou l'utilisation d'armes, une
+        circulation à contresens, une personne ou un véhicule dans une zone interdite, une personne au
+        sol après une chute, un mouvement de foule, une foule trop dense et un départ de feu. Ils ne décident rien : ils envoient un signalement à une personne, qui juge.
       </p>
       <p>
         Les résultats varient beaucoup selon la tâche. Compter une foule ou repérer quelqu'un sur une
@@ -98,13 +98,22 @@ const etapes = [
         personnes sans domicile.
       </p>
     </div>
-    <p slot="ingenieur">
-      Le comité d'évaluation distingue les faux positifs « techniques » (l'algorithme se trompe) et
-      « opérationnels » (il a raison, mais l'événement ne mérite pas d'intervention). Il a jugé
-      « globalement satisfaisants » l'intrusion, la circulation à contresens et la surdensité, et
-      « très insatisfaisantes » la détection des départs de feu et des personnes au sol. Il qualifie
-      l'intérêt opérationnel du dispositif de « limité mais réel ».
-    </p>
+    <div slot="ingenieur">
+      <p>
+        Le comité d'évaluation distingue l'exactitude d'un signalement de son utilité. À la RATP,
+        pendant les Jeux olympiques, l'algorithme a signalé 1 222 vraies intrusions, dont 11 seulement
+        ont été jugées pertinentes pour intervenir. À Cannes, pendant le Festival, sur 37 194 alertes,
+        25 639 ont été traitées par les opérateur·rices et aucune n'a nécessité l'envoi d'un agent sur
+        le terrain ; les essais suivants, mieux paramétrés, ont été jugés plus concluants.
+      </p>
+      <p>
+        Le comité juge « globalement satisfaisantes » les performances pour l'intrusion, le contresens
+        et la densité de foule, « inégales » pour les objets abandonnés et les armes, et « très
+        insatisfaisantes » pour les départs de feu et les personnes au sol. Il note que l'évaluation a
+        surtout porté sur le logiciel d'une seule entreprise, et qualifie l'intérêt opérationnel du
+        dispositif de « limité mais réel ».
+      </p>
+    </div>
     <div slot="histoire">
       <p>
         La loi du 19 mai 2023 sur les Jeux olympiques autorise cette expérimentation jusqu'au 31 mars
@@ -114,17 +123,21 @@ const etapes = [
         notamment sur son efficacité.
       </p>
       <p>
-        Le comité d'évaluation rend son rapport en janvier 2025. En février 2025, un rapport du Sénat recommande de prolonger l'expérimentation avant
+        Le comité d'évaluation rend son rapport en janvier 2025 : il estime que le dispositif, « en
+        l'état, ne heurte les libertés publiques ni dans sa conception ni dans sa mise en œuvre », et
+        que l'abandon, la prolongation ou la pérennisation sont « un choix politique qui ne relève pas
+        de la mission du comité ». En février 2025, un rapport du Sénat recommande de prolonger l'expérimentation avant
         toute pérennisation. Une première prolongation, glissée dans une loi sur la sécurité dans les
         transports, est censurée par le Conseil constitutionnel en avril 2025. La loi du 20 mars 2026 sur les Jeux de 2030 la reconduit finalement jusqu'au
         31 décembre 2027, avec un nouveau rapport d'évaluation attendu le 30 septembre 2027 ; le Conseil
         constitutionnel la juge conforme.
       </p>
       <p>
-        Les avis restent opposés. Pour une proposition de loi sénatoriale de décembre 2025, le comité
-        a montré que le dispositif « ne heurte les libertés publiques ni dans sa conception ni dans sa
-        mise en œuvre », et ses utilisateurs (préfecture de police, SNCF, RATP) en reconnaissent
-        l'intérêt. Pour Amnesty International France, les Jeux ont servi de tremplin pour banaliser ces
+        Les avis restent opposés. Une proposition de loi sénatoriale de décembre 2025 s'appuie sur ce
+        bilan et sur l'intérêt reconnu par les utilisateurs (préfecture de police, SNCF, RATP) pour
+        autoriser durablement ces traitements dans les transports. La Défenseure des droits, citée
+        par le comité, alerte sur le risque de biais, par exemple des équipements de personnes
+        handicapées pris pour des objets interdits. Pour Amnesty International France, les Jeux ont servi de tremplin pour banaliser ces
         technologies, des mesures « expérimentales » finissant par devenir la norme. État au 1ᵉʳ
         novembre 2026.
       </p>
@@ -205,7 +218,7 @@ const etapes = [
       { auteur: 'Banque de France', titre: 'Une fraude maîtrisée sur l’ensemble des moyens de paiement… (communiqué, 9 septembre 2025)', url: 'https://www.banque-france.fr/system/files/2025-09/CP-OSMP-2024_20250909.pdf', type: 'primaire', annee: 2025 },
       { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2023-850 DC du 17 mai 2023 (loi relative aux Jeux olympiques et paralympiques de 2024)', url: 'https://www.conseil-constitutionnel.fr/decision/2023/2023850DC.htm', type: 'primaire', annee: 2023 },
       { auteur: 'F. Dumont, M.-P. de La Gontrie (Sénat)', titre: 'Vidéoprotection algorithmique, sécurité privée : après les JOP, jouons les prolongations (rapport d’information n° 374)', url: 'https://www.senat.fr/rap/r24-374/r24-3745.html', type: 'primaire', annee: 2025 },
-      { auteur: 'Comité d’évaluation de l’expérimentation', titre: 'Expérimentation de traitements algorithmiques d’images (rapport, janvier 2025), notice', url: 'https://www.vie-publique.fr/files/rapport/pdf/297322.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Comité d’évaluation de l’expérimentation', titre: 'Expérimentation de traitements algorithmiques d’images légalement collectées au moyen de systèmes de vidéoprotection (rapport, janvier 2025)', url: 'https://www.vie-publique.fr/files/rapport/pdf/297322.pdf', type: 'primaire', annee: 2025 },
       { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2026-902 DC du 19 mars 2026 (loi relative aux Jeux olympiques et paralympiques de 2030)', url: 'https://www.conseil-constitutionnel.fr/decision/2026/2026902DC.htm', type: 'primaire', annee: 2026 },
       { auteur: 'I. Florennes (Sénat)', titre: 'Proposition de loi n° 221 visant à autoriser le traitement algorithmique des images de vidéoprotection dans les transports en commun', url: 'https://www.senat.fr/leg/ppl25-221.pdf', type: 'primaire', annee: 2025 },
       { auteur: 'Amnesty International France', titre: 'Voici comment le gouvernement a prolongé la vidéosurveillance algorithmique', url: 'https://www.amnesty.fr/actualites/voici-comment-le-gouvernement-a-prolonge-la-videosurveillance-algorithmique/', type: 'site', annee: 2025 },
