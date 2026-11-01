@@ -33,7 +33,7 @@ prédictive, où la prédiction fabrique ses propres données.
 - Les articles de Lum et Isaac, de Mohler et al. et de Messerli ont été lus
   (PDF transmis par le mainteneur) : chiffres d'Oakland, déclaration des liens
   des auteurs de l'essai de 2015 avec PredPol, corrélation chocolat-Nobel.
-- Le rôle de Klara von Neumann dans les prévisions de 1950 n'a pas pu être
-  vérifié dans l'article : non publié.
+- Klára von Neumann : son rôle (enseigner la programmation de l'ENIAC,
+  vérifier le programme final) vient des remerciements de l'article de 1950.
 - L'étape 3 renvoie à l'animation des contrôles du module « Les IA qui
   décident pour nous », qui montre une boucle voisine.

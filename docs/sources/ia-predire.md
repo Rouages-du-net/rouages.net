@@ -37,9 +37,19 @@ confirmer elle-même.
 **ENIAC (1950)** [2] [3] [4]
 - J. G. Charney, R. Fjörtoft, J. von Neumann, « Numerical Integration of the
   Barotropic Vorticity Equation », *Tellus* 2(4), 1950, p. 237-254 (CC BY ;
-  **résumé seulement**, site de la revue indisponible) : « The results of a
-  series of four 24-hour forecasts computed from actual data at the 500 mb
-  level are presented ».
+  **lu**, PDF transmis par le mainteneur) : « The results of a series of four
+  24-hour forecasts computed from actual data at the 500 mb level are
+  presented » ; ENIAC des Ballistic Research Laboratories d'Aberdeen
+  (Maryland), demande faite par le U. S. Weather Bureau (p. 238) ; « the
+  computation time for a 24-hour forecast was about 24 hours, that is, we were
+  just able to keep pace with the weather » ; « about 100,000 standard I.B.M.
+  punch cards were produced and 1,000,000 multiplications and divisions were
+  performed » ; « Richardson's dream (1922) of advancing the computation faster
+  than the weather may soon be realized » ; « as little as 12 hours » avec une
+  routine bien rodée (p. 245) ; remerciements (p. 254) : « The writers wish to
+  thank Mrs K. von Neumann for instruction in the technique of coding for the
+  Eniac and for checking the final code », puis G. Platzman, J. Freeman,
+  J. Smagorinsky et le personnel du Computing Laboratory des BRL.
 - ENIAC et durée du calcul : C. Yang (arXiv, 2025) : 24 heures de calcul pour
   une prévision à 24 heures, « 33 days and nights » de travail sur l'ENIAC ;
   Guinness World Records cite l'article : « with a thorough routinization of
@@ -47,9 +57,10 @@ confirmer elle-même.
   as 12 hours ». (Deux sources secondaires concordantes ; la fiche Guinness
   qualifie l'ENIAC de « first digital programmable computer » : affirmation
   non reprise.)
-- Rôle de Klara von Neumann (remerciée dans l'article pour l'enseignement du
-  codage sur l'ENIAC et la vérification du code, selon un résumé de recherche) :
-  **non vérifié** dans le texte de l'article ; non publié.
+- « Mrs K. von Neumann » est identifiée comme Klára (Klari) Dán von Neumann,
+  programmeuse de l'ENIAC, par G. Dyson, *Turing's Cathedral* (2012), p. 104,
+  cité par K. Coyle (blog, 2012) : identification de seconde main, cohérente
+  avec l'article.
 
 **GraphCast (2023)** [5]
 - R. Lam et al., « Learning skillful medium-range global weather
@@ -159,7 +170,7 @@ confirmer elle-même.
 ## Sources
 
 1. Richardson, L. F. (1922). *Weather Prediction by Numerical Process*. https://archive.org/details/weatherpredictio00richrich — P, en, **lu partiellement** (ch. 11, essai du ch. 9).
-2. Charney, J. G., Fjörtoft, R., von Neumann, J. (1950). *Tellus* 2(4). https://doi.org/10.3402/tellusa.v2i4.8607 — P, en, **résumé seulement**.
+2. Charney, J. G., Fjörtoft, R., von Neumann, J. (1950). *Tellus* 2(4). https://doi.org/10.3402/tellusa.v2i4.8607 — P, en, **lu**.
 3. Yang, C. (2025). « The First Compute Arms Race ». https://arxiv.org/abs/2506.21816 — R, en, **lu partiellement**.
 4. Guinness World Records. « First computer-assisted weather forecast ». https://www.guinnessworldrecords.com/world-records/775520-first-computer-assisted-weather-forecast — site, en, **lu**.
 5. Lam, R. et al. (2023). *Science* 382. https://doi.org/10.1126/science.adi2336 — R, en, **résumé seulement**.
@@ -186,4 +197,4 @@ confirmer elle-même.
   qu'elle interdit la police prédictive en général. Sujet évolutif.
 - Chiffres d'électricité : l'animation est inventée ; seul l'ordre de grandeur
   de 2,4 GW par degré vient de RTE.
-- Klara von Neumann : à ajouter si le texte de l'article de 1950 peut être lu.
+- Klára von Neumann : mentionnée d'après les remerciements de l'article de 1950 (vérifié).

@@ -335,10 +335,18 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
   de cas par an à 15 000 dans les années 1950-1960.
 
 **Winner et les ponts de Moses** [21]
-- L. Winner, « Do Artifacts Have Politics? », *Daedalus* 109(1), 1980 : texte
-  **non lu** (copies inaccessibles) ; connu par les résumés : les ponts bas des
-  parkways de Long Island, conçus sous Robert Moses, auraient empêché le passage
-  des bus, et donc des populations pauvres et noires, vers les plages.
+- L. Winner, « Do Artifacts Have Politics? », *Daedalus* 109(1), 1980,
+  p. 121-136 (**lu**, copie JSTOR transmise par le mainteneur) : « Many of the
+  overpasses are extraordinarily low, having as little as nine feet of clearance
+  at the curb » ; « the two hundred or so low-hanging overpasses on Long Island
+  were deliberately designed to achieve a particular social effect » ; « According
+  to evidence provided by Robert A. Caro in his biography of Moses, the reasons
+  reflect Moses's social-class bias and racial prejudice » ; « Poor people and
+  blacks, who normally used public transit, were kept off the roads because the
+  twelve-foot tall buses could not get through the overpasses » ; Jones Beach ;
+  « Moses made doubly sure of this result by vetoing a proposed extension of the
+  Long Island Railroad to Jones Beach » (p. 123-124). Conversion : 9 pieds ≈
+  2,7 m, 12 pieds ≈ 3,7 m.
 - B. Joerges, « Do Politics Have Artefacts? », *Social Studies of Science*
   29(3), 1999, p. 411-431 (**lu**, PDF transmis par le mainteneur, p. 411-421) :
   résumé : « The story turns out to be counterfactual » ; Winner cité p. 412 :
@@ -380,7 +388,7 @@ notait qu'une machine plus économe en charbon peut en faire consommer davantage
 ### Sources (thème 4)
 
 20. Kranzberg, M. (1986). *Technology and Culture* 27(3) : 544-560. Copie PDF : https://www.cs.ucdavis.edu/~koehl/Teaching/ECS188/PDF_files/Kranzberg.pdf — P, en, **lu partiellement**.
-21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. https://doi.org/10.1177/030631299029003004 — R, en, **lu** (p. 411-421). Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner (1980) : **non lu**.
+21. Joerges, B. (1999). *Social Studies of Science* 29(3) : 411-431. https://doi.org/10.1177/030631299029003004 — R, en, **lu** (p. 411-421). Woolgar, S., Cooper, G. (1999), *ibid.* : 433-449 — **métadonnées seulement**. Winner, L. (1980). *Daedalus* 109(1) : 121-136. https://www.jstor.org/stable/20024652 — P, en, **lu** (p. 121-125).
 22. Lessig, L. (janv. 2000). « Code Is Law ». *Harvard Magazine*. https://www.harvardmagazine.com/2000/01/code-is-law-html — P, en, **lu partiellement**.
 23. Barlow, J. P. (1996). https://www.eff.org/cyberspace-independence — P, en, **lu**.
 24. Jevons, W. S. (1866). *The Coal Question*, chap. VII. Econlib : https://www.econlib.org/library/YPDBooks/Jevons/jvnCQ7.html — P, en, **lu partiellement**.
