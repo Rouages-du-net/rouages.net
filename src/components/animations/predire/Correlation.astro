@@ -1,0 +1,103 @@
+---
+// Animation « Corrélation ou causalité » (module « Les IA qui prédisent ») :
+// 60 journées d'été inventées ; les glaces vendues prédisent très bien les
+// coups de soleil, mais c'est la chaleur qui cause les deux.
+---
+<div class="anim correlation" data-correlation>
+  <div class="anim-repli">
+    <p>
+      Sur 60 journées d'été inventées, plus on vend de glaces, plus on soigne de coups de soleil : la
+      corrélation vaut 0,92, presque parfaite. Les ventes de glaces permettent donc de prédire les
+      coups de soleil. Mais à température égale, la corrélation tombe à 0,02 : c'est la chaleur qui
+      fait vendre des glaces et qui donne des coups de soleil. Interdire les glaces n'éviterait aucun
+      coup de soleil.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="case"><input type="checkbox" data-egale /> comparer à température égale (retirer l'effet de la chaleur)</label>
+      <label class="case"><input type="checkbox" data-interdire /> interdire la vente de glaces</label>
+      <svg viewBox="0 0 320 210" role="img" aria-labelledby="correl-titre">
+        <title id="correl-titre">Nuage de points : glaces vendues et coups de soleil soignés, une journée par point, couleur selon la température</title>
+        <rect class="fond" x="40" y="10" width="270" height="160" />
+        <g data-points></g>
+        <text x="175" y="200" text-anchor="middle" data-axe-x>Glaces vendues dans la journée</text>
+        <text x="12" y="90" text-anchor="middle" transform="rotate(-90 12 90)" data-axe-y>Coups de soleil soignés</text>
+      </svg>
+      <p class="cle"><span class="pastille frais"></span> journée fraîche (moins de 24 °C) · <span class="pastille chaud"></span> journée chaude</p>
+      <p class="mesure" data-mesure aria-live="polite"></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <p class="anim-note">Données inventées : la chaleur fait vendre des glaces et donne des coups de soleil ; les glaces, elles, n'ont aucun effet sur la peau.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { ete, correlation, residus } from '../../../lib/predire';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const nb = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+  const jours = ete();
+  const T = jours.map((d) => d.temperature);
+  const G = jours.map((d) => d.glaces);
+  const C = jours.map((d) => d.coups);
+
+  document.querySelectorAll<HTMLElement>('[data-correlation]').forEach((racine) => {
+    activerScene(racine);
+    const egale = racine.querySelector<HTMLInputElement>('[data-egale]')!;
+    const interdire = racine.querySelector<HTMLInputElement>('[data-interdire]')!;
+    const groupe = racine.querySelector<SVGGElement>('[data-points]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function maj() {
+      const ban = interdire.checked;
+      const x = egale.checked ? residus(G, T) : ban ? G.map(() => 0) : G;
+      const y = egale.checked ? residus(C, T) : C;
+      const [x0, x1] = [Math.min(...x, 0), Math.max(...x, 1)];
+      const [y0, y1] = [Math.min(...y, 0), Math.max(...y, 1)];
+      const px = (v: number) => 48 + ((v - x0) / (x1 - x0 || 1)) * 254;
+      const py = (v: number) => 162 - ((v - y0) / (y1 - y0 || 1)) * 144;
+      groupe.replaceChildren(
+        ...jours.map((d, i) => {
+          const c = document.createElementNS(NS, 'circle');
+          c.setAttribute('cx', String(px(x[i])));
+          c.setAttribute('cy', String(py(y[i])));
+          c.setAttribute('r', '3.5');
+          c.setAttribute('class', d.temperature >= 24 ? 'chaud' : 'frais');
+          return c;
+        }),
+      );
+      racine.querySelector('[data-axe-x]')!.textContent = egale.checked ? 'Glaces : écart à ce que prévoit la température' : 'Glaces vendues dans la journée';
+      racine.querySelector('[data-axe-y]')!.textContent = egale.checked ? 'Coups de soleil : écart' : 'Coups de soleil soignés';
+      const r = ban && !egale.checked ? null : correlation(x, y);
+      const total = C.reduce((s, v) => s + v, 0);
+      racine.querySelector('[data-mesure]')!.textContent =
+        (r === null ? 'Corrélation : impossible à calculer (plus aucune glace vendue).' : `Corrélation : ${nb(r)}`) +
+        ` · Coups de soleil sur les 60 jours : ${total}`;
+      legende.textContent = egale.checked
+        ? 'À température égale, il ne reste presque rien : les glaces ne disent rien de plus sur les coups de soleil que la chaleur elle-même.'
+        : ban
+          ? 'Plus une seule glace vendue… et exactement autant de coups de soleil : la corrélation permettait de prédire, pas d’agir.'
+          : 'Les glaces prédisent très bien les coups de soleil. Faut-il en conclure qu’elles les causent ?';
+    }
+    [egale, interdire].forEach((x) => x.addEventListener('input', maj));
+    maj();
+  });
+</script>
+
+<style>
+  .case { display: block; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .case input { accent-color: var(--accent); }
+  svg { width: 100%; max-width: 34rem; height: auto; display: block; margin: 0 auto; }
+  .fond { fill: var(--bg); stroke: var(--border); }
+  svg text { fill: var(--muted); font-size: 10px; font-family: var(--police); }
+  svg :global(circle.frais) { fill: var(--ill-client); stroke: var(--bg); stroke-width: 1; }
+  svg :global(circle.chaud) { fill: var(--ill-paquet); stroke: var(--bg); stroke-width: 1; }
+  .cle { font-size: 0.9rem; color: var(--muted); margin: 0.25rem 0; }
+  .pastille { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 50%; vertical-align: middle; }
+  .pastille.frais { background: var(--ill-client); }
+  .pastille.chaud { background: var(--ill-paquet); }
+  .mesure { font-family: var(--police-mono); font-size: 0.9rem; margin: 0.25rem 0; }
+</style>
