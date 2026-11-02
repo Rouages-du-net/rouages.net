@@ -151,7 +151,7 @@ vérifier lors de la recherche.
 
 - Matérialité (câbles, datacenters, énergie)
 - Sécurité & vie privée
-- Le dark net : routage en oignon, `.onion`, usages et limites
+- [x] Le dark net : routage en oignon, `.onion`, usages et limites *(`/modules/dark-net/`, relecture humaine à faire ; chiffres de Tor Metrics à dater à chaque mise à jour)*
 - Savoirs : édition scientifique, libre accès, Sci-Hub et Alexandra Elbakyan, communs de la connaissance
 - Économie du net
 - Version anglaise

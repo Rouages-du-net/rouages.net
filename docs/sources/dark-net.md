@@ -185,6 +185,29 @@ Types : **P** primaire · **R** recherche · **Pr** presse · **S** site/institu
 
 ---
 
+## Fonctionnement de Tor (pour le module, recherche du 2 novembre 2026)
+
+Extraits relus dans l'article fondateur (Dingledine, Mathewson, Syverson,
+2004, PDF lu, source [22] ci-dessus) :
+- « Because a circuit crosses several servers, and each server only knows the
+  adjacent servers in the circuit, no single server can link a user to her
+  communication partners. »
+- « In our current approach, Alice always chooses at least three nodes
+  unrelated to herself and her destination. »
+- Circuits construits « incrementally, negotiating a symmetric key with each
+  OR on the circuit, one hop at a time » ; Alice « iteratively encrypts the
+  cell payload » avec les clés de chaque relais ; données envoyées en
+  « fixed-size cells » ; dans la figure 1, la liaison du relais de sortie au
+  site est « unencrypted » (hors HTTPS).
+- Services cachés : Bob génère « a long-term public key pair to identify his
+  service », choisit des « introduction points » ; Alice choisit un
+  « rendezvous point » ; adresses de la forme « x.y.onion where […] y encodes
+  the hash of the public key ».
+- « volunteer-based distributed infrastructure » ; « a reasonable tradeoff
+  between anonymity, usability, and efficiency ».
+- Les « entry guards » (garder longtemps le même relais d'entrée) ne figurent
+  pas dans l'article de 2004 : non publié.
+
 ## À vérifier plus tard
 
 - **Légifrance** (403) : je n'ai pas lu le texte de l'art. 30 de la LCEN, seulement la citation de l'ANSSI. Même chose pour l'art. 132-79 du Code pénal (circonstance aggravante liée à la cryptologie), qui n'est pas confirmé.
