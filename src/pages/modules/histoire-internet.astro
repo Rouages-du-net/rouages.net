@@ -1,0 +1,264 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import FriseInternet from '../../components/animations/histoire/FriseInternet.astro';
+
+// Faits sourcés : voir docs/sources/internet.md.
+const etapes = [
+  { ancre: 'frise', court: 'Un siècle et demi de réseaux' },
+  { ancre: 'reseau', court: 'Un réseau de réseaux' },
+  { ancre: 'noms', court: 'Des noms plutôt que des numéros' },
+  { ancre: 'web', court: 'Le web n’est pas internet' },
+  { ancre: 'ailleurs', court: 'Internet ailleurs' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Histoire d’internet"
+  description="Des câbles télégraphiques à 2Africa, de CYCLADES et ARPANET au web et au Minitel : une histoire mondiale d’internet, avec celles et ceux qu’on oublie. Frise filtrable par région, thème et pionnières."
+>
+  <p class="tag">Histoires · module en construction</p>
+  <h1>Histoire d’internet</h1>
+  <MiseAJour date="2026-11-02" evolutif />
+  <p class="chapo seulement-debut">
+    Internet n'a pas été inventé par une personne, ni en un jour, ni dans un seul pays. C'est une
+    suite d'idées, de câbles et de conventions, venues des États-Unis, de France, de Corée, du
+    Ghana, du Kenya… Parcours la frise, filtre-la, puis découvre les idées qui ont compté.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Un siècle et demi de réseaux" ancre="frise">
+    <FriseInternet slot="animation" />
+    <p slot="decouverte">
+      Vingt-sept dates, des câbles télégraphiques de 1858 aux câbles géants d'aujourd'hui. Filtre par
+      région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
+    </p>
+    <p slot="curieux">
+      Les récits les plus connus parlent surtout des États-Unis et de quelques hommes. La frise montre
+      aussi la France, la Corée du Sud, le Ghana, le Kenya, et des femmes dont le travail fait encore
+      tourner le réseau : l'annuaire, les noms, les commutateurs, le navigateur.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Un réseau de réseaux" ancre="reseau">
+    <p slot="decouverte">
+      Internet, c'est d'abord une convention pour faire parler entre eux des réseaux différents. Les
+      données y voyagent en petits paquets, chacun avec son adresse, comme des lettres plutôt qu'un
+      coup de téléphone.
+    </p>
+    <div slot="curieux">
+      <p>
+        Dans les années 1960, Paul Baran (RAND) étudie un réseau sans centre, capable de survivre à des
+        destructions. En 1966, Bob Taylor lance ARPANET pour partager des ordinateurs rares entre
+        chercheur·ses. Au début des années 1970, en France, l'équipe de Louis Pouzin conçoit CYCLADES :
+        le réseau se contente d'acheminer des paquets indépendants, des « datagrammes », et ce sont les
+        ordinateurs aux deux bouts qui vérifient que tout est arrivé.
+      </p>
+      <p>
+        En 1974, Vint Cerf et Bob Kahn publient un protocole pour relier des réseaux différents ; leur
+        article cite CYCLADES, et la spécification de décembre 1974 remercie trois membres de l'équipe
+        française. Le protocole est scindé en IP et TCP en 1981, et ARPANET bascule vers TCP/IP le
+        1ᵉʳ janvier 1983.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le module <a href="/modules/entree-a-la-page/#voyage">De l'Entrée à la page</a> montre ces paquets
+      en action. IP les achemine de réseau en réseau sans garantie ; TCP, aux deux bouts, les numérote,
+      redemande ceux qui manquent et les remet dans l'ordre.
+    </p>
+    <div slot="histoire">
+      <p>
+        CYCLADES n'a pas survécu : les autorités françaises cessent de le soutenir vers 1979 et
+        dispersent l'équipe. Les historien·nes Andrew L. Russell et Valérie Schafer ont consacré à
+        cette histoire un article, primé en 2016.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Internet a été créé pour résister à une attaque nucléaire. »</strong> Pas ARPANET :
+      l'idée vient de l'étude distincte de Paul Baran. Voir la fiche <a
+      href="/vrai-ou-faux/internet-attaque-nucleaire/">Vrai ou faux ?</a>
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Des noms plutôt que des numéros" ancre="noms">
+    <p slot="decouverte">
+      Les ordinateurs se trouvent par des numéros, mais les humains retiennent des noms. Il a fallu
+      tenir l'annuaire du réseau, puis inventer un système pour qu'il tienne tout seul.
+    </p>
+    <div slot="curieux">
+      <p>
+        De 1972 à 1989, au SRI (Californie), l'équipe d'Elizabeth « Jake » Feinler tient le centre
+        d'information d'ARPANET : l'annuaire, le registre des noms d'ordinateurs (un simple fichier,
+        HOSTS.TXT) et le premier service WHOIS. En 1983, ce fichier arrive « près de la limite de ce
+        qui est gérable » : P. Mockapetris décrit le système de noms de domaine (DNS), et les premiers
+        domaines (.com, .org, .edu…) sont définis en 1984 ; l'Internet Hall of Fame en attribue le
+        schéma à Feinler et à son groupe.
+      </p>
+      <p>
+        En 1985, Radia Perlman publie l'algorithme de l'arbre couvrant, qui permet de relier de grands
+        réseaux Ethernet sans que les messages tournent en rond.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le DNS répartit l'annuaire : chaque domaine gère ses propres noms, et un serveur sait à qui
+      demander pour le reste. Le module <a href="/modules/entree-a-la-page/#nom">De l'Entrée à la
+      page</a> suit une question DNS pas à pas.
+    </p>
+    <p slot="mythes">
+      <strong>« Radia Perlman est la mère d'internet. »</strong> Elle refuse elle-même ce surnom :
+      personne n'a inventé internet seul, et ce titre met en avant son genre plutôt que son travail.
+      De même, Elizabeth Feinler n'a pas « inventé le DNS » : son équipe a tenu les noms avant lui et
+      contribué au schéma des domaines.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Le web n’est pas internet" ancre="web">
+    <p slot="decouverte">
+      Le web, ce sont des pages reliées par des liens. Internet, c'est le réseau qui les transporte,
+      avec bien d'autres choses : courriels, visioconférences, jeux, applications.
+    </p>
+    <div slot="curieux">
+      <p>
+        En 1989, au CERN, Tim Berners-Lee propose un système d'information par hypertexte, qu'il
+        appelle encore « Mesh ». En novembre 1990, avec Robert Cailliau, il propose le projet
+        « WorldWideWeb » ; fin 1990, le premier serveur et le premier navigateur tournent. Nicola
+        Pellow, étudiante en stage, écrit le navigateur en mode ligne, utilisable sur n'importe quel
+        terminal. Le 30 avril 1993, le CERN place le logiciel du web dans le domaine public.
+      </p>
+      <p>
+        En France, le Minitel ouvre en 1983 : un service en ligne grand public à l'échelle d'un pays,
+        dix ans avant le web. Mais c'est un système centralisé et national, pas un réseau de réseaux.
+        Il s'arrête le 30 juin 2012.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le Minitel reposait sur trois couches : le terminal (Minitel), le service (Télétel) et le réseau
+      de données (Transpac, ouvert en 1978). Le web, lui, utilise internet comme transport : depuis que le
+      CERN a placé son logiciel dans le domaine public, n'importe qui peut installer un serveur ou
+      écrire un navigateur.
+    </p>
+    <p slot="mythes">
+      <strong>« Tim Berners-Lee a inventé internet. »</strong> Il a inventé le web, en 1989-1990, sur
+      un internet qui existait déjà. Et le premier navigateur utilisable partout est celui de Nicola
+      Pellow.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Internet ailleurs" ancre="ailleurs">
+    <p slot="decouverte">
+      L'histoire d'internet ne s'écrit pas seulement aux États-Unis et en Europe. Elle passe par la
+      Corée, le Ghana, le Kenya, et par les fonds des océans.
+    </p>
+    <div slot="curieux">
+      <p>
+        En mai 1982, en Corée du Sud, l'équipe de Kilnam Chon relie deux villes avec ses propres
+        routeurs : le premier réseau TCP/IP hors des États-Unis et de l'Europe. Au Ghana, l'entreprise
+        de Nii Quaynor se connecte en 1993, et le pays obtient en août 1995 une connexion permanente ;
+        Nii Quaynor préside ensuite le premier conseil d'AFRINIC, le registre des adresses IP pour
+        l'Afrique. Au Kenya, M-Pesa permet dès 2007 d'envoyer de l'argent par téléphone mobile.
+      </p>
+      <p>
+        Et presque tout passe par des câbles sous la mer : selon TeleGeography, plus de 99 % du trafic
+        intercontinental (une estimation, pas une mesure exacte). En février 2024, trois câbles
+        coupés en mer Rouge ont perturbé l'Afrique de l'Est.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Les câbles appartiennent à des consortiums d'opérateurs et, de plus en plus, aux géants du
+      numérique : selon TeleGeography, les fournisseurs de contenu et de cloud représentaient 75 % de
+      la capacité utilisée en 2025. Equiano (Google) atterrit à Lomé en 2022 ; le cœur de 2Africa
+      (Meta, Orange, Vodafone, China Mobile, MTN…) est achevé en novembre 2025.
+    </p>
+    <div slot="histoire">
+      <p>
+        Selon une étude publiée dans <em>Science</em> en 2016, M-Pesa aurait sorti de la pauvreté
+        194 000 ménages kényans, surtout dirigés par des femmes. D'autres chercheur·ses contestent ces
+        résultats (2019). Le débat illustre combien il est difficile de mesurer l'effet d'une
+        technique sur la pauvreté.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La Corée a été le deuxième pays connecté à internet. »</strong> Le Royaume-Uni et la
+      Norvège utilisaient déjà TCP/IP, et SDN est resté un réseau national jusqu'à sa première ligne IP
+      vers les États-Unis, en 1990. Kilnam Chon écrit lui-même « one of the first countries ». De même,
+      le Ghana n'est pas le premier pays africain connecté : l'Afrique du Sud l'était avant.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Personne n'a inventé internet seul.</strong> C'est une suite d'idées partagées entre équipes et pays.</li>
+      <li><strong>Un réseau de réseaux</strong>, où des paquets voyagent et où les deux bouts assurent la fiabilité.</li>
+      <li><strong>Des noms et des annuaires</strong>, tenus d'abord à la main, puis répartis par le DNS.</li>
+      <li><strong>Le web n'est pas internet</strong> : c'est un service parmi d'autres.</li>
+      <li><strong>Une histoire mondiale et matérielle</strong>, faite de câbles, de registres et d'usages partout sur la planète.</li>
+    </ol>
+    <p>
+      Les fiches <a href="/vrai-ou-faux/">Vrai ou faux ?</a> reviennent sur l'attaque nucléaire et sur
+      d'autres idées reçues.
+    </p>
+
+  <Sources
+    verifie="2026-11-02"
+    sources={[
+      { auteur: 'B. Leiner, V. Cerf, D. Clark, R. Kahn et al.', titre: 'A Brief History of the Internet (Internet Society)', url: 'https://www.internetsociety.org/internet/history-internet/brief-history-internet/', type: 'primaire', annee: 1997, langue: 'en' },
+      { auteur: 'P. Baran', titre: 'On Distributed Communications (RAND RM-3420)', url: 'https://www.rand.org/pubs/research_memoranda/RM3420.html', type: 'primaire', annee: 1964, langue: 'en' },
+      { auteur: 'J. Pelkey', titre: 'Interview of Robert W. “Bob” Taylor (Computer History Museum)', url: 'https://archive.computerhistory.org/resources/access/text/2017/12/102738691-05-01-acc.pdf', type: 'primaire', annee: 1988, langue: 'en' },
+      { auteur: 'C. Marinica, M. Shapiro', titre: 'Du datagramme à la gouvernance de l’Internet. Entretien avec Louis Pouzin (1024 n° 6)', url: 'https://1024.socinfo.fr/2015/07/1024_6_2015_59.pdf', type: 'primaire', annee: 2015 },
+      { auteur: 'A. L. Russell, V. Schafer', titre: 'In the Shadow of ARPANET and Internet: Louis Pouzin and the Cyclades Network in the 1970s (Technology and Culture 55-4), notice', url: 'https://doi.org/10.1353/tech.2014.0096', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'V. Cerf, R. Kahn', titre: 'A Protocol for Packet Network Intercommunication (IEEE Trans. Comm. 22-5)', url: 'https://www.cs.princeton.edu/courses/archive/fall06/cos561/papers/cerf74.pdf', type: 'primaire', annee: 1974, langue: 'en' },
+      { auteur: 'V. Cerf, Y. Dalal, C. Sunshine', titre: 'RFC 675', url: 'https://www.rfc-editor.org/rfc/rfc675', type: 'primaire', annee: 1974, langue: 'en' },
+      { auteur: 'J. Postel', titre: 'RFC 801, NCP/TCP Transition Plan', url: 'https://www.rfc-editor.org/rfc/rfc801', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Elizabeth Feinler', url: 'https://www.internethalloffame.org/inductee/elizabeth-feinler/', type: 'site', langue: 'en' },
+      { auteur: 'P. Mockapetris', titre: 'RFC 882, Domain Names – Concepts and Facilities', url: 'https://www.rfc-editor.org/rfc/rfc882.txt', type: 'primaire', annee: 1983, langue: 'en' },
+      { auteur: 'J. Postel, J. Reynolds', titre: 'RFC 920, Domain Requirements', url: 'https://www.rfc-editor.org/rfc/rfc920', type: 'primaire', annee: 1984, langue: 'en' },
+      { auteur: 'R. Perlman', titre: 'An Algorithm for Distributed Computation of a Spanning Tree in an Extended LAN (SIGCOMM ’85)', url: 'https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'Intel Free Press', titre: 'Intel’s Radia Perlman: Don’t Call Her “Mother Of The Internet”', url: 'https://www.siliconvalleywatcher.com/intels-radia-perlman-dont-call-her-mother-of-the-internet/', type: 'presse', annee: 2011, langue: 'en' },
+      { auteur: 'T. Berners-Lee', titre: 'Information Management: A Proposal (CERN)', url: 'https://www.w3.org/History/1989/proposal.html', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'CERN', titre: 'A short history of the Web', url: 'https://home.cern/science/computing/the-birth-of-the-web/short-history-web/', type: 'site', langue: 'en' },
+      { auteur: 'Projet WWW (CERN)', titre: 'Nicola Pellow', url: 'https://www.w3.org/History/19921103-hypertext/hypertext/WWW/People/Pellow.html', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'T. Smith, F. Flückiger (CERN)', titre: 'Licensing the Web', url: 'https://home.cern/science/computing/the-birth-of-the-web/licensing-web/', type: 'site', langue: 'en' },
+      { auteur: 'L. Laborie', titre: 'Jalons de la télématique et du Minitel en France jusqu’en 1985 (Univ. Bordeaux Montaigne)', url: 'https://resendem.u-bordeaux-montaigne.fr/IMG/pdf/Chronologie_telematique_France.pdf', type: 'recherche', annee: 2012 },
+      { auteur: 'D. Hardy', titre: 'Minitel et annuaire électronique (Encyclopædia Universalis)', url: 'https://www.universalis.fr/encyclopedie/minitel-et-annuaire-electronique/', type: 'site' },
+      { auteur: 'K. Chon et al.', titre: 'A History of Computer Networking and the Internet in Korea (IEEE Communications Magazine 51-2)', url: 'https://doi.org/10.1109/MCOM.2013.6461175', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Asian Internet Traces Roots To Kilnam Chon', url: 'https://www.internethalloffame.org/2012/06/26/asian-internet-traces-roots-kilnam-chon/', type: 'site', annee: 2012, langue: 'en' },
+      { auteur: 'W. Tevie, N. N. Quaynor, A. Bulley', titre: 'Development of the Internet in Ghana (INET’96, archive)', url: 'http://web.archive.org/web/20180301012959/http://www.isoc.org/inet96/proceedings/g6/g6_4.htm', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Nii Quaynor', url: 'https://www.internethalloffame.org/inductee/nii-quaynor/', type: 'site', langue: 'en' },
+      { auteur: 'N. Hughes, S. Lonie', titre: 'M-PESA: Mobile Money for the “Unbanked” (Innovations 2-1/2)', url: 'https://ideas.repec.org/a/tpr/inntgg/v2y2007i1-2p63-81.html', type: 'primaire', annee: 2007, langue: 'en' },
+      { auteur: 'T. Suri, W. Jack', titre: 'The long-run poverty and gender impacts of mobile money (Science 354)', url: 'https://www.findevgateway.org/paper/2016/12/long-run-poverty-and-gender-impacts-mobile-money', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'M. Bateman, M. Duvendack, N. Loubere', titre: 'Contesting Suri and Jack’s M-Pesa findings published in Science (Review of African Political Economy 46)', url: 'https://ueaeprints.uea.ac.uk/id/eprint/71521/1/Accepted_Manuscript.pdf', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'A. Mauldin (TeleGeography)', titre: 'Do Submarine Cables Account For Over 99% of Intercontinental Data Traffic?', url: 'https://resources.telegeography.com/2023-mythbusting-part-3', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'A. Mauldin (TeleGeography)', titre: 'Connecting the AI Revolution: Long-Haul Networks and Bandwidth Growth', url: 'https://resources.telegeography.com/ai-long-haul-networks-bandwidth-growth', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'N. Harrington, M. Cuddington (LINX)', titre: 'Misinformation in the Red Sea: Investigating Concurrent Failures', url: 'https://www.linx.net/wp-content/uploads/2024/11/Misinformation-in-the-Red-Sea-1.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'atlantic-cable.com', titre: 'Cable Timeline: Atlantic', url: 'https://atlantic-cable.com/Cables/CableTimeLine/atlantic.htm', type: 'site', langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

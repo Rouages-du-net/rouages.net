@@ -96,7 +96,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'Les deux histoires se sont mélangées : celle de Baran, qui pensait vraiment à la guerre nucléaire, et celle d’ARPANET, financé par l’armée mais pensé par des chercheur·ses.',
-    aVenir: 'Histoire d’internet',
+    module: { titre: 'Histoire d’internet', lien: '/modules/histoire-internet/#reseau' },
     dossier: 'internet.md',
     verifie: '2026-11-01',
     sources: [
