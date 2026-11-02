@@ -46,7 +46,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'L’image de l’iceberg est frappante, et « web profond » et « dark web » sonnent pareil. Un chiffre réel a simplement changé de sens en passant de main en main.',
-    aVenir: 'Le dark net',
+    module: { titre: 'Le dark net, sans fantasme', lien: '/modules/dark-net/' },
     dossier: 'dark-net.md',
     verifie: '2026-11-01',
     sources: [
@@ -71,7 +71,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'On entend surtout parler de Tor à propos d’affaires criminelles. Ses usages ordinaires (protéger sa vie privée, contourner la censure, protéger des sources) font moins de bruit.',
-    aVenir: 'Le dark net',
+    module: { titre: 'Le dark net, sans fantasme', lien: '/modules/dark-net/' },
     dossier: 'dark-net.md',
     verifie: '2026-11-01',
     sources: [

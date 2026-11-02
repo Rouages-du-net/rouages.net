@@ -1,0 +1,284 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Oignon from '../../components/animations/darknet/Oignon.astro';
+
+// Faits sourcés : voir docs/sources/dark-net.md.
+const etapes = [
+  { ancre: 'termes', court: 'Web profond, dark web' },
+  { ancre: 'oignon', court: 'Un oignon à trois couches' },
+  { ancre: 'onion', court: 'Des sites sans adresse' },
+  { ancre: 'limites', court: 'Ce que Tor ne protège pas' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Le dark net, sans fantasme"
+  description="Web profond et dark web, routage en oignon, sites .onion, usages légitimes et marchés illégaux, ce que Tor protège et ce qu’il ne protège pas : suis une demande à travers trois relais Tor, couche par couche."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>Le dark net, sans fantasme</h1>
+  <MiseAJour date="2026-11-02" evolutif />
+  <p class="chapo seulement-debut">
+    On en parle comme d'un continent caché, immense et inquiétant. La réalité est plus petite et plus
+    intéressante : un réseau qui protège l'anonymat en faisant passer chaque demande par trois
+    relais. Suis une demande, couche par couche, puis découvre qui s'en sert, et ce que ce réseau ne
+    protège pas.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Web profond, dark web" ancre="termes">
+    <p slot="decouverte">
+      Deux mots qu'on confond souvent. Le <strong>web profond</strong> (<em>deep web</em>), ce sont
+      toutes les pages que les moteurs de recherche n'indexent pas : ta messagerie, ton compte
+      bancaire, un intranet. Tu t'en sers tous les jours. Le <strong>dark web</strong>, ce sont les
+      sites accessibles seulement par un réseau d'anonymat comme Tor, avec des adresses en
+      <code>.onion</code>.
+    </p>
+    <div slot="curieux">
+      <p>
+        Le dark web est minuscule. En 2015, le Tor Project estimait qu'environ 3,4 % du trafic de ses
+        utilisateur·rices allait vers des sites <code>.onion</code> (une estimation préliminaire, sans
+        mise à jour publiée depuis) : le reste sert à aller sur le web ordinaire, anonymement.
+      </p>
+      <p>
+        En septembre 2026, Tor Metrics estimait à environ 3,2 millions le nombre moyen d'utilisateur·rices
+        connecté·es chaque jour directement au réseau. Ce sont des estimations, pas un comptage de
+        personnes.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Tor Metrics compte aussi environ 675 000 adresses <code>.onion</code> uniques par jour
+      (septembre 2026). Une adresse n'est pas un site : beaucoup sont éphémères ou servent à des
+      applications. On parle parfois de <em>darknet</em> pour le réseau et de <em>dark web</em> pour
+      les sites qu'il héberge ; les définitions varient.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le chiffre « 90 % d'internet » vient d'un livre blanc de Michael K. Bergman (2001), qui estimait
+        le web profond public 400 à 550 fois plus grand que le web de surface. Il parlait des bases de
+        données dynamiques (catalogues, archives), pas de sites cachés : Tor n'existait pas encore. Le
+        chiffre a ensuite été plaqué sur le dark web, avec l'image de l'iceberg ; Roger Dingledine, du
+        Tor Project, refuse ces « images d'icebergs inquiétants ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le dark net, c'est 90 % d'internet. »</strong> C'est un chiffre de 2001 sur tout autre
+      chose. Voir la fiche <a href="/vrai-ou-faux/dark-net-90-pour-cent/">Vrai ou faux ?</a>
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Un oignon à trois couches" ancre="oignon">
+    <Oignon slot="animation" />
+    <p slot="decouverte">
+      Sur le web ordinaire, ton fournisseur d'accès voit quels sites tu visites, et chaque site voit
+      ton adresse. Tor cache ce lien en faisant passer ta demande par trois relais, chacun ne
+      connaissant qu'un morceau du chemin. Avance pas à pas.
+    </p>
+    <p slot="curieux">
+      Comme un oignon, la demande est enveloppée de plusieurs couches de chiffrement. Chaque relais en
+      retire une, avec sa propre clé, et découvre seulement à qui la passer. Les relais sont des
+      ordinateurs tenus pour l'essentiel par des bénévoles.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        L'article fondateur de Tor (2004) l'explique : le circuit traverse plusieurs serveurs, et
+        « chaque serveur ne connaît que ses voisins dans le circuit », si bien qu'« aucun serveur seul
+        ne peut relier un utilisateur à ses correspondants ». Le logiciel choisit « au moins trois
+        nœuds » sans rapport avec la personne et sa destination, négocie une clé avec chacun, puis
+        envoie des paquets de taille fixe.
+      </p>
+      <p>
+        Le chiffrement entre le relais de sortie et le site, lui, ne dépend que du site : sans HTTPS,
+        le relais de sortie voit le contenu.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        L'idée remonte aux « mix-nets » de David Chaum (1981). En 1995, au Naval Research Laboratory
+        (Washington), David Goldschlag, Michael Reed et Paul Syverson commencent à travailler sur le
+        « routage en oignon », qu'ils présentent en 1996 ; leur brevet est délivré en 2001 au nom de
+        l'US Navy. Le but déclaré : protéger les communications contre l'analyse du trafic, ce qui
+        demande un réseau ouvert et des utilisateur·rices varié·es pour s'y fondre.
+      </p>
+      <p>
+        En 2002, Roger Dingledine, rejoint par Nick Mathewson, annonce une première version du réseau
+        Tor (« The Onion Router »), ouvert au public en 2003 et décrit en 2004 avec Paul Syverson. L'association Tor Project naît en 2006. Son
+        financement est mixte : en 2023-2024, environ 35 % venait du gouvernement américain, contre
+        53,5 % deux ans plus tôt, le reste d'entreprises, de fondations, de dons et d'autres États.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'armée américaine a inventé le dark web. »</strong> Le routage en oignon est bien né
+      dans un laboratoire de la marine américaine, pour protéger des communications. Mais Tor est un
+      logiciel libre, porté depuis 2006 par une association, et le Tor Project compte comme
+      fondateurs Dingledine et Mathewson, avec d'autres. Il ne faut ni en faire « l'outil de la CIA »,
+      ni prétendre qu'il ne doit rien à aucun État.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Des sites sans adresse" ancre="onion">
+    <p slot="decouverte">
+      Un site <code>.onion</code> cache aussi sa propre adresse. La personne qui le visite et le
+      serveur qui l'héberge passent chacun par leurs relais, et se retrouvent à mi-chemin, sur un
+      relais choisi comme « point de rendez-vous ». Aucun des deux ne connaît l'adresse de l'autre.
+    </p>
+    <div slot="curieux">
+      <p>
+        Ces services servent d'abord à des usages que tout le monde peut défendre. Des journaux
+        utilisent SecureDrop, une boîte aux lettres en <code>.onion</code> qui permet à des sources et
+        lanceur·ses d'alerte de leur envoyer des documents sans se dévoiler : <em>Der Spiegel</em>, le
+        <em>Guardian</em>, le <em>Financial Times</em>, ou le consortium Forbidden Stories, qui publie
+        en français. En octobre 2026, l'annuaire de SecureDrop ne recensait aucun média français.
+      </p>
+      <p>
+        Des médias et des réseaux sociaux ouvrent aussi une version <code>.onion</code> de leur site
+        pour les personnes sous censure : Facebook en 2014, le <em>New York Times</em> en 2017, la BBC
+        en 2019 « pour déjouer les tentatives de censure ».
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le serveur annonce quelques relais comme « points d'introduction ». La personne qui veut le
+      joindre choisit un point de rendez-vous, le signale via un point d'introduction, et attend que
+      le serveur l'y rejoigne. Le service s'identifie par une clé cryptographique, et son adresse
+      <code>.onion</code> encode l'empreinte de cette clé : l'adresse permet ainsi de vérifier qu'on
+      parle bien au bon serveur.
+    </p>
+    <div slot="histoire">
+      <p>
+        SecureDrop est né en 2011 d'un projet d'Aaron Swartz et du journaliste Kevin Poulsen, appelé
+        « DeadDrop ». Le <em>New Yorker</em> l'utilise le premier, en mai 2013, sous le nom
+        « Strongbox » ; la Freedom of the Press Foundation le reprend en octobre 2013 et confie sa
+        maintenance à James Dolan, qui avait organisé sa relecture de sécurité.
+      </p>
+      <p>
+        Tor n'est pas le seul réseau de ce genre. En 1999, à l'université d'Édimbourg, Ian Clarke
+        conçoit Freenet, un réseau pair-à-pair pour publier et lire sans censure (version 0.1 en mars
+        2000). Son mode « darknet », entre ami·es, est un des premiers usages du mot dans ce sens. Le
+        logiciel s'appelle aujourd'hui Hyphanet.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Un site en .onion, c'est forcément louche. »</strong> Des journaux, la BBC, des réseaux
+      sociaux en ont un. Le dark web héberge aussi des marchés illégaux, mais il ne s'y résume pas.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Ce que Tor ne protège pas" ancre="limites">
+    <p slot="decouverte">
+      Tor cache qui parle à qui. Il ne rend ni invisible, ni intouchable. La documentation officielle
+      le dit elle-même, et plusieurs affaires judiciaires le montrent.
+    </p>
+    <div slot="curieux">
+      <p>
+        Selon la documentation du Tor Project : seules les applications configurées passent par Tor ;
+        se connecter à un compte ou remplir un formulaire avec ses données fait perdre l'anonymat ;
+        ouvrir hors ligne un document téléchargé peut révéler son adresse ; sans HTTPS, le relais de
+        sortie voit le contenu ; et un observateur peut voir que l'on utilise Tor.
+      </p>
+      <p>
+        En France, utiliser Tor est légal : « L'utilisation des moyens de cryptologie est libre »,
+        dit la loi pour la confiance dans l'économie numérique (2004). Ce qui est illégal, ce sont les
+        actes commis avec, comme sur le web ordinaire. Fin 2015, une note de police proposant
+        d'« interdire et bloquer » Tor n'a pas été retenue.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      L'article de 2004 l'admet : Tor « ne prétend pas résoudre complètement » les attaques par
+      corrélation. Un adversaire qui observe à la fois l'entrée et la sortie du réseau peut rapprocher
+      les flux par leur volume et leur rythme. Ses concepteurs présentent Tor comme un « compromis
+      raisonnable entre anonymat, facilité d'usage et efficacité ».
+    </p>
+    <div slot="histoire">
+      <p>
+        Silk Road, un marché de drogues ouvert en 2011, est fermé en 2013. Les enquêteur·rices ont
+        identifié son administrateur, Ross Ulbricht, en partie grâce à des messages qu'il avait publiés
+        sur des forums ordinaires dès 2011, pas en « cassant » Tor. Condamné en 2015 à la perpétuité, il
+        a été gracié par Donald Trump le 21 janvier 2025.
+      </p>
+      <p>
+        En juillet 2017, une opération internationale à laquelle la France participe ferme AlphaBay,
+        plus de 250 000 annonces de drogues selon Europol. La police néerlandaise, elle, avait pris le
+        contrôle d'un autre marché, Hansa, et l'a fait fonctionner en secret pendant un mois pour
+        recueillir des renseignements sur les utilisateur·rices qui y migraient. L'anonymat technique
+        n'empêche pas l'infiltration.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Avec Tor, on est totalement anonyme. »</strong> Tor cache ton adresse aux sites et
+      ce que tu consultes à ton fournisseur d'accès. Tes comptes, tes documents, ta façon d'écrire
+      peuvent encore te trahir.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Web profond ≠ dark web.</strong> Le premier, c'est ta messagerie ; le second, une toute petite partie du web.</li>
+      <li><strong>Trois relais, trois couches.</strong> Aucun relais ne sait à la fois qui tu es et ce que tu consultes.</li>
+      <li><strong>Des usages légitimes.</strong> Sources de journalistes, personnes sous censure, médias.</li>
+      <li><strong>Des usages illégaux aussi</strong>, que la police démantèle, souvent sans « casser » Tor.</li>
+      <li><strong>Légal en France</strong>, mais pas magique : tes comptes et tes fichiers peuvent te trahir.</li>
+    </ol>
+    <p>
+      Le site officiel du Tor Project est <a href="https://www.torproject.org/">torproject.org</a>. Les
+      fiches <a href="/vrai-ou-faux/">Vrai ou faux ?</a> reviennent sur le chiffre des 90 % et sur la
+      légalité de Tor.
+    </p>
+
+  <Sources
+    verifie="2026-11-02"
+    sources={[
+      { auteur: 'R. Dingledine, N. Mathewson, P. Syverson', titre: 'Tor: The Second-Generation Onion Router (USENIX Security)', url: 'https://svn-archive.torproject.org/svn/projects/design-paper/tor-design.pdf', type: 'primaire', annee: 2004, langue: 'en' },
+      { auteur: 'Onion Routing (NRL)', titre: 'Brief Selected History', url: 'https://www.onion-router.net/History.html', type: 'primaire', langue: 'en' },
+      { auteur: 'The Tor Project', titre: 'History', url: 'https://www.torproject.org/about/history/', type: 'primaire', langue: 'en' },
+      { auteur: 'The Tor Project', titre: 'Transparency, Openness, and Our 2023-2024 Financials', url: 'https://blog.torproject.org/financials-blog-post-2023-2024/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'M. G. Reed, P. F. Syverson, D. M. Goldschlag', titre: 'Brevet US 6 266 704 (routage en oignon)', url: 'https://patents.google.com/patent/US6266704B1/en', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'ICANN (D. Piscitello)', titre: 'Le web invisible : terre des services cachés', url: 'https://www.icann.org/fr/blogs/details/the-dark-web-the-land-of-hidden-services-27-6-2017-fr', type: 'site', annee: 2017 },
+      { auteur: 'M. K. Bergman', titre: 'The Deep Web: Surfacing Hidden Value (reprise des conclusions, liste EAS-info, Yale)', url: 'https://mailman.yale.edu/pipermail/eas-info/2001/000234.html', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'The Tor Project', titre: 'Some statistics about onions', url: 'https://blog.torproject.org/some-statistics-about-onions/', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'Tor Metrics', titre: 'Relay users', url: 'https://metrics.torproject.org/userstats-relay-country.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Tor Metrics', titre: 'Unique .onion v3 addresses', url: 'https://metrics.torproject.org/hidserv-dir-v3-onions-seen.html', type: 'primaire', langue: 'en' },
+      { auteur: 'The Tor Project', titre: 'Facebook, hidden services, and https certs', url: 'https://blog.torproject.org/facebook-hidden-services-and-https-certs/', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'G. Price (infoDOCKET)', titre: 'The New York Times Now Available as a Tor Onion Service', url: 'https://www.infodocket.com/2017/10/27/privacy-the-new-york-times-now-available-as-a-tor-onion-service/', type: 'presse', annee: 2017, langue: 'en' },
+      { auteur: 'BBC News', titre: 'BBC News launches “dark web” Tor mirror', url: 'https://www.bbc.com/news/technology-50150981', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'K. Poulsen (The New Yorker)', titre: 'Strongbox and Aaron Swartz', url: 'https://www.newyorker.com/news/news-desk/strongbox-and-aaron-swartz', type: 'presse', annee: 2013, langue: 'en' },
+      { auteur: 'Freedom of the Press Foundation', titre: 'Freedom of the Press Foundation Launches SecureDrop', url: 'https://freedom.press/tech/news/freedom-of-the-press-foundation-launches-securedrop-an-open-source-submission-platform-for-whistleblowers/', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'Freedom of the Press Foundation', titre: 'SecureDrop Directory', url: 'https://securedrop.org/directory/', type: 'primaire', langue: 'en' },
+      { auteur: 'I. Clarke', titre: 'A Distributed Decentralised Information Storage and Retrieval System (université d’Édimbourg)', url: 'https://freenet.org/pdf/DDISRS.pdf', type: 'primaire', annee: 1999, langue: 'en' },
+      { auteur: 'Hyphanet', titre: 'About', url: 'https://www.hyphanet.org/pages/about.html', type: 'primaire', langue: 'en' },
+      { auteur: 'The Tor Project', titre: 'Tor Browser best practices', url: 'https://support.torproject.org/tor-browser/security/using-tb-safely/', type: 'primaire', langue: 'en' },
+      { auteur: 'ANSSI', titre: 'Crypto, le webdoc – Chapitre III : Sécurité, secret et légalité', url: 'https://cyber.gouv.fr/crypto-le-webdoc/chapitre-iii-s%C3%A9curit%C3%A9-secret-et-l%C3%A9galit%C3%A9/', type: 'primaire' },
+      { auteur: 'M. Rees (Next INpact)', titre: '« L’interdiction du Wi-Fi public n’est pas une piste » assure Manuel Valls', url: 'https://next.ink/15998/97646-l-interdiction-wi-fi-public-n-est-pas-piste-assure-manuel-valls/', type: 'presse', annee: 2015 },
+      { auteur: 'BBC News', titre: 'Silk Road drug website founder Ross Ulbricht jailed', url: 'https://www.bbc.com/news/world-us-canada-32941060', type: 'presse', annee: 2015, langue: 'en' },
+      { auteur: 'U.S. Department of Justice', titre: 'Clemency Grants by President Donald J. Trump (2025-Present)', url: 'https://www.justice.gov/pardon/clemency-grants-president-donald-j-trump-2025-present', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'C. Baraniuk (BBC News)', titre: 'AlphaBay and Hansa dark web markets shut down', url: 'https://www.bbc.com/news/technology-40670010', type: 'presse', annee: 2017, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

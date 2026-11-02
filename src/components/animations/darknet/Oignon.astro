@@ -1,0 +1,167 @@
+---
+// Animation « Un oignon à trois couches » (module « Le dark net, sans
+// fantasme ») : un message chiffré en trois couches traverse trois relais
+// Tor ; chaque relais retire une couche et ne connaît que ses voisins.
+// D'après Dingledine, Mathewson, Syverson (2004). Simplifications : le vrai
+// Tor négocie les clés relais par relais et découpe le trafic en cellules.
+const noeuds = [
+  { id: 'toi', nom: 'Toi' },
+  { id: 'r1', nom: 'Relais d’entrée' },
+  { id: 'r2', nom: 'Relais du milieu' },
+  { id: 'r3', nom: 'Relais de sortie' },
+  { id: 'site', nom: 'Le site' },
+];
+---
+<div class="anim oignon" data-oignon>
+  <div class="anim-repli">
+    <ol>
+      <li>Ton logiciel Tor choisit trois relais et enferme ta demande dans trois couches de chiffrement, une par relais.</li>
+      <li>Le relais d'entrée retire la première couche. Il sait que la demande vient de toi, et qu'il doit la passer au relais du milieu. Il ne voit ni le site ni le contenu.</li>
+      <li>Le relais du milieu retire la deuxième couche. Il ne connaît que le relais d'entrée et le relais de sortie.</li>
+      <li>Le relais de sortie retire la dernière couche. Il voit le site demandé (et le contenu, si le site n'utilise pas HTTPS), mais pas qui tu es.</li>
+      <li>Le site reçoit la demande depuis l'adresse du relais de sortie : il ne voit pas la tienne.</li>
+      <li>Aucun relais ne connaît à la fois qui tu es et ce que tu consultes. Mais quelqu'un qui observerait les deux bouts pourrait rapprocher les flux.</li>
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="case"><input type="checkbox" data-https checked /> le site utilise HTTPS (cadenas)</label>
+      <ol class="chemin" aria-label="Le chemin de la demande">
+        {noeuds.map((n) => (
+          <li data-noeud={n.id}>
+            <span class="pastille"></span>
+            <span class="nom">{n.nom}</span>
+          </li>
+        ))}
+      </ol>
+      <div class="paquet" aria-hidden="true">
+        <span class="couche c1"><span class="couche c2"><span class="couche c3"><span class="coeur">demande</span></span></span></span>
+      </div>
+      <table class="savoir">
+        <caption>Ce que voit chaque maillon à cette étape</caption>
+        <thead><tr><th scope="col"></th><th scope="col">Qui envoie&nbsp;?</th><th scope="col">Quel site&nbsp;?</th><th scope="col">Le contenu&nbsp;?</th></tr></thead>
+        <tbody data-savoir></tbody>
+      </table>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+      <p class="anim-note">Simplifié : le vrai Tor négocie une clé avec chaque relais l'un après l'autre, et découpe le trafic en petits paquets de taille fixe.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  type Ligne = [string, string, string, string];
+  const OUI = 'oui', NON = 'non';
+
+  document.querySelectorAll<HTMLElement>('[data-oignon]').forEach((racine) => {
+    activerScene(racine);
+    const https = racine.querySelector<HTMLInputElement>('[data-https]')!;
+    const corps = racine.querySelector<HTMLElement>('[data-savoir]')!;
+    const paquet = racine.querySelector<HTMLElement>('.paquet')!;
+    const noeuds = [...racine.querySelectorAll<HTMLElement>('[data-noeud]')];
+
+    function tableau(lignes: Ligne[]) {
+      corps.replaceChildren(
+        ...lignes.map((l) => {
+          const tr = document.createElement('tr');
+          l.forEach((v, i) => {
+            const c = document.createElement(i === 0 ? 'th' : 'td');
+            if (i === 0) c.setAttribute('scope', 'row');
+            c.textContent = v;
+            if (i > 0 && v.startsWith(OUI)) c.className = 'oui';
+            if (i > 0 && v.startsWith(NON)) c.className = 'non';
+            tr.append(c);
+          });
+          return tr;
+        }),
+      );
+    }
+
+    function placer(i: number, couches: number) {
+      noeuds.forEach((n, k) => n.classList.toggle('actif', k === i));
+      paquet.style.setProperty('--pos', String(Math.max(0, i)));
+      paquet.style.visibility = i < 0 ? 'hidden' : 'visible';
+      paquet.dataset.couches = String(couches);
+    }
+
+    const contenuSortie = () => (https.checked ? 'non (chiffré par HTTPS)' : OUI);
+
+    const etapes: (() => string)[] = [
+      () => {
+        placer(0, 3);
+        tableau([['Toi', OUI, OUI, OUI]]);
+        return 'Ton logiciel Tor choisit trois relais au hasard parmi ceux du réseau, puis enferme ta demande dans trois couches de chiffrement : une seule clé ouvre chaque couche, et chaque relais n’a que la sienne.';
+      },
+      () => {
+        placer(1, 2);
+        tableau([['Relais d’entrée', `${OUI} (ton adresse)`, NON, NON]]);
+        return 'Le relais d’entrée retire la première couche. Il voit ton adresse, et lit seulement : « passe ceci au relais du milieu ». Il ne sait ni quel site tu demandes, ni ce que tu dis.';
+      },
+      () => {
+        placer(2, 1);
+        tableau([['Relais du milieu', `${NON} (seulement le relais d’entrée)`, NON, NON]]);
+        return 'Le relais du milieu retire la deuxième couche. Il ne connaît que ses deux voisins : le relais d’entrée et le relais de sortie.';
+      },
+      () => {
+        placer(3, 0);
+        tableau([['Relais de sortie', `${NON} (seulement le relais du milieu)`, OUI, contenuSortie()]]);
+        return https.checked
+          ? 'Le relais de sortie retire la dernière couche : il voit quel site tu demandes, mais pas qui tu es. Le contenu reste protégé par HTTPS.'
+          : 'Le relais de sortie retire la dernière couche : il voit quel site tu demandes et, sans HTTPS, le contenu lui-même, mais pas qui tu es.';
+      },
+      () => {
+        placer(4, 0);
+        tableau([['Le site', `${NON} (seulement le relais de sortie)`, OUI, OUI]]);
+        return 'Le site reçoit la demande depuis l’adresse du relais de sortie. Il ne voit pas la tienne, sauf si tu te connectes à un compte ou donnes ton nom.';
+      },
+      () => {
+        placer(-1, 0);
+        tableau([
+          ['Relais d’entrée', OUI, NON, NON],
+          ['Relais du milieu', NON, NON, NON],
+          ['Relais de sortie', NON, OUI, contenuSortie()],
+          ['Le site', NON, OUI, OUI],
+        ]);
+        return 'Aucun relais ne sait à la fois qui tu es et ce que tu consultes. Limite connue : quelqu’un qui observerait les deux bouts du chemin pourrait rapprocher les flux par leur rythme.';
+      },
+    ];
+
+    const pas = pasAPas(racine, () => etapes.length, (n) => etapes[n - 1]());
+    https.addEventListener('input', () => pas.redessiner());
+    pas.aller(1);
+  });
+</script>
+
+<style>
+  .case { display: block; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .case input { accent-color: var(--accent); }
+  .chemin { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.25rem; text-align: center; position: relative; }
+  .chemin::before { content: ''; position: absolute; top: 0.9rem; left: 10%; right: 10%; border-top: 2px dashed var(--border); }
+  .chemin li { position: relative; display: grid; justify-items: center; gap: 0.25rem; font-size: 0.8rem; }
+  .pastille { width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--card); border: 2px solid var(--border); }
+  .chemin li.actif .pastille { border-color: var(--accent); background: var(--accent); }
+  .chemin li.actif .nom { font-weight: 700; }
+  .paquet { --pos: 0; display: flex; justify-content: center; margin: 0.4rem 0 0.75rem; width: 20%; transform: translateX(calc(var(--pos) * 100%)); transition: transform 0.6s ease; }
+  .couche { display: inline-flex; padding: 3px; border-radius: 999px; }
+  .c1 { background: var(--ill-secret-a); }
+  .c2 { background: var(--ill-client); }
+  .c3 { background: var(--ill-commun); }
+  .coeur { background: var(--card); color: var(--fg); border-radius: 999px; padding: 0.1rem 0.4rem; font-size: 0.75rem; }
+  .paquet[data-couches='2'] .c1, .paquet[data-couches='1'] .c1, .paquet[data-couches='0'] .c1 { background: none; }
+  .paquet[data-couches='1'] .c2, .paquet[data-couches='0'] .c2 { background: none; }
+  .paquet[data-couches='0'] .c3 { background: none; }
+  .savoir { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0; }
+  .savoir caption { text-align: left; font-weight: 700; margin-bottom: 0.25rem; }
+  .savoir th, .savoir td { border: 1px solid var(--border); padding: 0.3rem 0.4rem; text-align: left; vertical-align: top; }
+  .savoir :global(td.oui) { color: var(--ill-paquet); font-weight: 700; }
+  .savoir :global(td.non) { color: var(--ill-secret-b); font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .paquet { transition: none; } }
+</style>
