@@ -470,6 +470,49 @@ géographie du pouvoir.
 
 ---
 
+## Chine, Inde, Brésil (recherche du 3 novembre 2026)
+
+**Chine** [1]
+- Hu Qiheng (présidente de l'Internet Society of China), discours du 23 juillet
+  2009 (Pékin), archivé par l'institut d'informatique du KIT (Karlsruhe) :
+  « in September 1987, when Wang Yunfeng and his colleagues sent an email
+  entitled "Go beyond the Great Wall to the World" to Karlsruhe University.
+  This was the first email ever sent from a Chinese computer network » ; .cn
+  enregistré par l'équipe de Wang Yunfeng, serveur géré à Karlsruhe par Werner
+  Zorn ; « the first real Chinese Internet connection was implemented in April
+  1994 on the network of the National Computing Facility Center (NCFC) » ; elle
+  était « Director of the NCFC Administration Committee » et a rencontré Neal
+  Lane (NSF) ; « on April 20, 1994 China was connected to the Internet with
+  full functionality » ; serveur .cn relocalisé en Chine plus tard en 1994.
+- Une revendication concurrente (1986) pour le premier courriel est signalée
+  par des résumés de recherche : non retenue, la page suit Hu Qiheng.
+
+**Inde** [2] [3]
+- Research Matters (média scientifique de l'IISc, non daté) : ERNET « initiated
+  in 1986 by the then Department of Electronics » avec le PNUD ; huit
+  institutions (IISc, NCST, cinq IIT, DoE) ; « the country's first internet
+  service provider » en 1992 ; Chandrika Shridhar (1986-2016), Anurag Kumar
+  (coordinateur à partir de 1988), Gopi Garge.
+- B. K. Syngal & S. Deb, *Telecom Man* (Westland), extrait publié par ThePrint
+  le 8 févr. 2020 (Syngal dirigeait VSNL) : lancement fixé au « 15 August
+  1995 » ; « five cities as the first lot » : Delhi, Bombay, Calcutta, Madras,
+  Pune. (D'autres sources citent quatre villes : la page suit le témoignage.)
+
+**Brésil** [4]
+- M. de Oliveira, « The internet's early days », *Pesquisa FAPESP* n° 180,
+  févr. 2011 : réseau ANSP financé par la FAPESP depuis 1988, relié à BITNET en
+  avril 1989 ; premiers signaux d'internet en janvier 1991 par une ligne vers
+  le Fermilab (logiciel Multinet sur VAX) ; Demi Getschko (centre informatique
+  de la FAPESP), Alberto Gomide, Joseph Moussa ; RNP créé en 1989, relié en
+  1992 ; comité gestionnaire d'internet (CGI) créé en 1995.
+- Mexique (ITESM, 1989) : seulement des sources secondaires faibles, non publié.
+
+**Sources**
+1. Hu Qiheng (2009). https://www.informatik.kit.edu/downloads/HuQiheng-Spoeech_on_ChineseInternet-Beijing.23Jul2009.pdf — P (témoignage), en, **lu**.
+2. Research Matters. https://researchmatters.in/article/ernet-project-genesis-internet-india — Pr, en, **lu** (via outil de synthèse).
+3. Syngal & Deb (2020), extrait ThePrint. https://theprint.in/pageturner/excerpt/how-vsnl-launched-internet-services-in-india-in-1995-when-even-china-hadnt/361722/ — P (mémoires), en, **lu partiellement**.
+4. *Pesquisa FAPESP* (2011). https://revistapesquisa.fapesp.br/en/the-internets-early-days/ — Pr (revue de la fondation), en, **lu** (via outil de synthèse).
+
 ## À vérifier plus tard
 
 - Contenu de J. Abbate, *Inventing the Internet* (MIT Press) — non

@@ -6,7 +6,8 @@ import Sources from '../../components/Sources.astro';
 import MiseAJour from '../../components/MiseAJour.astro';
 import Frise from '../../components/Frise.astro';
 import ModeLecture from '../../components/ModeLecture.astro';
-import FriseInternet from '../../components/animations/histoire/FriseInternet.astro';
+import FriseHistoire from '../../components/FriseHistoire.astro';
+import { FRISE_INTERNET } from '../../data/histoire-internet';
 
 // Faits sourcés : voir docs/sources/internet.md.
 const etapes = [
@@ -24,11 +25,11 @@ const etapes = [
 >
   <p class="tag">Histoires · module en construction</p>
   <h1>Histoire d’internet</h1>
-  <MiseAJour date="2026-11-02" evolutif />
+  <MiseAJour date="2026-11-03" evolutif />
   <p class="chapo seulement-debut">
     Internet n'a pas été inventé par une personne, ni en un jour, ni dans un seul pays. C'est une
-    suite d'idées, de câbles et de conventions, venues des États-Unis, de France, de Corée, du
-    Ghana, du Kenya… Parcours la frise, filtre-la, puis découvre les idées qui ont compté.
+    suite d'idées, de câbles et de conventions, venues des États-Unis, de France, de Corée, de
+    Chine, d'Inde, du Brésil, du Ghana, du Kenya… Parcours la frise, filtre-la, puis découvre les idées qui ont compté.
   </p>
 
   <div class="reglages">
@@ -41,14 +42,14 @@ const etapes = [
 
   <!-- Étape 0 -->
   <Etape numero={0} titre="Un siècle et demi de réseaux" ancre="frise">
-    <FriseInternet slot="animation" />
+    <FriseHistoire slot="animation" donnees={FRISE_INTERNET} id="internet" />
     <p slot="decouverte">
-      Vingt-sept dates, des câbles télégraphiques de 1858 aux câbles géants d'aujourd'hui. Filtre par
+      Une trentaine de dates, des câbles télégraphiques de 1858 aux câbles géants d'aujourd'hui. Filtre par
       région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
     </p>
     <p slot="curieux">
       Les récits les plus connus parlent surtout des États-Unis et de quelques hommes. La frise montre
-      aussi la France, la Corée du Sud, le Ghana, le Kenya, et des femmes dont le travail fait encore
+      aussi la France, la Corée du Sud, la Chine, l'Inde, le Brésil, le Ghana, le Kenya, et des femmes dont le travail fait encore
       tourner le réseau : l'annuaire, les noms, les commutateurs, le navigateur.
     </p>
   </Etape>
@@ -175,6 +176,14 @@ const etapes = [
         l'Afrique. Au Kenya, M-Pesa permet dès 2007 d'envoyer de l'argent par téléphone mobile.
       </p>
       <p>
+        En Chine, l'équipe de Wang Yunfeng envoie en 1987 un premier courriel vers l'Allemagne,
+        « Au-delà de la Grande Muraille, vers le monde » ; le pays est pleinement relié à internet le
+        20 avril 1994, après les démarches de Hu Qiheng auprès de la Fondation nationale pour la
+        science américaine. En Inde, le réseau de recherche ERNET naît en 1986, et l'opérateur public
+        VSNL ouvre internet au grand public le 15 août 1995. Au Brésil, les premiers signaux arrivent
+        à la fondation de recherche de São Paulo en janvier 1991.
+      </p>
+      <p>
         Et presque tout passe par des câbles sous la mer : selon TeleGeography, plus de 99 % du trafic
         intercontinental (une estimation, pas une mesure exacte). En février 2024, trois câbles
         coupés en mer Rouge ont perturbé l'Afrique de l'Est.
@@ -217,7 +226,7 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-02"
+    verifie="2026-11-03"
     sources={[
       { auteur: 'B. Leiner, V. Cerf, D. Clark, R. Kahn et al.', titre: 'A Brief History of the Internet (Internet Society)', url: 'https://www.internetsociety.org/internet/history-internet/brief-history-internet/', type: 'primaire', annee: 1997, langue: 'en' },
       { auteur: 'P. Baran', titre: 'On Distributed Communications (RAND RM-3420)', url: 'https://www.rand.org/pubs/research_memoranda/RM3420.html', type: 'primaire', annee: 1964, langue: 'en' },
@@ -242,6 +251,10 @@ const etapes = [
       { auteur: 'Internet Hall of Fame', titre: 'Asian Internet Traces Roots To Kilnam Chon', url: 'https://www.internethalloffame.org/2012/06/26/asian-internet-traces-roots-kilnam-chon/', type: 'site', annee: 2012, langue: 'en' },
       { auteur: 'W. Tevie, N. N. Quaynor, A. Bulley', titre: 'Development of the Internet in Ghana (INET’96, archive)', url: 'http://web.archive.org/web/20180301012959/http://www.isoc.org/inet96/proceedings/g6/g6_4.htm', type: 'primaire', annee: 1996, langue: 'en' },
       { auteur: 'Internet Hall of Fame', titre: 'Nii Quaynor', url: 'https://www.internethalloffame.org/inductee/nii-quaynor/', type: 'site', langue: 'en' },
+      { auteur: 'Hu Qiheng', titre: 'The Introduction of the Internet into China and International Cooperation in Science and Technology (discours, 2009, archivé par le KIT)', url: 'https://www.informatik.kit.edu/downloads/HuQiheng-Spoeech_on_ChineseInternet-Beijing.23Jul2009.pdf', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'Research Matters', titre: 'The ERNET project: genesis of the internet in India', url: 'https://researchmatters.in/article/ernet-project-genesis-internet-india', type: 'presse', langue: 'en' },
+      { auteur: 'B. K. Syngal, S. Deb', titre: 'Telecom Man (extrait publié par ThePrint)', url: 'https://theprint.in/pageturner/excerpt/how-vsnl-launched-internet-services-in-india-in-1995-when-even-china-hadnt/361722/', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'M. de Oliveira (Pesquisa FAPESP)', titre: 'The internet’s early days', url: 'https://revistapesquisa.fapesp.br/en/the-internets-early-days/', type: 'presse', annee: 2011, langue: 'en' },
       { auteur: 'N. Hughes, S. Lonie', titre: 'M-PESA: Mobile Money for the “Unbanked” (Innovations 2-1/2)', url: 'https://ideas.repec.org/a/tpr/inntgg/v2y2007i1-2p63-81.html', type: 'primaire', annee: 2007, langue: 'en' },
       { auteur: 'T. Suri, W. Jack', titre: 'The long-run poverty and gender impacts of mobile money (Science 354)', url: 'https://www.findevgateway.org/paper/2016/12/long-run-poverty-and-gender-impacts-mobile-money', type: 'recherche', annee: 2016, langue: 'en' },
       { auteur: 'M. Bateman, M. Duvendack, N. Loubere', titre: 'Contesting Suri and Jack’s M-Pesa findings published in Science (Review of African Political Economy 46)', url: 'https://ueaeprints.uea.ac.uk/id/eprint/71521/1/Accepted_Manuscript.pdf', type: 'recherche', annee: 2019, langue: 'en' },

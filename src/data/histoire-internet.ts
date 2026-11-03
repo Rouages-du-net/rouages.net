@@ -1,31 +1,20 @@
-// Frise de l'histoire d'internet (module « Histoire d'internet »).
+// Frise de l'histoire d'internet (module « Histoire d'internet »), affichée
+// par src/components/FriseHistoire.astro.
 // Chaque événement vient de docs/sources/internet.md ; `source` est la source
 // principale de l'événement (les autres sont dans le dossier).
 
-export type Region = 'ameriques' | 'europe' | 'asie' | 'afrique' | 'monde';
-export type Theme = 'reseaux' | 'noms' | 'web' | 'infra';
+import type { DonneesFrise, Evenement } from '../lib/frise';
 
-export interface Evenement {
-  annee: string; // texte affiché (« 1971-1973 »)
-  tri: number; // pour l'ordre
-  titre: string;
-  texte: string;
-  region: Region;
-  theme: Theme;
-  personnes?: string[];
-  pionniere?: boolean; // met en avant une femme pionnière
-  source: { titre: string; url: string };
-}
-
-export const REGIONS: Record<Region, string> = {
-  ameriques: 'Amériques',
+export const REGIONS: Record<string, string> = {
+  'amerique-nord': 'Amérique du Nord',
+  'amerique-latine': 'Amérique latine',
   europe: 'Europe',
   asie: 'Asie',
   afrique: 'Afrique',
   monde: 'Océans et monde',
 };
 
-export const THEMES: Record<Theme, string> = {
+export const THEMES: Record<string, string> = {
   reseaux: 'Réseaux et protocoles',
   noms: 'Noms et annuaires',
   web: 'Web et services',
@@ -33,6 +22,37 @@ export const THEMES: Record<Theme, string> = {
 };
 
 export const EVENEMENTS: Evenement[] = [
+  {
+    annee: '1986', tri: 1986, titre: 'ERNET, le réseau de la recherche indienne',
+    texte: 'Le ministère indien de l’Électronique et le Programme des Nations unies pour le développement lancent ERNET, qui relie de grands instituts (IISc, cinq IIT…). En 1992, il devient le premier fournisseur d’accès à internet du pays. Chandrika Shridhar y travaille de 1986 à 2016.',
+    region: 'asie', theme: 'reseaux', personnes: ['Chandrika Shridhar', 'Anurag Kumar'], pionniere: true,
+    source: { titre: 'Research Matters, « The ERNET project: genesis of the internet in India »', url: 'https://researchmatters.in/article/ernet-project-genesis-internet-india' },
+  },
+  {
+    annee: '1987', tri: 1987, titre: 'Le premier courriel chinois',
+    texte: 'En septembre, l’équipe de Wang Yunfeng envoie de Pékin à l’université de Karlsruhe (Allemagne) un courriel intitulé « Au-delà de la Grande Muraille, vers le monde » : le premier envoyé d’un réseau informatique chinois. Le domaine .cn est d’abord géré à Karlsruhe.',
+    region: 'asie', theme: 'reseaux', personnes: ['Wang Yunfeng', 'Werner Zorn'],
+    source: { titre: 'Hu Qiheng, « The Introduction of the Internet into China… » (discours de 2009, KIT)', url: 'https://www.informatik.kit.edu/downloads/HuQiheng-Spoeech_on_ChineseInternet-Beijing.23Jul2009.pdf' },
+  },
+  {
+    annee: '1991', tri: 1991, titre: 'Le Brésil sur internet',
+    texte: 'En janvier, les premiers signaux d’internet arrivent à la FAPESP, la fondation de recherche de l’État de São Paulo, par une ligne vers le Fermilab (États-Unis). L’équipe de Demi Getschko avait d’abord relié le réseau académique pauliste à BITNET en 1989.',
+    region: 'amerique-latine', theme: 'reseaux', personnes: ['Demi Getschko'],
+    source: { titre: 'M. de Oliveira, « The internet’s early days », Pesquisa FAPESP n° 180 (2011)', url: 'https://revistapesquisa.fapesp.br/en/the-internets-early-days/' },
+  },
+  {
+    annee: '1994', tri: 1994, titre: 'La Chine pleinement connectée',
+    texte: 'Le 20 avril, le réseau NCFC de Pékin est relié à internet avec toutes ses fonctions, après des démarches de Hu Qiheng, directrice de son comité, auprès de la Fondation nationale pour la science américaine. Le serveur du domaine .cn rejoint la Chine la même année.',
+    region: 'asie', theme: 'reseaux', personnes: ['Hu Qiheng'], pionniere: true,
+    source: { titre: 'Hu Qiheng, « The Introduction of the Internet into China… » (discours de 2009, KIT)', url: 'https://www.informatik.kit.edu/downloads/HuQiheng-Spoeech_on_ChineseInternet-Beijing.23Jul2009.pdf' },
+  },
+  {
+    annee: '1995', tri: 1995.6, titre: 'Internet pour le public en Inde',
+    texte: 'Le 15 août, jour de la fête de l’Indépendance, l’opérateur public VSNL ouvre l’accès à internet au grand public, d’abord dans cinq villes : Delhi, Bombay, Calcutta, Madras et Pune.',
+    region: 'asie', theme: 'web', personnes: ['Brijendra K. Syngal'],
+    source: { titre: 'B. K. Syngal & S. Deb, Telecom Man (extrait publié par ThePrint, 2020)', url: 'https://theprint.in/pageturner/excerpt/how-vsnl-launched-internet-services-in-india-in-1995-when-even-china-hadnt/361722/' },
+  },
+
   {
     annee: '1858', tri: 1858, titre: 'Premier câble transatlantique',
     texte: 'Un câble télégraphique relie l’Irlande à Terre-Neuve. Il ne fonctionne, irrégulièrement, qu’environ trois semaines.',
@@ -48,13 +68,13 @@ export const EVENEMENTS: Evenement[] = [
   {
     annee: '1960-1964', tri: 1960, titre: 'Un réseau qui survit aux destructions',
     texte: 'À la RAND, Paul Baran étudie un réseau « distribué » capable de survivre à la destruction de certains nœuds. Ses travaux influencent la commutation de paquets.',
-    region: 'ameriques', theme: 'reseaux', personnes: ['Paul Baran'],
+    region: 'amerique-nord', theme: 'reseaux', personnes: ['Paul Baran'],
     source: { titre: 'P. Baran, On Distributed Communications (RAND RM-3420)', url: 'https://www.rand.org/pubs/research_memoranda/RM3420.html' },
   },
   {
     annee: '1966', tri: 1966, titre: 'Le projet ARPANET',
     texte: 'Bob Taylor, à l’ARPA, lance un réseau pour relier des communautés de chercheur·ses et partager des ordinateurs rares, pas pour résister à une attaque nucléaire.',
-    region: 'ameriques', theme: 'reseaux', personnes: ['Bob Taylor'],
+    region: 'amerique-nord', theme: 'reseaux', personnes: ['Bob Taylor'],
     source: { titre: 'Entretien de Bob Taylor (Computer History Museum, 1988)', url: 'https://archive.computerhistory.org/resources/access/text/2017/12/102738691-05-01-acc.pdf' },
   },
   {
@@ -66,13 +86,13 @@ export const EVENEMENTS: Evenement[] = [
   {
     annee: '1972-1989', tri: 1972, titre: 'Le centre d’information d’ARPANET',
     texte: 'Au SRI, l’équipe d’Elizabeth « Jake » Feinler tient l’annuaire du réseau et le registre des noms d’ordinateurs, et crée le premier serveur WHOIS.',
-    region: 'ameriques', theme: 'noms', personnes: ['Elizabeth Feinler'], pionniere: true,
+    region: 'amerique-nord', theme: 'noms', personnes: ['Elizabeth Feinler'], pionniere: true,
     source: { titre: 'Internet Hall of Fame, « Elizabeth Feinler »', url: 'https://www.internethalloffame.org/inductee/elizabeth-feinler/' },
   },
   {
     annee: '1974', tri: 1974, titre: 'Relier des réseaux différents',
     texte: 'Vint Cerf et Bob Kahn publient « A Protocol for Packet Network Intercommunication », qui cite CYCLADES. En décembre, la RFC 675 remercie trois membres de l’équipe française.',
-    region: 'ameriques', theme: 'reseaux', personnes: ['Vint Cerf', 'Bob Kahn'],
+    region: 'amerique-nord', theme: 'reseaux', personnes: ['Vint Cerf', 'Bob Kahn'],
     source: { titre: 'RFC 675 (décembre 1974)', url: 'https://www.rfc-editor.org/rfc/rfc675' },
   },
   {
@@ -84,7 +104,7 @@ export const EVENEMENTS: Evenement[] = [
   {
     annee: '1981', tri: 1981, titre: 'IP et TCP séparés',
     texte: 'Le protocole est scindé en deux : IP (RFC 791) achemine les paquets, TCP (RFC 793) assure une livraison fiable.',
-    region: 'ameriques', theme: 'reseaux',
+    region: 'amerique-nord', theme: 'reseaux',
     source: { titre: 'RFC 791, « Internet Protocol »', url: 'https://www.rfc-editor.org/info/rfc791/' },
   },
   {
@@ -96,7 +116,7 @@ export const EVENEMENTS: Evenement[] = [
   {
     annee: '1983', tri: 1983.0, titre: 'ARPANET passe à TCP/IP',
     texte: 'Le 1ᵉʳ janvier, ARPANET bascule de l’ancien protocole NCP vers TCP/IP. C’est une étape, pas « la naissance d’internet ».',
-    region: 'ameriques', theme: 'reseaux',
+    region: 'amerique-nord', theme: 'reseaux',
     source: { titre: 'J. Postel, RFC 801, « NCP/TCP Transition Plan »', url: 'https://www.rfc-editor.org/rfc/rfc801' },
   },
   {
@@ -108,19 +128,19 @@ export const EVENEMENTS: Evenement[] = [
   {
     annee: '1983', tri: 1983.2, titre: 'Le DNS',
     texte: 'La table des noms tenue à la main par le centre d’information arrive « près de la limite de ce qui est gérable » : P. Mockapetris décrit le système de noms de domaine.',
-    region: 'ameriques', theme: 'noms', personnes: ['P. Mockapetris'],
+    region: 'amerique-nord', theme: 'noms', personnes: ['P. Mockapetris'],
     source: { titre: 'P. Mockapetris, RFC 882', url: 'https://www.rfc-editor.org/rfc/rfc882.txt' },
   },
   {
     annee: '1984', tri: 1984, titre: '.com, .org, .edu…',
     texte: 'La RFC 920 définit les premiers domaines (.gov, .edu, .com, .mil, .org). L’Internet Hall of Fame attribue le schéma à Elizabeth Feinler et son groupe.',
-    region: 'ameriques', theme: 'noms', personnes: ['J. Postel', 'J. Reynolds', 'Elizabeth Feinler'], pionniere: true,
+    region: 'amerique-nord', theme: 'noms', personnes: ['J. Postel', 'J. Reynolds', 'Elizabeth Feinler'], pionniere: true,
     source: { titre: 'J. Postel, J. Reynolds, RFC 920', url: 'https://www.rfc-editor.org/rfc/rfc920' },
   },
   {
     annee: '1985', tri: 1985, titre: 'L’arbre couvrant',
     texte: 'Radia Perlman publie l’algorithme de l’arbre couvrant (spanning tree), qui permet d’étendre les réseaux Ethernet sans boucles.',
-    region: 'ameriques', theme: 'reseaux', personnes: ['Radia Perlman'], pionniere: true,
+    region: 'amerique-nord', theme: 'reseaux', personnes: ['Radia Perlman'], pionniere: true,
     source: { titre: 'R. Perlman, SIGCOMM ’85 (copie PDF)', url: 'https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf' },
   },
   {
@@ -196,3 +216,5 @@ export const EVENEMENTS: Evenement[] = [
     source: { titre: 'Telecom Egypt, « The Completion of 2Africa »', url: 'https://ir.te.eg/en/CorporateNews/PressRelease/232/The-Completion-of-2Africa-A-Consortium-Milestone-for-Global-Connectivity' },
   },
 ];
+
+export const FRISE_INTERNET: DonneesFrise = { regions: REGIONS, themes: THEMES, evenements: EVENEMENTS };

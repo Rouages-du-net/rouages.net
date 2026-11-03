@@ -15,7 +15,7 @@ internet ailleurs), en démontant les « premières » et les attributions uniqu
 
 | # | Étape | Animation | Contenu |
 |---|---|---|---|
-| 0 | Un siècle et demi de réseaux | `FriseInternet` | 27 événements (1858-2025), filtres région / thème / pionnières, une source par événement |
+| 0 | Un siècle et demi de réseaux | `FriseHistoire` | 32 événements (1858-2025), filtres région (dont Amérique latine) / thème / pionnières, une source par événement |
 | 1 | Un réseau de réseaux | texte | Baran, Taylor, CYCLADES (Pouzin), Cerf et Kahn, 1981, 1983 ; mythe nucléaire |
 | 2 | Des noms plutôt que des numéros | texte | Feinler (NIC, HOSTS.TXT, WHOIS), DNS, RFC 920, Perlman ; mythes « mère d'internet », « Feinler a inventé le DNS » |
 | 3 | Le web n'est pas internet | texte | CERN 1989-1993, Pellow, Minitel (1983-2012) |
@@ -31,5 +31,5 @@ internet ailleurs), en démontant les « premières » et les attributions uniqu
 - Non repris faute de vérification : le NPL britannique (Donald Davies) en
   détail, l'annotation « Vague but exciting », la situation actuelle
   d'AFRINIC, la citation de Herzfeld.
-- La frise pourrait accueillir d'autres événements (Chine, Amérique latine,
-  Inde) quand des sources auront été lues.
+- Chine (Hu Qiheng, 2009), Inde (ERNET, VSNL) et Brésil (FAPESP) ajoutés le
+  3 novembre 2026 ; le Mexique (ITESM, 1989) attend une source solide.
