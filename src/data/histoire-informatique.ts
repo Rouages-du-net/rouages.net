@@ -9,7 +9,9 @@ export const REGIONS: Record<string, string> = {
   europe: 'Europe de l’Ouest',
   'europe-est': 'URSS et Europe de l’Est',
   'moyen-orient': 'Moyen-Orient',
+  afrique: 'Afrique',
   asie: 'Asie',
+  oceanie: 'Océanie',
 };
 
 export const THEMES: Record<string, string> = {
@@ -142,7 +144,7 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1963-1975', tri: 1963, titre: 'Les ouvrières de l’électronique',
-    texte: 'Fairchild assemble ses puces à Hong Kong dès fin 1963 : une ouvrière y gagne environ 1 dollar par jour en 1965. De 1965 à 1975, l’entreprise a aussi une usine en territoire navajo, à Shiprock ; Intel ouvre son site de Penang (Malaisie) en 1972. Une main-d’œuvre surtout féminine et peu payée.',
+    texte: 'Fairchild assemble ses puces à Hong Kong dès fin 1963 : une ouvrière y gagne environ 1 dollar par jour en 1965. Intel ouvre son site de Penang (Malaisie) en 1972, et les maquiladoras se multiplient au nord du Mexique. Une main-d’œuvre surtout féminine et peu payée.',
     region: 'asie', theme: 'societe', pionniere: true,
     source: { titre: 'D. Roads, « Hong Kong Adds Quality Electronics… », Electronics (13 décembre 1965)', url: 'https://rfcafe.com/references/electronics-mag/hong-kong-quality-electronics-mag-dec-13-1965.htm' },
   },
@@ -184,7 +186,7 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1980', tri: 1980, titre: 'Le chinois en photocomposition laser',
-    texte: 'À l’université de Pékin, le système de Wang Xuan et Chen Kunqiu, codirectrice du projet, imprime son premier livre-échantillon. La compression des caractères chinois (contours et paramètres) permet de les composer avec des ordinateurs à mémoire très limitée.',
+    texte: 'À l’université de Pékin, le système de photocomposition de Wang Xuan et Chen Kunqiu, qui en écrit le logiciel, imprime son premier livre-échantillon (selon l’université). La compression des caractères chinois (contours et paramètres) permet de les composer avec des ordinateurs à mémoire très limitée.',
     region: 'asie', theme: 'logiciel', personnes: ['Wang Xuan', 'Chen Kunqiu'], pionniere: true,
     source: { titre: 'PKU News, « Wang Xuan: Exploring the way of independent innovation » (2019)', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html' },
   },
@@ -205,6 +207,96 @@ export const EVENEMENTS: Evenement[] = [
     texte: 'Chez Acorn, à Cambridge, les premières puces ARM arrivent le 26 avril. Sophie Wilson en a conçu le jeu d’instructions, Steve Furber l’architecture matérielle.',
     region: 'europe', theme: 'machines', personnes: ['Sophie Wilson', 'Steve Furber'], pionniere: true,
     source: { titre: 'Computer History Museum, « Sophie Wilson — 2012 Fellow »', url: 'https://computerhistory.org/profile/sophie-wilson/' },
+  },
+  {
+    annee: '1892', tri: 1892, titre: 'Les « dames de la Carte du Ciel »',
+    texte: 'Pour la Carte du Ciel, lancée en 1887 par 18 observatoires, des équipes de femmes mesurent au microscope la position des étoiles sur des milliers de plaques photographiques. À Paris, Dorothea Klumpke dirige le Bureau des mesures de 1892 à 1901 ; Jeanne Clavier le dirigera de fait à partir de 1930, sans en avoir le titre.',
+    region: 'europe', theme: 'societe', personnes: ['Dorothea Klumpke', 'Jeanne Clavier'], pionniere: true,
+    source: { titre: 'Observatoire de Paris-PSL, « Trois siècles de femmes astronomes : Dorothéa Klumpke » (2023)', url: 'https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4860.html' },
+  },
+  {
+    annee: '1898', tri: 1898, titre: 'Les mesureuses de Melbourne',
+    texte: 'À l’observatoire de Melbourne, six femmes, dont Charlotte Peel, mesurent les plaques du même catalogue d’étoiles pour 40 livres par an ; un article de 1902 estime qu’aucun homme ne le ferait à moins du double. Elles doivent démissionner en se mariant.',
+    region: 'oceanie', theme: 'societe', personnes: ['Charlotte Peel'], pionniere: true,
+    source: { titre: 'T. Stevenson, « Making Visible the First Women in Astronomy in Australia », PASA 31 (2014)', url: 'https://www.cambridge.org/core/journals/publications-of-the-astronomical-society-of-australia/article/making-visible-the-first-women-in-astronomy-in-australia-the-measurers-and-computers-employed-for-the-astrographic-catalogue/AD35E9CECEBC784E926D7B8F35E3D4E0' },
+  },
+  {
+    annee: '1941', tri: 1940.5, titre: '90 calculateurs humains à Calcutta',
+    texte: 'À l’Indian Statistical Institute de P. C. Mahalanobis, jusqu’à 90 calculateurs humains traitent les enquêtes par sondage sur le jute au Bengale. Le travail est découpé en petites tâches standard, et la production de chacun est contrôlée chaque mois sur cartes perforées.',
+    region: 'asie', theme: 'societe', personnes: ['P. C. Mahalanobis'],
+    source: { titre: 'S. Mertia, « Did Mahalanobis Dream of Androids? », Lives of Data (2020)', url: 'https://networkcultures.org/wp-content/uploads/2020/12/LivesofData.pdf' },
+  },
+  {
+    annee: '1941', tri: 1940.8, titre: 'Le Z3 de Konrad Zuse',
+    texte: 'Le 12 mai 1941, à Berlin, Konrad Zuse montre son Z3 à quelques spécialistes de la recherche aéronautique, qui a cofinancé ses travaux. Faite d’environ 2 000 relais, la machine calcule en binaire et suit un programme lu sur un film perforé. Elle n’est pas électronique et ne garde pas son programme en mémoire.',
+    region: 'europe', theme: 'machines', personnes: ['Konrad Zuse'],
+    source: { titre: 'DPMA (Office allemand des brevets), « Konrad Zuse »', url: 'https://dpma.de/dpma/veroeffentlichungen/meilensteine/computer-pioniere/zuse/index.html' },
+  },
+  {
+    annee: '1942', tri: 1942, titre: 'L’ABC calcule à Ames',
+    texte: 'À l’Iowa State College, le physicien John Atanasoff et l’étudiant Clifford Berry achèvent une machine électronique et binaire qui résout des systèmes d’équations linéaires. Elle n’est pas programmable et reste presque inconnue pendant trente ans.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['John V. Atanasoff', 'Clifford Berry'],
+    source: { titre: 'Computer History Museum, « The Atanasoff-Berry Computer In Operation »', url: 'https://www.computerhistory.org/collections/catalog/102781093' },
+  },
+  {
+    annee: '1944', tri: 1944.1, titre: 'Colossus contre les messages Tunny',
+    texte: 'Conçu par Tommy Flowers, ingénieur des Postes britanniques, Colossus fonctionne à Bletchley Park dès février 1944. Ce calculateur électronique de quelque 2 400 tubes aide à déchiffrer les messages du haut commandement allemand chiffrés par les machines Lorenz. Il reste secret jusqu’aux années 1970.',
+    region: 'europe', theme: 'machines', personnes: ['Tommy Flowers', 'Bill Tutte', 'Max Newman'],
+    source: { titre: 'IEEE / ETHW, « Milestones: The Colossus Computers, 1944-1945 »', url: 'https://ethw.org/Milestones:The_Colossus_Computers,_1944-1945' },
+  },
+  {
+    annee: '1944-1945', tri: 1944.2, titre: 'Les Wrens aux commandes de Colossus',
+    texte: 'Jour et nuit, en équipes de huit heures, des membres du service féminin de la Royal Navy (les « Wrens ») font tourner les Colossus : 272 femmes pour 27 hommes à la fin de la guerre. Tenues au secret, des opératrices comme Irene Dixon ou Betty O’Connell n’ont pu raconter leur travail que des décennies plus tard.',
+    region: 'europe', theme: 'societe', personnes: ['Irene Dixon', 'Betty O’Connell', 'Eleanor Ireland'], pionniere: true,
+    source: { titre: 'A. Marsh, « The Hidden Figures Behind Bletchley Park’s Code-Breaking Colossus », IEEE Spectrum (2019)', url: 'https://spectrum.ieee.org/the-hidden-figures-behind-bletchley-parks-codebreaking-colossus-2650279485' },
+  },
+  {
+    annee: '1948', tri: 1948, titre: 'Le Plankalkül publié',
+    texte: 'Konrad Zuse publie le Plankalkül, un langage pour décrire des calculs, conçu pendant la guerre. On le considère comme le premier langage de programmation de haut niveau, mais il passe presque inaperçu et n’influence pas les premiers langages.',
+    region: 'europe', theme: 'logiciel', personnes: ['Konrad Zuse'],
+    source: { titre: 'IEEE Computer Society, « Konrad Zuse »', url: 'https://computer.org/profiles/konrad-zuse' },
+  },
+  {
+    annee: '1957', tri: 1957, titre: 'Une paie calculée au Cap',
+    texte: 'Un ordinateur britannique BTM 1201 est livré à l’administration de la province du Cap pour calculer la paie de quelque 25 000 enseignant·es. C’est l’un des plus anciens ordinateurs documentés en service sur le continent africain ; d’autres suivent pour des entreprises et des chemins de fer.',
+    region: 'afrique', theme: 'machines',
+    source: { titre: 'Computer Conservation Society, listes de livraison des BTM / ICT 1200 (d’après Computer Survey, 1962)', url: 'https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf' },
+  },
+  {
+    annee: '1964', tri: 1964, titre: 'Ibadan forme des informaticien·nes',
+    texte: 'En mars 1964, IBM ouvre à l’université d’Ibadan, au Nigeria, un « African Education Centre » : des étudiant·es de plusieurs pays africains y apprennent la programmation sur un IBM 1401. Au Nigeria tout juste indépendant, le projet est vu comme un outil de construction nationale.',
+    region: 'afrique', theme: 'societe',
+    source: { titre: 'A. K. Osterlow, séminaire So.Hist-Info du Cnam (2026)', url: 'https://technique-societe.cnam.fr/anna-katharina-osterlow-training-the-african-vanguard-of-the-computer-age-early-computing-and-visions-of-modernity-and-independence-in-senegal-and-nigeria-1960-1990-1605532.kjsp' },
+  },
+  {
+    annee: '1965-1975', tri: 1965.2, titre: 'L’usine de Shiprock',
+    texte: 'Fairchild fabrique des circuits intégrés à Shiprock, en territoire navajo : plus d’un millier de personnes, surtout des femmes navajo. L’entreprise présente leur habileté comme un prolongement « naturel » du tissage, un discours qu’analyse l’historienne Lisa Nakamura. L’usine ferme en 1975, après des licenciements et une semaine d’occupation par l’American Indian Movement.',
+    region: 'amerique-nord', theme: 'societe', pionniere: true,
+    source: { titre: 'L. Nakamura, « Indigenous Circuits », Computer History Museum (2014)', url: 'https://computerhistory.org/blog/indigenous-circuits/' },
+  },
+  {
+    annee: '1966-1970', tri: 1966, titre: 'Les registres de l’apartheid',
+    texte: 'En Afrique du Sud, le bureau des laissez-passer convertit sur bande magnétique le registre de population des Noir·es, d’abord chez un prestataire puis sur son propre ordinateur (1967). Vers 1970, le projet « Book of Life » est confié à IBM pour les autres catégories raciales.',
+    region: 'afrique', theme: 'societe',
+    source: { titre: 'P. N. Edwards, G. Hecht, « History and the Technopolitics of Identity », JSAS 36-3 (2010)', url: 'https://mail.pne.people.si.umich.edu/PDF/EdwardsHechtJSAS2010.pdf' },
+  },
+  {
+    annee: '1973', tri: 1973, titre: 'Le brevet de l’ENIAC annulé',
+    texte: 'En octobre 1973, au terme du procès Honeywell contre Sperry Rand, le juge Earl Larson déclare invalide le brevet de l’ENIAC : ses inventeurs ont repris des idées d’Atanasoff, et leurs idées étaient publiques avant le dépôt. Le principe de l’ordinateur électronique n’appartient plus à personne.',
+    region: 'amerique-nord', theme: 'societe', personnes: ['Earl R. Larson', 'John V. Atanasoff'],
+    source: { titre: 'University of Pennsylvania Archives, « ENIAC Trial Exhibits Master Collection »', url: 'https://archives.upenn.edu/collections/finding-aid/upd8_12' },
+  },
+  {
+    annee: '1982', tri: 1982, titre: 'LOGO parle wolof à Dakar',
+    texte: 'À Dakar, un projet de micro-informatique à l’école est lancé avec des partenaires français et américains. Une équipe sénégalaise, dirigée par une informaticienne du ministère de la Recherche, adapte le langage éducatif LOGO en wolof et plaide pour du matériel conçu pour le climat africain.',
+    region: 'afrique', theme: 'logiciel', pionniere: true,
+    source: { titre: 'A. Osterlow, « African Tech Inventions… », The Digital Orientalist (2024)', url: 'https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/' },
+  },
+  {
+    annee: '1989', tri: 1989, titre: 'Adenike Osofisan, docteure en informatique',
+    texte: 'Formée dans la première génération d’étudiant·es en informatique de l’université d’Ife, Adenike Osofisan devient en 1989 la première Nigériane docteure en informatique.',
+    region: 'afrique', theme: 'idees', personnes: ['Adenike Osofisan'], pionniere: true,
+    source: { titre: 'Université d’Ibadan, « Professor Adenike Osofisan Inducted Into the Nigeria Women Hall of Fame » (2019)', url: 'https://ui.edu.ng/node/4153' },
   },
 ];
 

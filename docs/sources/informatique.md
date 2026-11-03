@@ -883,3 +883,436 @@ années 1970-80 · à vérifier plus tard.
 - Dean : la date de dépôt du brevet US 4 528 626 (Google Patents indisponible : erreur 503) ; l'origine du terme « ISA » (Wikipédia seulement).
 - Brésil : la durée de 8 ans de la réserve inscrite dans la loi de 1984 ; la résolution de la CAPRE de 1976-1977 ; le texte intégral de Marques (SciELO, erreur 403) et d'Adler.
 - Travailleuses : le contenu intégral de Nakamura, Ong et Fernández-Kelly (métadonnées et résumés seulement) ; l'occupation de Shiprock par l'AIM en 1975 ; la date de la zone franche de Bayan Lepas (août 1972) ; les implantations de Singapour à la fin des années 1960.
+
+---
+
+## Complément 1 (3 novembre 2026) — Z3, Colossus, ABC, informatique en Afrique (1950-1980)
+
+Module « Histoire de l'informatique », rouages.net. Recherche faite le 3 novembre 2026.
+
+Conventions :
+- **[ouvert]** : page ou PDF réellement ouvert et lu (en tout ou en partie).
+- **[métadonnées]** : notice Crossref seulement (titre, auteurs, revue, DOI). Texte non lu.
+- **[résumé de recherche]** : vu seulement dans un extrait de moteur de recherche. À ne pas citer tel quel.
+- Wikipédia : uniquement en « pour aller plus loin », jamais comme source.
+
+---
+
+### 1. Konrad Zuse, le Z3 et le Plankalkül
+
+#### Faits clés datés
+
+- **1936** : Zuse commence à construire des machines à calculer à Berlin (KAS/Rojas). **1938** : Z1, mécanique, jamais fiable « à cause de problèmes mécaniques » (DPMA).
+- **1939-1941** : construction du Z3 (KAS/Rojas). Machine **électromécanique à relais** (environ 2 000 relais selon le DPMA), arithmétique **binaire à virgule flottante**, programme lu sur **film perforé** (Rojas 2026).
+- **12 mai 1941** : présentation du Z3 à un petit groupe d'expert·es, dans l'atelier de Zuse, Methfesselstraße, à Berlin-Kreuzberg. D'après le livre d'or, il y avait quatre cadres de la Deutsche Versuchsanstalt für Luftfahrt (DVL), qui avait cofinancé le travail, et Helmut Schreyer (KAS/Rojas ; DPMA).
+- **16 juin 1941** : demande de brevet Z 26476 au Reichspatentamt (DPMA ; Rojas 2026). La procédure reprend en 1950. Elle se termine en **1967** : le Bundespatentgericht rejette toutes les revendications (DPMA).
+- **Décembre 1943** : le Z3 original est détruit dans un bombardement sur Berlin (Rojas 2026). Le DPMA écrit « 1944 ». **Divergence à signaler.** Il ne reste qu'un dessin (DPMA).
+- **1962** : réplique construite par la Zuse KG, sous la direction de Zuse. Elle est montrée au congrès de l'IFIP à Munich (26 août-2 septembre 1962), puis entre au Deutsches Museum en **mai 1968**. Ce n'est pas une copie fidèle : relais plus récents, une seule armoire de mémoire au lieu de deux. Zuse la fait construire en partie pour appuyer son brevet et sa revendication d'antériorité (Rojas 2026). Plusieurs sources secondaires disent « 1961 » : c'est inexact d'après Rojas.
+- **Plankalkül** : premier langage de programmation de haut niveau, conçu pendant la guerre (vers 1942-1945, date exacte variable selon les sources). Il est **publié en 1948** et reste largement ignoré (DPMA ; IEEE Computer Society). Il n'a pas été implanté du vivant de Zuse et n'a pas eu d'influence directe sur les premiers langages (IEEE CS). Heinz Rutishauser (co-auteur d'ALGOL) : « The very first attempt to devise an algorithmic language was undertaken in 1948 by K. Zuse » (cité par IEEE CS).
+- **1998** : Raúl Rojas montre que le Z3, qui n'a **pas de branchement conditionnel**, peut **en théorie** simuler branchements et adressage indirect par de simples calculs. Il serait donc « en principe » universel, avec une mémoire bornée (Rojas 1998, *IEEE Annals* 20(3), p. 51-54). En pratique, personne ne l'a programmé ainsi, et ce n'était pas l'intention de Zuse.
+- **1946** : IBM prend une option sur ses brevets. **1950** : le Z4 est loué à l'ETH Zurich (IEEE CS).
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| DPMA (Office allemand des brevets), « Konrad Zuse », série *Meilensteine / Computer-Pioniere* — https://dpma.de/dpma/veroeffentlichungen/meilensteine/computer-pioniere/zuse/index.html | institution (brevet) | de | [ouvert] |
+| Raúl Rojas, « 12. Mai 1941: Konrad Zuse stellt den ersten Computer vor », Konrad-Adenauer-Stiftung, *Geschichtsbewusst*, 11 mai 2021 — https://www.kas.de/de/web/geschichtsbewusst/essay/-/content/12-mai-1941-konrad-zuse-stellt-den-ersten-computer-vor | historien (vulgarisation) | de | [ouvert] |
+| Raúl Rojas, « The Reconstructions of Konrad Zuse's Z3 Computer », arXiv:2607.13089, juillet 2026 — https://arxiv.org/abs/2607.13089 (PDF : https://arxiv.org/pdf/2607.13089) | recherche (prépublication) | en | [ouvert] |
+| Raúl Rojas, « How to make Zuse's Z3 a universal computer », *IEEE Annals of the History of Computing* 20(3), 1998, p. 51-54, doi:10.1109/85.707574 — https://doi.org/10.1109/85.707574 | recherche | en | [métadonnées] ; le résumé (« at least in principle, as universal as today's computers that have a bounded addressing space ») n'a été vu qu'en [résumé de recherche] |
+| IEEE Computer Society, profil « Konrad Zuse » — https://computer.org/profiles/konrad-zuse | institution (société savante) | en | [ouvert] |
+
+Pour aller plus loin : Rojas, « Konrad Zuse's legacy: the architecture of the Z1 and Z3 », *IEEE Annals* 19(2), 1997, doi:10.1109/85.586067 [métadonnées] ; F. L. Bauer, « Konrad Zuse – Fakten und Legenden », *Informatik-Spektrum* 19(6), 1996, doi:10.1007/s002870050040 [métadonnées] ; Wikipédia « Z3 (ordinateur) ».
+
+#### Points d'attention
+
+- **Ne pas écrire « le premier ordinateur »** sans dire de quel critère il s'agit. Formulation prudente : « la première machine **programmable** et **entièrement automatique** à fonctionner (1941), électromécanique et non électronique ». Le programme était sur bande externe : **pas de programme enregistré**.
+- **« Turing-complet »** : seulement **en théorie**, et **démontré en 1998** par Rojas, pas par Zuse. Le profil IEEE CS écrit « first functional program-controlled Turing-complete computer » : c'est un raccourci. Formulation : « Un historien a montré en 1998 qu'il aurait pu, en théorie, faire tous les calculs d'un ordinateur moderne (à mémoire limitée). Personne ne s'en servait ainsi. »
+- **Contexte** : la DVL (recherche aéronautique du Reich) a financé une partie des travaux. Zuse a aussi travaillé pour Henschel (aviation militaire). C'est à mentionner sans sensationnalisme.
+- **La machine présentée au musée est une réplique de 1962**, pas l'original de 1941.
+- Dates divergentes : destruction en 1943 ou 1944 ; Plankalkül « 1942-45 », « 1945 » ou « 1948 » selon qu'on parle de la conception, du manuscrit ou de la publication. Écrire « conçu pendant la guerre, publié en 1948 ».
+- Relais : 2 000, 2 300 ou 2 600 selon les sources. Écrire « environ 2 000 relais ».
+
+#### Événements de frise proposés
+
+1. **1941 — Le Z3 de Konrad Zuse**
+   Texte : « Le 12 mai 1941, à Berlin, Konrad Zuse montre son Z3 à quelques spécialistes. La machine, faite d'environ 2 000 relais téléphoniques, calcule en binaire et suit un programme lu sur un film perforé. C'est la première machine programmable entièrement automatique connue à avoir fonctionné. Elle n'est pas électronique et ne garde pas son programme en mémoire. »
+   Région : Europe (Allemagne). Thème : machines. Personnes : Konrad Zuse. Pionnière : non.
+   Source principale : DPMA, « Konrad Zuse » — https://dpma.de/dpma/veroeffentlichungen/meilensteine/computer-pioniere/zuse/index.html (avec Rojas, KAS 2021).
+2. **1948 — Le Plankalkül publié**
+   Texte : « Konrad Zuse publie en 1948 le Plankalkül, un langage pour décrire des calculs, conçu pendant la guerre. On le considère comme le premier langage de programmation de haut niveau. Il passe presque inaperçu et n'est mis en œuvre sur machine qu'après la mort de Zuse. »
+   Région : Europe (Allemagne). Thème : logiciel. Personnes : Konrad Zuse. Pionnière : non.
+   Source principale : IEEE Computer Society, « Konrad Zuse » — https://computer.org/profiles/konrad-zuse (et DPMA).
+
+---
+
+### 2. Colossus (Bletchley Park, 1943-1945) et les Wrens
+
+#### Faits clés datés
+
+- **Cible** : les messages chiffrés par les machines Lorenz SZ40/42 du haut commandement allemand, appelés « **Tunny** » par les Britanniques (TNMOC). Environ 200 machines Lorenz ont existé et quatre seulement sont connues aujourd'hui (TNMOC). Bill Tutte en a déduit la structure **sans jamais en avoir vu une** (TNMOC).
+- **Conception** : **Thomas H. (Tommy) Flowers**, ingénieur de la station de recherche du General Post Office à **Dollis Hill** (ETHW/IEEE).
+- **Décembre 1943** : le prototype fonctionne à Dollis Hill. **Janvier 1944** : il est installé à Bletchley Park. **À partir de février 1944** : il est utilisé en continu (ETHW).
+- **1er juin 1944** : la version améliorée (Mark 2) tourne de façon satisfaisante, juste avant le débarquement (ETHW).
+- **Fin de la guerre (1945)** : dix Colossus en service et un onzième en cours de mise en route (ETHW ; le texte de l'IEEE se contredit ailleurs, voir plus bas). Ils comptaient environ 2 400 tubes électroniques et lisaient la bande à 5 000 caractères par seconde (IEEE CS, biographie de Flowers).
+- **Opératrices** : des membres du **Women's Royal Naval Service (Wrens)**. À la fin de la guerre, l'équipe comptait **272 Wrens et 27 hommes** (ETHW). Allison Marsh parle de 273 femmes recrutées à partir de 1943, formées au départ par l'équipe de Max Newman, et qui travaillaient jour et nuit en équipes de huit heures (IEEE Spectrum). Noms documentés : **Irene Dixon** et **Betty O'Connell**, parmi les premières opératrices en 1944 (TNMOC) ; **Eleanor Ireland**, **Dorothy Du Boisson**, **Catherine Caughey** (IEEE Spectrum).
+- **Secret** : après la guerre, Flowers reçoit l'ordre de brûler plans et modes d'emploi (Spectrum). Les opératrices restent tenues par l'Official Secrets Act. Brian Randell publie les **premières informations en 1972** (ETHW). Le gouvernement britannique déclassifie des photos à partir de **1975**. Randell présente ses résultats en **1976** et Flowers peut écrire sur la conception en **1983** (Spectrum). Le *General Report on Tunny* est publié en **2000** (ETHW ; Spectrum).
+- **1996** : la reconstruction menée par **Tony Sale** est mise en marche. Elle est visible au **National Museum of Computing (TNMOC)**, bloc H de Bletchley Park (Spectrum ; TNMOC).
+- **29 septembre 2026** : un **IEEE Milestone** est prévu au bloc H (ETHW). Je n'ai pas vérifié que la cérémonie a eu lieu.
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| ETHW / IEEE, « Milestones: The Colossus Computers, 1944-1945 » (texte de la plaque et dossier) — https://ethw.org/Milestones:The_Colossus_Computers,_1944-1945 | institution (IEEE), avec références | en | [ouvert] |
+| The National Museum of Computing, « From encrypt to decrypt – the full Lorenz story », 7 avril 2016 — https://www.tnmoc.org/news-releases/2016/4/7from-encrypt-to-decrypt-the-full-lorenz-story | musée | en | [ouvert] |
+| Allison Marsh (historienne, Univ. of South Carolina), « The Hidden Figures Behind Bletchley Park's Code-Breaking Colossus », *IEEE Spectrum*, 31 décembre 2019 — https://spectrum.ieee.org/the-hidden-figures-behind-bletchley-parks-codebreaking-colossus-2650279485 | historienne (revue spécialisée) | en | [ouvert] |
+| IEEE Computer Society, « Thomas H. (Tommy) Flowers » — https://history.computer.org/pioneers/flowers.html | institution | en | [ouvert] ; **contient une erreur** (voir plus bas) |
+| B. J. Copeland, « Colossus: its origins and originators », *IEEE Annals* 26(4), 2004, p. 38-45, doi:10.1109/MAHC.2004.26 | recherche | en | [métadonnées] |
+
+Pour aller plus loin : B. J. Copeland (dir.), *Colossus: The Secrets of Bletchley Park's Codebreaking Computers*, Oxford UP, 2006 [métadonnées] ; Wikipédia « Colossus (ordinateur) ».
+
+#### Points d'attention
+
+- **Ce n'est pas Alan Turing qui a conçu Colossus.** La biographie de Flowers sur history.computer.org écrit « designed by Alan Turing and others » : c'est faux, ne pas la suivre. Turing a travaillé sur Enigma et sur une méthode à la main contre Tunny (« Turingery »). La machine est de **Flowers** (et de son équipe de Dollis Hill), les méthodes statistiques sont de **Tutte** et de l'équipe de **Max Newman** (la « Newmanry »).
+- **Colossus et Enigma** : Colossus ne cassait pas Enigma (ça, c'étaient les « bombes » électromécaniques). Il visait Lorenz/Tunny.
+- **« Premier ordinateur électronique »** (formule du TNMOC) : préférer « premier grand calculateur numérique électronique **programmable** (par câblage et interrupteurs), spécialisé dans le déchiffrement ». Il n'enregistrait pas son programme et n'était pas généraliste. L'IEEE parle de « first successful large-scale application of digital electronics to computing ».
+- **Rôle des Wrens** : elles **faisaient tourner** les machines (montage des bandes, réglages, lancement des passes, lecture des résultats). Ne pas les réduire à des « petites mains ». Ne pas leur prêter non plus la conception des méthodes : elles n'en étaient pas chargées.
+- **Nombre de machines** : l'ETHW dit « dix en service, un onzième en route », mais aussi « neuf construites en 18 mois ». Écrire « une dizaine ».
+- **Le secret explique pourquoi l'ENIAC a longtemps été présenté comme le premier.** C'est un bon exemple de « mythe du premier ».
+
+#### Événements de frise proposés
+
+1. **1944 — Colossus casse les messages Tunny**
+   Texte : « Conçu par l'ingénieur des Postes Tommy Flowers, Colossus fonctionne en continu à Bletchley Park dès février 1944. Ce calculateur électronique de quelque 2 400 tubes aide à déchiffrer les messages du haut commandement allemand chiffrés par les machines Lorenz. Il reste secret jusqu'aux années 1970. »
+   Région : Europe (Royaume-Uni). Thème : machines. Personnes : Tommy Flowers, Bill Tutte, Max Newman. Pionnière : non.
+   Source principale : IEEE/ETHW, « The Colossus Computers, 1944-1945 » — https://ethw.org/Milestones:The_Colossus_Computers,_1944-1945
+2. **1944 — Les Wrens aux commandes de Colossus**
+   Texte : « Jour et nuit, en équipes de huit heures, des membres du Women's Royal Naval Service font tourner les Colossus : à la fin de la guerre, ce sont 272 femmes pour 27 hommes. Tenues au secret pendant des décennies, des opératrices comme Irene Dixon et Betty O'Connell n'ont pu raconter leur travail qu'à partir des années 1990-2000. »
+   Région : Europe (Royaume-Uni). Thème : societe. Personnes : Irene Dixon, Betty O'Connell, Eleanor Ireland. Pionnière : oui.
+   Source principale : A. Marsh, *IEEE Spectrum*, 2019 — https://spectrum.ieee.org/the-hidden-figures-behind-bletchley-parks-codebreaking-colossus-2650279485 (et ETHW pour le chiffre 272/27).
+
+---
+
+### 3. L'Atanasoff-Berry Computer (ABC) et le jugement Honeywell c. Sperry Rand
+
+#### Faits clés datés
+
+- **1937** : John Vincent Atanasoff, professeur de physique à l'Iowa State College (Ames), commence la conception. **1939** : premier prototype de démonstration, puis machine complète avec son étudiant **Clifford Berry**. **Début 1942** : la machine complète est en essais (Snow 2001). Le Computer History Museum date le début de la construction de 1938 et l'achèvement de 1942 (CHM). **Dates de début divergentes.**
+- **Ce qu'elle faisait** : un **solveur de systèmes d'équations linéaires** (jusqu'à 29 inconnues), électronique (tubes), binaire, avec mémoire régénérée sur tambours de condensateurs. Elle **n'était pas programmable** : selon le CHM, ce n'est « pas un ordinateur au sens moderne ». L'imprimante à étincelles qui écrivait sur cartes restait peu fiable (CHM).
+- **1941** : John Mauchly (futur co-concepteur de l'ENIAC) rend visite à Atanasoff pendant quatre jours et voit la machine. Ils avaient aussi échangé des lettres (CHM ; archives de l'Université de Pennsylvanie).
+- **1967** : Honeywell attaque Sperry Rand, propriétaire des brevets de l'ENIAC (n° 4-67 Civ. 138, district du Minnesota). **1er juin 1971** : début des témoignages à Minneapolis devant le juge **Earl R. Larson** (UPenn).
+- **19 octobre 1973** : décision du juge Larson (date donnée par le CHM ; les archives de l'Université de Pennsylvanie écrivent « 10 octobre 1973 », **à signaler**). Le brevet ENIAC est déclaré invalide. Le juge écrit qu'Eckert et Mauchly « did not themselves first invent the automatic electronic computer, but instead derived that subject matter from one Dr. John Vincent Atanasoff » (cité par IEEE CS). Décision publiée dans *US Patent Quarterly* vol. 180 (1974), p. 673-773 (IEEE CS).
+- **Autres motifs** : l'invalidité ne repose **pas seulement** sur Atanasoff. Les idées de l'ENIAC avaient été rendues publiques plus d'un an avant le dépôt (1947), notamment par la diffusion du rapport de von Neumann (UPenn). Sperry Rand ne fait pas appel. Conséquence : le principe de l'ordinateur électronique n'appartient à personne, ce que Gordon Bell appelle la « dés-invention de l'ordinateur » (CHM).
+- **1997** : Iowa State termine une réplique fonctionnelle, commencée en 1993 (CHM ; Snow).
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| Computer History Museum, notice « The Atanasoff-Berry Computer In Operation » (film ISU, 1999) — https://www.computerhistory.org/collections/catalog/102781093 | musée | en | [ouvert] |
+| University of Pennsylvania Archives, guide UPD 8.12, « ENIAC Trial Exhibits Master Collection » — https://archives.upenn.edu/collections/finding-aid/upd8_12 | archives (instrument de recherche) | en | [ouvert] |
+| IEEE Computer Society, « Earl R. Larson » — https://history.computer.org/larson.html | institution | en | [ouvert] |
+| Joel A. Snow (Iowa State), lettre « ENIAC or ABC? », *Physics Today*, 2001 — https://physicstoday.aip.org/letters/eniac-or-abc | témoignage d'un acteur du projet de réplique, **partie prenante** | en | [ouvert] |
+
+Pour aller plus loin : site John Vincent Atanasoff de l'Iowa State (https://jva.cs.iastate.edu/courtcase.php, avec un lien vers le texte de la décision). **Non ouvert** : le certificat TLS du serveur a été refusé. À vérifier avant de citer. Wikipédia « Honeywell, Inc. v. Sperry Rand Corp. ».
+
+#### Points d'attention
+
+- Un jugement de brevet **n'établit pas une vérité historique**. Les historien·nes restent partagé·es, et des défenseur·ses de l'ENIAC ont contesté la décision (Snow le reconnaît). Formulation prudente : « En 1973, un tribunal américain a jugé que l'ENIAC reprenait des idées d'Atanasoff et a annulé son brevet. »
+- **L'ABC n'a jamais été breveté** : ne pas écrire « le brevet d'Atanasoff » (une erreur qu'on trouve en ligne).
+- **Ne pas écrire « l'ABC, premier ordinateur »** : il n'était pas programmable et servait à une seule tâche. Il est « le premier calculateur numérique **électronique** » si l'on accepte une machine spécialisée. Colossus (1943-1944) est électronique lui aussi et, en partie, programmable.
+- **Clifford Berry** est co-concepteur et constructeur, pas un simple assistant.
+- La machine d'origine a été démontée dans les années 1940. La date précise (souvent « 1948 ») n'a pas été vérifiée ici.
+- Date de la décision : 19 ou 10 octobre 1973. Le 19 est le plus cité (CHM). Si besoin, écrire « octobre 1973 ».
+
+#### Événements de frise proposés
+
+1. **1942 — L'ABC calcule à Ames**
+   Texte : « À l'Iowa State College, le physicien John Atanasoff et l'étudiant Clifford Berry achèvent une machine électronique et binaire qui résout des systèmes d'équations linéaires. Elle n'est pas programmable et reste inconnue du public pendant près de trente ans. »
+   Région : Amérique du Nord (États-Unis). Thème : machines. Personnes : John V. Atanasoff, Clifford Berry. Pionnière : non.
+   Source principale : Computer History Museum — https://www.computerhistory.org/collections/catalog/102781093
+2. **1973 — Un tribunal annule le brevet de l'ENIAC**
+   Texte : « Le 19 octobre 1973, au terme du procès Honeywell contre Sperry Rand, le juge Earl Larson déclare invalide le brevet de l'ENIAC. Il estime qu'Eckert et Mauchly ont repris des idées d'Atanasoff et que leurs idées étaient publiques avant le dépôt. Personne ne possède plus le principe de l'ordinateur électronique, sans que la question du “premier” soit tranchée. »
+   Région : Amérique du Nord (États-Unis). Thème : societe. Personnes : Earl R. Larson, John V. Atanasoff, John Mauchly, J. Presper Eckert. Pionnière : non.
+   Source principale : University of Pennsylvania Archives, UPD 8.12 — https://archives.upenn.edu/collections/finding-aid/upd8_12 (et CHM pour la date).
+
+---
+
+### 4. L'informatique en Afrique, années 1950-1980
+
+Bilan général : les sources solides sont **rares et éparpillées**. Beaucoup de « premiers ordinateurs de [pays] » circulent seulement sur des blogs. Les historien·nes du domaine parlent d'un « silence » sur l'histoire africaine de l'informatique (Osterlow). Voici seulement ce qui tient.
+
+#### 4.1 Afrique du Sud : des ordinateurs dès 1957, et l'informatique de l'apartheid
+
+- **1957** : un **BTM 1201** (série HEC, britannique) est livré à la **Provincial Administration of the Cape of Good Hope** pour la paie d'environ **25 000 enseignant·es**, puis du personnel médical. C'est la liste de livraisons de la Computer Conservation Society, établie d'après *Computer Survey*, juin 1962 (CCS). D'autres machines de la série suivent avant 1962 : General Motors S.A. (1958), Durban City Council (1959), ISCOR (mai 1960), South African Railways and Harbours (1960) (CCS).
+- **1960** : l'Université du Witwatersrand (Johannesburg) achète un **IBM 1620** et se présente comme la première université d'Afrique du Sud équipée d'un ordinateur (Wits, 2019). IBM vendait alors aux universités avec 80 % de remise. **Une seule source**, institutionnelle et auto-déclarative.
+- **1966-1967** : le Bewysburo (bureau des laissez-passer) est l'une des premières administrations sud-africaines à utiliser des ordinateurs électroniques. Il convertit sur bande magnétique le **registre de population « bantou »**, d'abord par un service d'ICT (1966), puis sur son propre ordinateur ICL (1967). La conversion prend plus de cinq ans. **Vers 1970** : projet « **Book of Life** » pour les autres catégories raciales, confié à IBM (Edwards & Hecht 2010, d'après les rapports annuels du ministère).
+- **Années 1970** : IBM contrôle près de la moitié du marché sud-africain. **À partir de 1972**, des actionnaires militant·es déposent à chaque assemblée d'IBM des résolutions pour le désinvestissement. En 1978, quelque 2 000 salarié·es d'ICL au Royaume-Uni se mobilisent (Edwards & Hecht). Beaucoup de cadres noir·es et métis·ses de l'informatique sud-africaine actuelle ont reçu leur première formation chez IBM au début des années 1980 (*idem*).
+
+#### 4.2 Égypte : un IBM 1620 pour la planification (années 1960)
+
+- Un mémorandum de l'**Institute of National Planning** du Caire (République arabe unie), daté du 1er février 1970, fait le bilan des « recherches menées à l'INP avec l'aide de l'ordinateur IBM 1620 ». Selon ce texte, l'usage de calculateurs pour préparer les plans de développement remonte au « début de 1957 ». Des modèles de **programmation linéaire** pour l'investissement ont été lancés avant le premier plan quinquennal (1960-1965), à l'initiative du Pr I. Helmi Abd-El-Rahman et de l'économiste Ragnar Frisch. Exemple traité : l'usage optimal d'une retenue d'eau entre irrigation et hydroélectricité (INP 1970, **source primaire**).
+- **Installation de l'IBM 1620 en 1963**, présentée comme « le premier ordinateur numérique à programme enregistré en Égypte » : vu **seulement en [résumé de recherche]**, dans la notice d'un document INP **retiré** du dépôt (handle 123456789/5854). **Non vérifié.**
+
+#### 4.3 Nigeria : l'African Education Centre d'IBM à Ibadan (1964)
+
+- **Mars 1964** : IBM World Trade Corporation ouvre l'**« African Education Centre »** à l'Université d'Ibadan pour former des étudiant·es de **plusieurs pays africains**. IBM paie les frais et les voyages. Sources : le film de 1964 *Focus on Progress – I.B.M. Center* (fiche détaillée : enseigne « IBM World Trade Corporation, African Education Centre », un **IBM 1401**, des perforatrices, un étudiant éthiopien, un enseignant nigérian de mathématiques) et les travaux d'**Anna Katharina Osterlow** (Sciences Po), qui y voit un projet relié par les Nigérian·es à la **construction nationale et à la décolonisation**.
+- La date **1963** circule aussi (centre « mis en place en 1963 », renommé centre de calcul de l'université en 1966, d'après un livre de l'Université des Nations unies). Je n'ai pas pu le lire : site archive.unu.edu hors ligne, accès Wayback bloqué. Osterlow et le film donnent **1964**.
+- **1964** : le centre de calcul d'Ibadan catalogue déjà des découvertes archéologiques pour le département concerné (Osterlow 2024).
+- Le film de 1964 dit que **deux ordinateurs** sont en service au Nigeria, dont un aux chemins de fer de Lagos (fiche Footage Farm : propos d'un intervenant, non vérifiés ailleurs).
+- **Adenike Osofisan** : étudiante de la première génération en informatique à l'Université d'Ife, licence (informatique/économie) en **1976**, maîtrise à Georgia Tech en 1979, **doctorat en informatique en 1989**. Elle est **la première Nigériane docteure en informatique** (Université d'Ibadan, 2019 ; son CV). Elle se présente aussi comme « première Africaine professeure d'informatique (2006) » : c'est **auto-déclaré**, à formuler prudemment.
+
+#### 4.4 Afrique de l'Est, Rhodésie
+
+- Au **printemps 1962**, *Computer Survey* signale un **ICT 1202** **commandé** par les **East African Railways and Harbours** (comptabilité) et un autre par le **Trésor de Rhodésie du Sud** (Salisbury) (CCS). La machine n'était donc **pas encore livrée** en juin 1962.
+- Les récits qui font des années 1950 le début de l'informatique au Kenya (machine HEC ou ICT 1202 aux chemins de fer de Nairobi, « jetée dans l'océan Indien », etc.) viennent de **blogs** (Owaahh, Hackaday, Reddit). **Non vérifiés** : Owaahh était injoignable, la page Hackaday renvoyait une erreur 404.
+- Tanzanie : « ICT 1500 au ministère des Finances en 1965 » (livre de l'UNU) contre « 1968 » (autre article). **Non vérifié.**
+
+#### 4.5 Sénégal : micro-informatique et éducation (1982)
+
+- **Mars 1982** : un groupe d'enseignant·es, de scientifiques et d'expert·es du Sénégal, de France et des États-Unis lance le projet **« Computers in education »** à l'**École normale supérieure de Dakar** (Cnam, séminaire So.Hist-Info, présentation d'Osterlow du 13 avril 2026). Les débats portaient sur l'« occidentalité » de la technique, l'adaptation à la culture sénégalaise et les conditions d'export du matériel du Nord vers le Sud.
+- L'équipe de l'Université de Dakar développe une version de **LOGO en wolof**, avec un « micro-monde » proche de la vie des enfants sénégalais. Elle est **dirigée par une informaticienne du ministère sénégalais de la Recherche scientifique et technique**, que l'article ne nomme pas. Elle plaide pour du matériel conçu en Afrique, résistant à la chaleur et à la poussière (Osterlow 2024, d'après des documents UNESCO). **Nom de cette femme : à retrouver** dans les archives UNESCO (https://unesdoc.unesco.org/ark:/48223/pf0000074689, non ouvert).
+
+#### 4.6 Ghana
+
+- Rien de solide. « IBM 1401 à la Ghana Housing Corporation, Accra, 1963 » n'apparaît que sur des blogs. **Ne pas publier.**
+
+#### Sources (sujet 4)
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| Computer Conservation Society, « Delivery lists and applications of the BTM HEC computers and the BTM / ICT 1200 series » (T1X1, v2, déc. 2011, d'après *Computer Survey*, juin 1962) — https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf | inventaire d'historien·nes amateur·es d'après une source d'époque | en | [ouvert] |
+| P. N. Edwards et G. Hecht, « History and the Technopolitics of Identity: The Case of Apartheid South Africa », *Journal of Southern African Studies* 36(3), 2010, p. 619-639, doi:10.1080/03057070.2010.507568 — PDF : https://mail.pne.people.si.umich.edu/PDF/EdwardsHechtJSAS2010.pdf | recherche (historien·nes) | en | [ouvert] |
+| Deborah Minors, « When computers came to Wits », Université du Witwatersrand, 12 nov. 2019 — https://www.wits.ac.za/curiosity/stories/when-computers-came-to-wits.html | institution (auto-déclaratif) | en | [ouvert] |
+| Institute of National Planning (Le Caire), « Review on Research Activities Conducted at the Institute of National Planning Cairo with the Help of the Computer IBM 1620 », mémo n° 940, 1er févr. 1970 — https://repository.inp.edu.eg/handle/123456789/5940 | **source primaire** (PDF scanné, pages 1 à 3 lues) | en (notice en ar.) | [ouvert] |
+| Footage Farm, fiche du film « 1964 – Africa, Nigeria: Focus On Progress – I.B.M. Center » (reel 221761-01) — https://footagefarm.com/reel-details/africa/generic/1964---africa-nigeria--focus-on-progress---ibm-center | source primaire (film d'époque, lu par sa fiche descriptive, pas visionné) | en | [ouvert] |
+| Cnam HT2S, séminaire So.Hist-Info, A. K. Osterlow, « Training “The African vanguard of the computer age”… Senegal and Nigeria, 1963-1984 », 13 avril 2026 — https://technique-societe.cnam.fr/anna-katharina-osterlow-training-the-african-vanguard-of-the-computer-age-early-computing-and-visions-of-modernity-and-independence-in-senegal-and-nigeria-1960-1990-1605532.kjsp | recherche (résumé de séminaire, thèse en cours) | en/fr | [ouvert] |
+| Sciences Po, Centre d'histoire, fiche « Anna Osterlow » — https://www.sciencespo.fr/histoire/en/directory/osterlow-anna/ | institution | en | [ouvert] |
+| A. Osterlow, « African Tech Inventions, Inclusive AI and Digital Innovation: A Historical Perspective », *The Digital Orientalist*, 15 oct. 2024 — https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/ | chercheuse (billet) | en | [ouvert] |
+| Université d'Ibadan, « Professor Adenike Osofisan Inducted Into the Nigeria Women Hall of Fame », 10 juin 2019 — https://ui.edu.ng/node/4153 | institution | en | [ouvert] |
+| K. Obayan, « Entrepreneurial Hustle and the Rise (and Fall) of Personal Computer Companies in Lagos, Nigeria: 1960–1999 », *IEEE Annals* 44(3), 2022, p. 6-16, doi:10.1109/MAHC.2022.3182631 | recherche | en | [métadonnées] (Project MUSE a bloqué l'accès) |
+| F. Prieto-Ñañez, « Postcolonial Histories of Computing », *IEEE Annals*, 2016, doi:10.1109/MAHC.2016.21 | recherche (cadre) | en | [métadonnées] |
+| K. Breckenridge, *Biometric State*, Cambridge UP, 2014, doi:10.1017/CBO9781139939546 | recherche | en | [métadonnées] |
+
+#### Points d'attention
+
+- **Pas de « premier ordinateur d'Afrique »** : aucune source sérieuse ne l'établit. Le BTM 1201 de la province du Cap (1957) est **parmi les plus anciens documentés**. Écrire « l'un des premiers ordinateurs en service sur le continent ».
+- La liste CCS écrit « Republic of South Africa » pour 1957 : c'est un **anachronisme** de la source (la République date de 1961). Écrire « Union sud-africaine » ou simplement « Afrique du Sud ».
+- Ces premières machines sont **importées** (britanniques, américaines) et servent surtout la **paie, la comptabilité et l'administration**, en Afrique du Sud au service d'un **État d'apartheid** (registres raciaux). Le dire sans faire de l'Afrique une simple réceptrice. Ibadan et Dakar montrent des acteur·rices africain·es qui pensent la technique au service de l'indépendance et de leurs langues.
+- **Ibadan** : 1963 ou 1964 ? Mars 1964 est appuyé par deux sources indépendantes (film d'époque et Osterlow). Écrire « en 1964 ». Machine : **IBM 1401**, et non IBM 1620 (l'hypothèse « 1620 à Ibadan » n'est confirmée nulle part).
+- **Égypte, 1963** : à présenter au conditionnel ou à omettre tant qu'on n'a qu'une notice retirée. Le mémo de 1970 prouve seulement l'usage de l'IBM 1620 à l'INP.
+- **Femmes** : la seule pionnière africaine **nommée et sourcée** pour la période est Adenike Osofisan (formée à partir de 1971, docteure en 1989). Les « premières programmeuses » du Ghana, du Kenya, etc. ne sont **pas documentées** par des sources fiables trouvées ici. La responsable du LOGO wolof est à identifier. Ne jamais publier l'adresse figurant dans le CV d'Osofisan.
+- Kenya et Ghana : ne rien publier de précis sans source nouvelle.
+
+#### Événements de frise proposés
+
+1. **1964 — Ibadan forme des informaticien·nes de tout le continent**
+   Texte : « En mars 1964, IBM ouvre à l'Université d'Ibadan, au Nigeria, un “African Education Centre” : des étudiant·es venu·es de plusieurs pays africains y apprennent la mécanographie et la programmation sur un IBM 1401. Au Nigeria tout juste indépendant, le projet est vu comme un outil de construction nationale. »
+   Région : Afrique (Nigeria). Thème : societe. Personnes : (aucune nommée de façon fiable). Pionnière : non.
+   Source principale : A. K. Osterlow, Cnam/So.Hist-Info, 2026 — https://technique-societe.cnam.fr/anna-katharina-osterlow-training-the-african-vanguard-of-the-computer-age-early-computing-and-visions-of-modernity-and-independence-in-senegal-and-nigeria-1960-1990-1605532.kjsp (et le film de 1964, fiche Footage Farm).
+2. **1982 — LOGO parle wolof à Dakar**
+   Texte : « En mars 1982, l'École normale supérieure de Dakar lance avec des partenaires français et américains un projet de micro-informatique à l'école. Une équipe sénégalaise, dirigée par une informaticienne du ministère de la Recherche, adapte le langage éducatif LOGO en wolof et plaide pour du matériel conçu pour le climat africain. »
+   Région : Afrique (Sénégal). Thème : logiciel. Personnes : (responsable non nommée dans la source). Pionnière : oui.
+   Source principale : A. Osterlow, *The Digital Orientalist*, 2024 — https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/ (et le résumé du Cnam pour la date de 1982).
+   Événement de rechange, plus « machines » : **1957 — Une paie d'enseignant·es calculée au Cap**. « Un ordinateur britannique BTM 1201 est livré à l'administration de la province du Cap pour calculer la paie de quelque 25 000 enseignant·es. C'est l'un des plus anciens ordinateurs documentés en service sur le continent africain. » Afrique (Afrique du Sud), machines, pionnière non. Source : CCS, T1X1 — https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf
+
+---
+
+### Reste à vérifier
+
+1. Le résumé de Rojas 1998 (texte intégral non lu ; seulement Crossref et un extrait de recherche).
+2. La date de la décision Larson : 19 ou 10 octobre 1973. Lire le texte de la décision (180 USPQ 673) ou la page jva.cs.iastate.edu (TLS refusé ici).
+3. La destruction du Z3 : décembre 1943 (Rojas) ou 1944 (DPMA).
+4. L'Égypte : l'installation de l'IBM 1620 en 1963 (notice INP retirée).
+5. Ibadan 1963 (UNU, hors ligne) ou 1964 (film, Osterlow). Le renommage en centre de calcul en 1966.
+6. Le Kenya et l'Afrique de l'Est : la date de livraison de l'ICT 1202 des EAR&H. Les histoires d'ordinateurs des années 1950 (blogs).
+7. Le Ghana : aucune source fiable.
+8. Le nom de l'informaticienne sénégalaise qui dirigeait l'équipe LOGO (archives UNESCO).
+9. L'IEEE Milestone Colossus du 29 septembre 2026 : je n'ai pas vérifié que la cérémonie a eu lieu.
+
+Note : le CV d'Adenike Osofisan consulté pendant la recherche contient une adresse personnelle ; il n'est ni cité ni lié ici.
+
+---
+
+## Complément 2 (3 novembre 2026) — calculatrices hors Royaume-Uni et États-Unis, ouvrières navajo de Fairchild, Wang Xuan et la photocomposition du chinois
+
+Recherche faite le 3 novembre 2026, pour le module « Histoire de l'informatique » de rouages.net.
+Légende : **[lu]** = page ouverte et lue ; **[méta]** = seulement des métadonnées (Crossref) ou une notice de catalogue ; **[extrait]** = seulement un extrait de moteur de recherche, page non ouverte ou bloquée.
+
+---
+
+### 1. Bureaux de calcul humains hors Royaume-Uni et États-Unis
+
+#### 1a. France : les « dames de la Carte du Ciel » (Observatoire de Paris, Toulouse…)
+
+**Faits clés**
+- **16-27 avril 1887** : congrès de Paris réuni par l'amiral Mouchez ; lancement de la Carte du Ciel, 18 observatoires (22 à la fin, vers 1970). Chaque plaque porte un réseau gravé qui permet de mesurer les positions d'étoiles au micron près. *(IMCCE 2013)*
+- **Vingt à trente « dames de la carte du ciel » par observatoire** mesurent les clichés à la machine à mesurer (microscope + micromètre ; machine Gautier installée à Paris en 1892). Au total **22 652 plaques** mesurées à la main, près de 5 millions d'étoiles → le « Catalogue astrographique ». *(IMCCE 2013)*
+- **Dorothea Klumpke (1861-1942)** : entre au projet en **1887** à l'Observatoire de Paris (mesure des coordonnées d'étoiles) ; **dirige le Bureau des mesures de 1892 à 1901**, « à la tête d'une équipe de femmes "calculatrices" » ; en **1893**, première femme docteure ès sciences (thèse sur les anneaux de Saturne). *(Observatoire de Paris, 2023)*
+- **Jeanne Clavier (1889-1940)** : recrutée en **1919** pour la Carte du Ciel, d'abord stagiaire ; supervise le bureau des mesures **à partir de 1930**, à la suite de Klumpke, **sans en avoir le statut officiel de cheffe** ; astronome adjointe en 1938 ; prix Valz 1940 (première femme). *(Observatoire de Paris, 2023)*
+- **Toulouse** : Jérôme Lamy a consacré un article à la création d'un « Bureau des dames » pour la Carte du Ciel à l'Observatoire de Toulouse (*Nuncius* 21-1, 2006, p. 101-120). **[méta]** seulement : contenu non lu.
+
+**Sources**
+| Source | Type | Langue | Accès |
+|---|---|---|---|
+| IMCCE, « Un ciel sur mesure (8/12) : Des mesures et démesure de la "Carte du ciel" », *Lettre d'information de l'IMCCE* n° 93, août-sept. 2013 — https://www.imcce.fr/newsletter/docs/Article_IMCCE_2013_LI93_1.pdf | site institutionnel (vulgarisation savante, IMCCE/Observatoire de Paris) | fr | [lu] (texte du PDF extrait) |
+| Observatoire de Paris-PSL, « Trois siècles de femmes astronomes : Dorothéa Klumpke », 21 févr. 2023 — https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4860.html | site institutionnel | fr | [lu] |
+| Observatoire de Paris-PSL, « Trois siècles de femmes astronomes : Jeanne Clavier », 3 mars 2023 — https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4867.html | site institutionnel | fr | [lu] |
+| J. Lamy, « La Carte du Ciel et la création du "Bureau des dames" à l'Observatoire de Toulouse », *Nuncius* 21(1), 2006, p. 101-120, DOI 10.1163/221058706x00045 | recherche | fr | [méta] (Brill : 403) |
+| S. Débarbat, « Documents pour une exposition : la Carte du Ciel », IAU Symposium 133, 1988, DOI 10.1017/S0074180900139476 — https://www.cambridge.org/core/journals/symposium-international-astronomical-union/article/documents-pour-une-exposition-la-carte-du-ciel/91A77FBD1EAECBDF363C7EE01A9C545A | recherche | fr | [lu] résumé seulement ; le PDF (qui citerait Mmes Séguier et Rault, « demoiselles » de la Carte parties en 1950) n'a pas pu être ouvert → **non vérifié** |
+
+**Points d'attention**
+- Les trois sources lues émanent toutes de l'Observatoire de Paris / IMCCE : institutionnelles mais **pas indépendantes entre elles**. Le chiffre « 20 à 30 dames par observatoire » ne repose que sur l'IMCCE ; à présenter comme ordre de grandeur, ou à recouper avec Lamy (2006/2008) avant publication.
+- Pour Klumpke : elle est née à San Francisco ; ne pas en faire une « Française » sans nuance.
+- Aucune donnée de salaire lue pour la France.
+- Terme : à l'époque, « calculatrice » désigne une personne (le plus souvent une femme) qui calcule.
+
+#### 1b. Australie (bonus, très bien sourcé) : mesureuses du Catalogue astrographique
+
+Hors Royaume-Uni et États-Unis, et avec des femmes nommées, des salaires et des conditions.
+
+- **Adélaïde, 1890** : Charles Todd engage **Mary Emma Greayer** comme « female computer » ; une seconde, Miss Pittman, en 1892.
+- **Melbourne, 1898** : Pietro Baracchi crée un bureau de **six femmes** (Peel, Phillips, Skoglund, Lewis, Harker, Hall). **Charlotte Peel** (1876-1974) y travaille de 1898 à 1918 et démissionne à son mariage.
+- **Perth, 1907** : bureau de deux « star measurers » (Prudence Williams, Minnie Harvey) ; sept femmes en 1909 ; en **1913**, quatre mesureuses se plaignent de leur salaire.
+- **Salaires** : 40 £ par an à Melbourne ; un article de 1902 estime qu'« aucun homme » ne ferait ce travail à moins du double ; à partir de 1907, la loi fixe le salaire des femmes à 54 % de celui d'un homme. Barrière du mariage dans la fonction publique fédérale de 1902 à 1966.
+
+| Source | Type | Langue | Accès |
+|---|---|---|---|
+| T. Stevenson, « Making Visible the First Women in Astronomy in Australia: The Measurers and Computers Employed for the Astrographic Catalogue », *PASA* 31, e018, 2014, DOI 10.1017/pasa.2014.12 — https://www.cambridge.org/core/journals/publications-of-the-astronomical-society-of-australia/article/making-visible-the-first-women-in-astronomy-in-australia-the-measurers-and-computers-employed-for-the-astrographic-catalogue/AD35E9CECEBC784E926D7B8F35E3D4E0 | recherche (revue à comité de lecture) | en | [lu] |
+| Encyclopedia of Australian Science and Innovation, notice « Peel, Charlotte Emily Fforde » — https://eoas.info/biogs/P007342b.htm | encyclopédie savante (Swinburne / Univ. Melbourne) | en | [lu] (elle s'appuie sur Stevenson : pas tout à fait indépendante) |
+
+**Point d'attention** : presque tout vient d'une seule chercheuse (Toner Stevenson). Les faits sont peu contestés, mais la deuxième source est dérivée.
+
+#### 1c. Inde : l'Indian Statistical Institute (Calcutta) et P. C. Mahalanobis
+
+**Faits clés**
+- **1932** : le premier « personnel » de l'ISI est un « calculateur à temps partiel » (part-time computer). **1938** : début des formations professionnelles de calculateurs humains. *(Mertia 2020)*
+- **1937** : selon Mahalanobis, « pas un seul enquêteur formé, et seulement une demi-douzaine de calculateurs ». **1941** : jusqu'à **90 calculateurs humains** sur les enquêtes par sondage sur le jute au Bengale. *(Mahalanobis 1944, cité par Mertia)*
+- Le travail est découpé en tâches standard (« copier des tables à trois chiffres, additionner des quantités à quatre chiffres… »), avec un rendement et un taux d'erreur attendus ; la production de chaque calculateur est perforée sur cartes Hollerith et tabulée chaque mois. *(Mertia 2020)*
+- **1943** (après la famine du Bengale) : calculatrices de bureau mécaniques, société pour fabriquer localement des machines à calculer. **1950** : Laboratoire de l'ordinateur électronique. **1950-1951** : plus de 100 « computing clerks » recrutés pour l'Enquête nationale par sondage (NSS), tabulatrices IBM louées. **1953** : ordinateur analogique de S. K. Mitra et S. M. Bose. **1955/1956** : HEC-2M (premier ordinateur électronique importé en Inde). **1958** : URAL soviétique. *(Sharma 2018 ; Mertia 2020)*
+
+| Source | Type | Langue | Accès |
+|---|---|---|---|
+| Sandeep Mertia, « Did Mahalanobis Dream of Androids? », dans S. Mertia (dir.), *Lives of Data: Essays on Computational Cultures from India*, Institute of Network Cultures, 2020 (libre accès) — https://networkcultures.org/wp-content/uploads/2020/12/LivesofData.pdf | recherche (anthropologie historique), citant des sources primaires (Mahalanobis, *Phil. Trans. R. Soc. B* 231, 1944 ; *Sankhyā* 13, 1953) | en | [lu] (chapitre 1) |
+| Dinesh C. Sharma, « Here is how PC Mahalanobis dabbled with computing in the early 20th century », *Down To Earth* / India Science Wire, 29 juin 2018 — https://www.downtoearth.org.in/science-technology/here-is-how-pc-mahalanobis-dabbled-with-computing-in-the-early-20th-century-60988 | presse scientifique | en | [lu] |
+| ISI, « History of Computer in ISI » — https://www.isical.ac.in/~repro/history/public/notepage/ISI_Computers-F.html | site institutionnel | en | **non lu** (erreur 503 deux fois) |
+
+**Points d'attention (importants)**
+- **Pas de femmes documentées** : Mertia écrit (note 22) qu'il s'agissait « vraisemblablement d'une communauté entièrement masculine » et qu'il n'a trouvé **aucune mention de calculatrices** dans les écrits de Mahalanobis. Ne pas écrire « les calculatrices de l'ISI ». Des pages web qui parlent d'« équipes de femmes très qualifiées » ne sont pas sourcées.
+- Dates des premières machines divergentes selon les sources (HEC-2M : 1955 chez Sharma, 1956 chez Mertia). Écrire « 1955-1956 » ou vérifier aux rapports annuels de l'ISI (*Sankhyā*).
+
+#### 1d. URSS, Japon : non traités faute de temps ; aucune source lue.
+
+#### Événements de frise proposés (sujet 1)
+
+1. **Année** : 1892 · **Titre** : Un bureau de calculatrices à l'Observatoire de Paris · **Texte** : Pour la Carte du Ciel, carte photographique de tout le ciel lancée en 1887 par 18 observatoires, des équipes de femmes mesurent au microscope la position des étoiles sur des milliers de plaques. À Paris, Dorothea Klumpke dirige ce Bureau des mesures de 1892 à 1901 ; Jeanne Clavier le dirigera de fait à partir de 1930, sans en avoir le titre. · **Région** : Europe (France) · **Thème** : societe · **Personnes** : Dorothea Klumpke, Jeanne Clavier · **Pionnière** : oui · **Source principale** : Observatoire de Paris, « Trois siècles de femmes astronomes : Dorothéa Klumpke » — https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4860.html (+ IMCCE 2013).
+2. **Année** : 1941 · **Titre** : 90 calculateurs humains à Calcutta · **Texte** : À l'Indian Statistical Institute, fondé par P. C. Mahalanobis, jusqu'à 90 calculateurs humains traitent les enquêtes par sondage sur le jute au Bengale. Le travail est découpé en petites tâches standard, et la production de chacun est perforée sur cartes et contrôlée chaque mois. Cette organisation prépare l'arrivée des premiers ordinateurs de l'Inde dans les années 1950. · **Région** : Asie du Sud (Inde) · **Thème** : societe · **Personnes** : Prasanta Chandra Mahalanobis · **Pionnière** : non · **Source principale** : S. Mertia, « Did Mahalanobis Dream of Androids? », *Lives of Data*, 2020 — https://networkcultures.org/wp-content/uploads/2020/12/LivesofData.pdf
+   (Variante avec femmes nommées : 1898, Melbourne, six mesureuses dont Charlotte Peel ; source Stevenson 2014.)
+
+---
+
+### 2. Lisa Nakamura, « Indigenous Circuits » (2014), et l'usine Fairchild de Shiprock
+
+#### Recherche d'une version en libre accès
+- OpenAlex (interrogé le 3 nov. 2026) : article **« closed »**, aucune copie en dépôt (`any_repository_has_fulltext: false`) ; seuls emplacements : DOI et Project MUSE (https://muse.jhu.edu/article/563663, page bloquée par une vérification anti-robot). **Pas de version dans Deep Blue (Michigan)** trouvée.
+- Une copie PDF circule sur un site de cours d'une université brésilienne (edisciplinas.usp.br) : **non utilisée** (copie non autorisée d'un texte payant ; ne pas la lier depuis le site).
+- **Version lisible de l'autrice elle-même** : son billet « Indigenous Circuits » sur le blog du Computer History Museum (2 janv. 2014), qui résume la recherche → https://computerhistory.org/blog/indigenous-circuits/ **[lu]**. C'est la meilleure source ouverte à citer.
+
+#### Faits et thèses (d'après le billet CHM et les résumés de conférences)
+- **1965-1975** : Fairchild Semiconductor exploite une usine de circuits intégrés à **Shiprock (Nouveau-Mexique), en territoire navajo**. Fairchild est alors **le plus grand employeur privé de travailleur·ses amérindien·nes des États-Unis**. Les ouvrières sont presque exclusivement des **femmes navajo**. *(Nakamura, CHM)*
+- **Inauguration officielle du bâtiment : 8 septembre 1969** (légende de photo, CHM). L'usine a été voulue par le président de la Nation navajo **Raymond Nakai** (1963-1971) ; communiqué de 1969 : « l'aboutissement des efforts conjoints du peuple navajo, du Bureau des affaires indiennes et de Fairchild ».
+- Production : circuits pour calculatrices, systèmes de guidage de missiles, satellites (ex. circuit Fairchild 9040, COMSAT).
+- **Discours de l'entreprise** : brochure couleur de **1969** qui rapproche le **tissage navajo** et le dessin des circuits (tapis géométrique juxtaposé à un circuit agrandi), et vante un « perfectionnisme » commun.
+- **Thèse** : Nakamura critique l'idée que les tisserandes navajo seraient « idéalement adaptées, voire câblées » (« hard-wired ») pour fabriquer des circuits : une **racialisation et une féminisation** du travail présentée comme une aptitude culturelle « naturelle ». Shiprock est un **terrain d'essai** de l'externalisation de la fabrication électronique vers des travailleuses racisées, généralisée ensuite en Asie. Résumé officiel (lu seulement en **[extrait]** de moteur de recherche, MUSE bloqué) : les ouvrières navajo y sont décrites comme des « travailleuses numériques prénumériques idéales », adaptées au poste « par le tempérament, la culture et le genre ».
+- **1975** : des militant·es de l'**American Indian Movement (AIM)** occupent l'usine **une semaine** pour dénoncer l'exploitation, dans un contexte de **licenciements** et de crise ; Fairchild décide de **fermer définitivement** l'usine à la fin de l'occupation, pour se concentrer sur l'Asie. *(Nakamura, CHM)*
+- **Le billet ne donne pas le nombre d'ouvrières.** Une conférence de 2014 parle de « milliers de femmes navajo » (page Berkeley, qui contient elle-même des coquilles : « Fairfield Corporation »).
+
+#### Deuxième source indépendante sur Shiprock et la fermeture
+- **Effectifs** : 325 salarié·es en 1966, objectif de 600 puis environ 1 000 (*Navajo Times* 2016, récit de 1966) ; **1 200 salarié·es « pour la plupart Navajos »** à l'inauguration du nouveau bâtiment en 1969 (*Navajo Times* 2019) ; « plus de 1 000, majoritairement des femmes » (Intermountain Histories) ; une lettre de 1975 lue sur KUNM parle de **1 700 ouvrier·es d'assemblage formé·es** à Shiprock.
+- **Débuts** : activité installée d'abord dans le gymnase du lycée, avant que la tribu construise le bâtiment en 1969 (*Navajo Times* 2016). La tribu louait le bâtiment à Fairchild (6 000 $/mois ; projet de 1,1 M$) (*Navajo Times* 2019).
+- **Occupation** : début le **24 février 1975** (notice du tract de Fairchild « Let's Talk Facts », daté du 3 mars 1975, Computer History Museum) ; une vingtaine de militant·es armé·es de l'AIM ; **huit jours** (*Navajo Times* 2016) ou **sept jours** (*Navajo Times*, 6 mars 1975, résumé de catalogue) ; fin pacifique. Revendications : réembauche des licencié·es, rétablissement des salaires d'avant la baisse (Intermountain Histories).
+- **Licenciements** : plus de 100 salarié·es navajo licencié·es en 1975, récession commencée en 1974 (*Navajo Times* 2016).
+- **Fermeture** : Fairchild accélère son départ après l'occupation ; le bâtiment reste vide plusieurs années (*Navajo Times* 2016). En juin 1975, l'usine est fermée et l'AIM demande sa réouverture par la tribu (KUNM, 18 juin 1975). Intermountain Histories affirme un transfert de l'activité en **Corée** : **non recoupé**.
+- **Responsabilités disputées** : beaucoup d'habitant·es de Shiprock ont reproché à l'AIM la perte des emplois ; l'auteur du *Navajo Times* souligne que la direction était déjà contestée (salaire minimum, licenciements après la période de formation subventionnée pour réembaucher des stagiaires, postes bien payés refusés aux Navajos) et que l'occupation a offert à Fairchild un **prétexte** pour quitter son bail.
+
+| Source | Type | Langue | Accès |
+|---|---|---|---|
+| L. Nakamura, « Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture », *American Quarterly* 66(4), 2014, p. 919-941, DOI 10.1353/aq.2014.0070 | recherche | en | [méta] (OpenAlex ; MUSE bloqué) |
+| L. Nakamura, « Indigenous Circuits », blog du Computer History Museum, 2 janv. 2014 — https://computerhistory.org/blog/indigenous-circuits/ | recherche (vulgarisée par l'autrice) | en | [lu] |
+| Bill Donovan, « 50 Years Ago: The highs and lows of the Fairchild operation in Shiprock », *Navajo Times*, 21 avril 2016 — https://navajotimes.com/50years/50-years-ago-highs-lows-fairchild-operation-shiprock/ | presse (journal de la Nation navajo) | en | [lu] |
+| Bill Donovan, « 50 Years Ago: Dignitaries attend Fairchild opening », *Navajo Times*, 5 sept. 2019 — https://navajotimes.com/50years/50-years-ago-dignitaries-attend-fairchild-opening/ | presse | en | [lu] |
+| Computer History Museum, notice « Shiprock seizure flyer: Let's talk facts » (Fairchild, 3 mars 1975), n° 102770538 — https://www.computerhistory.org/collections/catalog/102770538 | primaire (notice d'archive ; tract lui-même non lu) | en | [lu] notice |
+| American Archive of Public Broadcasting, « AIM Takeover of Fairchild Camera and Instrument Corporation (1975) », extrait KUNM du 18 juin 1975 — https://americanarchive.org/primary_source_sets/american-indian-movement/8-207-483j9qpk | primaire (radio) | en | [lu] description et transcription partielle |
+| Elias Gold, « AIM Occupation of Fairchild Plant on Navajo Reservation », *Intermountain Histories* (BYU) — https://www.intermountainhistories.org/items/show/398 | site universitaire (notice étudiante) | en | [lu] |
+| *Navajo Times*, 6 mars 1975, « MacDonald lauds peaceful settlement of AIM occupation » — https://uamr.lib.arizona.edu/node/257784 | primaire (presse) | en | [méta] résumé de catalogue seulement |
+
+**Points d'attention**
+- **« 1965-1975 »** est confirmé (Nakamura ; *Navajo Times* 2016 : 325 salarié·es en 1966, un an d'activité). Mais le bâtiment n'est inauguré qu'en **septembre 1969** : ne pas dater l'« ouverture de l'usine » de 1969.
+- Nombre d'ouvrières : les chiffres varient (325 en 1966, 1 000 à 1 200 vers 1969, 1 700 formé·es au total). Écrire « plus d'un millier de salarié·es, surtout des femmes navajo ».
+- **Causalité de la fermeture contestée** : présenter les deux lectures (l'occupation par l'AIM comme cause, ou comme prétexte pour une entreprise déjà en repli). Ne pas écrire « l'AIM a fait fermer l'usine » sans nuance.
+- Photographies et tracts de l'entreprise : citer le discours de Fairchild **comme discours**, pas comme fait.
+
+#### Vérification du texte déjà publié
+- « Fairchild assemble ses puces à **Hong Kong dès fin 1963** » : **confirmé** par une source primaire, *Electronics*, 13 déc. 1965 : « Fairchild, which started production late in 1963 » — https://rfcafe.com/references/electronics-mag/hong-kong-quality-electronics-mag-dec-13-1965.htm **[lu]** (retranscription de RF Cafe). D'autres sources secondaires disent 1964 : garder « fin 1963 ».
+- « De 1965 à 1975, l'entreprise a aussi une usine en territoire navajo, à Shiprock » : **exact**. Ajout suggéré : « … où travaillent plus d'un millier de personnes, surtout des femmes navajo ; l'usine ferme en 1975, après une occupation d'une semaine par l'American Indian Movement en pleine vague de licenciements. »
+
+#### Événement de frise proposé (sujet 2)
+- **Année** : 1965 · **Titre** : Des ouvrières navajo fabriquent des puces · **Texte** : De 1965 à 1975, Fairchild Semiconductor assemble des circuits intégrés à Shiprock, en territoire navajo ; plus d'un millier de personnes y travaillent, surtout des femmes. L'entreprise présente leur habileté comme un prolongement « naturel » du tissage traditionnel, un discours que l'historienne Lisa Nakamura analyse comme une racialisation du travail. L'usine ferme en 1975, après des licenciements et une occupation d'une semaine par l'American Indian Movement. · **Région** : Amérique du Nord (États-Unis, Nation navajo) · **Thème** : societe · **Personnes** : Lisa Nakamura (historienne), Raymond Nakai · **Pionnière** : non (ouvrières anonymes ; possible « oui » si la frise valorise les ouvrières collectivement) · **Source principale** : L. Nakamura, « Indigenous Circuits », Computer History Museum, 2014 — https://computerhistory.org/blog/indigenous-circuits/ (+ *Navajo Times* 2016).
+
+---
+
+### 3. Wang Xuan, Chen Kunqiu et la photocomposition laser du chinois (Projet 748)
+
+#### Faits (sources institutionnelles chinoises : université de Pékin)
+- **Août 1974** : lancement du **Projet 748** (« système de traitement de l'information en caractères chinois »), d'où son nom (74-8), avec trois sous-projets, dont la composition typographique de haute qualité. *(ICST/PKU ; PKU 2019)*
+- **1975-1976** : après une étude sur la compression des polices, **Wang Xuan et Chen Kunqiu** prennent en charge le sous-projet de composition ; Wang assure la conception d'ensemble et choisit d'emblée une photocomposeuse « de 4ᵉ génération » (laser, polices numériques), sans passer par les générations intermédiaires. **Chen Kunqiu** (épouse de Wang) conçoit et réalise **l'ensemble du gros logiciel** des systèmes Huaguang puis Founder. *(ICST/PKU ; PKU 2019)*
+- **15 septembre 1980** : impression du premier **livre-échantillon**, *Wu Hao zhi jian* (« L'Épée de Wu Hao », 26 pages). *(PKU 2019, seule source lue)*
+- **1983** : Huaguang II, présenté comme le premier système chinois de photocomposition laser opérationnel. **1986** : le *Economic Daily* (Jingji Ribao) teste Huaguang III ; **1988** : premier journal à abandonner le plomb. **1995** : système Founder. *(ICST/PKU ; PKU 2019)*
+- Part de marché revendiquée : 99 % de la presse chinoise « en trois ans » (PKU 2019, à ne pas reprendre sans source indépendante).
+
+#### Source indépendante primaire : le brevet européen de 1982
+- **EP 0 095 536** « The representation of character images in a compact form for computer storage », **inventeur : Wang Xuan** ; déposé le **1er juin 1982**, publié le 7 déc. 1983, délivré (B1) le 18 mars 1987. **Déposants : Zhang Song Zhi et Wong Kam Fu (Hong Kong)**, pas l'université de Pékin.
+- Principe : les traits réguliers (horizontaux, verticaux…) sont codés sous forme compacte (24 à 48 bits), les traits courbes par des suites de petits vecteurs ; le contour se met à l'échelle puis se convertit en points pour la composeuse laser.
+- Le brevet décrit **les systèmes antérieurs** : plus de dix styles de caractères de plus de 8 000 caractères chacun, soit plus de 2 milliards d'octets en matrices de points ; codage par plages (run-length) utilisé par le **Digiset de Hell** (RFA), une composeuse **IBM** pour un journal japonais et le **Lasercomp de Monotype** (R.-U.), jugé insuffisant ; composition par radicaux (Japon, Taïwan) jugée de qualité inacceptable.
+- https://patents.google.com/patent/EP0095536A1/en **[lu]**
+
+#### Thomas S. Mullaney (Stanford), *The Chinese Computer* (MIT Press, 2024)
+- Chapitres (Crossref **[méta]**) : « When IMEs Were Women: IBM, Lois Lew, and the Dawn of Electronic Chinese » ; « Breaking the Spell: Sinotype and the Invention of Autocompletion » ; « Farewell, QWERTY » ; « The Input Wars: Zhi Bingyi and the Return of Hypography » ; « The Search for Modding China: Printers, Screens, and the Politics of Peripherals » ; « Connected Thoughts ». DOI des chapitres : 10.7551/mitpress/10992.003.0003 à .0010.
+- Systèmes antérieurs selon les recensions lues : machine à écrire électrique de **Chung-Chin Kao** (prototype 1946, codes à 4 chiffres) et démonstratrice d'IBM **Lois Lew** (fin des années 1940) ; **Sinotype** de **Samuel H. Caldwell** (MIT, prototype 1959, financé au nom de la sécurité nationale ; fin à sa mort en 1960 ; invente la saisie par composants et l'autocomplétion) ; Mergenthaler Linotype et IBM abandonnent ; IPX de Chan-hui Yeh (Ideographix) ; « guerres des méthodes de saisie » des années 1980 (400 à 450 méthodes). *(LARB 2024 ; CHM 2024)*
+- Dans son article TechCrunch (2021, extrait du livre), Mullaney montre que les **imprimantes matricielles et écrans occidentaux** devaient être « bidouillés » (modding) pour le chinois (mode graphique, deux passages de tête 9 aiguilles).
+- **Wang Xuan, Chen Kunqiu et le Projet 748 n'apparaissent dans AUCUNE des pages de Mullaney ou sur Mullaney que j'ai pu lire** (LARB, Sixth Tone, TechCrunch, CHM). Le texte du livre (MIT Press Direct, Google Books) n'a pas été accessible (403, quota). **Ce que Mullaney dit de Wang Xuan reste donc non vérifié.** Autre piste indépendante non vérifiée : Jing Tsu, *Kingdom of Characters* (Riverhead, 2022), dernier chapitre.
+
+| Source | Type | Langue | Accès |
+|---|---|---|---|
+| Brevet EP 0 095 536 (Wang Xuan, 1982) — https://patents.google.com/patent/EP0095536A1/en | primaire (indépendante des institutions chinoises) | en | [lu] |
+| ICST (aujourd'hui Wangxuan Institute of Computer Technology, PKU), « History » — https://www.icst.pku.edu.cn/english/about_us/history/index.htm | institutionnelle chinoise | en | [lu] |
+| Wei Qijia, « [70 years on] Wang Xuan: Exploring the way of independent innovation », PKU News, 27 sept. 2019 — https://newsen.pku.edu.cn/news_events/news/people/8889.html | institutionnelle chinoise | en | [lu] |
+| Maura Elizabeth Cunningham, « The Character of Chinese Computing », *Los Angeles Review of Books*, 1er déc. 2024 — https://lareviewofbooks.org/article/the-character-of-chinese-computing/ | recension (presse culturelle) | en | [lu] |
+| Tom Mullaney, « How intensive modding ushered in China's computer revolution », TechCrunch, 24 oct. 2021 — https://techcrunch.com/2021/10/24/how-intensive-modding-ushered-in-chinas-computer-revolution/ | recherche (vulgarisée par l'auteur) | en | [lu] |
+| Computer History Museum, « Creating the Chinese Computer », 26 juin 2024 — https://computerhistory.org/blog/creating-the-chinese-computer/ | musée (compte rendu d'une conférence de Mullaney) | en | [lu] |
+| T. S. Mullaney, *The Chinese Computer: A Global History of the Information Age*, MIT Press, 2024, ISBN 9780262047517 | recherche | en | [méta] (table des chapitres via Crossref) |
+
+**Points d'attention**
+- **Mythe à démonter avec prudence** : le récit chinois officiel fait de Wang Xuan le « père » unique de la photocomposition chinoise et la « seconde invention de l'imprimerie après Bi Sheng ». Il y a eu d'autres systèmes (Hell Digiset, Monotype, systèmes japonais et taïwanais, Sinotype aux États-Unis), et un travail d'équipe (Chen Kunqiu pour le logiciel ; trois sous-projets du 748). Les déposants hongkongais du brevet de 1982 méritent une vérification (rôle d'intermédiaires pour le dépôt à l'étranger ?).
+- **Chen Kunqiu « codirectrice »** : l'ICST écrit que Wang et Chen « prennent en charge » ensemble le sous-projet en 1976, Wang ayant la conception d'ensemble ; PKU attribue à Chen tout le logiciel. « Codirectrice » se défend, mais « responsable du logiciel » est plus précis et mieux sourcé.
+- **Le livre-échantillon de 1980** n'est sourcé que par l'université de Pékin (institution partie prenante). Fait peu surprenant, mais pas de seconde source indépendante trouvée.
+- Dates des « premières » variables selon les sources chinoises (première page de journal en juillet 1979 citée par des sources non lues ; adoption générale 1985 ou 1987-1993).
+
+#### Vérification du texte déjà publié
+« Le système de Wang Xuan et Chen Kunqiu, codirectrice du projet, imprime son premier livre-échantillon [en 1980]. »
+- **Date 1980** : confirmée par PKU (15 sept. 1980, *Wu Hao zhi jian*), source institutionnelle seule.
+- Proposition : « En 1980, le système de photocomposition laser conçu à l'université de Pékin par Wang Xuan et Chen Kunqiu, qui en écrit le logiciel, imprime son premier livre-échantillon. » Ajouter en source le brevet EP 0 095 536 pour la méthode de compression, et signaler que la source de la date est l'université de Pékin.
+
+#### Événements de frise proposés (sujet 3)
+1. **Année** : 1980 · **Titre** : Le chinois passe au laser · **Texte** : À l'université de Pékin, dans le cadre du Projet 748 lancé en 1974, Wang Xuan et Chen Kunqiu mettent au point une photocomposeuse laser pour les caractères chinois ; Chen Kunqiu en écrit le logiciel. Le système imprime son premier livre-échantillon en 1980. Leur astuce : décrire chaque caractère par ses traits sous une forme compacte, au lieu de stocker des milliers d'images. · **Région** : Asie de l'Est (Chine) · **Thème** : logiciel · **Personnes** : Wang Xuan, Chen Kunqiu · **Pionnière** : oui (Chen Kunqiu) · **Source principale** : PKU News, « Wang Xuan: Exploring the way of independent innovation », 2019 — https://newsen.pku.edu.cn/news_events/news/people/8889.html (+ brevet EP 0 095 536).
+2. **Année** : 1982 · **Titre** : Un brevet pour compresser les caractères · **Texte** : Wang Xuan dépose un brevet européen sur la représentation compacte des caractères chinois : les traits droits sont codés en quelques octets, les courbes en petits vecteurs, et la forme se met à l'échelle avant d'être convertie en points pour l'imprimante laser. Le brevet explique pourquoi les solutions occidentales (Hell, Monotype) ne suffisaient pas : stocker en images plus de 8 000 caractères par style, dans plusieurs styles et tailles, aurait demandé des milliards d'octets. · **Région** : Asie de l'Est (Chine) / Europe (dépôt) · **Thème** : machines · **Personnes** : Wang Xuan · **Pionnière** : non · **Source principale** : brevet EP 0 095 536 — https://patents.google.com/patent/EP0095536A1/en
+
+---
+
+### Ce qui reste non vérifié
+- Contenu intégral de l'article de Nakamura (aucune version autorisée en libre accès) ; résumé MUSE lu seulement en extrait de moteur de recherche.
+- Article de Lamy sur le « Bureau des dames » de Toulouse (métadonnées seulement) ; noms de femmes mesureuses à Paris autres que Klumpke et Clavier (Débarbat 1988 non lu en entier).
+- Ce que Mullaney écrit sur Wang Xuan, Chen Kunqiu et le Projet 748 (livre non consulté) ; seconde source indépendante sur le livre-échantillon de 1980.
+- Page d'histoire de l'ISI (erreur 503) ; transfert de l'activité de Shiprock en Corée ; nombre exact d'occupant·es et date précise de la fermeture de Shiprock.
+- URSS et Japon : non traités.
