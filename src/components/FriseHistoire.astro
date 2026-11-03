@@ -1,21 +1,34 @@
 ---
-// Frise interactive de l'histoire d'internet, filtrable par région, par thème
-// et pour mettre en avant les pionnières (voir docs/VISION.md, § 3). Sans
-// JavaScript, la frise complète s'affiche ; les filtres ne font que masquer.
-import { EVENEMENTS, REGIONS, THEMES } from '../../../data/histoire-internet';
-const evts = [...EVENEMENTS].sort((a, b) => a.tri - b.tri);
+// Frise interactive d'histoire (internet, informatique, IA…), filtrable par
+// région, par thème et pour mettre en avant les pionnières (voir
+// docs/VISION.md, § 3). Sans JavaScript, la frise complète s'affiche ; les
+// filtres ne font que masquer. Données : un objet DonneesFrise (src/lib/frise.ts).
+import type { DonneesFrise } from '../lib/frise';
+
+interface Props {
+  donnees: DonneesFrise;
+  id: string; // identifiant unique (noms des boutons radio)
+}
+const { donnees, id } = Astro.props;
+const evts = [...donnees.evenements].sort((a, b) => a.tri - b.tri);
+const REGIONS = donnees.regions, THEMES = donnees.themes;
+const presentes = (cle: 'region' | 'theme') => new Set(evts.map((e) => e[cle]));
+const regionsVues = Object.entries(REGIONS).filter(([v]) => presentes('region').has(v));
+const themesVus = Object.entries(THEMES).filter(([v]) => presentes('theme').has(v));
+const nomRegion = `region-${id}`, nomTheme = `theme-${id}`;
+const couleur = Object.fromEntries(Object.keys(THEMES).map((k, i) => [k, i % 5]));
 ---
-<div class="frise-histoire" data-frise-internet>
+<div class="frise-histoire" data-frise-histoire data-region-nom={nomRegion} data-theme-nom={nomTheme}>
   <div class="filtres" hidden data-filtres>
     <fieldset>
       <legend>Région</legend>
-      <label><input type="radio" name="region-internet" value="" checked /> toutes</label>
-      {Object.entries(REGIONS).map(([v, l]) => <label><input type="radio" name="region-internet" value={v} /> {l}</label>)}
+      <label><input type="radio" name={nomRegion} value="" checked /> toutes</label>
+      {regionsVues.map(([v, l]) => <label><input type="radio" name={nomRegion} value={v} /> {l}</label>)}
     </fieldset>
     <fieldset>
       <legend>Thème</legend>
-      <label><input type="radio" name="theme-internet" value="" checked /> tous</label>
-      {Object.entries(THEMES).map(([v, l]) => <label><input type="radio" name="theme-internet" value={v} /> {l}</label>)}
+      <label><input type="radio" name={nomTheme} value="" checked /> tous</label>
+      {themesVus.map(([v, l]) => <label><input type="radio" name={nomTheme} value={v} /> {l}</label>)}
     </fieldset>
     <label class="case"><input type="checkbox" data-pionnieres /> seulement les pionnières</label>
     <p class="compte" aria-live="polite" data-compte></p>
@@ -23,7 +36,7 @@ const evts = [...EVENEMENTS].sort((a, b) => a.tri - b.tri);
 
   <ol class="evenements">
     {evts.map((e) => (
-      <li data-region={e.region} data-theme={e.theme} data-pionniere={e.pionniere ? '1' : '0'} class={`theme-${e.theme}`}>
+      <li data-region={e.region} data-theme={e.theme} data-pionniere={e.pionniere ? '1' : '0'} class={`couleur-${couleur[e.theme]}`}>
         <p class="annee">{e.annee}</p>
         <div class="corps">
           <h3>{e.titre}</h3>
@@ -41,16 +54,17 @@ const evts = [...EVENEMENTS].sort((a, b) => a.tri - b.tri);
 </div>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-frise-internet]').forEach((racine) => {
+  document.querySelectorAll<HTMLElement>('[data-frise-histoire]').forEach((racine) => {
     const filtres = racine.querySelector<HTMLElement>('[data-filtres]')!;
     filtres.hidden = false;
     const items = [...racine.querySelectorAll<HTMLElement>('.evenements > li')];
     const compte = racine.querySelector<HTMLElement>('[data-compte]')!;
     const pionnieres = racine.querySelector<HTMLInputElement>('[data-pionnieres]')!;
     const val = (n: string) => racine.querySelector<HTMLInputElement>(`input[name="${n}"]:checked`)!.value;
+    const nomRegion = racine.dataset.regionNom!, nomTheme = racine.dataset.themeNom!;
 
     function maj() {
-      const r = val('region-internet'), t = val('theme-internet');
+      const r = val(nomRegion), t = val(nomTheme);
       let n = 0;
       items.forEach((li) => {
         const ok = (!r || li.dataset.region === r) && (!t || li.dataset.theme === t) && (!pionnieres.checked || li.dataset.pionniere === '1');
@@ -66,7 +80,7 @@ const evts = [...EVENEMENTS].sort((a, b) => a.tri - b.tri);
 
 <style>
   .filtres { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 1rem; display: grid; gap: 0.5rem; }
-  .filtres[hidden] { display: none; }
+  .filtres[hidden], .evenements > li[hidden] { display: none; }
   .filtres fieldset { border: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; font-size: 0.95rem; }
   .filtres legend { font-weight: 700; margin-bottom: 0.25rem; width: 100%; }
   .filtres input { accent-color: var(--accent); }
@@ -75,10 +89,11 @@ const evts = [...EVENEMENTS].sort((a, b) => a.tri - b.tri);
   .evenements { list-style: none; padding: 0; margin: 0; border-left: 3px solid var(--border); }
   .evenements > li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.75rem; padding: 0.75rem 0 0.75rem 1rem; position: relative; }
   .evenements > li::before { content: ''; position: absolute; left: -0.55rem; top: 1.05rem; width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
-  .theme-reseaux::before { background: var(--ill-client) !important; }
-  .theme-noms::before { background: var(--ill-secret-a) !important; }
-  .theme-web::before { background: var(--ill-paquet) !important; }
-  .theme-infra::before { background: var(--ill-serveur) !important; }
+  .couleur-0::before { background: var(--ill-client) !important; }
+  .couleur-1::before { background: var(--ill-secret-a) !important; }
+  .couleur-2::before { background: var(--ill-paquet) !important; }
+  .couleur-3::before { background: var(--ill-serveur) !important; }
+  .couleur-4::before { background: var(--ill-secret-b) !important; }
   .annee { margin: 0; font-family: var(--police-mono); font-weight: 700; }
   .corps h3 { margin: 0 0 0.25rem; font-size: 1.05rem; }
   .corps p { margin: 0 0 0.35rem; max-width: var(--mesure); }
