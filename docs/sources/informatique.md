@@ -1316,3 +1316,643 @@ Hors Royaume-Uni et États-Unis, et avec des femmes nommées, des salaires et de
 - Ce que Mullaney écrit sur Wang Xuan, Chen Kunqiu et le Projet 748 (livre non consulté) ; seconde source indépendante sur le livre-échantillon de 1980.
 - Page d'histoire de l'ISI (erreur 503) ; transfert de l'activité de Shiprock en Corée ; nombre exact d'occupant·es et date précise de la fermeture de Shiprock.
 - URSS et Japon : non traités.
+
+---
+
+## Complément 3 (3 novembre 2026) — URSS, Japon, Afrique de l'Est et de l'Ouest
+
+Module « Histoire de l'informatique » — recherche du 3 novembre 2026.
+
+Légende des statuts : **[lu]** = page ou PDF ouvert et lu (au moins le
+passage cité) ; **[méta]** = notice seulement (Crossref, catalogue, résumé
+d'éditeur) ; **[extrait]** = vu seulement dans un résultat de moteur de
+recherche, pas ouvert (ou ouverture refusée : 403, 503…).
+
+Remarque sur l'état des sites : `ukrainiancomputing.org` (ancien musée virtuel
+de B. Malinovsky) a changé de contenu et ne doit plus être cité ;
+`icfcst.kiev.ua` renvoie une page anti-robots (429) ; `archive.unu.edu` est
+hors ligne (« This site is offline ») ; `cacm.acm.org` répond 403.
+
+---
+
+### 1. URSS : calcul humain et premières machines
+
+#### Faits clés datés
+
+- **Juin 1948** — Décret du Conseil des ministres créant le **laboratoire n° 8**
+  de l'expédition géophysique du GEOFIAN, dirigé par A. N. Tikhonov, pour les
+  calculs du projet atomique. Dans une grande salle, **30 à 40
+  « вычислители » (calculateur·rices)** travaillent sur des **calculatrices
+  électromécaniques « Mercedes » prises à l'Allemagne** (trophées de guerre).
+  Tikhonov confie la direction d'un groupe à **Olga Pavlovna Kramer
+  (1896-1971)**, seule à avoir l'expérience de l'intégration numérique
+  d'équations différentielles (astrophysique). [Krayneva 2018, lu]
+- Les « bureaux » de calcul de **L. V. Kantorovitch** (Leningrad),
+  **A. N. Tikhonov** et **I. G. Petrovski** ont participé au projet atomique ;
+  « on y trouvait beaucoup de femmes ». [Krayneva 2018, lu]
+- **Août 1949** — après le premier essai de la bombe atomique, O. Kramer est
+  primée pour « tâches spéciales du gouvernement ». **1953** : elle suit
+  Tikhonov au département de mathématiques appliquées de l'Institut Steklov
+  (MIAN), dirigé par M. V. Keldych, « principal calculateur du projet
+  atomique ». **1954** : la **Strela**, premier ordinateur soviétique de série
+  (SKB-245… cité « СКБ-265 » dans l'article), est installée au MIAN ; Kramer
+  y devient programmeuse « virtuose » (témoignage d'A. A. Doumova).
+  **1956** : ordre « Insigne d'honneur ». [Krayneva 2018, lu]
+- **Calcul « à la main » encore dans les années 1950** : Malinovsky rapporte
+  qu'un problème trop lourd (équations de dissociation de l'air, 13 équations
+  différentielles) fut confié à la **« Première fabrique moscovite de calculs
+  mécaniques »**, « where an entire staff of young women with hand computers »
+  tentait de le résoudre. [Malinovsky 2010, lu, p. ~ ch. sur Brook/M-2]
+- **Arithmomètre « Felix »** : modèle dérivé de l'Odhner, nom « Felix »
+  (d'après Dzerjinski) vers **1929** ; production interrompue en 1941, reprise
+  vers 1948 (Penza puis surtout **Koursk**) jusqu'en **1978** ; « plusieurs
+  millions » d'exemplaires selon une estimation. [Jaap Scherphuis, lu —
+  site de collectionneur, pas une source primaire ; dates données comme
+  approximatives]
+- **1948-1951 — MESM** (Малая электронная счётная машина, « petite machine à
+  calculer électronique »), laboratoire de **S. A. Lebedev**, Institut
+  d'électrotechnique de l'Académie des sciences d'Ukraine, à **Feofania**
+  près de Kyiv (ancien monastère, puis annexe d'hôpital psychiatrique).
+  - **6 novembre 1950** : premier fonctionnement de la maquette (date usuelle,
+    souvent citée ; le tableau de Malinovsky situe la mise au point en
+    novembre-décembre 1950). [Malinovsky 2010, lu]
+  - **4 janvier 1951** : démonstration de la maquette en fonctionnement à une
+    commission d'État (calcul de sommes de factorielles impaires).
+    [Malinovsky 2010, lu]
+  - **8 janvier 1951** : procès-verbal « top secret » du conseil scientifique
+    de l'institut ; parmi les présent·es, « Candidates of Science L. N.
+    Dashevsky and **E. A. Shkabara** ». [Malinovsky 2010, lu]
+  - **25 décembre 1951** : mise en service de la MESM ; une commission de
+    l'Académie des sciences d'URSS menée par **M. V. Keldych** (avec Sobolev,
+    Lavrentiev, Semendiaïev, Kurosh) vient à Feofania. [Malinovsky 2010, lu ;
+    I Programmer 2011, lu ; CHM, lu : « went into regular operation in 1951 »]
+  - Environ **6 000 tubes** selon Malinovsky (« its six thousand vacuum
+    tubes turned the premises into a sauna »). [lu]
+- **Ekaterina Alexeïevna Chkabara (Шкабара)** : avec **Lev Naoumovitch
+  Dachevski**, « principale assistante » de Lebedev ; équipe de **25
+  ingénieur·es, technicien·nes et monteur·ses** ; les trois (Lebedev,
+  Dachevski, Chkabara) sont proposés en 1952 comme responsables du projet pour
+  le prix d'État d'URSS. Elle a co-écrit avec Dachevski les souvenirs
+  *Как это начиналось* (Moscou, Znanie, 1981). [Malinovsky 2010, lu] Un site
+  russe la donne responsable de **l'unité de commande** de la MESM
+  [vc.ru, extrait — à confirmer].
+- **Autre femme documentée** : **Tamara Alexandridi** (née en 1924), seule
+  femme de l'équipe d'I. S. Brouk qui construit la **M-1** (Moscou, 1950-1951).
+  [Malinovsky 2010, lu]
+
+#### Sources
+
+1. I. Krayneva (Institut des systèmes informatiques, SO RAN, Novossibirsk),
+   « Ольга Крамер: из вычислителей в программисты », *Открытые системы*
+   n° 3/2018, p. 44-45 — article d'historienne fondé sur archives (dossier
+   personnel à l'Institut Keldych, RGAE, Archives de l'Académie). Russe. **[lu]**
+   https://www.iis.nsk.su/files/os-n03_2018_44-45.pdf
+2. B. N. Malinovsky, *Pioneers of Soviet Computing*, éd. A. Fitzpatrick,
+   trad. E. Aronie, 2ᵉ éd. électronique SIGCIS, 2010 (CC BY-ND 3.0) —
+   témoin et partie prenante (il a travaillé avec Lebedev), reproduit des
+   procès-verbaux d'archives. Anglais. **[lu]** (copie Internet Archive)
+   https://ia800608.us.archive.org/28/items/PioneersOfSovietComputing/Pioneers%20of%20Soviet%20Computing.pdf
+   (adresse d'origine indiquée dans le PDF : http://www.sigcis.org/files/sigcismc2010_001.pdf — la notice sigcis.org/node/516 répond 404)
+3. Computer History Museum, « Researchers with MESM computer », légende de
+   photo (objet 500003160). Anglais, musée. **[lu]**
+   https://www.computerhistory.org/revolution/birth-of-the-computer/4/92/2376
+4. K. Tatarchenko, « “The Computer Does Not Believe in Tears”: Soviet
+   Programming, Professionalization, and the Gendering of Authority »,
+   *Kritika* 18-4 (2017), p. 709-739, DOI 10.1353/kri.2017.0048. **[méta]**
+   — article clé sur les programmeuses soviétiques, non lu.
+5. S. Gerovitch, « “Mathematical Machines” of the Cold War: Soviet Computing,
+   American Cybernetics and Ideological Disputes in the Early 1950s »,
+   *Social Studies of Science* 31-2 (2001), p. 253-287,
+   DOI 10.1177/0306312701031002006. **[méta]**
+6. G. D. Crowe, S. E. Goodman, « S. A. Lebedev and the Birth of Soviet
+   Computing », *IEEE Annals of the History of Computing* 16-1 (1994),
+   p. 4-24, DOI 10.1109/85.251852. **[méta]**
+7. I Programmer, « On this day in 1951 MESM formally recognised » (2011).
+   Anglais, presse spécialisée (secondaire). **[lu]**
+   https://i-programmer.info/news/82-heritage/3533-on-this-day-in-1951-mesm-formally-recognised.html
+8. J. Scherphuis, « Felix », Jaap's Mechanical Calculators Page — site de
+   collectionneur, cite le manuel d'usine de Koursk (1968). **[lu]**
+   https://www.jaapsch.net/mechcalc/felix.htm
+
+Pour aller plus loin : Wikipédia « MESM » (en), non utilisée comme source.
+
+#### Points d'attention
+
+- **« Premier ordinateur d'Europe continentale »** : formule courante mais
+  contestée (Zuse Z4, BARK suédois…). Préférer « premier ordinateur
+  électronique à programme enregistré d'URSS (et d'Ukraine) ».
+- **Dates de la MESM** : 1950 (maquette), 4 janvier 1951 (démonstration),
+  25 décembre 1951 (mise en service / reconnaissance). Un article de
+  vulgarisation (teletype.in, [extrait]) conteste même l'existence d'une
+  commission extérieure ; Malinovsky, qui cite les archives, la décrit. Écrire
+  « mise en service fin 1951 ».
+- **Nombre de tubes** : ~6 000 (Malinovsky) ; d'autres chiffres circulent.
+  Écrire « environ 6 000 ».
+- **Chkabara** : son rôle de « principale assistante » est solide (Malinovsky,
+  procès-verbal de 1951) ; la répartition précise (unité de commande) n'est
+  vue que dans un extrait de moteur. Ne pas en faire la « co-inventrice » de
+  la MESM ; dire « l'une des deux principales adjointes de Lebedev ».
+- **« Felix » et projet atomique** : aucune source lue ne relie l'arithmomètre
+  Felix aux calculs atomiques ; le laboratoire n° 8 utilisait des machines
+  électromécaniques allemandes « Mercedes ». Ne pas illustrer le projet
+  atomique par un Felix.
+- **Institut Steklov** : le calcul du projet atomique relève notamment du
+  département de mathématiques appliquées du MIAN (Keldych, 1953) et du
+  bureau de Kantorovitch à Leningrad ; le nom « Centre de calcul de
+  l'Académie des sciences » désigne une autre institution (créée en 1955),
+  à ne pas confondre.
+- Une grande partie des tâches du projet atomique reste classée (Krayneva le
+  dit explicitement) : formulations prudentes.
+
+#### Événements de frise proposés
+
+1. **Année** : 1948 — **Titre** : Les calculatrices du projet atomique
+   — **Texte** : À Moscou, le laboratoire n° 8 d'Andreï Tikhonov calcule pour
+   le projet atomique soviétique : 30 à 40 calculateur·rices y travaillent sur
+   des machines électromécaniques allemandes. Olga Kramer dirige un groupe,
+   puis devient en 1954 programmeuse de la Strela, premier ordinateur
+   soviétique de série. — **Région** : europe-est — **Thème** : societe —
+   **Personnes** : Olga Kramer, Andreï Tikhonov — **Pionnière** : oui —
+   **Source** : I. Krayneva, « Ольга Крамер: из вычислителей в
+   программисты », *Открытые системы* 3/2018 —
+   https://www.iis.nsk.su/files/os-n03_2018_44-45.pdf
+2. **Année** : 1951 — **Titre** : La MESM de Feofania
+   — **Texte** : Près de Kyiv, dans un ancien monastère, l'équipe de Sergueï
+   Lebedev met en service fin 1951 la MESM, premier ordinateur électronique à
+   programme enregistré d'URSS (environ 6 000 tubes). Ekaterina Chkabara et
+   Lev Dachevski sont ses deux principaux adjoints, à la tête d'une équipe
+   d'environ 25 personnes. — **Région** : europe-est — **Thème** : machines —
+   **Personnes** : Sergueï Lebedev, Ekaterina Chkabara, Lev Dachevski —
+   **Pionnière** : oui — **Source** : B. N. Malinovsky, *Pioneers of Soviet
+   Computing* (SIGCIS, 2010) —
+   https://ia800608.us.archive.org/28/items/PioneersOfSovietComputing/Pioneers%20of%20Soviet%20Computing.pdf
+
+---
+
+### 2. Japon : calcul humain et premières machines
+
+#### Faits clés datés
+
+- **12 novembre 1946** — Au théâtre Ernie Pyle de Tokyo (réservé aux
+  forces d'occupation), concours organisé par le journal de l'armée américaine
+  *Stars and Stripes* : **Kiyoshi Matsuzaki** (松崎喜義), champion de soroban
+  du Bureau de l'épargne du ministère des Postes, contre le soldat **Thomas
+  Nathan Wood**, du 240ᵉ service financier du QG de MacArthur, sur
+  **calculatrice électrique** (électromécanique). Résultat **4 à 1** pour le
+  soroban : addition, soustraction, division et problème composé ; la machine
+  ne gagne qu'en multiplication. Citations du *Stars and Stripes* (« The
+  machine age took a step backward… ») et du *Nippon Times* (dépêche UP).
+  [Kojima 1954, lu]
+- Le même livre cite le comité du soroban de la Chambre de commerce et
+  d'industrie du Japon : examens de licence d'opérateur·rice depuis **1931** ;
+  l'avantage du soroban s'efface en multiplication/division au-delà d'environ
+  10-12 chiffres. [Kojima 1954, lu]
+- **1952** — ETL (Electrotechnical Laboratory) : prototype de calculateur à
+  relais **ETL Mark I** ; **novembre 1955** : **ETL Mark II** (relais).
+  [IPSJ, chronologie, lu]
+- **1949-1956 — FUJIC** : **Okazaki Bunji** (1914-1998), chez Fuji Photo
+  Film, commence ses recherches en mars 1949 pour **automatiser les calculs
+  de conception d'objectifs** ; assemblage à partir de 1952, démonstration en
+  novembre 1955, achèvement en **mars 1956** : premier ordinateur électronique
+  japonais. Environ **1 700 tubes**, mémoire de **255 mots** à lignes à
+  retard à mercure ; objectif 1 000 fois la vitesse d'un calcul humain,
+  environ 2 000 fois atteint. Travail mené « presque seul ». Utilisé deux ans
+  et demi à l'usine d'Odawara, donné à l'université Waseda, conservé au
+  **Musée national de la nature et des sciences** (Tokyo). [IPSJ, lu]
+- **Juillet 1954** — **Eiichi Goto**, doctorant au laboratoire de **Hidetosi
+  Takahasi** (physique, université de Tokyo), présente le **paramétron** :
+  élément logique à oscillation paramétrique (deux phases, 0 ou π, codent un
+  bit), construit avec des tores de ferrite. Bon marché et stable, il a
+  « façonné les débuts de l'informatique japonaise ». [IPSJ, lu ; IEEE
+  Milestone, lu]
+- **Juillet 1956** — **ETL Mark III**, entièrement à transistors, « qui
+  pourrait être le premier ordinateur à programme enregistré [à transistors]
+  au monde » (formulation prudente de l'IPSJ). [IPSJ, lu]
+- **Mars 1957** — **MUSASINO-1**, premier ordinateur à paramétrons de NTT ;
+  **novembre 1957** : ETL Mark IV (transistors à jonction). [IPSJ, lu ;
+  IEEE, lu]
+- **26 mars 1958** — premier calcul du **PC-1** (environ **4 200
+  paramétrons**), premier ordinateur à programme enregistré construit par une
+  université japonaise, le plus rapide du Japon en 1958. Selon Goto (1959),
+  près de la moitié des ordinateurs japonais en service utilisaient alors des
+  paramétrons ; PC-2 (1960, avec Fujitsu) devient le FACOM 202. [IEEE
+  Milestone n° 291, inauguré le 27 novembre 2025, lu]
+- **Femmes programmeuses japonaises** : **rien de documenté trouvé** dans les
+  sources institutionnelles consultées (IPSJ, IEEE). Pistes : publications de
+  l'IPSJ et du Musée national de la nature et des sciences (rapports
+  « 技術の系統化調査 »), recherches en japonais (« 女性プログラマー 1960年代 »,
+  « キーパンチャー »). Ne rien publier sans source.
+
+#### Sources
+
+1. Takashi Kojima, *The Japanese Abacus: Its Use and Theory*, Tokyo/Rutland,
+   Charles E. Tuttle, 1ʳᵉ éd. avril 1954, p. 12-14 — texte d'époque qui cite
+   *Stars and Stripes* et *Nippon Times* ; Kojima remercie Matsuzaki pour son
+   aide. Anglais. **[lu]**
+   https://ia800907.us.archive.org/3/items/japaneseabacus00taka/japaneseabacus00taka.pdf
+   (extrait en ligne : https://www.ecb.torontomu.ca/~elf/abacus/abacus-contest.html
+   **[lu]** — attention, cet extrait écrit « 20th Finance » au lieu de « 240th »)
+2. IPSJ Computer Museum (Société de traitement de l'information du Japon),
+   « [Fuji Photo Film] FUJIC ». Anglais, institution. **[lu]**
+   https://museum.ipsj.or.jp/en/computer/dawn/0010.html
+3. IPSJ Computer Museum, « Okazaki Bunji » (Japanese Computer Pioneers).
+   **[lu]** https://museum.ipsj.or.jp/en/pioneer/okazaki.html
+4. IPSJ Computer Museum, « Parametron » (patrimoine, 1954) et chronologie
+   « Dawn of Japanese computers ». **[lu]**
+   https://museum.ipsj.or.jp/en/heritage/parametron.html ·
+   https://museum.ipsj.or.jp/en/computer/dawn
+5. IEEE / ETHW, « Milestones: Parametron, 1954 » (plaque inaugurée le 27
+   novembre 2025, université de Tokyo). Anglais. **[lu]** (deux tiers de la
+   page lus ; annexe des modèles commerciaux non lue)
+   https://ethw.org/Milestones:Parametron,_1954
+
+Pour aller plus loin : Wikipédia « FUJIC », « Parametron » (en).
+
+#### Points d'attention
+
+- Le concours de 1946 oppose le soroban à une **calculatrice électrique de
+  bureau**, pas à un « ordinateur ». Ne pas écrire « l'abaque bat
+  l'ordinateur ». Le score (4-1) et la date sont donnés par deux textes
+  d'époque cités par Kojima ; le *Stars and Stripes* original n'a pas été vu.
+  L'unité de Wood varie selon les reprises (240ᵉ dans Kojima).
+- Okazaki a travaillé « presque seul » d'après l'IPSJ : ne pas inventer
+  d'équipe. Le rapport de vitesse (2 000 fois le calcul humain) est celui de
+  l'IPSJ ; d'autres pages disent « le double de l'objectif » — cohérent.
+- « Premier ordinateur à transistors du monde » pour l'ETL Mark III :
+  l'IPSJ dit « could be » ; d'autres machines (Manchester TC, TRADIC aux
+  États-Unis) revendiquent ce titre. Formulation prudente obligatoire.
+- MUSASINO-1 (mars 1957) précède le PC-1 (mars 1958) : le PC-1 n'est pas le
+  « premier ordinateur à paramétrons », mais le premier construit par une
+  université.
+- Graphie : l'IPSJ écrit « Takahasi Hidetosi » (romanisation Kunrei) ;
+  l'IEEE écrit « Takahashi ». Ordre nom/prénom : l'IPSJ met le nom d'abord
+  (« Okazaki Bunji », « Goto Eiichi »).
+
+#### Événements de frise proposés
+
+1. **Année** : 1946 — **Titre** : Le soroban bat la calculatrice
+   — **Texte** : À Tokyo, sous l'occupation, le journal de l'armée américaine
+   organise un duel : Kiyoshi Matsuzaki, employé des Postes, avec son soroban,
+   contre un soldat sur calculatrice électrique. Le boulier l'emporte 4 à 1 ;
+   la machine ne gagne qu'en multiplication. — **Région** : asie —
+   **Thème** : societe — **Personnes** : Kiyoshi Matsuzaki, Thomas Nathan
+   Wood — **Pionnière** : non — **Source** : T. Kojima, *The Japanese
+   Abacus* (Tuttle, 1954), p. 12-14 —
+   https://ia800907.us.archive.org/3/items/japaneseabacus00taka/japaneseabacus00taka.pdf
+2. **Année** : 1954-1958 — **Titre** : Le paramétron et le PC-1
+   — **Texte** : À l'université de Tokyo, le doctorant Eiichi Goto invente en
+   1954 le paramétron, un élément logique bon marché à tores de ferrite. Le
+   PC-1, qui en compte 4 200, fait son premier calcul en mars 1958 ; vers
+   1959, près de la moitié des ordinateurs japonais utilisent des
+   paramétrons. (Variante : FUJIC, 1956, d'Okazaki Bunji, source IPSJ.)
+   — **Région** : asie — **Thème** : machines — **Personnes** : Eiichi Goto,
+   Hidetosi Takahasi — **Pionnière** : non — **Source** : IEEE / ETHW,
+   « Milestones: Parametron, 1954 » — https://ethw.org/Milestones:Parametron,_1954
+
+---
+
+### 3. Afrique de l'Est et de l'Ouest
+
+#### Faits clés datés
+
+- **Kenya / East African Railways and Harbours (EAR&H)** :
+  - La liste de livraisons des BTM/ICT 1202 compilée par la Computer
+    Conservation Society, d'après *Computer Survey*, juin 1962, p. 22-23,
+    mentionne « **East African Railways and Harbours — On order — General
+    accounting** ». C'est la seule source solide trouvée : elle atteste une
+    **commande en cours en 1962**, pas une installation ni une date de mise
+    en service. [CCS, lu]
+  - Un rapport UNIDO (Badzmirowski, fin des années 1980, partie Kenya)
+    indique qu'« au début des années soixante il n'y avait que deux
+    fournisseurs d'ordinateurs au Kenya, IBM et ICT », et que **12
+    ordinateurs** étaient installés en **1969**. [UNIDO, lu, OCR de mauvaise
+    qualité]
+  - **1968 et 1969** : la East African Railways Corporation acquiert deux
+    ordinateurs **ICL 1904E et ICL 1905F** installés au siège de **Nairobi**,
+    reliés à des terminaux de soumission à distance à Dar es Salaam, Kampala
+    et Nairobi : tout le réseau ferroviaire des trois pays de la Communauté
+    est-africaine est géré ainsi. [Ndamagi 1986, méta (résumé) ; UNIDO, lu]
+  - **Novembre 1970** : *Railway Gazette International* (p. 772-773) décrit
+    le système d'information de gestion des East African Railways (suivi des
+    wagons, voitures, locomotives ; usure des rails). [TRID, méta]
+  - Récits de la fin de l'ICT 1202 (coup de feu sur un serpent, machine
+    jetée dans l'océan Indien, envoi en Chine) : **blogs et forums
+    seulement** (owaahh.com, Hackaday 2018 qui le reprend, Reddit) — non
+    vérifiables, **à ne pas publier**. owaahh.com n'a pas pu être ouvert.
+  - **Université de Nairobi** : **aucune source solide trouvée** sur un
+    premier ordinateur universitaire.
+- **Tanzanie** :
+  - Selon C. Ndamagi (Tanzania Railways Corporation, 1986), le premier
+    ordinateur électronique moderne est un **ICL 1901 à bandes magnétiques
+    installé en 1968 au ministère des Finances** pour tous les besoins de
+    l'État ; avant, des installations mécanographiques « de l'ère Hollerith »
+    au ministère des Finances et au siège régional des EAR&H à Dar es Salaam.
+    [méta (résumé AIS) ; même texte reproduit dans le rapport UNIDO, lu]
+  - Un chapitre de K. Mgaya (presses de l'Université des Nations unies)
+    donnerait un **ICT 1500 installé en 1965** au ministère des Finances, et
+    7 ordinateurs en 1974. **[extrait]** — site UNU hors ligne, non lu.
+    **Contradiction non résolue** : 1965 (ICT 1500) ou 1968 (ICL 1901).
+- **Ghana** : **rien de solide trouvé**. Seuls des extraits de moteur
+  évoquent un IBM 1401 à la Ghana Housing Corporation et un IBM 1620 à
+  l'université de Kumasi (KNUST) vers 1963-1964, d'après un document IBM non
+  localisé, via un billet Medium (403). À ne pas publier en l'état. Pistes :
+  archives IBM (« Historical Highlights in Sub-Saharan Africa »), rapports
+  annuels du Central Bureau of Statistics (créé en 1961), histoire du centre
+  de calcul de l'université du Ghana / KNUST.
+- Le module a déjà, côté Afrique de l'Ouest, les travaux d'A.-K. Osterlow
+  (Nigeria, Sénégal) ; ses recherches sont la meilleure piste universitaire
+  pour l'Afrique de l'Ouest anglophone.
+
+#### Sources
+
+1. Computer Conservation Society, « Delivery lists and applications of the
+   BTM HEC computers and the BTM / ICT 1200 series » (T1X1, v2, déc. 2011),
+   d'après *Computer Survey*, juin 1962. Anglais. **[lu]**
+   https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf
+2. C. Ndamagi, « Status of informatics technology in Tanzania »,
+   *Information Technology for Development* 1-3 (1986), p. 169-175,
+   DOI 10.1080/02681102.1986.9627070. Anglais. **[méta]** (résumé lu sur AIS
+   eLibrary) https://aisel.aisnet.org/itd/vol1/iss3/5
+3. K. Badzmirowski (consultant ONUDI), *Report on “State of the art, review
+   on informatics/microelectronics in the Eastern and Southern African
+   subregion…”*, ONUDI, document IT/7-3 (fin des années 1980 ; date exacte non
+   lisible dans l'OCR), parties Tanzanie et Kenya. Anglais, rapport
+   d'organisation internationale. **[lu]** (OCR très dégradé)
+   https://downloads.unido.org/ot/48/19/4819534/15001-20000_17173.pdf
+4. « East African Railways Builds a Management Information System »,
+   *Railway Gazette International*, novembre 1970, p. 772-773 (notice TRID).
+   **[méta]** https://trid.trb.org/View/6584
+5. K. Mgaya, chapitre sur la Tanzanie, UNU Press (uu19ie). **[extrait]** —
+   https://archive.unu.edu/unupress/unupbooks/uu19ie/uu19ie0i.htm (hors ligne)
+
+Non retenues (blogs) : owaahh.com (non ouvert), Hackaday 2018 **[lu]**
+https://hackaday.com/2018/04/28/the-interesting-fate-of-kenyas-first-computers
+(ne fait que résumer owaahh, aucune date).
+
+#### Points d'attention
+
+- **« Premier ordinateur du Kenya »** : ne pas affirmer de date
+  d'installation. Écrire « commandé (en commande en 1962) » pour l'ICT 1202
+  des EAR&H. L'Afrique du Sud avait déjà des 1201/1202 depuis 1957-1959
+  (déjà dans la frise : « Une paie calculée au Cap »).
+- Les EAR&H sont une entreprise publique coloniale (Haut-commissariat
+  d'Afrique de l'Est) : la machine de 1962 relève de l'administration
+  coloniale finissante (indépendance du Kenya en décembre 1963). À dire.
+- **Tanzanie** : deux dates en concurrence (1965 ICT 1500 / 1968 ICL 1901) ;
+  la seule lue est 1968 (Ndamagi, repris par l'ONUDI). Écrire « en 1968, selon
+  un ingénieur tanzanien (1986) ».
+- **Ghana** : ne rien publier sans nouvelle source.
+- Écarter les anecdotes spectaculaires (serpent, océan Indien, Chine).
+
+#### Événements de frise proposés
+
+1. **Année** : 1962 — **Titre** : Un ordinateur pour les chemins de fer
+   est-africains — **Texte** : En juin 1962, une revue britannique recense un
+   ICT 1202 « en commande » pour les East African Railways and Harbours, qui
+   exploitent rails et ports du Kenya, de l'Ouganda et du Tanganyika. Il doit
+   servir à la comptabilité, sous une administration coloniale qui prend fin
+   l'année suivante au Kenya. — **Région** : afrique — **Thème** : machines —
+   **Personnes** : — — **Pionnière** : non — **Source** : Computer
+   Conservation Society, listes de livraison des BTM / ICT 1200 (d'après
+   Computer Survey, 1962) — https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf
+2. **Année** : 1968-1969 — **Titre** : Un réseau ferroviaire informatisé
+   en Afrique de l'Est — **Texte** : La East African Railways Corporation
+   installe à Nairobi deux ordinateurs ICL, reliés à des terminaux à Dar es
+   Salaam et Kampala : tout le réseau des trois pays est suivi depuis ce
+   centre. La même année, la Tanzanie installe un ICL 1901 au ministère des
+   Finances. — **Région** : afrique — **Thème** : societe — **Personnes** : —
+   — **Pionnière** : non — **Source** : C. Ndamagi, « Status of informatics
+   technology in Tanzania », *Information Technology for Development* (1986)
+   — https://aisel.aisnet.org/itd/vol1/iss3/5 (à compléter par le rapport
+   ONUDI, lu, qui reproduit le passage)
+
+---
+
+### Ce qui reste à vérifier
+
+- Texte intégral de Tatarchenko (2017) et de Gerovitch (2001) : non lus.
+- Rôle précis de Chkabara (unité de commande) : un seul extrait non lu.
+- Article original du *Stars and Stripes* (13 novembre 1946) : non vu.
+- Programmeuses japonaises : aucune source trouvée.
+- Kenya : date réelle d'installation de l'ICT 1202 ; premier ordinateur de
+  l'université de Nairobi.
+- Tanzanie : chapitre Mgaya (ICT 1500, 1965) inaccessible.
+- Ghana : aucune source solide.
+
+---
+
+## Complément 4 (3 novembre 2026) — Dakar (LOGO), Wang Xuan, Shiprock
+
+Recherche du 3 novembre 2026, module « Histoire de l'informatique » de rouages.net.
+
+Statut des sources :
+- **[lu]** : page ou PDF ouvert et lu (texte intégral ou passage pertinent) ;
+- **[méta]** : notice bibliographique seulement ;
+- **[extrait]** : vu seulement dans un résultat de moteur de recherche ou cité par une source secondaire, non ouvert.
+
+Requêtes faites avec le User-Agent `RouagesDuNet-research/0.1 (https://rouages.net)`. Plusieurs serveurs ont bloqué l'accès
+(unesdoc.unesco.org : défi Cloudflare 403 ; dspace.mit.edu, archive.org, API Google Books : 429 ; nytimes.com et mitpress.mit.edu : 403).
+Ces blocages sont signalés à chaque endroit concerné.
+
+---
+
+### 1. Le projet de micro-informatique éducative de Dakar (1982)
+
+#### Faits clés datés
+
+| Date | Fait | Sources |
+|---|---|---|
+| automne 1981 – 1982 | Création à Paris du Centre mondial informatique et ressource humaine (J.-J. Servan-Schreiber, avec Seymour Papert et Nicholas Negroponte). Le Centre installe des classes LOGO à Paris et à Dakar en 1982. | Ames 2018 [lu] (s'appuie sur Echikson, *Christian Science Monitor*, 1982 [extrait]) |
+| 1982 | Photo : Seymour Papert avec un élève « au laboratoire de recherche Logo de l'École normale supérieure de Dakar ». **Photo créditée à Fatimata Seye Sylla.** | MIT News, 2016 [lu] |
+| 1983 | Un article de *Technology Review* (MIT) juge le projet du Centre utopique (illettrisme, LOGO reposant sur l'anglais écrit) et pose la question d'un regard colonial. | Ames 2018 [lu], qui cite l'article de 1983 [extrait] |
+| 1983-1985 | Fatimata Seye Sylla prépare au MIT (Media Lab, département d'architecture) un master sous la direction de Seymour Papert : *Computers and literacy in Senegal* (1985). Le mémoire étudie des élèves d'école élémentaire à Dakar (différences filles/garçons, statut social, degré d'assimilation à l'école française, influence de la culture sénégalaise), puis des femmes adultes non alphabétisées à Dakar et à Boston. | Notice MIT DSpace [méta] ; PDF bloqué (429) |
+| 1984 | Selon la page de profil d'Anna Osterlow (Sciences Po), le projet « computers in education » de l'ENS de Dakar a eu lieu « en 1984 » (date à confronter avec 1982, voir « Points d'attention »). Titre de sa communication du 23 mai 2024 : « "Un ordinateur parlant le ouolof" : le projet "computers in education" à Dakar ». | Sciences Po, profil Osterlow [lu] |
+| 1985 | Le *Christian Science Monitor* rapporte que des chercheur·ses ont introduit cette année-là des ordinateurs dans **quatre écoles sénégalaises** ; les enfants travaillent en LOGO, **traduit en français et en wolof**, pour la lecture et les mathématiques. | Gottlieb, CSM, 25 nov. 1985 [lu] |
+| s. d. | L'équipe sénégalaise réunit informaticien·nes, pédagogues, enseignant·es et responsables du **ministère de la Recherche scientifique et technique** ; elle est dirigée par une informaticienne de ce ministère (non nommée), qui critique les logiciels pensés pour l'Occident. Version de LOGO en wolof ; « micro-monde » sénégalais à la place du micro-monde « plage » américain ; demandes : machines résistantes à la chaleur et à la poussière, institut régional africain pour concevoir et adapter le matériel, normes imposées aux exportateurs. Images tirées du document UNESCO pf0000074689. | Osterlow, *The Digital Orientalist*, 15 oct. 2024 [lu] |
+
+#### Le nom de l'informaticienne
+
+**Fatimata Seye Sylla** (aussi écrit Fatimata Sèye Sylla) est la piste la plus solide, mais **le lien exact avec la formule « informaticienne du ministère de la Recherche » n'est pas vérifié** :
+
+- elle a pris la photo de Papert au « laboratoire de recherche Logo de l'ENS de Dakar » en 1982 (MIT News [lu]) ;
+- sa biographie (publiée par AfChix, donc fournie par elle ou son entourage) dit qu'elle a été pendant six ans **chef d'équipe du laboratoire de recherche Informatique et éducation de l'ENS de Dakar** et qu'elle y a **lancé le projet LOGO** (enfants de 6 à 12 ans, lecture et écriture en français, notions mathématiques et scientifiques) [lu] ;
+- son mémoire du MIT (1985), dirigé par Papert, porte sur ce terrain [méta] ;
+- l'archive ICANN dit qu'elle a mené « le premier projet national d'introduction des TIC dans le système éducatif » et passé dix ans dans l'administration sénégalaise, **sans nommer de ministère** [lu].
+
+Aucune source lue ne dit en toutes lettres que F. S. Sylla travaillait au ministère de la Recherche scientifique et technique. L'article d'Osterlow ne nomme pas l'informaticienne. La thèse (section « History of project ») le dit peut-être : PDF bloqué par le serveur du MIT (429) pendant toute la recherche.
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| Fatimata Seye Sylla, *Computers and literacy in Senegal*, mémoire de M.S., MIT, 1985, dir. S. Papert — https://dspace.mit.edu/handle/1721.1/77676 (PDF : https://dspace.mit.edu/bitstream/handle/1721.1/77676/13981612-MIT.pdf?sequence=2) | primaire (acteur·rice du projet) | en | [méta] (notice et résumé lus ; PDF refusé, 429) |
+| MIT News, « Professor Emeritus Seymour Papert, pioneer of constructionist learning, dies at 88 », 1er août 2016 — https://news.mit.edu/2016/seymour-papert-pioneer-of-constructionist-learning-dies-0801 | institutionnelle, légende photo | en | [lu] |
+| Adam M. Gottlieb, « Pilot projects introduce micro-computers into African schools », *Christian Science Monitor*, 25 nov. 1985 — https://www.csmonitor.com/1985/1125/dnai.html | presse d'époque | en | [lu] |
+| Anna Osterlow, « African Tech Inventions, Inclusive AI and Digital Innovation: A Historical Perspective », *The Digital Orientalist*, 15 oct. 2024 — https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/ | billet d'une doctorante (Sciences Po), sans note sur Dakar | en | [lu] |
+| Profil d'Anna Osterlow, Centre d'histoire de Sciences Po — https://www.sciencespo.fr/histoire/en/directory/osterlow-anna/ | institutionnelle | en | [lu] |
+| Morgan G. Ames, « Hackers, Computers, and Cooperation: A Critical History of Logo and Constructionist Learning », *PACM HCI* (CSCW), 2018 — https://www.morganya.org/research/2018-Ames-CSCW-Constructionism.pdf | universitaire (cite *CSM* 1982, *Technology Review* 1983, *Datamation* 1984, OLPC) | en | [lu] |
+| Biographie de F. S. Sylla, AfChix — https://afchix.org/author/comms/page/3/ | biographie (auto-déclarative) | en | [lu] |
+| Archive ICANN, « Fatimata Seye Sylla (Senegal) » — https://archive.icann.org/en/committees/alac/sylla.html | biographie institutionnelle | en | [lu] |
+| UNESCO, document pf0000074689 — https://unesdoc.unesco.org/ark:/48223/pf0000074689 | primaire (source des images citées par Osterlow) | ? | **non lu** (défi Cloudflare, 403) |
+| *Education Week*, « Seymour Papert's 'Microworld': An Educational Utopia », mai 1983 — https://www.edweek.org/education/seymour-paperts-microworld-an-educational-utopia/1983/05 | presse d'époque (projets pilotes à Marseille et Dakar) | en | [extrait] |
+| Pour aller plus loin : Wikipédia, « Fatimata Seye Sylla » (en) | encyclopédie | en | [lu] (ne mentionne ni LOGO ni le ministère) |
+
+#### Points d'attention
+
+- **1982 ou 1984 ?** MIT News (photo de 1982) et Ames (classes LOGO installées en 1982) donnent 1982 ; le profil d'Osterlow écrit « en 1984 » ; le *CSM* parle de quatre écoles équipées « cette année » (1985). Hypothèse raisonnable : laboratoire ouvert en 1982 à l'ENS, extension aux écoles en 1984-1985. À formuler prudemment (« à partir de 1982 »).
+- **Langue du projet** : la bio AfChix parle de lecture et d'écriture **en français** ; Osterlow et le *CSM* (1985) parlent de LOGO **en wolof** (le *CSM* : « en français et en wolof »). Les deux sont compatibles ; écrire « en français et en wolof » est plus exact.
+- **Nom de l'informaticienne** : ne pas écrire « Fatimata Seye Sylla, informaticienne du ministère de la Recherche » tant que la thèse ou le document UNESCO ne l'a pas confirmé. On peut en revanche écrire qu'elle a dirigé l'équipe du laboratoire Informatique et éducation de l'ENS (bio + photo MIT + mémoire).
+- **Chronologie de Sylla** : « six ans » à la tête du laboratoire, mais étudiante au MIT en 1983-1985 (LinkedIn [extrait]) ; détail à ne pas publier sans vérification.
+- **Critique** : en 1983-1984, la presse (*Technology Review*, *Datamation*) juge le Centre mondial désorganisé et pose la question du néocolonialisme ; le Centre ferme en 1986. Utile pour « présenter toutes les parties ».
+- **Matériel** : l'OLPC parle de micro-ordinateurs Apple II distribués à des écoliers « dans une banlieue de Dakar » (cité par Ames [lu], page OLPC non ouverte).
+
+---
+
+### 2. Wang Xuan et la photocomposition laser du chinois
+
+#### Faits clés datés (sources de l'université de Pékin)
+
+| Date | Fait | Sources |
+|---|---|---|
+| août 1974 | La Commission nationale du plan lance le « Système de traitement de l'information en caractères chinois », dit **Projet 748** (piloté par le 4e ministère de la Construction mécanique). | ICST (zh) [lu] ; ICST (en) [lu] ; PKU News 2019 [lu] |
+| 1975 | L'université de Pékin crée un « groupe de travail 748 » ; **Wang Xuan et Chen Kunqiu** en sont les piliers techniques. Selon PKU News, Chen Kunqiu prend en charge « toute la conception et la réalisation » du grand logiciel du système. | ICST (zh) [lu] ; PKU News 2019 [lu] |
+| 1976 | Wang Xuan, Chen Kunqiu et l'équipe mettent au point la compression des contours de caractères et leur restitution rapide ; Chen Kunqiu et Wang Xuan prennent en charge la « photocomposition de haute qualité ». | ICST (zh) [lu] ; ICST (en) [lu] ; Musée national de Chine [lu] |
+| 1977 | Groupe de pilotage commun Xinhua, ministère de l'Électronique et université ; l'agence **Xinhua** devient le premier utilisateur. | ICST (zh) [lu] |
+| 1979 | Première page de journal-échantillon sortie de la photocomposeuse laser (reportage du *Guangming Ribao* le 11 août). | ICST (zh) [lu] |
+| **15 septembre 1980** | Premier livre-échantillon, **《伍豪之剑》** (*L'Épée de Wu Hao*), « premier livre en caractères chinois composé par un système de photocomposition laser national ». PKU News précise : **26 pages**. | **PKU News (en), 27 sept. 2019 [lu]** ; **Institut Wang Xuan + Centre des médias de l'université, via The Paper, 5 oct. 2020 [lu]** ; ICST (zh), à l'année 1980 sans jour [lu] |
+| 1981 | Le prototype (**Huaguang I**) passe l'homologation ministérielle. | ICST (zh) [lu] |
+| 1er juin 1982 | Dépôt de la demande de brevet européen EP 0 095 536 (publiée le 7 déc. 1983, délivrée le 18 mars 1987). | Fascicules A1 et B1 de l'OEB [lu] ; Musée national de Chine [lu] |
+| 6 janv. 1983 | Création officielle de l'Institut d'informatique de l'université (ICST). | ICST (en) [lu] |
+| 1983 | **Huaguang II** (circuits intégrés à moyenne et grande échelle, microprocesseurs). | ICST (zh) [lu] ; ICST (en) [lu] |
+| 1984 / 1985 | Essai de Huaguang II à l'agence Xinhua (ICST : début de l'essai en 1984 ; The Paper/ICST : « réussi » en 1985, premier système de photocomposition pratique). | ICST (zh) [lu] ; The Paper 2020 [lu] |
+| 1985 | **Huaguang III** (ordinateur hôte DJS 153 remplacé), primé au premier Salon chinois des inventions. | ICST (zh) [lu] |
+| 1986-1987 | Le *Jingji Ribao* (*Quotidien de l'économie*) essaie Huaguang III (PKU News : 1986) puis compose tout le journal avec lui, avec réception nationale (ICST : 1987). | PKU News 2019 [lu] ; ICST (zh) [lu] |
+| 1987 | **Huaguang IV**, premier modèle sur micro-ordinateur (les I, II, III tournaient sur mini-ordinateurs). | ICST (zh) [lu] |
+
+#### Le brevet EP 0 095 536
+
+- Titre : *The representation of character images in a compact form for computer storage* ; demande n° 82302816.2 ; dépôt le 1er juin 1982 ; publication A1 le 7 déc. 1983 (Bulletin 83/49) ; délivrance B1 le 18 mars 1987 (Bulletin 87/12) ; États désignés : AT BE CH DE FR GB IT LI LU NL SE. Mandataire : cabinet Lloyd Wise, Tregear & Co., Londres. [lu, fascicules A1 et B1]
+- **Déposant·es / titulaires : trois personnes**, Zhang Song Zhi, **Wang Xuan** et Wong Kam Fu, toutes avec **la même adresse professionnelle dans un immeuble de bureaux de Kowloon (Hong Kong)**. Inventeur unique : Wang Xuan, domicilié à la même adresse. (Google Patents n'affiche que Wong Kam Fu et Zhang Song Zhi comme « assignees » : les fascicules montrent que Wang Xuan est aussi déposant.) [lu]
+- Qui étaient Zhang Song Zhi et Wong Kam Fu : **non documenté** dans les sources trouvées. Le Musée national de Chine explique seulement que la Chine n'avait pas encore de système de brevets (loi de 1985) et que Wang Xuan a rédigé la demande en 1981 en s'inspirant de brevets étrangers. Une adresse commune à Hong Kong suggère un intermédiaire (société ou mandataires hongkongais), mais c'est une **hypothèse**. Ne pas publier l'adresse (inutile, même si professionnelle).
+- Le brevet décrit le principe : traits « réguliers » codés en 24 à 48 bits (position, longueur, épaisseur, attaques, terminaisons, inclinaison), traits courbes approchés par des suites de vecteurs ; mise à l'échelle depuis une taille de base puis conversion en matrice de points pour une photocomposeuse laser. [lu]
+
+#### Ce que disent les historien·nes non chinois·es
+
+- **Thomas S. Mullaney, *The Chinese Computer*** (MIT Press, 2024) : le livre porte sur les **méthodes de saisie** (IBM 1947 et Lois Lew, Sinotype, « input wars » des années 1970-1980 autour de **Zhi Bingyi**, BIOS, cartes ROM, pilotes d'imprimante, pinyin et texte prédictif). La recension de Weilin Zhu (*International Journal of Communication*, 2026, CC BY-NC-ND) [lu] ne mentionne **ni Wang Xuan, ni la photocomposition, ni le Projet 748**. Je n'ai pas pu vérifier dans le texte du livre si et comment Mullaney traite Wang Xuan ou Chen Kunqiu (MIT Press et direct.mit.edu : 403 ; Google Books : 429).
+- **Jing Tsu, *Kingdom of Characters*** (Riverhead, 2022) : selon une recension, le chapitre « Entering into the computer (1979) » porte « largement » sur la photocomposition informatique du chinois (Ian Hopkinson [lu]) ; d'autres recensions (*Physics World* [lu], *Literary Review* [extrait]) ne retiennent que Zhi Bingyi. **Aucune source lue ne confirme ce que Tsu écrit de Wang Xuan, de Chen Kunqiu ou du Projet 748.**
+- Conclusion : pas de seconde lecture non chinoise vérifiée de Wang Xuan. Le récit disponible reste celui de l'université et de la presse chinoise (souvent hagiographique : « Bi Sheng des temps modernes »).
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| ICST (Institut d'informatique Wang Xuan, université de Pékin), chronologie « 发展历程 » — https://www.icst.pku.edu.cn/gywm/fzlc/index.htm | institutionnelle (université) | zh | [lu] |
+| ICST, « History » — https://www.icst.pku.edu.cn/english/about_us/history/index.htm | institutionnelle | en | [lu] |
+| Wei Qijia, « [70 years on] Wang Xuan: Exploring the way of independent innovation », PKU News, 27 sept. 2019 — https://english.pku.edu.cn/news_events/news/people/8889.html | institutionnelle (université) | en | [lu] |
+| « 40年前王选在北大印出一本书，改变了我们的世界 », The Paper (compte 澎湃号·政务), 5 oct. 2020, sources : Institut Wang Xuan et Centre des médias de l'université de Pékin — https://www.thepaper.cn/newsDetail_forward_9465062 | institutionnelle relayée par la presse | zh | [lu] |
+| Musée national de Chine, notice « 王选发明汉字激光照排核心技术的欧洲专利申请书手稿 » — https://www.chnmuseum.cn/zp/zpml/gshww/202109/t20210927_251587.shtml | musée (objet : brouillon de la demande de brevet) | zh | [lu] |
+| OEB, EP 0 095 536 A1 (7 déc. 1983) — https://data.epo.org/publication-server/rest/v1.0/publication-dates/19831207/patents/EP0095536NWA1/document.pdf | primaire | en | [lu] |
+| OEB, EP 0 095 536 B1 (18 mars 1987) — https://data.epo.org/publication-server/rest/v1.0/publication-dates/19870318/patents/EP0095536NWB1/document.pdf | primaire | en | [lu] |
+| Google Patents, EP0095536 — https://patents.google.com/patent/EP0095536A1/en | base de données | en | [lu] |
+| Weilin Zhu, recension de T. S. Mullaney, *The Chinese Computer*, *International Journal of Communication* 20 (2026) — https://ijoc.org/index.php/ijoc/article/download/26695/5217/106185 | recension universitaire | en | [lu] |
+| Ian Hopkinson, « Book review: Kingdom of Characters by Jing Tsu », août 2022 — https://ianhopkinson.org.uk/2022/08/book-review-kingdom-of-characters-by-jing-tsu/ | recension (blog) | en | [lu] |
+| Andrew Robinson, « Technology with characters », *Physics World*, 11 mars 2022 — https://physicsworld.com/a/technology-with-characters-the-story-of-chinas-unique-transformation/ | recension | en | [lu] |
+
+#### Points d'attention
+
+- **Le 15 septembre 1980 a désormais deux sources universitaires distinctes** (PKU News 2019, en anglais ; texte de l'Institut Wang Xuan et du Centre des médias, 2020, en chinois) plus la chronologie de l'ICST (année seulement). Elles ne sont **pas indépendantes** au sens strict : toutes émanent de l'université. On peut garder « selon l'université ».
+- **Dates divergentes** : Huaguang II à Xinhua (essai 1984, succès 1985) ; *Jingji Ribao* (essai 1986, adoption 1987). Utiliser les dates de l'ICST et dire « essai » / « adoption ».
+- **Chen Kunqiu** : les sources de l'université la présentent comme co-pilier du projet dès 1975 et autrice de « toute la conception et la réalisation » du logiciel ; le récit de The Paper la réduit à « l'épouse de Wang Xuan ». Formulation recommandée : « l'informaticienne Chen Kunqiu, qui conçoit et écrit le logiciel ».
+- **Brevet** : la demande est européenne, avec trois déposant·es à une adresse de Kowloon, dont Wang Xuan lui-même. Ne pas écrire « déposé par des Hongkongais » sans nuance.
+
+---
+
+### 3. L'usine Fairchild de Shiprock (1965-1975)
+
+#### Faits clés datés
+
+| Date | Fait | Sources |
+|---|---|---|
+| 1965 | Ouverture d'une usine pilote d'assemblage à Shiprock (environ 50 à 55 personnes). | Nakamura 2014 [lu] ; Ken Shirriff 2024 [lu] |
+| 2 sept. 1966 | Communiqué du BIA : contrat de formation sur le tas de **700 000 $** pour **1 481** travailleur·ses navajo ; l'usine emploie alors **366 Navajo** ; projet d'usine permanente de 1,5 M$ ; assemblage de transistors. | BIA, 1966 [lu] |
+| 1966 | *Navajo Times* (rubrique « il y a 50 ans ») : 325 personnes ; masse salariale « approchant 1 M$ par an » ; l'entreprise ne paie que la moitié du salaire des stagiaires, la subvention fédérale de formation de la tribu paie le reste. | *Navajo Times*, 2016 [lu] |
+| 6 sept. 1969 | Inauguration de la nouvelle usine (bâtiment propriété de la tribu, loué 6 000 $ par mois ; prêt navajo de 700 000 $, matériel fédéral gratuit). | Nakamura 2014 [lu] |
+| pic (vers 1969-1973) | « Plus de 1 000 Navajo » (*San Jose Mercury News*, 2000) ; « près de 1 200 » en 1969 (*Treaty Council News*, 1977). Fairchild : premier employeur industriel du Nouveau-Mexique et premier employeur d'Autochtones du pays. | Cassidy 2000 [lu] ; Dunbar-Ortiz 1977 [lu] ; Nakamura 2014 [lu] |
+| 1974 | **922 Navajo**, surtout des femmes (Colleen O'Neill, 2005, citée par Nakamura) ; « 1 000 Navajo, 95 % de l'effectif » et masse salariale « inférieure à 1 M$ » (*Treaty Council News*). Récession de 1974-1975. | Nakamura [lu] (O'Neill [extrait]) ; Dunbar-Ortiz 1977 [lu] ; *Navajo Times* 2016 [lu] |
+| févr. 1975 | **Licenciement de 140 Navajo** ; il reste moins de 500 salarié·es (**473** selon Cassidy) ; Fairchild (Fred Hoar) parle de 600 après des « démissions ». | Cassidy 2000 [lu] ; Dunbar-Ortiz 1977 [lu] |
+| **24 févr. 1975** (avant l'aube) | Occupation de l'usine par une vingtaine de membres armés de l'AIM, menés par le Navajo Larry Anderson. | Cassidy 2000 [lu] ; NYT, 2 mars 1975 [extrait via Shirriff] |
+| **3 mars 1975** | Fin de l'occupation (amnistie), après 8 jours (Cassidy) ou « 7 jours » (*Navajo Times*, 6 mars 1975). | Cassidy 2000 [lu] ; notice *Navajo Times* (Arizona Index) [méta] ; NYT, 4 mars 1975 [extrait] |
+| **vers le 12 mars 1975** | Fermeture définitive annoncée « neuf jours » après le départ des occupant·es (Cassidy) ; NYT du 13 mars 1975 : « Plant that Indians seized is now shut ». | Cassidy 2000 [lu] ; NYT [extrait via Shirriff, page bloquée] |
+| 18 juin 1975 | Émission de KUNM (Albuquerque) : lettre demandant la réouverture par la tribu, avec « 1 700 assembleur·ses formé·es » à Shiprock. | American Archive of Public Broadcasting [lu] |
+| après 1975 | Production transférée **en Asie du Sud-Est** (témoignage de Bill Baker, ancien de Fairchild : « transfer of our process after the Indian uprising in Shiprock over to Southeast Asia »). | Oral history CHM, 2007 [lu] |
+
+#### Transfert de production : Corée ?
+
+Aucune source lue ne dit que la production de Shiprock est partie **en Corée**. Les sources disent « Asie » (Nakamura, blog du CHM ; *Navajo Times*) ou « Asie du Sud-Est » (Bill Baker, CHM). Le *Treaty Council News* (1977) énumère les usines de Fairchild (Singapour, Corée du Sud, Hong Kong, Japon, Mexique, Brésil, Indonésie) et cite l'Indonésie à « 12 cents de l'heure », mais **sans dire où est partie la production de Shiprock**. → Ne pas écrire « Corée ».
+
+#### Salaires
+
+Aucun taux horaire trouvé pour Shiprock. Ce qui est documenté : un « très bas salaire horaire » et des subventions fédérales à la formation (Nakamura) ; moitié du salaire des stagiaires payée par la tribu via une subvention fédérale (*Navajo Times*) ; masse salariale annuelle d'environ 1 M$ (1966, *Navajo Times*), « moins de 1 M$ pour 1 000 Navajo » en 1974 (*Treaty Council News*, source militante) contre « 4,5 M$ » selon *National Geographic* (déc. 1972, cité par Shirriff [extrait]). Les chiffres se contredisent : ne pas en publier sans les attribuer.
+
+#### Sources
+
+| Source | Type | Langue | Statut |
+|---|---|---|---|
+| Bureau of Indian Affairs, « Electronics Industry Expanding on Navajo Reservation », communiqué du 2 sept. 1966 — https://www.bia.gov/as-ia/opa/online-press-release/electronics-industry-expanding-navajo-reservation | primaire (administration) | en | [lu] |
+| Roxanne Dunbar Ortiz, « Whatever Happened to Fairchild? », *Treaty Council News* (International Indian Treaty Council), vol. 1 n° 9, déc. 1977, p. 3 — https://www.iitc.org/wp-content/uploads/vol.-1-no.-9-December-1977.pdf | primaire, presse militante (proche de l'AIM) | en | [lu] |
+| KUNM, « AIM Takeover of Fairchild Camera and Instrument Corporation (1975) », 18 juin 1975, American Archive of Public Broadcasting — https://americanarchive.org/primary_source_sets/american-indian-movement/8-207-483j9qpk | primaire (radio, transcription partielle) | en | [lu] |
+| « MacDonald lauds peaceful settlement of AIM occupation », *Navajo Times*, 6 mars 1975, p. A-1 (notice de l'Arizona Index) — https://uamr.lib.arizona.edu/node/257784 | notice de presse d'époque | en | [méta] |
+| Fairchild Oral History Panel: Bipolar Digital Products (Fairchild@50), CHM, 5 oct. 2007 — https://archive.computerhistory.org/resources/access/text/2015/07/102658280-05-01-acc.pdf | témoignage (Bill Baker) | en | [lu] |
+| Lisa Nakamura, « Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture », *American Quarterly* 66 (4), 2014, p. 919-941, PDF diffusé par l'autrice — https://lisanakamura.net/wp-content/uploads/2011/01/indigenous-circuits-nakamura-aq.pdf | universitaire | en | [lu] |
+| Lisa Nakamura, « Indigenous Circuits », blog du Computer History Museum, 2 janv. 2014 — https://computerhistory.org/blog/indigenous-circuits/ | universitaire (vulgarisation) | en | [lu] |
+| Mike Cassidy, « What Went Wrong at Shiprock », *San Jose Mercury News*, 7 mai 2000, republié par l'auteur — https://mikecassidy.wordpress.com/2012/10/23/when-protesters-took-over-fairchilds-fab-on-the-navajo-reservation/ | presse (enquête avec témoins) | en | [lu] |
+| Bill Donovan, « 50 years ago: highs and lows of Fairchild operation in Shiprock », *Navajo Times*, 21 avr. 2016 — https://navajotimes.com/50years/50-years-ago-highs-lows-fairchild-operation-shiprock/ | presse navajo (rétrospective) | en | [lu] |
+| Ken Shirriff, « The Pentium as a Navajo weaving », août 2024 — http://www.righto.com/2024/08/pentium-navajo-fairchild-shiprock.html | blog documenté (renvoie aux archives NYT, CHM, BIA) | en | [lu] |
+| *New York Times*, 2, 4 et 13 mars 1975 — https://www.nytimes.com/1975/03/13/archives/plant-that-indians-seized-is-now-shut.html (et 1975/03/02/…/indians-vow-to-stay-in-fairchild-plant.html, 1975/03/04/…/40-indians-accept-amnesty-and-end-plant-occupation.html) | presse d'époque | en | [extrait] (titres via Shirriff ; nytimes.com bloqué) |
+
+#### Points d'attention
+
+- **Effectifs** : « plus d'un millier » est correct pour le pic (Cassidy, Dunbar-Ortiz « près de 1 200 ») ; en 1974, 922 (O'Neill) ou 1 000 (Dunbar-Ortiz) ; au moment de l'occupation, moins de 500.
+- **Fermeture** : annoncée à la mi-mars 1975 (vers le 12, NYT du 13 mars). Selon Nakamura et le *Navajo Times*, Fairchild avait déjà envisagé l'Asie ; Fairchild invoque l'instabilité sociale ; des militant·es y voient une manœuvre anti-syndicale. Les sources navajo rappellent aussi que beaucoup d'habitant·es de Shiprock ont reproché la perte des emplois à l'AIM : présenter les deux points de vue.
+- **Durée de l'occupation** : 7 ou 8 jours selon le décompte (24 févr. – 3 mars) ; « une semaine » reste juste.
+- Le *Treaty Council News* est une source militante : chiffres utiles mais à attribuer.
+
+---
+
+### Propositions de corrections pour les textes publiés
+
+#### Dakar
+
+Texte actuel : « À Dakar, un projet de micro-informatique à l'école est lancé avec des partenaires français et américains. Une équipe sénégalaise, dirigée par une informaticienne du ministère de la Recherche, adapte le langage éducatif LOGO en wolof et plaide pour du matériel conçu pour le climat africain. »
+
+Proposition (prudente, tout est sourcé) :
+
+> « À Dakar, l'École normale supérieure ouvre un laboratoire d'informatique éducative avec le Centre mondial informatique de Paris et le MIT de Seymour Papert. L'équipe sénégalaise, où l'informaticienne Fatimata Sèye Sylla dirige le laboratoire, adapte le langage LOGO en wolof et en français, et plaide pour des machines qui résistent à la chaleur et à la poussière. En 1985, LOGO est utilisé dans quatre écoles. »
+
+- Sources à ajouter dans `<Sources>` : MIT News 2016 (photo de 1982), *CSM* 1985, Osterlow 2024, bio AfChix, mémoire Sylla 1985 (notice), Ames 2018.
+- Si l'on veut garder « informaticienne du ministère de la Recherche », **ne pas la nommer** à cet endroit (lien non confirmé) ; ou garder la formule actuelle et ajouter « Fatimata Sèye Sylla dirige le laboratoire de l'ENS ».
+- Ajouter éventuellement l'encart critique : la presse de 1983-1984 juge le Centre mondial utopique, voire néocolonial ; il ferme en 1986.
+
+#### Wang Xuan
+
+Texte actuel : « À l'université de Pékin, le système de photocomposition de Wang Xuan et Chen Kunqiu, qui en écrit le logiciel, imprime son premier livre-échantillon (selon l'université). »
+
+Proposition :
+
+> « À l'université de Pékin, le système de photocomposition laser de Wang Xuan et Chen Kunqiu, qui en conçoit et écrit le logiciel, compose son premier livre-échantillon, *L'Épée de Wu Hao* (26 pages), selon l'université. Le système, appelé Huaguang, entre dans les rédactions entre 1985 et 1987 (agence Xinhua, *Quotidien de l'économie*). »
+
+- Sources : PKU News 2019 + Institut Wang Xuan/The Paper 2020 + chronologie ICST.
+- Pour le brevet (si mentionné ailleurs) : « brevet européen déposé en 1982 (EP 0 095 536, délivré en 1987), la Chine n'ayant pas encore de loi sur les brevets ; Wang Xuan y figure comme seul inventeur, avec deux co-déposants domiciliés à Hong Kong ».
+- Ne rien attribuer à Mullaney ni à Tsu sur Wang Xuan tant que le texte n'a pas été lu.
+
+#### Shiprock
+
+Texte actuel : « Fairchild fabrique des circuits intégrés à Shiprock, en territoire navajo : plus d'un millier de personnes, surtout des femmes navajo. […] L'usine ferme en 1975, après des licenciements et une semaine d'occupation par l'American Indian Movement. »
+
+Le texte est **juste**. Précisions possibles :
+
+> « […] L'usine ferme en mars 1975 : après le licenciement de 140 salarié·es en février, des militant·es de l'American Indian Movement l'occupent du 24 février au 3 mars ; Fairchild annonce la fermeture une dizaine de jours plus tard et transfère la production en Asie du Sud-Est. Une partie des habitant·es de Shiprock reprochera la perte des emplois à l'AIM. »
+
+- « Asie du Sud-Est » : un témoignage d'ancien de Fairchild (CHM) + Nakamura (« Asie ») ; **pas de « Corée »**.
+- Ne pas donner de salaire horaire (aucune source primaire trouvée).
+- Sources à ajouter : communiqué BIA 1966, Cassidy 2000, *Treaty Council News* 1977 (attribué), KUNM 1975, oral history CHM 2007, Nakamura 2014 (PDF de l'autrice).

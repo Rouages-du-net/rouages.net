@@ -186,7 +186,7 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1980', tri: 1980, titre: 'Le chinois en photocomposition laser',
-    texte: 'À l’université de Pékin, le système de photocomposition de Wang Xuan et Chen Kunqiu, qui en écrit le logiciel, imprime son premier livre-échantillon (selon l’université). La compression des caractères chinois (contours et paramètres) permet de les composer avec des ordinateurs à mémoire très limitée.',
+    texte: 'À l’université de Pékin, le système de photocomposition laser de Wang Xuan et Chen Kunqiu, qui en conçoit et écrit le logiciel, compose son premier livre-échantillon, de 26 pages (selon l’université). Appelé Huaguang, il entre dans les rédactions entre 1985 et 1987. La compression des caractères chinois (contours et paramètres) permet de les composer avec des ordinateurs à mémoire très limitée.',
     region: 'asie', theme: 'logiciel', personnes: ['Wang Xuan', 'Chen Kunqiu'], pionniere: true,
     source: { titre: 'PKU News, « Wang Xuan: Exploring the way of independent innovation » (2019)', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html' },
   },
@@ -270,7 +270,7 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1965-1975', tri: 1965.2, titre: 'L’usine de Shiprock',
-    texte: 'Fairchild fabrique des circuits intégrés à Shiprock, en territoire navajo : plus d’un millier de personnes, surtout des femmes navajo. L’entreprise présente leur habileté comme un prolongement « naturel » du tissage, un discours qu’analyse l’historienne Lisa Nakamura. L’usine ferme en 1975, après des licenciements et une semaine d’occupation par l’American Indian Movement.',
+    texte: 'Fairchild fabrique des circuits intégrés à Shiprock, en territoire navajo : plus d’un millier de personnes, surtout des femmes navajo. L’entreprise présente leur habileté comme un prolongement « naturel » du tissage, un discours qu’analyse l’historienne Lisa Nakamura. En février 1975, après 140 licenciements, l’American Indian Movement occupe l’usine pendant une semaine ; Fairchild la ferme en mars et transfère la production en Asie du Sud-Est.',
     region: 'amerique-nord', theme: 'societe', pionniere: true,
     source: { titre: 'L. Nakamura, « Indigenous Circuits », Computer History Museum (2014)', url: 'https://computerhistory.org/blog/indigenous-circuits/' },
   },
@@ -288,8 +288,8 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1982', tri: 1982, titre: 'LOGO parle wolof à Dakar',
-    texte: 'À Dakar, un projet de micro-informatique à l’école est lancé avec des partenaires français et américains. Une équipe sénégalaise, dirigée par une informaticienne du ministère de la Recherche, adapte le langage éducatif LOGO en wolof et plaide pour du matériel conçu pour le climat africain.',
-    region: 'afrique', theme: 'logiciel', pionniere: true,
+    texte: 'L’École normale supérieure de Dakar ouvre un laboratoire d’informatique éducative avec le Centre mondial informatique de Paris et Seymour Papert (MIT) ; l’informaticienne Fatimata Sèye Sylla en dirige l’équipe. Le langage LOGO y est adapté en wolof et en français, et l’équipe sénégalaise plaide pour des machines qui résistent à la chaleur et à la poussière. En 1985, LOGO est utilisé dans quatre écoles.',
+    region: 'afrique', theme: 'logiciel', personnes: ['Fatimata Sèye Sylla'], pionniere: true,
     source: { titre: 'A. Osterlow, « African Tech Inventions… », The Digital Orientalist (2024)', url: 'https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/' },
   },
   {
@@ -297,6 +297,42 @@ export const EVENEMENTS: Evenement[] = [
     texte: 'Formée dans la première génération d’étudiant·es en informatique de l’université d’Ife, Adenike Osofisan devient en 1989 la première Nigériane docteure en informatique.',
     region: 'afrique', theme: 'idees', personnes: ['Adenike Osofisan'], pionniere: true,
     source: { titre: 'Université d’Ibadan, « Professor Adenike Osofisan Inducted Into the Nigeria Women Hall of Fame » (2019)', url: 'https://ui.edu.ng/node/4153' },
+  },
+  {
+    annee: '1946', tri: 1946, titre: 'Le soroban contre la calculatrice',
+    texte: 'À Tokyo, sous l’occupation américaine, le journal de l’armée américaine organise un duel : Kiyoshi Matsuzaki, employé des Postes, avec son boulier (soroban), contre un soldat sur calculatrice électrique de bureau. Le boulier l’emporte 4 à 1 ; la machine ne gagne qu’en multiplication.',
+    region: 'asie', theme: 'societe', personnes: ['Kiyoshi Matsuzaki'],
+    source: { titre: 'T. Kojima, The Japanese Abacus (Tuttle, 1954), p. 12-14', url: 'https://ia800907.us.archive.org/3/items/japaneseabacus00taka/japaneseabacus00taka.pdf' },
+  },
+  {
+    annee: '1948', tri: 1948.2, titre: 'Les calculatrices du projet atomique',
+    texte: 'À Moscou, le laboratoire d’Andreï Tikhonov calcule pour le projet atomique soviétique : 30 à 40 calculateur·rices y travaillent sur des machines électromécaniques. Olga Kramer dirige un groupe, puis devient en 1954 programmeuse de la Strela, premier ordinateur soviétique de série.',
+    region: 'europe-est', theme: 'societe', personnes: ['Olga Kramer', 'Andreï Tikhonov'], pionniere: true,
+    source: { titre: 'I. Krayneva, « Ольга Крамер: из вычислителей в программисты », Открытые системы 3/2018', url: 'https://www.iis.nsk.su/files/os-n03_2018_44-45.pdf' },
+  },
+  {
+    annee: '1951', tri: 1951, titre: 'La MESM de Feofania',
+    texte: 'Près de Kyiv, dans un ancien monastère, l’équipe de Sergueï Lebedev met en service fin 1951 la MESM, premier ordinateur électronique à programme enregistré d’URSS, avec environ 6 000 tubes. Ekaterina Chkabara et Lev Dachevski sont ses deux principaux adjoints, dans une équipe d’environ 25 personnes.',
+    region: 'europe-est', theme: 'machines', personnes: ['Sergueï Lebedev', 'Ekaterina Chkabara', 'Lev Dachevski'], pionniere: true,
+    source: { titre: 'B. N. Malinovsky, Pioneers of Soviet Computing (SIGCIS, 2010)', url: 'https://ia800608.us.archive.org/28/items/PioneersOfSovietComputing/Pioneers%20of%20Soviet%20Computing.pdf' },
+  },
+  {
+    annee: '1956', tri: 1956, titre: 'FUJIC, construit presque seul',
+    texte: 'Chez Fuji Photo Film, l’ingénieur Okazaki Bunji construit presque seul FUJIC, le premier ordinateur électronique en service au Japon (mars 1956, environ 1 700 tubes), pour calculer des objectifs d’appareils photo.',
+    region: 'asie', theme: 'machines', personnes: ['Okazaki Bunji'],
+    source: { titre: 'IPSJ Computer Museum, « [Fuji Photo Film] FUJIC »', url: 'https://museum.ipsj.or.jp/en/computer/dawn/0010.html' },
+  },
+  {
+    annee: '1954-1958', tri: 1956.5, titre: 'Le paramétron et le PC-1',
+    texte: 'À l’université de Tokyo, le doctorant Goto Eiichi invente en 1954 le paramétron, un élément logique bon marché à tores de ferrite. Le PC-1, qui en compte 4 200, fait son premier calcul en mars 1958 ; vers 1959, près de la moitié des ordinateurs japonais utilisent des paramétrons.',
+    region: 'asie', theme: 'machines', personnes: ['Goto Eiichi', 'Takahasi Hidetosi'],
+    source: { titre: 'IEEE / ETHW, « Milestones: Parametron, 1954 »', url: 'https://ethw.org/Milestones:Parametron,_1954' },
+  },
+  {
+    annee: '1962', tri: 1962.1, titre: 'Un ordinateur pour les chemins de fer est-africains',
+    texte: 'Une revue britannique recense un ICT 1202 « en commande » pour les East African Railways and Harbours, l’entreprise coloniale qui exploite rails et ports du Kenya, de l’Ouganda et du Tanganyika, pour sa comptabilité. La date de son installation n’est pas connue avec certitude.',
+    region: 'afrique', theme: 'machines',
+    source: { titre: 'Computer Conservation Society, listes de livraison des BTM / ICT 1200 (d’après Computer Survey, 1962)', url: 'https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf' },
   },
 ];
 

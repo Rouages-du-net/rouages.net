@@ -46,7 +46,7 @@ const etapes = [
   <Etape numero={0} titre="Deux mille ans de calcul" ancre="frise">
     <FriseHistoire slot="animation" donnees={FRISE_INFORMATIQUE} id="informatique" />
     <p slot="decouverte">
-      Près de cinquante dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
+      Une cinquantaine de dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
       région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
     </p>
     <p slot="curieux">
@@ -91,7 +91,10 @@ const etapes = [
         mesures de 1892 à 1901. À Melbourne, six mesureuses sont payées 40 livres par an en 1898 et doivent
         démissionner en se mariant. À Calcutta, l'Indian Statistical Institute de P. C. Mahalanobis
         emploie en 1941 jusqu'à 90 calculateurs humains, des hommes semble-t-il, pour ses enquêtes par
-        sondage.
+        sondage. À Moscou, en 1948, 30 à 40 calculateur·rices font les calculs du projet atomique
+        soviétique ; l'une d'elles, Olga Kramer, deviendra programmeuse. Et à Tokyo, en 1946, un employé
+        des Postes armé d'un boulier, Kiyoshi Matsuzaki, bat 4 à 1 un soldat américain équipé d'une
+        calculatrice électrique.
       </p>
     </div>
     <p slot="ingenieur">
@@ -118,7 +121,7 @@ const etapes = [
   <Etape numero={2} titre="Des machines partout dans le monde" ancre="machines">
     <p slot="decouverte">
       Les premiers ordinateurs électroniques apparaissent dans les années 1940 et 1950. Ils ne sont pas
-      seulement américains et britanniques : on en construit aussi à Moscou, à Kyiv, à Bombay ou à
+      seulement américains et britanniques : on en construit aussi à Kyiv, à Moscou, à Tokyo, à Bombay ou à
       Buenos Aires.
     </p>
     <div slot="curieux">
@@ -149,6 +152,13 @@ const etapes = [
         premier ordinateur conçu et construit en Inde, baptisé TIFRAC en 1962. À Buenos Aires,
         l'université inaugure en 1961 Clementina, son premier ordinateur scientifique ; Cecilia
         Berdichevsky en est la première programmeuse.
+      </p>
+      <p>
+        Près de Kyiv, fin 1951, l'équipe de Sergueï Lebedev met en service la MESM, premier ordinateur
+        électronique à programme enregistré d'URSS ; Ekaterina Chkabara est l'une de ses deux principaux
+        adjoints. Au Japon, l'ingénieur Okazaki Bunji construit presque seul FUJIC (1956), et l'université
+        de Tokyo invente le paramétron, un composant bon marché qui équipera près de la moitié des
+        ordinateurs japonais vers 1959.
       </p>
       <p>
         En Afrique, les premiers ordinateurs sont importés : dès 1957, l'administration de la province du
@@ -290,8 +300,9 @@ const etapes = [
         patrons, pas une explication.
       </p>
       <p>
-        En février 1975, après plus de cent licenciements, des militant·es de l'American Indian Movement
-        occupent l'usine de Shiprock pendant une semaine. Fairchild la ferme peu après. Pour beaucoup
+        En février 1975, après le licenciement de 140 salarié·es, des militant·es de l'American Indian
+        Movement occupent l'usine de Shiprock du 24 février au 3 mars. Fairchild annonce la fermeture une
+        dizaine de jours plus tard et transfère la production en Asie du Sud-Est. Pour beaucoup
         d'habitant·es, l'occupation a coûté les emplois ; d'autres y voient le prétexte d'une entreprise
         qui partait déjà vers l'Asie. Les deux lectures coexistent encore.
       </p>
@@ -331,9 +342,15 @@ const etapes = [
         L'ordinateur sert aussi à trier les personnes. En Afrique du Sud, à partir de 1966, le régime
         d'apartheid met sur bande magnétique le registre de population des Noir·es, puis confie à IBM vers
         1970 le « Book of Life » des autres catégories raciales ; des actionnaires d'IBM réclament à partir
-        de 1972 le retrait du pays. À l'inverse, à Dakar, en 1982, une équipe sénégalaise dirigée par une
-        informaticienne du ministère de la Recherche adapte en wolof le langage éducatif LOGO, pour que
-        l'informatique parle la langue des enfants.
+        de 1972 le retrait du pays. À l'inverse, à Dakar, à partir de 1982, le laboratoire d'informatique éducative de
+        l'École normale supérieure, dont l'informaticienne Fatimata Sèye Sylla dirige l'équipe, adapte
+        le langage LOGO en wolof et en français, pour que l'informatique parle la langue des enfants.
+      </p>
+      <p>
+        Ce projet est né d'un partenariat avec le Centre mondial informatique de Paris, créé en 1981 avec
+        le chercheur du MIT Seymour Papert. Dès 1983, la presse spécialisée juge ce centre utopique, voire
+        néocolonial ; il ferme en 1986. L'équipe sénégalaise, elle, réclamait des machines conçues pour la
+        chaleur et la poussière africaines, et un institut régional pour les adapter.
       </p>
     </div>
     <p slot="ingenieur">
@@ -428,7 +445,6 @@ const etapes = [
       { auteur: 'Computer History Museum', titre: 'Sophie Wilson — 2012 Fellow', url: 'https://computerhistory.org/profile/sophie-wilson/', type: 'site', langue: 'en' },
       { auteur: 'Centre for Computing History', titre: 'First ARM processor powered up', url: 'https://www.computinghistory.org.uk/det/5440/First-ARM-Processor-Powered-Up/', type: 'site', langue: 'en' },
       { auteur: 'D. Roads', titre: 'Hong Kong Adds Quality Electronics to Its Bargain Basement Line (Electronics, transcription RF Cafe)', url: 'https://rfcafe.com/references/electronics-mag/hong-kong-quality-electronics-mag-dec-13-1965.htm', type: 'primaire', annee: 1965, langue: 'en' },
-      { auteur: 'L. Nakamura', titre: 'Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture (American Quarterly 66-4), résumé', url: 'https://muse.jhu.edu/article/563663', type: 'recherche', annee: 2014, langue: 'en' },
       { auteur: 'Intel', titre: 'Intel Penang (Intel Virtual Vault)', url: 'https://intel.com/content/www/us/en/history/virtual-vault/articles/intel-penang.html', type: 'site', langue: 'en' },
       { auteur: 'B. Peters', titre: 'How the Soviets invented the internet and why it didn’t work (Aeon)', url: 'https://aeon.co/essays/how-the-soviets-invented-the-internet-and-why-it-didn-t-work', type: 'recherche', annee: 2016, langue: 'en' },
       { auteur: 'S. Gerovitch', titre: 'InterNyet: why the Soviet Union did not build a nationwide computer network (History and Technology 24-4)', url: 'https://web.mit.edu/slava/homepage/articles/Gerovitch-InterNyet.pdf', type: 'recherche', annee: 2008, langue: 'en' },
@@ -460,6 +476,20 @@ const etapes = [
       { auteur: 'B. Donovan (Navajo Times)', titre: '50 Years Ago: The highs and lows of the Fairchild operation in Shiprock', url: 'https://navajotimes.com/50years/50-years-ago-highs-lows-fairchild-operation-shiprock/', type: 'presse', annee: 2016, langue: 'en' },
       { auteur: 'American Archive of Public Broadcasting', titre: 'AIM Takeover of Fairchild Camera and Instrument Corporation (KUNM, 1975)', url: 'https://americanarchive.org/primary_source_sets/american-indian-movement/8-207-483j9qpk', type: 'primaire', annee: 1975, langue: 'en' },
       { auteur: 'Wang Xuan', titre: 'Brevet EP 0 095 536, The representation of character images in a compact form for computer storage', url: 'https://patents.google.com/patent/EP0095536A1/en', type: 'primaire', annee: 1982, langue: 'en' },
+      { auteur: 'I. Krayneva', titre: 'Ольга Крамер: из вычислителей в программисты (Открытые системы 3/2018)', url: 'https://www.iis.nsk.su/files/os-n03_2018_44-45.pdf', type: 'recherche', annee: 2018, langue: 'ru' },
+      { auteur: 'B. N. Malinovsky', titre: 'Pioneers of Soviet Computing (SIGCIS, copie Internet Archive)', url: 'https://ia800608.us.archive.org/28/items/PioneersOfSovietComputing/Pioneers%20of%20Soviet%20Computing.pdf', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'T. Kojima', titre: 'The Japanese Abacus: Its Use and Theory (Tuttle)', url: 'https://ia800907.us.archive.org/3/items/japaneseabacus00taka/japaneseabacus00taka.pdf', type: 'primaire', annee: 1954, langue: 'en' },
+      { auteur: 'IPSJ Computer Museum', titre: '[Fuji Photo Film] FUJIC', url: 'https://museum.ipsj.or.jp/en/computer/dawn/0010.html', type: 'site', langue: 'en' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestone: Parametron, 1954', url: 'https://ethw.org/Milestones:Parametron,_1954', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'MIT News', titre: 'Professor Emeritus Seymour Papert, pioneer of constructionist learning, dies at 88 (photo de Dakar, 1982)', url: 'https://news.mit.edu/2016/seymour-papert-pioneer-of-constructionist-learning-dies-0801', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'A. M. Gottlieb (Christian Science Monitor)', titre: 'Pilot projects introduce micro-computers into African schools', url: 'https://www.csmonitor.com/1985/1125/dnai.html', type: 'presse', annee: 1985, langue: 'en' },
+      { auteur: 'M. G. Ames', titre: 'Hackers, Computers, and Cooperation: A Critical History of Logo and Constructionist Learning (PACM HCI)', url: 'https://www.morganya.org/research/2018-Ames-CSCW-Constructionism.pdf', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'AfChix', titre: 'Biographie de Fatimata Seye Sylla', url: 'https://afchix.org/author/comms/page/3/', type: 'site', langue: 'en' },
+      { auteur: 'F. S. Sylla', titre: 'Computers and literacy in Senegal (mémoire, MIT), notice', url: 'https://dspace.mit.edu/handle/1721.1/77676', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'L. Nakamura', titre: 'Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture (American Quarterly 66-4, PDF de l’autrice)', url: 'https://lisanakamura.net/wp-content/uploads/2011/01/indigenous-circuits-nakamura-aq.pdf', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'M. Cassidy (San Jose Mercury News)', titre: 'What Went Wrong at Shiprock', url: 'https://mikecassidy.wordpress.com/2012/10/23/when-protesters-took-over-fairchilds-fab-on-the-navajo-reservation/', type: 'presse', annee: 2000, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Fairchild Oral History Panel: Bipolar Digital Products', url: 'https://archive.computerhistory.org/resources/access/text/2015/07/102658280-05-01-acc.pdf', type: 'primaire', annee: 2007, langue: 'en' },
+      { auteur: 'Bureau of Indian Affairs', titre: 'Electronics Industry Expanding on Navajo Reservation', url: 'https://www.bia.gov/as-ia/opa/online-press-release/electronics-industry-expanding-navajo-reservation', type: 'primaire', annee: 1966, langue: 'en' },
       { auteur: 'PKU News', titre: 'Wang Xuan: Exploring the way of independent innovation', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html', type: 'site', annee: 2019, langue: 'en' },
       { auteur: 'Wangxuan Institute of Computer Technology (PKU)', titre: 'History', url: 'https://www.icst.pku.edu.cn/english/about_us/history/index.htm', type: 'site', langue: 'en' },
       { auteur: 'IEEE / ETHW', titre: 'Milestone: The Pioneering TRON Intelligent House, 1989', url: 'https://ethw.org/Milestones:The_Pioneering_TRON_Intelligent_House,_1989', type: 'site', langue: 'en' },
