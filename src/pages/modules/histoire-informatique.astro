@@ -1,0 +1,405 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import FriseHistoire from '../../components/FriseHistoire.astro';
+import { FRISE_INFORMATIQUE } from '../../data/histoire-informatique';
+
+// Faits sourcés : voir docs/sources/informatique.md.
+const etapes = [
+  { ancre: 'frise', court: 'Deux mille ans de calcul' },
+  { ancre: 'avant', court: 'Calculer avant les machines' },
+  { ancre: 'machines', court: 'Des machines partout' },
+  { ancre: 'programmer', court: 'Programmer' },
+  { ancre: 'puces', court: 'Puces et petites mains' },
+  { ancre: 'choix', court: 'Des choix politiques' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Histoire de l’informatique"
+  description="De Pingala et al-Khwârizmî aux processeurs ARM : une histoire mondiale de l’informatique, avec les calculatrices, programmeuses et ouvrières qu’on oublie, les machines soviétiques, indiennes et argentines, et les choix politiques du Chili, du Brésil ou du Japon. Frise filtrable."
+>
+  <p class="tag">Histoires · module en construction</p>
+  <h1>Histoire de l’informatique</h1>
+  <MiseAJour date="2026-11-03" />
+  <p class="chapo seulement-debut">
+    L'informatique n'est pas née d'un génie isolé dans un garage. Elle vient d'idées indiennes et
+    arabes, du travail de milliers de calculatrices, de machines construites à Moscou, Bombay ou
+    Buenos Aires, et de choix politiques. Parcours la frise, filtre-la, puis découvre les personnes
+    qu'on oublie souvent.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Deux mille ans de calcul" ancre="frise">
+    <FriseHistoire slot="animation" donnees={FRISE_INFORMATIQUE} id="informatique" />
+    <p slot="decouverte">
+      Une trentaine de dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
+      région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
+    </p>
+    <p slot="curieux">
+      Les récits les plus connus racontent une suite d'hommes américains et britanniques. La frise
+      montre aussi l'Inde, Bagdad, l'URSS, l'Argentine, le Chili, le Brésil, la Chine et le Japon, et
+      les femmes qui ont calculé, programmé et assemblé les puces.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Calculer avant les machines" ancre="avant">
+    <p slot="decouverte">
+      Bien avant les ordinateurs, il fallait des méthodes pour calculer, et des gens pour le faire.
+      Le mot anglais <em>computer</em> a longtemps désigné un métier : la personne qui fait les calculs
+      à la main.
+    </p>
+    <div slot="curieux">
+      <p>
+        En Inde, vers le IIᵉ siècle avant notre ère, le traité de métrique de Pingala décrit comment
+        lister toutes les combinaisons de syllabes brèves et longues. Des mathématiciens indiens plus
+        tardifs y liront une forme d'écriture binaire. Au IXᵉ siècle, à Bagdad, al-Khwârizmî écrit sur
+        le calcul avec les chiffres indiens : son nom a donné « algorithme », et son traité
+        d'<em>al-jabr</em>, « algèbre ».
+      </p>
+      <p>
+        En 1843, Ada Lovelace publie ses notes sur la machine analytique de Charles Babbage. La Note G
+        décrit pas à pas le calcul des nombres de Bernoulli par la machine : le premier algorithme
+        publié destiné à une machine. Elle imagine aussi que la machine pourrait manipuler autre chose
+        que des nombres, par exemple de la musique.
+      </p>
+      <p>
+        À partir des années 1880, le métier de calculateur se féminise, surtout parce que les femmes
+        sont moins payées. À l'observatoire de Harvard, Williamina Fleming, embauchée en 1881, gagne
+        de 0,25 à 0,50 dollar de l'heure et dirige l'équipe dès 1886. Greenwich recrute ses
+        « Lady Computers » en 1890, et le laboratoire Langley de la NACA (future NASA) forme son premier
+        groupe de calculatrices en 1935.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Un algorithme est une suite d'instructions précises qui mène à un résultat. Le module <a
+      href="/modules/ordinateur/#binaire">Comment marche un ordinateur</a> montre comment on compte en
+      binaire, avec seulement 0 et 1, comme les syllabes brèves et longues de Pingala.
+    </p>
+    <div slot="histoire">
+      <p>
+        La machine analytique n'a jamais été construite : le calcul de Lovelace n'a jamais tourné.
+        Babbage avait lui-même écrit, entre 1836 et 1840, des « traces » de programmes restées inédites.
+        Des historien·nes d'Oxford ont réévalué en 2018 la compétence mathématique de Lovelace, que
+        d'autres avaient minimisée.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ada Lovelace est la première programmeuse. »</strong> La formule est contestée : il vaut
+      mieux parler du premier algorithme publié destiné à une machine. Et <strong>al-Khwârizmî n'a pas
+      inventé les chiffres « arabes »</strong> : ils viennent d'Inde, il les a fait connaître.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Des machines partout dans le monde" ancre="machines">
+    <p slot="decouverte">
+      Les premiers ordinateurs électroniques apparaissent dans les années 1940 et 1950. Ils ne sont pas
+      seulement américains et britanniques : on en construit aussi à Moscou, à Kyiv, à Bombay ou à
+      Buenos Aires.
+    </p>
+    <div slot="curieux">
+      <p>
+        En 1936, Alan Turing décrit une machine abstraite capable d'imiter toute autre machine de calcul.
+        Pendant la guerre, le chiffre allemand Enigma avait déjà été cassé dès 1932 par trois
+        mathématiciens polonais, Marian Rejewski, Jerzy Różycki et Henryk Zygalski, qui transmettent
+        leurs travaux aux Britanniques et aux Français en juillet 1939. À Bletchley Park, Turing travaille
+        sur l'Enigma navale avec, entre autres, Joan Clarke, qui devient cheffe adjointe de l'équipe en
+        1944. Pour pouvoir l'augmenter, on la classe « linguiste » : « Grade: Linguist, Languages: none! »
+      </p>
+      <p>
+        Aux États-Unis, six calculatrices de l'armée apprennent à programmer l'ENIAC à partir de ses
+        schémas : Kay McNulty, Jean Jennings Bartik, Betty Snyder Holberton, Marlyn Wescoff, Fran Bilas et
+        Ruth Lichterman. Lors de la présentation publique de 1946, personne ne les mentionne.
+      </p>
+      <p>
+        À l'université de Moscou, l'équipe de Nikolaï Broussentsov met en service fin 1958 Setun, qui
+        calcule en ternaire (−1, 0, +1). À Bombay, l'équipe de R. Narasimhan met en service en 1960 le
+        premier ordinateur conçu et construit en Inde, baptisé TIFRAC en 1962. À Buenos Aires,
+        l'université inaugure en 1961 Clementina, son premier ordinateur scientifique ; Cecilia
+        Berdichevsky en est la première programmeuse.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le ternaire utilise trois états au lieu de deux. Setun s'appuyait sur des éléments magnétiques
+      plutôt que sur des tubes, et coûtait très peu cher. Le module <a
+      href="/modules/ordinateur/#transistor">Comment marche un ordinateur</a> montre ce qui a remplacé
+      tubes et relais : le transistor.
+    </p>
+    <div slot="histoire">
+      <p>
+        Condamné en 1952 pour homosexualité, Turing accepte un traitement hormonal pour éviter la prison.
+        Il meurt en 1954 d'un empoisonnement au cyanure ; l'enquête conclut au suicide, ce que certains
+        historiens contestent. Il reçoit un pardon posthume en 2013, et la « loi Turing » de 2017 l'étend à
+        des milliers d'hommes condamnés pour les mêmes motifs.
+      </p>
+      <p>
+        Setun n'a pas été arrêté pour des raisons techniques, selon son concepteur : l'administration
+        freine puis stoppe la production en 1965, après 50 machines. En Argentine, le 29 juillet 1966,
+        la police de la dictature fait irruption dans l'université : plus de 1 000 enseignant·es
+        démissionnent, dont presque toute l'équipe de Clementina.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Turing a cassé Enigma, seul. »</strong> Les Polonais l'avaient cassé avant la guerre, et
+      Bletchley Park était un travail collectif. « Père de l'informatique » est aussi un raccourci :
+      Alonzo Church a publié un résultat équivalent la même année. Et TIFRAC n'est pas le premier
+      ordinateur <em>en</em> Inde : l'institut de statistique de Calcutta en avait importé un dès 1955.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Programmer" ancre="programmer">
+    <p slot="decouverte">
+      Une machine ne sait rien faire sans programme. Au début, on programme en branchant des câbles ou
+      en écrivant des nombres. Puis viennent des langages plus proches des mots humains.
+    </p>
+    <div slot="curieux">
+      <p>
+        En 1952, Grace Hopper publie son premier article sur A-0, un « compilateur » qui assemble des
+        morceaux de programmes. Son équipe crée ensuite FLOW-MATIC, un langage en mots anglais qui
+        inspirera COBOL. À Kyiv, Kateryna Iouchtchenko propose en 1958, avec V. Koroliouk, le langage
+        « Adresse » : il fait de l'adressage indirect, l'ancêtre des pointeurs, son principe central.
+      </p>
+      <p>
+        À la NACA, Dorothy Vaughan dirige à partir de 1949 l'unité ségréguée des calculatrices noires, et
+        deviendra experte en FORTRAN. En 1962, John Glenn demande que Katherine Johnson vérifie à la main
+        les calculs de son vol orbital. Annie Easley, embauchée en 1955 (« I was a computer at first »),
+        programme ensuite en FORTRAN. En 1965, Mary Kenneth Keller, religieuse, est l'une des deux
+        premières personnes à obtenir un doctorat en informatique aux États-Unis.
+      </p>
+      <p>
+        Au MIT, Margaret Hamilton dirige l'équipe du logiciel embarqué des missions Apollo. Au Royaume-Uni,
+        Stephanie Shirley fonde en 1962 une entreprise de programmeuses travaillant à domicile ; elle
+        signe ses lettres « Steve » pour qu'on lui réponde.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Un compilateur traduit un programme écrit par un humain en instructions pour la machine. Le module
+      <a href="/modules/ordinateur/#langages">Comment marche un ordinateur</a> montre cette traduction.
+      Lors de l'alunissage d'Apollo 11, un radar mal réglé surcharge l'ordinateur : le logiciel
+      redémarre en ne relançant que les tâches essentielles, comme l'équipe du MIT l'avait prévu et testé.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le logiciel d'Apollo a mobilisé plus de 400 personnes selon le MIT. L'expression « génie
+        logiciel » (<em>software engineering</em>) apparaît dès 1966 ; une conférence de l'OTAN la popularise
+        en 1968. Margaret Hamilton l'a employée au MIT pour faire reconnaître la discipline. Elle est morte
+        le 30 septembre 2026.
+      </p>
+    </div>
+    <div slot="mythes">
+      <p>
+        <strong>« Grace Hopper a inventé COBOL. »</strong> COBOL a été conçu par un comité, dont Jean
+        Sammet faisait partie ; Hopper en était conseillère et ses idées l'ont inspiré. Sammet l'a dit :
+        « She was not the mother, creator or developer of Cobol ». Hopper n'a pas non plus trouvé le
+        célèbre papillon de 1947 : voir la fiche <a href="/vrai-ou-faux/premier-bug-papillon/">Vrai ou
+        faux ?</a>
+      </p>
+      <p>
+        <strong>« Margaret Hamilton a sauvé seule l'alunissage. »</strong> C'est la conception collective
+        du logiciel qui a tenu, et la décision de poursuivre a été prise à Houston. De même, Kateryna
+        Iouchtchenko n'a pas « inventé les pointeurs » : la formule vient d'un article de son fils.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Puces et petites mains" ancre="puces">
+    <p slot="decouverte">
+      Les ordinateurs rapetissent grâce aux puces : des millions de transistors gravés sur un morceau de
+      silicium. Il faut les concevoir, mais aussi les fabriquer, souvent à la main et très loin de la
+      Silicon Valley.
+    </p>
+    <div slot="curieux">
+      <p>
+        À la fin des années 1970, Lynn Conway et Carver Mead mettent au point une méthode simplifiée de
+        conception des puces, enseignée au MIT dès 1978 puis diffusée par un manuel (1979-1980). En 1968, IBM avait licencié Lynn Conway parce qu'elle avait annoncé sa
+        transition ; l'entreprise s'en est excusée en 2020.
+      </p>
+      <p>
+        En 1981, Mark Dean et Dennis Moeller conçoivent le bus d'extension de l'IBM PC, appelé plus tard
+        « ISA ». En 1976, Jerry Lawson dirige chez Fairchild l'ingénierie de la Channel F, première console à
+        cartouches ROM. En 1985, chez Acorn, à Cambridge, arrivent les premières puces ARM : Sophie Wilson
+        en a conçu le jeu d'instructions et Steve Furber l'architecture matérielle.
+      </p>
+      <p>
+        Les puces sont assemblées par des ouvrières : à Hong Kong dès 1963 (environ 1 dollar par jour en
+        1965), dans une usine Fairchild en territoire navajo de 1965 à 1975, à Penang (Malaisie) chez Intel
+        à partir de 1972, dans les <em>maquiladoras</em> du nord du Mexique.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le jeu d'instructions est la liste des opérations qu'un processeur sait faire. Le module <a
+      href="/modules/ordinateur/#processeur">Comment marche un ordinateur</a> montre un processeur qui
+      exécute des instructions.
+    </p>
+    <div slot="histoire">
+      <p>
+        Les entreprises justifiaient l'emploi de femmes par leurs prétendus « doigts agiles ». La chercheuse
+        Lisa Nakamura a montré comment Fairchild présentait les ouvrières navajo comme naturellement
+        douées pour ce travail, un discours qui servait surtout à payer peu. Ces récits sont ceux des
+        patrons, pas une explication.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Sophie Wilson a inventé l'ARM » ; « Jerry Lawson a inventé la cartouche ».</strong> L'ARM
+      est une co-conception avec Steve Furber au sein d'une équipe. L'idée des jeux interchangeables
+      venait d'un prototype de l'entreprise Alpex, et le brevet de la cartouche est au nom de deux
+      collègues de Lawson. Leur rôle reste décisif, mais aucune de ces inventions n'est l'œuvre d'une
+      seule personne.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Des choix politiques" ancre="choix">
+    <p slot="decouverte">
+      L'informatique n'est pas seulement une affaire d'ingénieur·es. Des gouvernements ont voulu s'en
+      servir pour planifier l'économie, protéger leur industrie ou écrire leur propre langue.
+    </p>
+    <div slot="curieux">
+      <p>
+        En URSS, à partir de 1962, Viktor Glouchkov propose un réseau national de centres de calcul pour
+        planifier l'économie, appelé plus tard OGAS. En 1970, le Politburo le juge trop ambitieux : chaque
+        ministère construit ses propres systèmes, incompatibles. Au Chili, de 1971 à 1973, l'équipe de
+        Fernando Flores et le cybernéticien Stafford Beer bâtissent Cybersyn pour suivre les entreprises
+        nationalisées. Son réseau de télex aide le gouvernement pendant la grève d'octobre 1972 ; le coup
+        d'État du 11 septembre 1973 met fin au projet.
+      </p>
+      <p>
+        Le Brésil réserve de 1972 à 1992 le marché des mini- puis micro-ordinateurs à ses entreprises
+        nationales, avec l'entreprise publique Cobra. En Chine, Wang Xuan et Chen Kunqiu conçoivent un
+        système de photocomposition laser des caractères chinois, qui imprime son premier livre en 1980.
+        Au Japon, Ken Sakamura lance en 1984 TRON, dont la version embarquée équipe l'électroménager et
+        les voitures.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Une police chinoise compte des milliers de caractères. Pour la faire tenir dans des ordinateurs à
+      très petite mémoire, Wang Xuan décrit les traits réguliers par quelques paramètres et les autres
+      par leurs contours, au lieu de stocker chaque caractère point par point.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'historien Benjamin Peters résume l'échec d'OGAS d'une formule : le réseau mondial est né de
+        « capitalistes se comportant en socialistes coopératifs », pas l'inverse. Au Brésil, la réserve de
+        marché a été rattachée en 1979 au Conseil de sécurité nationale de la dictature. Son bilan reste
+        disputé : prix élevés et contrebande d'un côté, formation d'ingénieur·es et d'une industrie de
+        l'autre.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les États-Unis ont tué TRON par des sanctions. »</strong> En 1989, un rapport américain
+      range parmi les obstacles au commerce le projet d'imposer BTRON dans les ordinateurs scolaires
+      japonais, et le Japon y renonce. Mais TRON ne figure pas dans les sanctions décidées ensuite, et sa
+      version embarquée a prospéré. De même, OGAS n'était pas un « internet soviétique » : c'était un
+      système hiérarchique de gestion, pas un réseau de paquets.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Personne n'a inventé l'informatique seul.</strong> Elle vient d'idées venues d'Inde, de Bagdad, d'Europe et d'ailleurs.</li>
+      <li><strong>Le calcul a d'abord été un métier</strong>, souvent confié à des femmes moins payées, avant d'être celui des machines.</li>
+      <li><strong>Des machines partout</strong> : Moscou, Bombay et Buenos Aires ont construit les leurs dès les années 1950-1960.</li>
+      <li><strong>Programmer est un travail collectif</strong>, longtemps porté par des femmes que les récits ont oubliées.</li>
+      <li><strong>La technique est aussi politique</strong> : planifier, protéger une industrie, écrire sa langue, décider qui fabrique les puces.</li>
+    </ol>
+    <p>
+      Les fiches <a href="/vrai-ou-faux/">Vrai ou faux ?</a> reviennent sur le papillon de 1947, Hedy
+      Lamarr et le Wi-Fi, et d'autres idées reçues. Le module <a href="/modules/histoire-internet/">Histoire
+      d'internet</a> prolonge cette histoire.
+    </p>
+
+  <Sources
+    verifie="2026-11-03"
+    sources={[
+      { auteur: 'J. Shah', titre: 'A History of Piṅgala’s Combinatorics (prépublication, Northeastern University)', url: 'https://sanskrit.uohyd.ac.in/Algorithms_in_Ancient_India/Material/Pingala.pdf', type: 'recherche', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Abu Ja’far Muhammad ibn Musa Al-Khwarizmi (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/', type: 'recherche', langue: 'en' },
+      { auteur: 'L. F. Menabrea, A. A. Lovelace', titre: 'Sketch of the Analytical Engine invented by Charles Babbage, with notes (transcription Fourmilab)', url: 'https://www.fourmilab.ch/babbage/sketch.html', type: 'primaire', annee: 1843, langue: 'en' },
+      { auteur: 'C. Hollings, U. Martin, A. Rice', titre: 'Ada Lovelace and the Analytical Engine (Bodleian Libraries)', url: 'https://blogs.bodleian.ox.ac.uk/adalovelace/2018/07/26/ada-lovelace-and-the-analytical-engine/', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'Science Museum Group', titre: 'Notations of calculations for the Analytical Engine (Babbage Papers)', url: 'https://collection.sciencemuseumgroup.org.uk/documents/aa110000020/notations-of-calculations-for-the-analytical-engine', type: 'primaire', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Williamina Paton Stevens Fleming (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Fleming/', type: 'recherche', langue: 'en' },
+      { auteur: 'D. C. Pendergrass', titre: 'Harvard’s Forgotten Female Astronomers (The Harvard Crimson)', url: 'https://www.thecrimson.com/article/2019/9/26/women-computers-observatory/', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'L. Devoy', titre: 'The Lady Computers of the Royal Observatory (Royal Society)', url: 'https://royalsociety.org/blog/2025/08/lady-computers', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'S. McLennan, M. Gainer', titre: 'When the Computer Wore a Skirt: Langley’s Computers, 1935–1970 (NASA)', url: 'https://www.nasa.gov/history/when-the-computer-wore-a-skirt-langleys-computers-1935-1970/', type: 'site', langue: 'en' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestone: First Breaking of Enigma Code by the Team of Polish Cipher Bureau, 1932-1939', url: 'https://ethw.org/Milestones:First_Breaking_of_Enigma_Code_by_the_Team_of_Polish_Cipher_Bureau,_1932-1939', type: 'site', langue: 'en' },
+      { auteur: 'A. Hodges', titre: 'Alan Turing (1912-1954), notice pour l’Oxford Dictionary of National Biography', url: 'https://www.turing.org.uk/publications/dnb.html', type: 'recherche', annee: 1995, langue: 'en' },
+      { auteur: 'Ministry of Justice (UK)', titre: 'Royal pardon for WW2 code-breaker Dr Alan Turing', url: 'https://www.gov.uk/government/news/royal-pardon-for-ww2-code-breaker-dr-alan-turing', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'Royaume-Uni', titre: 'Policing and Crime Act 2017, section 164', url: 'https://www.legislation.gov.uk/ukpga/2017/3/section/164/enacted', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'R. Pease (BBC News)', titre: 'Alan Turing: Inquest’s suicide verdict “not supportable”', url: 'https://www.bbc.co.uk/news/science-environment-18561092', type: 'presse', annee: 2012, langue: 'en' },
+      { auteur: 'English Heritage', titre: 'Joan Clarke (1917–1996)', url: 'https://www.english-heritage.org.uk/visit/blue-plaques/joan-clarke/', type: 'site', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Joan Elisabeth Lowther Clarke Murray (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Clarke_Joan/', type: 'recherche', langue: 'en' },
+      { auteur: 'K. Kleiman', titre: 'ENIAC Programmers Project', url: 'https://eniacprogrammers.org/', type: 'site', langue: 'en' },
+      { auteur: 'J. Abbate', titre: 'Oral-History: Jean Bartik (IEEE History Center)', url: 'https://ethw.org/Oral-History:Jean_Bartik', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'N. P. Broussentsov, H. Ramil Alvarez', titre: 'Les ordinateurs ternaires Setun et Setun 70 (MGU)', url: 'https://ternarycomp.cs.msu.ru/Papers/Petroz.pdf', type: 'primaire', langue: 'ru' },
+      { auteur: 'TIFR', titre: 'India’s First Digital Computer (Google Arts & Culture)', url: 'https://artsandculture.google.com/story/NQVhslS0jrdXLA', type: 'primaire', langue: 'en' },
+      { auteur: 'V. Rajaraman', titre: 'History of Computing in India (1955–2010)', url: 'https://ethw.org/File:Rajaraman,_V._History_of_Computing_in_India,_1955-2010.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'UBA Ciencia', titre: 'Clementina, la primera computadora científica', url: 'https://www.uba.ar/ubaciencia/noticias/966', type: 'site', annee: 2025, langue: 'es' },
+      { auteur: 'UBA Ciencia', titre: 'Cecilia Tuwjasz, la primera programadora argentina', url: 'https://www.uba.ar/index.php/ubaciencia/noticias/61', type: 'site', annee: 2026, langue: 'es' },
+      { auteur: 'R. Carnota, C. Borches (comp.)', titre: 'Sadosky por Sadosky (Fundación Sadosky)', url: 'https://www.dc.uba.ar/wp-content/uploads/2023/03/librosadoskyxsadosky.pdf', type: 'primaire', annee: 2011, langue: 'es' },
+      { auteur: 'Yale', titre: 'Grace Murray Hopper (Grace Hopper Celebration, actes 1994)', url: 'https://cs.yale.edu/homes/tap/Files/hopper-story.html', type: 'site', langue: 'en' },
+      { auteur: 'The Computer Museum', titre: 'The Story of the COBOL Tombstone (1985)', url: 'https://tcm.computerhistory.org/Timeline/Cobol1985.pdf', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'The New York Times (repris par The Irish Times)', titre: 'Pioneering software engineer and Cobol co-designer (nécrologie de Jean Sammet)', url: 'https://www.irishtimes.com/life-and-style/people/pioneering-software-engineer-and-cobol-co-designer-1.3111332', type: 'presse', annee: 2017, langue: 'en' },
+      { auteur: 'Е. Л. Ющенко', titre: 'Адресное программирование (Kyiv)', url: 'https://files.infoua.net/yushchenko/Adresnoe-programmirovanie_EYushchenko_1963.pdf', type: 'primaire', annee: 1963, langue: 'ru' },
+      { auteur: 'IEEE / ETHW', titre: 'Harold Lawson', url: 'https://ethw.org/Harold_Lawson', type: 'site', langue: 'en' },
+      { auteur: 'M. L. Shetterly', titre: 'Dorothy Vaughan (NASA)', url: 'https://www.nasa.gov/people/dorothy-vaughan/', type: 'site', langue: 'en' },
+      { auteur: 'M. L. Shetterly', titre: 'Katherine Johnson Biography (NASA)', url: 'https://www.nasa.gov/centers-and-facilities/langley/katherine-johnson-biography/', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'A. J. Easley, S. Johnson', titre: 'NASA Headquarters Oral History Project (transcription)', url: 'https://www.nasa.gov/wp-content/uploads/2024/11/easleyaj-8-21-01.pdf', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'M. Ryan (UW–Madison)', titre: 'Sister Mary Kenneth Keller (PhD, 1965)', url: 'https://www.cs.wisc.edu/2019/03/18/2759/', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'Wisconsin Alumni Association', titre: 'First PhD', url: 'https://uwalumni.com/news/first-phd', type: 'site', langue: 'en' },
+      { auteur: 'J. Liberty (MIT News)', titre: 'Margaret Hamilton, computing pioneer who led software development for the Apollo program, dies at 90', url: 'https://news.mit.edu/2026/margaret-hamilton-computing-pioneer-dies-1007', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'P. Adler', titre: 'Apollo 11 Program Alarms (Apollo Lunar Surface Journal, NASA)', url: 'https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.1201-pa.html', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'B. Meyer', titre: 'The origin of “software engineering”', url: 'https://bertrandmeyer.com/2013/04/04/the-origin-of-software-engineering/', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'P. Naur, B. Randell (dir.)', titre: 'Software Engineering: Report on a conference sponsored by the NATO Science Committee', url: 'http://homepages.cs.ncl.ac.uk/brian.randell/NATO/nato1968.PDF', type: 'primaire', annee: 1968, langue: 'en' },
+      { auteur: 'D. Spicer (Computer History Museum)', titre: 'In Memoriam: Dame Stephanie Shirley, 1933–2025', url: 'https://computerhistory.org/blog/in-memoriam-dame-stephanie-shirley-1933-2025/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'J. Abbate', titre: 'Oral-History: Dame Stephanie (Steve) Shirley (IEEE History Center)', url: 'https://ethw.org/Oral-History:Dame_Stephanie_(Steve)_Shirley', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'F. R. Shapiro', titre: 'Etymology of the Computer Bug: History and Folklore (American Speech 62-4)', url: 'https://gwern.net/doc/cs/hardware/1987-shapiro.pdf', type: 'recherche', annee: 1987, langue: 'en' },
+      { auteur: 'D. Spicer (Computer History Museum)', titre: 'In Memoriam: Lynn Conway (1938–2024)', url: 'https://computerhistory.org/blog/in-memoriam-lynn-conway-1938-2024/', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'M. Cramer (The New York Times, repris par l’IEEE Computer Society)', titre: '52 Years Later, IBM Apologizes for Firing Transgender Woman', url: 'https://www.computer.org/publications/tech-news/events/ibm-apologizes-firing-transgender-woman', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'IBM', titre: 'Mark Dean (IBM Heritage)', url: 'https://www.ibm.com/history/mark-dean', type: 'site', langue: 'en' },
+      { auteur: 'K. Gallerneaux (The Henry Ford)', titre: 'Jerry Lawson & the Fairchild Channel F Video Entertainment System', url: 'https://www.thehenryford.org/collections/explore/articles/jerry-lawson-and-the-fairchild-channel-f-video-entertainment-system', type: 'site', annee: 2021, langue: 'en' },
+      { auteur: 'R. A. Smith, N. F. Talesfore', titre: 'Brevet US 4 095 791, Cartridge programmable video game apparatus', url: 'https://patents.google.com/patent/US4095791A/en', type: 'primaire', annee: 1978, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Sophie Wilson — 2012 Fellow', url: 'https://computerhistory.org/profile/sophie-wilson/', type: 'site', langue: 'en' },
+      { auteur: 'Centre for Computing History', titre: 'First ARM processor powered up', url: 'https://www.computinghistory.org.uk/det/5440/First-ARM-Processor-Powered-Up/', type: 'site', langue: 'en' },
+      { auteur: 'D. Roads', titre: 'Hong Kong Adds Quality Electronics to Its Bargain Basement Line (Electronics, transcription RF Cafe)', url: 'https://rfcafe.com/references/electronics-mag/hong-kong-quality-electronics-mag-dec-13-1965.htm', type: 'primaire', annee: 1965, langue: 'en' },
+      { auteur: 'L. Nakamura', titre: 'Indigenous Circuits: Navajo Women and the Racialization of Early Electronic Manufacture (American Quarterly 66-4), résumé', url: 'https://muse.jhu.edu/article/563663', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'Intel', titre: 'Intel Penang (Intel Virtual Vault)', url: 'https://intel.com/content/www/us/en/history/virtual-vault/articles/intel-penang.html', type: 'site', langue: 'en' },
+      { auteur: 'B. Peters', titre: 'How the Soviets invented the internet and why it didn’t work (Aeon)', url: 'https://aeon.co/essays/how-the-soviets-invented-the-internet-and-why-it-didn-t-work', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'S. Gerovitch', titre: 'InterNyet: why the Soviet Union did not build a nationwide computer network (History and Technology 24-4)', url: 'https://web.mit.edu/slava/homepage/articles/Gerovitch-InterNyet.pdf', type: 'recherche', annee: 2008, langue: 'en' },
+      { auteur: 'E. Medina', titre: 'Article sur Cybersyn (Cabinet n° 46)', url: 'https://cabinetmagazine.org/issues/46/medina.php', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'D. Zaparolli (Pesquisa FAPESP)', titre: 'The legacy of the ugly duckling', url: 'https://revistapesquisa.fapesp.br/en/the-legacy-of-the-ugly-duckling/', type: 'presse', annee: 2022, langue: 'en' },
+      { auteur: 'Presidência da República (Brésil)', titre: 'Decreto nº 84.067 de 2 de outubro de 1979', url: 'https://www.planalto.gov.br/ccivil_03/decreto/1970-1979/D84067.htm', type: 'primaire', annee: 1979, langue: 'pt' },
+      { auteur: 'Presidência da República (Brésil)', titre: 'Lei nº 8.248 de 23 de outubro de 1991', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8248.htm', type: 'primaire', annee: 1991, langue: 'pt' },
+      { auteur: 'PKU News', titre: 'Wang Xuan: Exploring the way of independent innovation', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'Wangxuan Institute of Computer Technology (PKU)', titre: 'History', url: 'https://www.icst.pku.edu.cn/english/about_us/history/index.htm', type: 'site', langue: 'en' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestone: The Pioneering TRON Intelligent House, 1989', url: 'https://ethw.org/Milestones:The_Pioneering_TRON_Intelligent_House,_1989', type: 'site', langue: 'en' },
+      { auteur: 'C. A. Hills (USTR)', titre: 'The Application of the Super 301 Provisions to Japan', url: 'https://worldjpn.net/documents/texts/JPUS/19890525.S1E.html', type: 'primaire', annee: 1989, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

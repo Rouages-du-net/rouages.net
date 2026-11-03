@@ -80,7 +80,7 @@ const couleur = Object.fromEntries(Object.keys(THEMES).map((k, i) => [k, i % 5])
 
 <style>
   .filtres { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 1rem; display: grid; gap: 0.5rem; }
-  .filtres[hidden] { display: none; }
+  .filtres[hidden], .evenements > li[hidden] { display: none; }
   .filtres fieldset { border: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; font-size: 0.95rem; }
   .filtres legend { font-weight: 700; margin-bottom: 0.25rem; width: 100%; }
   .filtres input { accent-color: var(--accent); }

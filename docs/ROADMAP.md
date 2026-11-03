@@ -48,7 +48,8 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] Composant de frise filtrable (région, thème, pionnières) — `src/components/FriseHistoire.astro`, générique (types dans `src/lib/frise.ts`, données de chaque histoire dans `src/data/`)
 - [x] Internet *(`/modules/histoire-internet/`, relecture humaine à faire)*
-- [ ] Informatique · IA
+- [x] Informatique *(`/modules/histoire-informatique/`, relecture humaine à faire)*
+- [ ] IA (réutiliser `FriseHistoire`)
 
 ## Phase 5 — L'IA
 

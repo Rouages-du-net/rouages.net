@@ -123,7 +123,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'Son histoire est belle, et longtemps oubliée : une star de cinéma inventrice. Reconnaître son brevet est juste ; en faire la mère du Wi-Fi efface les autres pionnier·es.',
-    aVenir: 'Histoire de l’informatique',
+    module: { titre: 'Histoire de l’informatique', lien: '/modules/histoire-informatique/#frise' },
     dossier: 'informatique.md',
     verifie: '2026-11-01',
     sources: [
@@ -149,7 +149,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'L’histoire est drôle et facile à raconter, et Grace Hopper la racontait elle-même. Mais lue de près, la note prouve que le mot était déjà courant chez les ingénieur·es.',
-    aVenir: 'Histoire de l’informatique',
+    module: { titre: 'Histoire de l’informatique', lien: '/modules/histoire-informatique/#programmer' },
     dossier: 'informatique.md',
     verifie: '2026-11-01',
     sources: [
