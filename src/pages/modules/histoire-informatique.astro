@@ -29,8 +29,8 @@ const etapes = [
   <MiseAJour date="2026-11-03" />
   <p class="chapo seulement-debut">
     L'informatique n'est pas née d'un génie isolé dans un garage. Elle vient d'idées indiennes et
-    arabes, du travail de milliers de calculatrices, de machines construites à Moscou, Bombay ou
-    Buenos Aires, et de choix politiques. Parcours la frise, filtre-la, puis découvre les personnes
+    arabes, du travail de milliers de calculatrices, de machines construites à Berlin, Moscou, Bombay ou
+    Buenos Aires, d'écoles d'informatique à Ibadan ou Dakar, et de choix politiques. Parcours la frise, filtre-la, puis découvre les personnes
     qu'on oublie souvent.
   </p>
 
@@ -46,12 +46,13 @@ const etapes = [
   <Etape numero={0} titre="Deux mille ans de calcul" ancre="frise">
     <FriseHistoire slot="animation" donnees={FRISE_INFORMATIQUE} id="informatique" />
     <p slot="decouverte">
-      Une trentaine de dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
+      Près de cinquante dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
       région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
     </p>
     <p slot="curieux">
       Les récits les plus connus racontent une suite d'hommes américains et britanniques. La frise
-      montre aussi l'Inde, Bagdad, l'URSS, l'Argentine, le Chili, le Brésil, la Chine et le Japon, et
+      montre aussi l'Inde, Bagdad, l'URSS, l'Argentine, le Chili, le Brésil, le Nigeria, le Sénégal,
+      l'Afrique du Sud, l'Australie, la Chine et le Japon, et
       les femmes qui ont calculé, programmé et assemblé les puces.
     </p>
   </Etape>
@@ -83,6 +84,14 @@ const etapes = [
         de 0,25 à 0,50 dollar de l'heure et dirige l'équipe dès 1886. Greenwich recrute ses
         « Lady Computers » en 1890, et le laboratoire Langley de la NACA (future NASA) forme son premier
         groupe de calculatrices en 1935.
+      </p>
+      <p>
+        Ailleurs aussi. Pour la Carte du Ciel, lancée en 1887 par 18 observatoires, des équipes de femmes
+        mesurent au microscope la position des étoiles : à Paris, Dorothea Klumpke dirige le Bureau des
+        mesures de 1892 à 1901. À Melbourne, six mesureuses sont payées 40 livres par an en 1898 et doivent
+        démissionner en se mariant. À Calcutta, l'Indian Statistical Institute de P. C. Mahalanobis
+        emploie en 1941 jusqu'à 90 calculateurs humains, des hommes semble-t-il, pour ses enquêtes par
+        sondage.
       </p>
     </div>
     <p slot="ingenieur">
@@ -122,6 +131,14 @@ const etapes = [
         1944. Pour pouvoir l'augmenter, on la classe « linguiste » : « Grade: Linguist, Languages: none! »
       </p>
       <p>
+        Les premières machines naissent en même temps, en secret ou presque. À Berlin, le 12 mai 1941,
+        Konrad Zuse montre son Z3, une machine à relais qui suit un programme lu sur un film perforé. En
+        1942, dans l'Iowa, John Atanasoff et Clifford Berry achèvent un calculateur électronique qui résout
+        des équations, sans être programmable. À Bletchley Park, le Colossus de l'ingénieur Tommy Flowers
+        déchiffre dès 1944 les messages du haut commandement allemand ; 272 femmes du service féminin de la
+        Royal Navy le font tourner jour et nuit.
+      </p>
+      <p>
         Aux États-Unis, six calculatrices de l'armée apprennent à programmer l'ENIAC à partir de ses
         schémas : Kay McNulty, Jean Jennings Bartik, Betty Snyder Holberton, Marlyn Wescoff, Fran Bilas et
         Ruth Lichterman. Lors de la présentation publique de 1946, personne ne les mentionne.
@@ -132,6 +149,12 @@ const etapes = [
         premier ordinateur conçu et construit en Inde, baptisé TIFRAC en 1962. À Buenos Aires,
         l'université inaugure en 1961 Clementina, son premier ordinateur scientifique ; Cecilia
         Berdichevsky en est la première programmeuse.
+      </p>
+      <p>
+        En Afrique, les premiers ordinateurs sont importés : dès 1957, l'administration de la province du
+        Cap calcule sur un BTM 1201 la paie de 25 000 enseignant·es. En 1964, IBM ouvre à l'université
+        d'Ibadan, au Nigeria, un centre où des étudiant·es de plusieurs pays apprennent à programmer ; en
+        1989, Adenike Osofisan y devient la première Nigériane docteure en informatique.
       </p>
     </div>
     <p slot="ingenieur">
@@ -154,12 +177,22 @@ const etapes = [
         démissionnent, dont presque toute l'équipe de Clementina.
       </p>
     </div>
-    <p slot="mythes">
+    <div slot="mythes">
+      <p>
+        <strong>« L'ENIAC est le premier ordinateur. »</strong> Tout dépend du critère : le Z3 est
+        programmable mais pas électronique, l'ABC électronique mais pas programmable, Colossus électronique
+        mais spécialisé et resté secret jusqu'aux années 1970. En 1973, un tribunal américain a même annulé
+        le brevet de l'ENIAC, estimant qu'il reprenait des idées d'Atanasoff : un jugement de brevet, pas
+        un verdict d'historien·nes.
+      </p>
+      <p>
       <strong>« Turing a cassé Enigma, seul. »</strong> Les Polonais l'avaient cassé avant la guerre, et
       Bletchley Park était un travail collectif. « Père de l'informatique » est aussi un raccourci :
       Alonzo Church a publié un résultat équivalent la même année. Et TIFRAC n'est pas le premier
       ordinateur <em>en</em> Inde : l'institut de statistique de Calcutta en avait importé un dès 1955.
-    </p>
+      Colossus, lui, n'a pas été conçu par Turing mais par Tommy Flowers.
+      </p>
+    </div>
   </Etape>
 
   <!-- Étape 3 -->
@@ -239,7 +272,8 @@ const etapes = [
       </p>
       <p>
         Les puces sont assemblées par des ouvrières : à Hong Kong dès 1963 (environ 1 dollar par jour en
-        1965), dans une usine Fairchild en territoire navajo de 1965 à 1975, à Penang (Malaisie) chez Intel
+        1965), dans l'usine Fairchild de Shiprock, en territoire navajo, de 1965 à 1975 (plus d'un millier
+        de personnes, surtout des femmes navajo), à Penang (Malaisie) chez Intel
         à partir de 1972, dans les <em>maquiladoras</em> du nord du Mexique.
       </p>
     </div>
@@ -254,6 +288,12 @@ const etapes = [
         Lisa Nakamura a montré comment Fairchild présentait les ouvrières navajo comme naturellement
         douées pour ce travail, un discours qui servait surtout à payer peu. Ces récits sont ceux des
         patrons, pas une explication.
+      </p>
+      <p>
+        En février 1975, après plus de cent licenciements, des militant·es de l'American Indian Movement
+        occupent l'usine de Shiprock pendant une semaine. Fairchild la ferme peu après. Pour beaucoup
+        d'habitant·es, l'occupation a coûté les emplois ; d'autres y voient le prétexte d'une entreprise
+        qui partait déjà vers l'Asie. Les deux lectures coexistent encore.
       </p>
     </div>
     <p slot="mythes">
@@ -287,11 +327,21 @@ const etapes = [
         Au Japon, Ken Sakamura lance en 1984 TRON, dont la version embarquée équipe l'électroménager et
         les voitures.
       </p>
+      <p>
+        L'ordinateur sert aussi à trier les personnes. En Afrique du Sud, à partir de 1966, le régime
+        d'apartheid met sur bande magnétique le registre de population des Noir·es, puis confie à IBM vers
+        1970 le « Book of Life » des autres catégories raciales ; des actionnaires d'IBM réclament à partir
+        de 1972 le retrait du pays. À l'inverse, à Dakar, en 1982, une équipe sénégalaise dirigée par une
+        informaticienne du ministère de la Recherche adapte en wolof le langage éducatif LOGO, pour que
+        l'informatique parle la langue des enfants.
+      </p>
     </div>
     <p slot="ingenieur">
       Une police chinoise compte des milliers de caractères. Pour la faire tenir dans des ordinateurs à
       très petite mémoire, Wang Xuan décrit les traits réguliers par quelques paramètres et les autres
-      par leurs contours, au lieu de stocker chaque caractère point par point.
+      par leurs contours, au lieu de stocker chaque caractère point par point. Son brevet européen de
+      1982 explique pourquoi les photocomposeuses occidentales de l'époque (Hell, Monotype), qui
+      stockaient des images, ne suffisaient pas ; Chen Kunqiu en a écrit le logiciel.
     </p>
     <div slot="histoire">
       <p>
@@ -316,7 +366,7 @@ const etapes = [
     <ol class="questions">
       <li><strong>Personne n'a inventé l'informatique seul.</strong> Elle vient d'idées venues d'Inde, de Bagdad, d'Europe et d'ailleurs.</li>
       <li><strong>Le calcul a d'abord été un métier</strong>, souvent confié à des femmes moins payées, avant d'être celui des machines.</li>
-      <li><strong>Des machines partout</strong> : Moscou, Bombay et Buenos Aires ont construit les leurs dès les années 1950-1960.</li>
+      <li><strong>Pas de « premier ordinateur »</strong> sans critère : Berlin, Bletchley Park, l'Iowa, Philadelphie, puis Moscou, Bombay et Buenos Aires ont construit les leurs.</li>
       <li><strong>Programmer est un travail collectif</strong>, longtemps porté par des femmes que les récits ont oubliées.</li>
       <li><strong>La technique est aussi politique</strong> : planifier, protéger une industrie, écrire sa langue, décider qui fabrique les puces.</li>
     </ol>
@@ -386,6 +436,30 @@ const etapes = [
       { auteur: 'D. Zaparolli (Pesquisa FAPESP)', titre: 'The legacy of the ugly duckling', url: 'https://revistapesquisa.fapesp.br/en/the-legacy-of-the-ugly-duckling/', type: 'presse', annee: 2022, langue: 'en' },
       { auteur: 'Presidência da República (Brésil)', titre: 'Decreto nº 84.067 de 2 de outubro de 1979', url: 'https://www.planalto.gov.br/ccivil_03/decreto/1970-1979/D84067.htm', type: 'primaire', annee: 1979, langue: 'pt' },
       { auteur: 'Presidência da República (Brésil)', titre: 'Lei nº 8.248 de 23 de outubro de 1991', url: 'https://www.planalto.gov.br/ccivil_03/leis/l8248.htm', type: 'primaire', annee: 1991, langue: 'pt' },
+      { auteur: 'Observatoire de Paris-PSL', titre: 'Trois siècles de femmes astronomes : Dorothéa Klumpke', url: 'https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4860.html', type: 'site', annee: 2023 },
+      { auteur: 'Observatoire de Paris-PSL', titre: 'Trois siècles de femmes astronomes : Jeanne Clavier', url: 'https://observatoiredeparis.psl.eu/trois-siecles-de-femmes-4867.html', type: 'site', annee: 2023 },
+      { auteur: 'IMCCE', titre: 'Un ciel sur mesure : des mesures et démesure de la « Carte du ciel » (lettre n° 93)', url: 'https://www.imcce.fr/newsletter/docs/Article_IMCCE_2013_LI93_1.pdf', type: 'site', annee: 2013 },
+      { auteur: 'T. Stevenson', titre: 'Making Visible the First Women in Astronomy in Australia (PASA 31)', url: 'https://www.cambridge.org/core/journals/publications-of-the-astronomical-society-of-australia/article/making-visible-the-first-women-in-astronomy-in-australia-the-measurers-and-computers-employed-for-the-astrographic-catalogue/AD35E9CECEBC784E926D7B8F35E3D4E0', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'S. Mertia', titre: 'Did Mahalanobis Dream of Androids? (Lives of Data, Institute of Network Cultures)', url: 'https://networkcultures.org/wp-content/uploads/2020/12/LivesofData.pdf', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'DPMA', titre: 'Konrad Zuse (Meilensteine / Computer-Pioniere)', url: 'https://dpma.de/dpma/veroeffentlichungen/meilensteine/computer-pioniere/zuse/index.html', type: 'site', langue: 'de' },
+      { auteur: 'R. Rojas', titre: '12. Mai 1941: Konrad Zuse stellt den ersten Computer vor (Konrad-Adenauer-Stiftung)', url: 'https://www.kas.de/de/web/geschichtsbewusst/essay/-/content/12-mai-1941-konrad-zuse-stellt-den-ersten-computer-vor', type: 'recherche', annee: 2021, langue: 'de' },
+      { auteur: 'IEEE Computer Society', titre: 'Konrad Zuse', url: 'https://computer.org/profiles/konrad-zuse', type: 'site', langue: 'en' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestone: The Colossus Computers, 1944-1945', url: 'https://ethw.org/Milestones:The_Colossus_Computers,_1944-1945', type: 'site', langue: 'en' },
+      { auteur: 'A. Marsh (IEEE Spectrum)', titre: 'The Hidden Figures Behind Bletchley Park’s Code-Breaking Colossus', url: 'https://spectrum.ieee.org/the-hidden-figures-behind-bletchley-parks-codebreaking-colossus-2650279485', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'The National Museum of Computing', titre: 'From encrypt to decrypt – the full Lorenz story', url: 'https://www.tnmoc.org/news-releases/2016/4/7from-encrypt-to-decrypt-the-full-lorenz-story', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'The Atanasoff-Berry Computer In Operation', url: 'https://www.computerhistory.org/collections/catalog/102781093', type: 'site', langue: 'en' },
+      { auteur: 'University of Pennsylvania Archives', titre: 'ENIAC Trial Exhibits Master Collection (UPD 8.12)', url: 'https://archives.upenn.edu/collections/finding-aid/upd8_12', type: 'primaire', langue: 'en' },
+      { auteur: 'IEEE Computer Society', titre: 'Earl R. Larson', url: 'https://history.computer.org/larson.html', type: 'site', langue: 'en' },
+      { auteur: 'Computer Conservation Society', titre: 'Delivery lists of the BTM HEC computers and the BTM / ICT 1200 series', url: 'https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf', type: 'recherche', annee: 2011, langue: 'en' },
+      { auteur: 'P. N. Edwards, G. Hecht', titre: 'History and the Technopolitics of Identity: The Case of Apartheid South Africa (JSAS 36-3)', url: 'https://mail.pne.people.si.umich.edu/PDF/EdwardsHechtJSAS2010.pdf', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'A. K. Osterlow (Cnam, séminaire So.Hist-Info)', titre: 'Training “The African vanguard of the computer age”: Senegal and Nigeria', url: 'https://technique-societe.cnam.fr/anna-katharina-osterlow-training-the-african-vanguard-of-the-computer-age-early-computing-and-visions-of-modernity-and-independence-in-senegal-and-nigeria-1960-1990-1605532.kjsp', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'A. Osterlow (The Digital Orientalist)', titre: 'African Tech Inventions, Inclusive AI and Digital Innovation: A Historical Perspective', url: 'https://digitalorientalist.com/2024/10/15/african-tech-inventions-inclusive-ai-and-digital-innovation-a-historical-perspective/', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'Footage Farm', titre: '1964 – Africa, Nigeria: Focus On Progress – I.B.M. Center (fiche du film)', url: 'https://footagefarm.com/reel-details/africa/generic/1964---africa-nigeria--focus-on-progress---ibm-center', type: 'primaire', annee: 1964, langue: 'en' },
+      { auteur: 'Université d’Ibadan', titre: 'Professor Adenike Osofisan Inducted Into the Nigeria Women Hall of Fame', url: 'https://ui.edu.ng/node/4153', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'L. Nakamura (Computer History Museum)', titre: 'Indigenous Circuits', url: 'https://computerhistory.org/blog/indigenous-circuits/', type: 'recherche', annee: 2014, langue: 'en' },
+      { auteur: 'B. Donovan (Navajo Times)', titre: '50 Years Ago: The highs and lows of the Fairchild operation in Shiprock', url: 'https://navajotimes.com/50years/50-years-ago-highs-lows-fairchild-operation-shiprock/', type: 'presse', annee: 2016, langue: 'en' },
+      { auteur: 'American Archive of Public Broadcasting', titre: 'AIM Takeover of Fairchild Camera and Instrument Corporation (KUNM, 1975)', url: 'https://americanarchive.org/primary_source_sets/american-indian-movement/8-207-483j9qpk', type: 'primaire', annee: 1975, langue: 'en' },
+      { auteur: 'Wang Xuan', titre: 'Brevet EP 0 095 536, The representation of character images in a compact form for computer storage', url: 'https://patents.google.com/patent/EP0095536A1/en', type: 'primaire', annee: 1982, langue: 'en' },
       { auteur: 'PKU News', titre: 'Wang Xuan: Exploring the way of independent innovation', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html', type: 'site', annee: 2019, langue: 'en' },
       { auteur: 'Wangxuan Institute of Computer Technology (PKU)', titre: 'History', url: 'https://www.icst.pku.edu.cn/english/about_us/history/index.htm', type: 'site', langue: 'en' },
       { auteur: 'IEEE / ETHW', titre: 'Milestone: The Pioneering TRON Intelligent House, 1989', url: 'https://ethw.org/Milestones:The_Pioneering_TRON_Intelligent_House,_1989', type: 'site', langue: 'en' },
