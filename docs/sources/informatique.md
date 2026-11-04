@@ -1956,3 +1956,534 @@ Le texte est **juste**. Précisions possibles :
 - « Asie du Sud-Est » : un témoignage d'ancien de Fairchild (CHM) + Nakamura (« Asie ») ; **pas de « Corée »**.
 - Ne pas donner de salaire horaire (aucune source primaire trouvée).
 - Sources à ajouter : communiqué BIA 1966, Cassidy 2000, *Treaty Council News* 1977 (attribué), KUNM 1975, oral history CHM 2007, Nakamura 2014 (PDF de l'autrice).
+
+---
+
+## Complément 5 (4 novembre 2026) — Moyen-Orient : automates et calcul médiévaux, premiers ordinateurs
+
+Module « Histoire de l'informatique », rouages.net. Recherche faite le 4 novembre 2026.
+
+Légende des statuts :
+- **[lu]** : page ou document ouvert et lu ;
+- **[méta]** : notice bibliographique seulement (Crossref, catalogue, Internet Archive) ;
+- **[extrait]** : vu seulement dans un résultat de moteur de recherche (texte non ouvert).
+
+Aucune donnée personnelle dans les requêtes. User-Agent utilisé pour curl :
+`RouagesDuNet-research/0.1 (https://rouages.net)`.
+
+---
+
+### Sujet 1 : calcul et automates dans le monde islamique médiéval (après al-Khwârizmî)
+
+#### 1.1 Les Banū Mūsā (Bagdad, IXe siècle)
+
+**Faits clés datés**
+
+- Trois frères, Muḥammad, Aḥmad et al-Ḥasan, fils de Mūsā ibn Shākir, nés à Bagdad au début du IXe siècle ; Muḥammad meurt en janvier ou février 873. Pupilles du calife al-Maʾmūn (règne 813-833), formés à la Maison de la sagesse (Bayt al-ḥikma). Mécènes de traductions (Thābit ibn Qurra, Ḥunayn ibn Isḥāq), auteurs d'une vingtaine d'ouvrages d'astronomie, de mécanique et de mathématiques. (Casulleras, BEA [lu] ; MacTutor [lu])
+- **Kitāb al-ḥiyal** (« Livre des procédés ingénieux ») : environ **100 dispositifs** (surtout vases et fontaines « à surprises », pneumatiques et hydrauliques), IXe siècle ; dans la lignée de Philon de Byzance et Héron d'Alexandrie, qu'ils dépassent selon les historien·nes. Édition arabe : A. Y. al-Hassan, Alep, 1981 ; traduction anglaise : **Donald R. Hill, *The Book of Ingenious Devices*, Dordrecht, Reidel, 1979**. (Casulleras, BEA [lu] ; Canavas 2017 [lu])
+- Manuscrits du Kitāb al-ḥiyal : Vatican (Vat. ar. 317), Topkapı (Ahmet III 3474), Le Caire (Dār al-kutub), Gotha, Berlin. (ISMI / portail de Leipzig [extrait]) Al-Jazarī connaît le livre et critique plusieurs de ses dispositifs comme irréalisables. (Canavas 2017 [lu])
+- **Traité distinct** : *al-Āla allatī tuzammir bi-nafsihā* (« L'instrument qui joue de lui-même »), vers 850 : orgue/flûte hydraulique dont la mélodie est codée par des **chevilles (ou rainures) sur un cylindre tournant** qui actionnent des leviers ouvrant ou fermant les trous. Le texte annonce que l'on peut changer de mélodie en changeant le cylindre. Reconstruction en 2015 par Liang Zhipeng (Université des arts de Berlin) pour l'exposition *Allah's Automata* du ZKM (Karlsruhe). (ZKM [lu] ; Hyperallergic [lu])
+- **Le mot « programmable »** : Teun Koetsier (historien des mécanismes) ouvre sa « préhistoire des machines programmables » par cet instrument des Banū Mūsā (Koetsier 2001 [méta] ; contenu connu seulement par des résumés secondaires [extrait]). C'est la base savante sérieuse de l'expression « première machine programmable ».
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | Josep Casulleras, « Banū Mūsā », *Biographical Encyclopedia of Astronomers*, Springer, 2007 (PDF hébergé par MacTutor) — https://mathshistory.st-andrews.ac.uk/BEA/banu_musa_bea.pdf | notice d'historien | en | [lu] |
+| 2 | Teun Koetsier, « On the prehistory of programmable machines: musical automata, looms, calculators », *Mechanism and Machine Theory* 36(5), 2001, p. 589-603, DOI 10.1016/S0094-114X(01)00005-2 — https://www.sciencedirect.com/science/article/pii/S0094114X01000052 | article savant | en | [méta] (Crossref ; page éditeur en 403) |
+| 3 | ZKM Karlsruhe, « Automatische hydraulische Orgel der Banū Mūsā ibn Shākir » (reconstruction 2015) — https://zkm.de/en/node/62659 | musée / exposition | en/de | [lu] |
+| 4 | J. J. O'Connor et E. F. Robertson, « Banu Musa brothers », MacTutor, 1999 — https://mathshistory.st-andrews.ac.uk/Biographies/Banu_Musa/ | université | en | [lu] (ne parle pas des automates) |
+| 5 | Allison Meier, « The 9th-Century Islamic "Instrument Which Plays by Itself" », *Hyperallergic*, 12 avril 2016 — https://hyperallergic.com/the-9th-century-islamic-instrument-which-plays-by-itself | presse culturelle (cite Mona Sanjakdar Chaarani, Siegfried Zielinski) | en | [lu] |
+
+**Points d'attention**
+
+- Ne pas confondre le *Kitāb al-ḥiyal* (100 dispositifs, surtout des vases à effets) et le petit traité sur **l'instrument qui joue tout seul** : c'est ce dernier qui contient le cylindre à chevilles. Beaucoup de sites les mélangent.
+- « Première machine programmable » : formulation à éviter telle quelle. Écrire plutôt « l'un des plus anciens exemples connus d'une machine dont la séquence est stockée sur un support interchangeable (un cylindre à chevilles) ». Un cylindre à chevilles code une **séquence fixe** : pas de calcul, pas de branchement, pas de mémoire modifiable — rien à voir avec un ordinateur. Le roboticien Noel Sharkey propose d'ailleurs un candidat plus ancien : le théâtre mobile d'**Héron d'Alexandrie** (vers 60 apr. J.-C.), dont la séquence est fixée par une corde enroulée sur un tambour (TechRadar 2018 [lu], voir 1.2). Le titre de « premier » est donc disputé même parmi les tenant·es de l'étiquette « programmable ».
+- État du manuscrit de l'« instrument qui joue de lui-même » : Hyperallergic affirme que le manuscrit et le schéma original sont « perdus » et connus par des photographies anciennes ; je n'ai pas pu vérifier. Piste : une édition arabe par Louis Cheikho dans la revue *al-Machriq* (Beyrouth, 1906) et l'étude de H. G. Farmer, *The Organ of the Ancients from Eastern Sources* (Londres, 1931) [méta, notice Internet Archive : identifiant `in.ernet.dli.2015.167795` — copie de la Digital Library of India dont le statut de droits est incertain, non utilisée]. **Non vérifié : à confirmer avant publication.**
+- Le reconstitueur du ZKM a ajouté un « enregistreur » (programmeur) qui grave les doigtés d'un·e musicien·ne sur le cylindre : c'est une **interprétation moderne** ; dire « reconstitution » et non « réplique ».
+- Hyperallergic date le *Livre des procédés ingénieux* de 830 dans une légende, MacTutor/historyofinformation disent « vers 850 » : rester sur « IXe siècle » ou « vers 850 ».
+
+#### 1.2 Al-Jazarī (Diyarbakır, 1206)
+
+**Faits clés datés**
+
+- Badīʿ al-Zamān Abū al-ʿIzz ibn Ismāʿīl ibn al-Razzāz al-Jazarī achève en **602 H / 1206** à Diyarbakır (Āmid, sud-est de l'Anatolie) son *Kitāb fī maʿrifat al-ḥiyal al-handasiyya* (« Livre de la connaissance des procédés mécaniques ingénieux »), à la demande du prince artuqide **Nāṣir al-Dīn Maḥmūd**, qui voulait garder une trace écrite de machines « merveilleuses mais fragiles ». Il dit avoir servi les Artuqides environ 25 ans. (Canavas 2017 [lu])
+- **50 dispositifs** en six catégories : I horloges à eau et à bougie (10), II vases à boire (10), III appareils pour se laver les mains (10), IV fontaines et automates musicaux (10), V machines élévatrices d'eau (5), VI divers (5). Chaque chapitre : vue d'ensemble, fonctionnement, pièces, conseils pratiques et causes de panne. (Canavas 2017 [lu] ; Met Museum [lu] : « fifty mechanical devices »)
+- **Horloge « château »** (catégorie I, chapitre 1) : horloge à eau marquant 12 heures de jour et 12 de nuit, avec des faucons qui lâchent des billes et cinq musiciens (deux tambours, deux trompettes, une cymbale) qui jouent à la 6e, 9e et 12e heure. (Canavas 2017 [lu]) Un régulateur de débit à douze divisions inégales permet d'ajuster la longueur des heures selon la saison (heures « temporaires ») ; un serviteur doit remettre l'horloge en place chaque jour. (Al-Hassani 2008 [lu])
+- **Bateau aux musiciens** (catégorie IV) : c'est là, et non dans l'horloge château, que se trouve l'arbre à **chevilles** qui fait battre les tambours. Noel Sharkey (Université de Sheffield) en a construit une maquette : la position des chevilles fixe le rythme ; percer des trous tout autour de l'arbre permettrait de les déplacer. (TechRadar 2018 [lu])
+- Manuscrits : D. R. Hill en recensait 11 en 1974 et 14 en 1981 ; un manuscrit de Paris (**BnF Arabe 5101**) n'est pas illustré, mais la place des figures y est réservée. (Canavas 2017 [lu]) Copie de **Topkapı, Ahmet III 3472** publiée en fac-similé par le ministère turc de la Culture en 1990 (CiNii [extrait] ; DergiPark [extrait]). Copie de **1315** (715 H) par **Farrukh ibn ʿAbd al-Laṭīf**, « probablement Syrie ou Iraq », folios dispersés au Metropolitan Museum (Met, API de collection [lu]). Copie de **1354** faite probablement au Caire par Muḥammad ibn Aḥmad al-Izmirī (MFA Boston [extrait]).
+- Traduction anglaise de référence : **Donald R. Hill, *The Book of Knowledge of Ingenious Mechanical Devices*, Dordrecht, Reidel, 1974** (Springer, DOI 10.1007/978-94-010-2573-7, daté 1973 chez Crossref) [méta].
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | Constantin Canavas, « Al-Jazarī's *Compendium of Ingenious Devices*: a model of representing and communicating technical knowledge in a medieval Islamicate context », in *Le livre technique avant le XXe siècle*, CNRS Éditions, 2017, p. 71-82 — https://books.openedition.org/editionscnrs/27688 | historien des sciences, accès ouvert | en (livre fr) | [lu] |
+| 2 | Metropolitan Museum of Art, « "The Elephant Clock", Folio from a Book of the Knowledge of Ingenious Mechanical Devices by al-Jazari », 57.51.23, daté 715 H / 1315 — https://www.metmuseum.org/art/collection/search/451402 (lu via l'API ouverte : https://collectionapi.metmuseum.org/public/collection/v1/objects/451402) | musée | en | [lu] (API) ; page web en 429 |
+| 3 | D. R. Hill (trad.), *The Book of Knowledge of Ingenious Mechanical Devices*, Reidel, 1974 — https://doi.org/10.1007/978-94-010-2573-7 | traduction savante | en | [méta] |
+| 4 | Olivia Tambini, « The forgotten history of the 800-year-old robot », *TechRadar*, 11 septembre 2018 (entretien avec Noel Sharkey) — https://www.techradar.com/news/the-forgotten-history-of-the-800-year-old-robot | presse (avec un roboticien) | en | [lu] |
+| 5 | Salim T. S. Al-Hassani, « Al-Jazari's Castle Water Clock: Analysis of its Components and Functioning », Muslim Heritage (FSTC), 13 mars 2008 — https://muslimheritage.com/al-jazaris-castle-water-clock/ | ingénieur, fondation de vulgarisation | en | [lu] |
+
+**Points d'attention : démonter les exagérations**
+
+- **« Premier robot programmable » (al-Jazarī)** : l'expression vient de Noel Sharkey, qui l'a proposée **en réponse** à une affirmation semblable de Mark Rosheim sur Léonard de Vinci. Sharkey lui-même nuance : (1) le candidat le plus ancien serait plutôt l'automate mobile d'Héron d'Alexandrie (vers 60 apr. J.-C.) ; (2) il ne pense pas qu'al-Jazarī mérite le titre de « père de la robotique » ; (3) al-Jazarī s'inscrit dans une tradition (Philon, Héron, Banū Mūsā). (TechRadar [lu]) Le texte d'al-Jazarī ne dit pas qu'on réarrangeait les chevilles : c'est une **lecture moderne** possible, pas un fait attesté.
+- **« Premier ordinateur analogique programmable » (horloge château)** : formule répandue en ligne (Wikipédia anglophone, documentaire télévisé), **introuvable chez les historien·nes consulté·es**. Canavas ne parle ni de programme ni de cylindre ; Al-Hassani non plus. L'horloge château est un **automate horaire réglable** (débit ajusté à la saison), pas une machine à calculer. Ne pas reprendre la formule ; si on la mentionne, c'est pour la démonter.
+- Erreurs fréquentes dans la presse : TechRadar écrit « 100 dispositifs » pour al-Jazarī (c'est 50 ; les 100 sont ceux des Banū Mūsā) et « né en 1136 » (date non attestée par les sources savantes consultées : Canavas dit qu'on sait très peu de choses de sa vie). TechRadar attribue aussi l'existence de l'« âge d'or islamique » face à un Occident « dans l'âge sombre » : cliché à éviter.
+- Muslim Heritage (FSTC, Al-Hassani) est une source utile pour la mécanique mais de tonalité apologétique (projet « 1001 Inventions ») : ne pas l'utiliser seule pour une affirmation de priorité.
+- Le manuscrit Topkapı 3472 est souvent présenté comme « la copie de 1206 » ; je n'ai pas trouvé de source qui date la **copie** elle-même (1204/1206 est la date de composition). **Non vérifié.**
+- Langage : écrire « automates » et « séquences mécaniques », éviter « robots » et « ordinateurs » sans guillemets.
+
+#### 1.3 Al-Kāshī (Kāshān puis Samarcande, XVe siècle)
+
+**Faits clés datés**
+
+- Ghiyāth al-Dīn Jamshīd ibn Masʿūd al-Kāshī, né à Kāshān (Iran) vers 1380, mort à Samarcande, peut-être le **22 juin 1429**. (MacTutor [lu] ; Schmidl, BEA [lu])
+- Arrive vers 1420 à Samarcande auprès d'**Ulugh Beg**, aide à construire et équiper l'observatoire (construction commencée en 1424), collaborateur principal ; lettres à son père (vers 1423) décrivant la vie savante de Samarcande. (Schmidl [lu] ; MacTutor [lu])
+- **Juillet 1424** : *Traité sur la circonférence* (*al-Risāla al-muḥīṭiyya*) : calcule **2π à 9 places sexagésimales**, converties en **16 décimales** exactes ; aussi sin 1° à 18 décimales (Schmidl). (MacTutor [lu] ; Schmidl [lu])
+- **2 mars 1427** : *La Clé de l'arithmétique* (*Miftāḥ al-ḥisāb*), manuel pour astronomes, arpenteurs, architectes et marchand·es ; exposé systématique des **fractions décimales** à côté des sexagésimales. (MacTutor [lu])
+- **Instruments de calcul** : dans *Nuzhat al-ḥadāʾiq* (1re version achevée à Kāshān le **10 février 1416**, révisée à Samarcande en juin 1426), il décrit la « **plaque des cieux** », un **équatoire planétaire** (instrument qui remplace un calcul de position des planètes par une construction géométrique), et la « **plaque des conjonctions** », un outil d'interpolation linéaire pour trouver l'heure d'une conjonction. Étude de référence : E. S. Kennedy, *The Planetary Equatorium of Jamshīd Ghiyāth al-Dīn al-Kāshī*, Princeton University Press, 1960. (Schmidl [lu] ; Wellcome Collection [extrait])
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | J. J. O'Connor et E. F. Robertson, « Ghiyath al-Din Jamshid Mas'ud al-Kashi », MacTutor, 1999 — https://mathshistory.st-andrews.ac.uk/Biographies/Al-Kashi/ | université | en | [lu] |
+| 2 | Petra G. Schmidl, « Kāshī », *Biographical Encyclopedia of Astronomers*, Springer, 2007, p. 613-615 (copie hébergée par l'Université McGill) — https://islamsci.mcgill.ca/RASI/BEA/Kashi_BEA.htm | historienne des sciences | en | [lu] |
+| 3 | E. S. Kennedy, *The Planetary Equatorium of Jamshīd Ghiyāth al-Dīn al-Kāshī*, Princeton, 1960 (notice Wellcome) — https://wellcomecollection.org/works/chr9bjnr | monographie savante | en | [extrait] |
+
+**Points d'attention**
+
+- **« Inventeur des fractions décimales »** : faux. MacTutor (s'appuyant sur Luckey 1948 et Rashed) : l'idée apparaît déjà dans l'école d'al-Karajī, surtout chez **al-Samawʾal** (XIIe s.) ; al-Kāshī va « un pas plus loin » (lien entre fractions sexagésimales et décimales, usage pour des nombres comme π). Des fractions décimales existent aussi en Chine bien avant Stevin (1585). Écrire : « il en donne un exposé systématique, 160 ans avant Simon Stevin ».
+- Le record de π tient environ 180 ans (Ludolph van Ceulen, 20 décimales, vers 1596-1600) : chiffre courant, mais vu seulement sur Wikipédia, **à vérifier** dans une source savante avant publication.
+- Les équatoires sont parfois appelés « calculateurs analogiques » : acceptable avec prudence (ce sont des **instruments de calcul graphique**, à manipuler à la main), mais ne pas parler d'« ordinateur ».
+- Date de naissance : « vers 1380 » (MacTutor, dont le titre indique pourtant 1390) ; Schmidl n'en donne pas. Rester sur « vers 1380 ».
+
+---
+
+### Sujet 2 : premiers ordinateurs au Moyen-Orient et en Afrique du Nord (1950-1980)
+
+#### 2.1 Israël : WEIZAC (Institut Weizmann, Rehovot, 1954-1963)
+
+**Faits clés datés**
+
+- Construit en **1954-1955** à l'Institut Weizmann des sciences (Rehovot) sur le modèle de la machine de l'IAS de Princeton (architecture dite de von Neumann). Vision scientifique : **Chaim Pekeris** (mathématiques appliquées) ; direction technique : **Gerald Estrin**. Équipe : **Thelma Estrin** (ingénieure électricienne), Micha Kedem (technicien), Zvi Riesel, Aviezri Fraenkel, Yeshayahu Ziegel ; Ephraim Frei a fait venir Estrin. (IEEE Milestone [lu])
+- Mis en service en **octobre 1955** ; fonctionne jusqu'en 1963 (remplacé par GOLEM). (IEEE Milestone [lu]) Utilisé notamment pour les calculs de Pekeris sur l'état fondamental des atomes à deux électrons (1958). (Koutschan et Zeilberger [lu, résumé arXiv])
+- **5 décembre 2006** : reconnu « IEEE Milestone » (n° 72), plaque dans le hall de l'Institut. (IEEE Milestone [lu])
+- **Thelma Estrin** (New York, 1924 - 2014) : doctorat en génie électrique (Université du Wisconsin, 1951) ; passe quinze mois en Israël avec Gerald Estrin pour WEIZAC (1954-1955) ; fonde ensuite à l'UCLA un laboratoire de traitement de données pour la recherche sur le cerveau (1961), pionnière de l'informatique médicale ; première femme élue à une fonction nationale de l'IEEE (vice-présidente, 1982). (ETHW [lu] ; mémorial de l'Université de Californie [lu])
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | IEEE / ETHW, « Milestones: WEIZAC Computer, 1955 » — https://ethw.org/Milestones:WEIZAC_Computer,_1955 | institution (IEEE) | en | [lu] |
+| 2 | Gerald Estrin, « The WEIZAC Years (1954-1963) », *IEEE Annals of the History of Computing*, 13(4), 1991, DOI 10.1109/MAHC.1991.10037 | témoignage de l'ingénieur en chef, revue savante | en | [méta] |
+| 3 | ETHW, « Thelma Estrin » — https://ethw.org/Thelma_Estrin | institution (IEEE) | en | [lu] |
+| 4 | Université de Californie, In Memoriam « Thelma Estrin » (signé Jens Palsberg) — https://senate.universityofcalifornia.edu/_files/inmemoriam/html/ThelmaEstrin.html | université | en | [lu] |
+| 5 | C. Koutschan et D. Zeilberger, « The 1958 Pekeris-Accad-WEIZAC Ground-Breaking Collaboration… », *Mathematical Intelligencer* 33(2), 2011 — https://arxiv.org/abs/1006.0200 | article | en | [lu] (résumé) |
+
+**Points d'attention**
+
+- « Premier ordinateur du Moyen-Orient » : formulation de l'IEEE et de l'ETHW, plausible et non contestée dans les sources lues. En revanche, le mémorial de l'Université de Californie dit « premier grand ordinateur électronique construit hors des États-Unis et d'Europe de l'Ouest » : **faux** (CSIRAC en Australie en 1949, MESM en URSS en 1950-1951, etc.). Ne pas reprendre.
+- Fin de service : « décembre 1963 » (sources secondaires) contre « début des années 1960 » dans l'IEEE. Écrire « jusqu'en 1963 ».
+- Le comité consultatif Einstein / Oppenheimer / von Neumann n'est attesté que par des articles de presse (Israel21c [extrait]) : **non vérifié**.
+- Sujet politiquement sensible : rester sur les faits techniques et institutionnels, sans formule du type « start-up nation » (titre du blog de la Bibliothèque nationale d'Israël, non lu).
+
+#### 2.2 Turquie : IBM 650 aux Karayolları (Ankara, 1960)
+
+**Faits clés datés**
+
+- Contrat signé avec IBM en **1959** par la Direction générale des routes de l'État (Karayolları Genel Müdürlüğü) ; machine arrivée à Ankara le **30 septembre 1960**, installée dans un service surnommé « IBM Müdürlüğü ». (Kılan, Capital 2002 [lu])
+- Financement : don américain d'environ 200 000 dollars, plus environ 90 000 dollars payés en livres turques à IBM Turquie. Premiers usages : paie, coûts d'entretien des routes, stocks de pièces d'environ 15 000 engins ; calculs de projets de routes et de ponts (pont en trèfle de Balgat présenté comme le premier pont calculé par ordinateur en Turquie). (Günalçın, Capital 2002 [lu] ; Kılan [lu])
+- Équipe de 5 à 6 personnes, surtout diplômées en mathématiques, formées un mois à la programmation par un formateur envoyé par IBM depuis la Suisse. (Günalçın [lu])
+- Ensuite : un ordinateur à l'Université technique d'Istanbul (İTÜ) — 1965-1966 selon Günalçın, 1968 selon Kılan ; modèle souvent cité : IBM 1620 (sites de presse [extrait], non confirmé) ; Turquie : 4 ordinateurs en 1970 (Kılan).
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | « IBM Müdürü'nden Bir Dönemin Öyküsü », entretien avec Kaya Kılan (ancien programmeur aux Karayolları), *Capital*, 2002 — https://www.capital.com.tr/sektorler/teknoloji/ibm-mudurunden-bir-donemin-oykusu | témoignage | tr | [lu] |
+| 2 | « Elektronik Beyin Döneminin Tanığı », entretien avec Güngör Günalçın (Karayolları 1954-1973), *Capital*, 2002 — https://www.capital.com.tr/sektorler/teknoloji/elektronik-beyin-doneminin-tanigi | témoignage | tr | [lu] |
+| 3 | Aydın Köksal, article de 1974 republié par la Chambre des ingénieurs électriciens (EMO) — https://emo.org.tr/ekler/3adaf494dc89ef7_ek.pdf?dergi=113 | historien de l'informatique turque | tr | [extrait] (404 à l'ouverture) |
+
+**Points d'attention**
+
+- Les deux entretiens sont des témoignages d'acteurs, 40 ans après : bonne concordance sur 1959-1960 et l'IBM 650, divergences sur l'İTÜ (1965-1966 ou 1968) et sur la durée de service (12 ou 18 ans selon la presse, non vérifié). Günalçın dit à la fois « 1960 » et « il y a 40 ans » (soit 1962).
+- La machine serait exposée aux installations de formation des Karayolları à Eskişehir (presse [extrait]) : **non vérifié**.
+- Aucune femme nommée dans les sources lues.
+
+#### 2.3 Iran : IBM 1620 de la Compagnie nationale iranienne du pétrole (1962)
+
+**Faits clés datés**
+
+- Premier « vrai » ordinateur en Iran : un **IBM 1620** installé par la **Compagnie nationale iranienne du pétrole** (NIOC) au début de **1341 du calendrier solaire, soit 1962**, pour suivre la production pétrolière. Des machines mécanographiques étaient importées depuis 1954 ; aucun ordinateur de première génération n'est arrivé en Iran. (Encyclopaedia Iranica, « Computers in Persia », Moḥammad-Reżā Moḥammadīfar, 15 déc. 1992 [extrait] ; Heidari et al. 2022 [méta, contenu vu en extrait])
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | Encyclopaedia Iranica, « Computers in Persia » — https://www.iranicaonline.org/?p=7750 | encyclopédie savante | en | [extrait] (403) |
+| 2 | A. Heidari, N. Jafari Navimipour, M. Unal, « The History of Computing in Iran (Persia) — Since the Achaemenid Empire », *Technologies* 10(4), 2022, art. 94, DOI 10.3390/technologies10040094 — https://www.mdpi.com/2227-7080/10/4/94 | article en accès ouvert | en | [méta] (403) |
+
+**Points d'attention**
+
+- Une seule source de qualité (Iranica), vue seulement en extrait : **à ouvrir avant publication**. L'article de 2022 semble reprendre Iranica (pas forcément indépendant).
+- Aucune femme documentée trouvée pour cette période.
+
+#### 2.4 Égypte : IBM 1620 de l'Institut de planification nationale (Le Caire, 1963)
+
+**Faits clés datés**
+
+- L'**Institute of National Planning** (INP, Le Caire) acquiert un **IBM 1620** en **1963**, avec peu de périphériques d'entrée-sortie ; présenté comme le premier ordinateur électronique numérique à programme enregistré introduit en Égypte. Suivent des machines NUR et ICT, puis un **ICT 1905 à l'Université du Caire (1968)**. (Monographie de Farid M. Badran, INP, 1968 [extrait])
+- Les modèles de programmation linéaire pour la planification datent d'avant le premier plan quinquennal (1960-1965), et l'usage du calcul dans la planification remonterait à 1957. (Rapport INP, 1970 [extrait])
+- L'INP publie en 1968 un guide des programmeur·ses et opérateur·rices de l'IBM 1620 (auteur principal : H. Elgohary). (Catalogue INP [extrait])
+
+**Sources**
+
+| # | Source | Type | Langue | Statut |
+|---|---|---|---|---|
+| 1 | INP, dépôt institutionnel, Farid M. Badran, *Digital Computer Systems* (1968) — https://repository.inp.edu.eg/handle/123456789/5854?show=full | archive institutionnelle (primaire) | en/ar | [extrait] (« Request Rejected ») |
+| 2 | INP, *Review on Research Activities Conducted at the Institute of National Planning Cairo with the Help of the Computer IBM 1620/940* (1970) — https://repository.inp.edu.eg/handle/123456789/5940 | archive institutionnelle | en | [extrait] |
+| 3 | Portail « Study in Egypt » (ministère), fiche INP — https://study-in-egypt.gov.eg/categories/All/280/Institute-of-National-Planning-INP | institution | en | [extrait] |
+
+**Points d'attention**
+
+- **Date contestée** : 1963 (archives de l'INP) contre **1960** (portail ministériel « Study in Egypt »). Les documents de l'INP de 1968-1970 sont plus proches des faits : retenir 1963 en signalant l'autre date, après lecture effective des notices.
+- Aucune source n'a été ouverte : rien à publier sur l'Égypte tant que les notices INP ne sont pas lues.
+
+#### 2.5 Algérie et Liban
+
+- **Algérie** : seul fait trouvé : création en **1969** du **Centre d'études et de recherche en informatique (CERI)** à Alger, ancêtre de l'actuelle École nationale supérieure d'informatique (ESI) [extrait, sites de classement universitaire]. Aucune source sur le premier ordinateur installé. **Rien de publiable en l'état.**
+- **Liban** : aucune source trouvée sur le premier ordinateur (pistes : Université américaine de Beyrouth, Université Saint-Joseph, administrations). **Rien de publiable.**
+
+#### 2.6 Femmes documentées
+
+- **Thelma Estrin** (WEIZAC) : seule pionnière solidement sourcée pour la région et la période (voir 2.1). Attention : c'est une ingénieure américaine venue pour 15 mois ; la présenter comme telle.
+- Aucune programmeuse nommée trouvée pour la Turquie, l'Iran ou l'Égypte. Les « premières docteures » trouvées sont bien plus tardives (Fatmah Baothman, Arabie saoudite, doctorat en IA en 2003 ; Mira Shalah, Israël, 2018) et hors période : **non vérifiées**, à traiter éventuellement dans un autre module.
+
+---
+
+### Pour aller plus loin (Wikipédia, labels NON vérifiés : API en 429)
+
+- Wikipédia, « Banou Moussa », « Al-Jazari », « Al-Kashi », « WEIZAC », « Thelma Estrin », « IBM 650 » (titres français supposés, à vérifier).
+- Wikipédia (en), « Program (machine) » — https://en.wikipedia.org/wiki/Program_(machine) [extrait] (cite Koetsier 2001).
+
+---
+
+### Liens bloqués à demander
+
+| URL | Erreur | Ce qu'on espère y trouver |
+|---|---|---|
+| https://www.sciencedirect.com/science/article/pii/S0094114X01000052 | 403 (et payant) | Koetsier 2001 : son jugement exact sur l'instrument des Banū Mūsā (« programmable » ?) et sa chronologie (Banū Mūsā → al-Jazarī → carillons → métiers Jacquard) |
+| https://www.iranicaonline.org/?p=7750 | 403 | Article « Computers in Persia » : IBM 1620 de la NIOC (1962), suivants (1963), universités, éventuelles femmes |
+| https://www.mdpi.com/2227-7080/10/4/94 (et /pdf) | 403 | Heidari et al. 2022 (accès ouvert) : chronologie de l'informatique iranienne 1954-1980 et ses sources |
+| https://repository.inp.edu.eg/handle/123456789/5854?show=full | « Request Rejected » | Notice de la monographie Badran (1968) : IBM 1620 acquis en 1963, « premier ordinateur d'Égypte » |
+| https://repository.inp.edu.eg/handle/123456789/5940 | idem | Rapport INP 1970 : usages de l'IBM 1620/940, débuts en 1957 |
+| https://discovery.inp.edu.eg/Record/14757 | 500 | Guide de programmation IBM 1620 (1968, H. Elgohary) : noms des programmeur·ses, éventuellement des femmes |
+| https://emo.org.tr/ekler/3adaf494dc89ef7_ek.pdf?dergi=113 | 404 | Article d'Aydın Köksal (1974) : histoire de l'arrivée des ordinateurs en Turquie, source indépendante des deux entretiens |
+| https://wis-wander.weizmann.ac.il/node/1983 | 403 | « The Weizac Days » (Institut Weizmann) : chronologie officielle, personnel, éventuelles programmeuses |
+| https://blog.nli.org.il/en/hoi_weizac/ | 403 | Bibliothèque nationale d'Israël : WEIZAC et GOLEM, documents d'archives |
+| https://invention.si.edu/ingenious-devices | 403 | Smithsonian (Lemelson Center) : présentation du *Kitāb al-ḥiyal* |
+| https://www.atlasobscura.com/articles/the-robot-clocks-of-12thcentury-turkey | 403 | Article sur al-Jazarī, citations d'historien·nes |
+| https://www.metmuseum.org/art/collection/search/451402 | 429 | Notice complète (texte du conservateur) du folio de l'horloge éléphant ; données de base déjà lues via l'API |
+| https://fr.wikipedia.org/w/api.php | 429 | Vérification des titres des pages Wikipédia « pour aller plus loin » |
+
+Sources à consulter en bibliothèque (non ouvertes, pas de copie autorisée trouvée) : D. R. Hill, trad. al-Jazarī (1974) — commentaire sur l'horloge château et le bateau aux musiciens ; D. R. Hill, trad. Banū Mūsā (1979) ; H. G. Farmer, *The Organ of the Ancients from Eastern Sources* (1931) — traité de l'instrument qui joue tout seul ; E. S. Kennedy (1960) sur l'équatoire d'al-Kāshī ; G. Estrin, « The WEIZAC Years » (1991).
+
+---
+
+### Propositions d'événements de frise
+
+#### Sujet 1
+
+1. **Année** : vers 850
+   **Titre** : Un instrument qui joue tout seul
+   **Texte** : À Bagdad, les trois frères Banū Mūsā décrivent un orgue hydraulique dont la mélodie est codée par des chevilles sur un cylindre tournant ; changer de cylindre change l'air joué. C'est l'un des plus anciens exemples connus d'une séquence stockée sur un support interchangeable, mais ce n'est pas un ordinateur : la machine rejoue une suite fixe, sans calculer.
+   **Région** : moyen-orient — **Thème** : idees
+   **Personnes** : Muḥammad, Aḥmad et al-Ḥasan ibn Mūsā ibn Shākir — **Pionnière** : non
+   **Source principale** : ZKM Karlsruhe, « Automatische hydraulische Orgel der Banū Mūsā ibn Shākir » — https://zkm.de/en/node/62659 (à compléter par Koetsier 2001, à lire)
+
+2. **Année** : 1206
+   **Titre** : Le livre des machines d'al-Jazarī
+   **Texte** : À Diyarbakır, al-Jazarī achève pour un prince artuqide un traité qui décrit en détail cinquante machines : horloges à eau, fontaines, automates musicaux, pompes. Un arbre à chevilles y fait battre des tambours mécaniques. Le présenter comme « premier robot programmable » est une lecture moderne, discutée par les spécialistes eux-mêmes.
+   **Région** : moyen-orient — **Thème** : machines
+   **Personnes** : Ibn al-Razzāz al-Jazarī, Nāṣir al-Dīn Maḥmūd — **Pionnière** : non
+   **Source principale** : C. Canavas, « Al-Jazarī's Compendium of Ingenious Devices », CNRS Éditions, 2017 — https://books.openedition.org/editionscnrs/27688
+
+3. **Année** : 1424
+   **Titre** : π à 16 décimales à Samarcande
+   **Texte** : À l'observatoire d'Ulugh Beg, al-Kāshī calcule 2π avec neuf chiffres en base 60, soit seize décimales exactes, un record pendant environ 180 ans. En 1427, sa *Clé de l'arithmétique* expose aussi de façon systématique les fractions décimales, déjà connues avant lui. Il conçoit en outre des instruments qui remplacent des calculs astronomiques par des constructions graphiques.
+   **Région** : asie — **Thème** : idees
+   **Personnes** : Jamshīd al-Kāshī, Ulugh Beg — **Pionnière** : non
+   **Source principale** : MacTutor, « Ghiyath al-Din Jamshid Mas'ud al-Kashi » — https://mathshistory.st-andrews.ac.uk/Biographies/Al-Kashi/
+
+#### Sujet 2
+
+1. **Année** : 1955
+   **Titre** : WEIZAC, premier ordinateur du Moyen-Orient
+   **Texte** : À Rehovot, l'Institut Weizmann met en service en octobre 1955 WEIZAC, construit sur le modèle de la machine de Princeton. L'ingénieure Thelma Estrin fait partie de l'équipe dirigée par Gerald Estrin, à l'initiative du mathématicien Chaim Pekeris. La machine sert jusqu'en 1963 aux calculs scientifiques.
+   **Région** : moyen-orient — **Thème** : machines
+   **Personnes** : Chaim Pekeris, Gerald Estrin, Thelma Estrin — **Pionnière** : oui (Thelma Estrin)
+   **Source principale** : IEEE / ETHW, « Milestones: WEIZAC Computer, 1955 » — https://ethw.org/Milestones:WEIZAC_Computer,_1955
+
+2. **Année** : 1960
+   **Titre** : Un IBM 650 pour les routes turques
+   **Texte** : Le 30 septembre 1960, la Direction générale des routes reçoit à Ankara un IBM 650, premier ordinateur de Turquie, financé en grande partie par une aide américaine. Une petite équipe de mathématicien·nes formé·es en un mois l'utilise pour la paie, les stocks et le calcul des routes et des ponts.
+   **Région** : moyen-orient — **Thème** : societe
+   **Personnes** : Kaya Kılan, Güngör Günalçın (témoins) — **Pionnière** : non
+   **Source principale** : « IBM Müdürü'nden Bir Dönemin Öyküsü », *Capital*, 2002 — https://www.capital.com.tr/sektorler/teknoloji/ibm-mudurunden-bir-donemin-oykusu
+
+3. **Année** : 1962 (Iran) / 1963 (Égypte) — **à ne publier qu'après lecture des sources bloquées**
+   **Titre** : Le calcul au service du pétrole et du Plan
+   **Texte** : En 1962, la Compagnie nationale iranienne du pétrole installe un IBM 1620 pour suivre la production. En 1963, l'Institut de planification nationale du Caire acquiert lui aussi un IBM 1620, premier ordinateur à programme enregistré d'Égypte, pour ses modèles de planification économique.
+   **Région** : moyen-orient / afrique — **Thème** : societe
+   **Personnes** : — — **Pionnière** : non
+   **Source principale** : Encyclopaedia Iranica, « Computers in Persia » — https://www.iranicaonline.org/?p=7750 ; INP, monographie Badran — https://repository.inp.edu.eg/handle/123456789/5854
+
+---
+
+## Complément 6 (4 novembre 2026) — femmes de l'informatique japonaise, Amérique latine
+
+Module « Histoire de l'informatique », rouages.net. Recherche faite le 4 novembre 2026.
+
+Légende des statuts :
+- **[lu]** : page ou PDF réellement ouvert et lu (le texte cité en vient) ;
+- **[méta]** : seulement la notice (Crossref, catalogue) ;
+- **[extrait]** : vu seulement dans un résultat de moteur de recherche, pas ouvert.
+
+Wikipédia n'est cité qu'en « pour aller plus loin ». Aucun lieu de résidence, aucune donnée personnelle sensible n'est reprise.
+
+---
+
+### Sujet 1 : femmes dans l'informatique japonaise, 1950-1980
+
+#### Constat général (à dire au lecteur)
+
+Le « panthéon » officiel japonais compte très peu de femmes. Sur les quelque 75 « Japanese Computer Pioneers » du musée virtuel de l'IPSJ (Information Processing Society of Japan), **une seule est une femme : Yamamoto Kinko (山本欣子)** [lu, liste vérifiée en anglais et en japonais]. Le travail des femmes est pourtant massif mais anonyme, surtout dans la saisie des données (perforation de cartes). C'est cette main-d'œuvre qui fait apparaître au Japon, dès les années 1960, une maladie professionnelle très étudiée : la « maladie des perforatrices » (keypuncher disease).
+
+#### Faits clés datés
+
+**Yamamoto Kinko (1928-1997), programmeuse, formatrice et cheffe de projet réseau**
+- 1948 : diplômée du département de mathématiques du Tokyo Woman's Christian College (東京女子大学数学科) ; elle entre la même année au laboratoire d'électrotechnique du ministère des Communications (逓信省電気試験所), qui devient ensuite le laboratoire de recherche de la NTT (電電公社電気通信研究所).
+- Années 1950 : elle s'occupe du **logiciel** de la MUSASINO-1, ordinateur à paramétrons de la NTT, achevé en **mars 1957** d'après la fiche machine de l'IPSJ.
+- 1958 : elle rejoint le nouveau centre de calcul commun de la JEIDA (Japan Electronic Industry Development Association, 日本電子工業振興協会). Elle y écrit des programmes appliqués (correction de relief d'après des photos aériennes), **forme des programmeur·ses** et co-développe avec Moriguti Sigeiti l'assembleur pédagogique **SIP** (Symbolic Input Program). Elle anime de nombreux séminaires de programmation.
+- 1968 : cheffe du département développement de la JIPDEC (Japan Information Processing Development Center). À partir de 1969, elle travaille sur un système à temps partagé (TSS) pour machines japonaises.
+- 1973-1977 : elle dirige **JIPNET**, réseau expérimental reliant trois ordinateurs centraux japonais de marques différentes, sur le modèle d'ARPANET. Il inspire le réseau universitaire N1.
+- 1975 et 1979 : membre du conseil d'administration de l'IPSJ ; 1980 : responsable du secrétariat japonais du congrès IFIP 80 (Tokyo-Melbourne) ; 1985 : directrice générale (常務理事) de la JIPDEC.
+
+**Perforatrices (キーパンチャー) et « maladie des perforatrices »**
+- Vers 1960 : l'informatisation des institutions financières japonaises fait exploser les plaintes des opératrices de perforation et des télétypistes. Ce sont surtout des femmes, qui « ont le plus souffert » (Shioda, 1994).
+- 1958-1961 : premières études médicales japonaises sur les opératrices de perforatrices de cartes (troubles de la main, ténosynovites) (Maeda et al., 1982).
+- 1960 : l'Institut des sciences du travail publie « Études sur le travail de bureau mécanisé » (Katsuki éd.). Selon son préface, ce travail « léger » est sous-estimé.
+- Années 1960 : on compte parfois **plus de 80 000 frappes par jour** ; le public parle de « keypuncher disease ».
+- **1964** : le ministère du Travail fixe des règles : au plus 300 minutes de frappe par jour, des séquences de 60 minutes au plus suivies de 10 à 15 minutes de pause, et de préférence **au plus 40 000 frappes par jour** en moyenne mensuelle. La même année, il crée des critères d'indemnisation (ténosynovite, crampe de l'écrivain…) pour les perforatrices et autres opératrices de clavier. Le fait est confirmé par deux sources indépendantes (Maeda 1982 ; Shioda 1994, note 14).
+- 1969 : les critères d'indemnisation sont élargis au « syndrome cervico-brachial » ; 1972 : un comité de la Japan Association of Industrial Health établit le concept de « trouble cervico-brachial professionnel » (頸肩腕障害), qui touche « en particulier les jeunes travailleuses » (Aoyama et al., 1979).
+- Dans les années 1960-1980, selon Shioda (1994), les perforatrices, télétypistes et programmeuses disent que leurs compétences leur permettent de changer d'emploi. Mais les horaires longs et irréguliers rendent « presque impossible » de garder ce travail après le mariage. Loi sur l'égalité des chances dans l'emploi : 17 mai 1985.
+
+**Années 1980 (pour une ouverture)**
+- 1984 : Asakawa Chieko (浅川智恵子) entre à IBM Research à Tokyo, en contrat temporaire selon l'IEEE Spectrum, après une formation de deux ans en programmation. Elle crée un éditeur numérique de braille, puis un réseau de bibliothèques braille. En 1997 sort Home Page Reader, lecteur vocal du Web (deux sources concordent sur 1997).
+
+#### Sources
+
+1. **IPSJ Computer Museum, « Yamamoto Kinko »**, version anglaise : https://museum.ipsj.or.jp/en/pioneer/k-yama.html, et version japonaise (notice signée 小川義久) : https://museum.ipsj.or.jp/pioneer/k-yama.html. Type : notice biographique d'une société savante. Langues : anglais et japonais. **[lu]**
+2. **IPSJ Computer Museum, liste « Japanese Computer Pioneers »** : https://museum.ipsj.or.jp/en/pioneer/index.html et https://museum.ipsj.or.jp/pioneer/index.html. Type : institution. **[lu]** (une seule femme sur environ 75 noms).
+3. **IPSJ Computer Museum, « MUSASINO-1, MUSASINO-1B »** : https://museum.ipsj.or.jp/en/computer/dawn/0013.html. Type : fiche machine. Langue : anglais. **[lu]** (achèvement en mars 1957).
+4. **Maeda K., Horiguchi S., Hosokawa M., « History of the Studies on Occupational Cervicobrachial Disorder in Japan and Remaining Problems »**, *Journal of Human Ergology* 11(1), 1982, p. 17-29, doi:10.11183/jhe1972.11.17. PDF : https://www.jstage.jst.go.jp/article/jhe1972/11/1/11_1_17/_pdf/-char/ja. Type : article scientifique (médecine du travail), avec une partie historique. Langue : anglais. **[lu]**
+5. **Shioda Sakiko, « Innovation and Change in the Rapid Economic Growth Period »**, chap. 5 de *Technology Change and Female Labour in Japan*, United Nations University Press, 1994, en ligne sur l'archive de l'IDE-JETRO : https://d-arch.ide.go.jp/je_archive/english/society/book_jes7_d06.html. Type : ouvrage universitaire (histoire et sociologie du travail). Langue : anglais. **[lu]**
+6. Aoyama H. et al., « Recent Trends in Research on Occupational Cervicobrachial Disorder », *Journal of Human Ergology* 8(1), 1979 : https://www.jstage.jst.go.jp/article/jhe1972/8/1/8_1_39/_article/-char/en. Type : article scientifique. Langue : anglais. **[lu]** (résumé seulement : comité de 1972, « young female workers »).
+7. Pour Asakawa : Eliza Strickland, « Chieko Asakawa: Web Guru for the Blind », *IEEE Spectrum*, 31 janvier 2012 : https://spectrum.ieee.org/geek-life/profiles/dream-job-2012-web-guru-for-the-blind **[lu]** ; National Inventors Hall of Fame, notice d'intronisation (2019) : https://www.invent.org/inductees/chieko-asakawa **[lu]**.
+
+Pour aller plus loin : Wikipédia « Chieko Asakawa » (en), non vérifié ici.
+
+#### Points d'attention
+
+- **Ne pas inventer de « première programmeuse japonaise »** : aucune source lue ne donne ce titre à Yamamoto Kinko. Formulation prudente : « l'une des premières programmeuses japonaises, seule femme parmi les pionnier·es retenu·es par l'IPSJ ».
+- **Date de la MUSASINO-1** : la notice japonaise de Yamamoto écrit « 1955年完成 », mais la fiche machine de l'IPSJ et la notice anglaise donnent **1957**. Retenir mars 1957 (1955 correspond au lancement du projet).
+- **ETL ou NTT ?** L'« Electrotechnical Laboratory » de 1948 relève du ministère des Communications. Ses activités de télécommunications passent à la NTT (1950-1952). Ce n'est pas l'ETL du MITI qui a construit les ETL Mark. Ne pas écrire que Yamamoto a travaillé sur les ETL Mark.
+- **Chiffres des perforatrices** : 40 000 frappes par jour est une **recommandation** de 1964 (« should preferably not exceed »), pas un plafond légal strict. Les 80 000 frappes par jour sont des maxima observés, pas une moyenne.
+- Le lien « perforatrices = femmes » est explicite chez Shioda et Aoyama ; Maeda ne le dit pas dans le passage historique. Il vaut mieux citer Shioda pour l'aspect « genre ».
+- **Pas trouvé** : de sources nominatives sur des programmeuses chez Fujitsu, NEC ou Hitachi, ni dans les centres de calcul universitaires des années 1960-1970. Il ne faut pas en citer sans source.
+- Asakawa : ses débuts sont datés de 1984 (IEEE Spectrum) ou de 1985 (poste permanent, autres sources). La NIHF ne donne pas l'année. Écrire « au milieu des années 1980 ».
+
+---
+
+### Sujet 2 : Amérique latine (hors Clementina et Cybersyn)
+
+#### 2a. Mexique : l'IBM 650 de l'UNAM (1958)
+
+**Faits clés**
+- **8 juin 1958** : création du Centro de Cálculo Electrónico de l'UNAM, dont le premier directeur est l'ingénieur Sergio Francisco Beltrán López. Le centre accueille un **IBM 650**, installé au rez-de-chaussée ou au sous-sol de la Faculté des sciences, à la Ciudad Universitaria.
+- Cette machine d'occasion vient de l'Université de Californie, où elle avait servi environ trois ans. Elle est **louée 25 000 pesos par mois**. Pour la rentabiliser, on vend du temps de calcul à l'IMSS, à Pemex, à la CFE et à Nacional Financiera.
+- Elle a environ 2 000 tubes, un tambor magnétique tournant à 12 500 tr/min et une entrée par cartes perforées. Usages : sismique, astronomie, biostatistique, et même un « lexique statistique de la langue maya » à l'Institut de recherches historiques.
+- Rôle cité de Sergio Beltrán, Alberto Barajas, Carlos Graef et du recteur Nabor Carrillo. Le centre donne les premiers cours de programmation. En 1970, il devient le CIMASS, dirigé par Renato Iturriaga.
+- 1963 : l'IPN (Centro Nacional de Cálculo) a lui aussi un ordinateur ; selon l'éditeur de la revue de l'IPN, il crée la première maîtrise en informatique d'Amérique latine.
+
+**Sources**
+1. Patricia de la Peña Sobarzo et Yassir Zárate Méndez, « De las tarjetas perforadas a Miztli », *El faro* (bulletin de la Coordinación de la Investigación Científica, UNAM), numéro spécial d'août 2018 : https://elfaro.cic.unam.mx/wp-content/uploads/2019/08/FARO-60-anos-delcomputo-en-mexico.pdf. Type : publication institutionnelle. Langue : espagnol. **[lu]**
+2. Mirtha Hernández, « Hace 60 años la UNAM puso en marcha la primera computadora en AL », *Gaceta UNAM*, 9 août 2018 : https://www.gaceta.unam.mx/hace-60-anos-la-unam-puso-en-marcha-la-primera-computadora-en-al/. Type : presse institutionnelle. Langue : espagnol. **[lu]**
+3. Carlos Vizcaíno Sahagún, « Editorial. 40 años de Cómputo en México », *Computación y Sistemas* (CIC-IPN), vol. 1 n° 3, janvier-mars 1998 : https://www.repositoriodigital.ipn.mx/jspui/bitstream/123456789/14955/1/v1n3_Editorial.pdf. Type : revue scientifique (éditorial). Langue : espagnol. **[lu]**
+
+**Points d'attention**
+- **Mythe à démonter : « la première computadora de América Latina »**. L'UNAM le dit (Gaceta, El faro), mais l'éditorial de l'IPN reconnaît lui-même que l'informatique électronique arrive **au Brésil fin 1957**. Il s'agit d'un **UNIVAC 120** acheté par le gouvernement de l'État de São Paulo pour calculer la consommation d'eau (Bigonha, UFMG 2020, [lu] : https://llp.dcc.ufmg.br/Publications/Books2020/caminhos.pdf). L'UNIVAC 120 est un calculateur à cartes perforées, pas un ordinateur à programme enregistré : tout dépend donc de la définition. Formulation sûre : « le premier ordinateur du Mexique, et l'un des tout premiers d'Amérique latine ».
+- Le site Expansión date l'arrivée de 1959 [extrait]. Les sources de l'UNAM, elles, donnent le 8 juin 1958.
+- « Sous-sol » (Gaceta) ou « rez-de-chaussée » (El faro) : il vaut mieux ne pas préciser.
+- **Femmes** : aucune n'est nommée dans les sources lues sur le Centro de Cálculo. C'est une lacune à signaler, pas une absence prouvée.
+
+#### 2b. Cuba : la CID-201 (1970)
+
+**Faits clés**
+- Juin 1969 : création du Centro de Investigaciones Digitales (CID) à l'Université de La Havane [extrait EcuRed].
+- **18 avril 1970** : la première **CID-201** est achevée. C'est un mini-ordinateur de 4 096 mots de 12 bits, qui fait environ 25 000 additions par seconde et s'inspire de la PDP-8 [extrait EcuRed ; Wikipédia]. Concepteur principal cité : l'ingénieur Orlando Ramos [extrait]. Elle aurait servi à gérer le trafic ferroviaire de la récolte sucrière (Central Camilo Cienfuegos) [extrait].
+- Les composants sont étrangers, souvent japonais selon Wikipédia, à cause de l'embargo. L'apport cubain est la conception [extrait EcuRed].
+- Plus de 100 CID-201 A et B sont produites entre 1971 et 1979 [extrait]. Confirmation d'époque : selon *Computerwoche* (RFA) du **1er décembre 1978**, sur environ 105 ordinateurs en service à Cuba, **86 sont des CID 201 B de production nationale**. Le premier ordinateur installé dans l'île est un Elliott 803 B britannique, en **1963**.
+- Avant elle, Cuba avait un calculateur analogique, le SILNA 999, présenté le 26 juillet 1968 [extrait].
+
+**Sources**
+1. « EDV-Entwicklungsland Cuba », *Computerwoche*, 1er décembre 1978 : https://www.computerwoche.de/article/2851259/edv-entwisklungsland-cuba.html. Type : presse professionnelle de l'époque. Langue : allemand. **[lu]**
+2. EcuRed, « CID 201 » : https://www.ecured.cu/CID_201 et « Historia de la Informática en Cuba » : https://www.ecured.cu/Historia_de_la_Inform%C3%A1tica_en_Cuba. Type : encyclopédie d'État cubaine. Langue : espagnol. **[extrait]** (bloqué, voir plus bas).
+3. Pour aller plus loin : Wikipédia (en) « CID-201 » : https://en.wikipedia.org/wiki/CID-201 [extrait]. L'article signale lui-même qu'il repose surtout sur une seule source.
+
+**Points d'attention**
+- Les sources sont **faibles** : aucune source primaire ou universitaire n'a pu être ouverte (les domaines .cu sont injoignables depuis notre réseau). La date du 18 avril 1970 n'est vue que dans des extraits ; il faut la vérifier avant publication.
+- Le nom varie (« Centro de Investigaciones Digitales » ou « Centro de Investigación Digital », plus tard ICID), tout comme le rôle de la CUJAE (groupe initial mené par Luis Carrasco [extrait]).
+- « Premier ordinateur cubain » : écrire plutôt « premier ordinateur numérique conçu à Cuba ». Le premier ordinateur *installé* à Cuba est l'Elliott 803 B de 1963.
+- Femmes : seule une source militante (derechos.org) mentionne une femme du groupe, sans rôle technique. Rien de publiable.
+
+#### 2c. Brésil : le Patinho Feio (USP, 1972) et ses précurseurs
+
+**Faits clés**
+- 1968 : création du Laboratório de Sistemas Digitais (LSD) à l'École polytechnique de l'USP. Le laboratoire reçoit un IBM 1620 pour l'étudier.
+- 1971 : l'ingénieur états-unien Glen Langdon Jr., venu d'IBM Brasil, propose aux 18 élèves de master du cours d'architecture des ordinateurs de construire une machine. Le projet est piloté par le professeur Antônio Hélio Guerra Vieira.
+- **24 juillet 1972** : inauguration du **Patinho Feio** (« vilain petit canard ») devant le gouverneur Laudo Natel et le recteur Miguel Reale. Pas de démonstration ce jour-là : un photographe a débranché la machine. Elle pèse environ 100 kg et compte 450 circuits intégrés sur 45 cartes, avec 4 ko de mémoire. Son nom se moque du projet « Cisne Branco » (cygne blanc) de l'Unicamp, jamais achevé.
+- Il sert de base au **G-10** (USP et PUC-Rio, pour la Marine), prototype du **MC 500 de Cobra**, premier ordinateur commercial brésilien.
+- **Edith Ranzini**, ingénieure électricienne diplômée en 1969 et membre du LSD dès ses débuts, fait partie de l'équipe. Elle a ensuite été professeure à la Poli. En 2022, à la cérémonie des 50 ans, elle déclare : « a arquitetura, estrutura e concepção do Patinho Feio não são muito diferentes das que se utilizam nos computadores de hoje ».
+- **Précurseurs** : en décembre 1960, des élèves de l'École technique de l'armée (futur IME, Rio) présentent la « **Lourinha** », d'après leurs propres souvenirs (Cardi et Barreto). En 1961, des élèves de l'ITA (São José dos Campos) construisent le « **Zezinho** » (ITA I), une machine didactique à transistors. Pesquisa FAPESP dit qu'elle « in practice did not execute computing tasks ».
+- 1957 : un UNIVAC 120 est acheté par l'État de São Paulo (voir 2a).
+
+**Sources**
+1. Domingos Zaparolli, « O legado do Patinho Feio », *Pesquisa FAPESP* n° 322, décembre 2022 : https://revistapesquisa.fapesp.br/o-legado-do-patinho-feio/ ; version anglaise : https://revistapesquisa.fapesp.br/en/the-legacy-of-the-ugly-duckling/. Type : magazine de la fondation publique de recherche. Langues : portugais et anglais. **[lu]**
+2. PCS-USP (département d'ingénierie informatique), « Poli-USP comemora os 50 anos do Patinho Feio, primeiro computador brasileiro », 26 septembre 2022 : https://pcs.usp.br/blog/2022/09/26/poli-usp-comemora-os-50-anos-do-patinho-feio-primeiro-computador-brasileiro. Type : institution. Langue : portugais. **[lu]** (cite aussi les professeures Edith Grassiani de Lino Campos, Maria Alice de Grigas Varella et Selma Shin Shimizu Melnikoff, présentes à la table ronde ; leur rôle en 1972 n'est pas établi).
+3. Marilza de Lourdes Cardi et Jorge Muniz Barreto, « Primórdios da Computação no Brasil », SHIALC 2012 (CLEI) : https://www.cos.ufrj.br/shialc/2012/content/docs/shialc_2/clei2012_submission_126.pdf. Type : actes du symposium d'histoire (l'un des auteurs est un constructeur de la Lourinha, donc témoin). Langue : portugais. **[lu]**
+4. Roberto S. Bigonha, *Um Pouco de Tudo que Havia no Caminho*, DCC-UFMG, 2020 : https://llp.dcc.ufmg.br/Publications/Books2020/caminhos.pdf. Type : mémoires et histoire universitaire. Langue : portugais. **[lu]** (UNIVAC 120, 1957).
+
+**Points d'attention**
+- **« Premier ordinateur brésilien »** : la formule est contestable (Lourinha 1960, Zezinho 1961). Formulation sûre : « premier ordinateur fonctionnel conçu et construit au Brésil » ou « premier ordinateur brésilien à avoir réellement fonctionné ». Le jour de l'inauguration, il n'a même pas tourné.
+- La mémoire est donnée selon les sources comme 4 096 mots de 8 bits, 4 ko ou 8 ko ; retenir 4 ko (FAPESP).
+- Edith Ranzini était étudiante de master en 1971-1972 : ne pas en faire « la conceptrice ». Écrire « l'une des membres de l'équipe ».
+
+#### 2d. Uruguay : le Centro de Computación de la Universidad de la República (CCUR, 1966-1968)
+
+**Faits clés**
+- Années 1962-1966 : des enseignant·es de la Faculté d'ingénierie de Montevideo vont faire calculer leurs programmes sur Clementina à Buenos Aires. Ils traversent le Río de la Plata en bateau de nuit, leurs cartes perforées sous le bras.
+- 1966 : après le coup d'État argentin et la « Noche de los Bastones Largos » (29 juillet), le recteur Oscar Maggiolo fait appel à Manuel Sadosky, exilé de l'UBA. Le **7 novembre 1966**, le Conseil directeur central crée le **CCUR**, dirigé par Sadosky, qui commence ses activités en **1967**.
+- **10 juillet 1967** : création de la carrière de « Computador Universitario » (premiers cours réguliers en 1968). En 1967-1968, on calcule sur l'ordinateur du Banco Comercial.
+- **Décembre 1968** : un **IBM System/360 modèle 44** (128 Ko) est installé au 5e étage de la Faculté d'ingénierie.
+- Femmes : l'**ingénieure Dolores Alía de Saravia** figure parmi les cinq assistants fondateurs du CCUR (seule femme et seule ingénieure diplômée de la liste). En 1973, c'est elle qui présente au journal *Ahora* les travaux du centre : statistiques, traitement du recensement de 1963 (2,6 millions de cartes, fait en 1969) et modèles mathématiques. **Cora Ratto de Sadosky**, mathématicienne, figure sur la photo de l'arrivée de l'IBM 360 en décembre 1968.
+- Le centre est démantelé après le coup d'État uruguayen de 1973.
+
+**Sources**
+1. Laura Bermúdez et María E. Urquhart, *Salvando la memoria de la computación en la Universidad de la República, Uruguay, a partir de los recuerdos del Profesor Manuel Sadosky*, Reporte Técnico RT 03-19, InCo-Fing-UdelaR, 21 novembre 2003 : https://www.fing.edu.uy/inco/usuarios/jcabezas/historiacomp/ElRomance/papers/TR0319_Salvando_Bermudez_Urquhart.pdf. Type : rapport universitaire fondé sur des archives (actes du CDC) et des entretiens. Langue : espagnol. **[lu]**
+2. Jorge Vidart, « Software en el Uruguay. De la investigación científica a la exportación » : https://www.fing.edu.uy/inco/usuarios/jcabezas/historiacomp/ElRomance/papers/SoftwareUCN6_Software_en_el_Uruguay_Vidart.pdf. Type : témoignage d'un assistant fondateur du CCUR. Langue : espagnol. **[lu]**
+
+**Points d'attention**
+- La consigne parlait d'un « Centro de Cálculo » en 1967 : le nom exact est **Centro de Computación** (CCUR), créé le 7 novembre 1966, actif en 1967 et équipé de sa propre machine fin 1968.
+- La piste d'un IBM 1620 n'est pas confirmée pour l'Uruguay ; ne pas l'écrire.
+- On ne connaît pas encore les dates ni la suite de carrière de Dolores Alía de Saravia : publier seulement son rôle au CCUR.
+
+#### 2e. Chili avant Cybersyn
+
+**Faits clés**
+- **1961** : un **IBM 1401**, premier ordinateur numérique du Chili, est installé au Service des douanes de Valparaíso, pour la gestion.
+- **1962** : la Universidad de Chile installe l'**ER-56 de Standard Elektrik Lorenz**, surnommé « Lorenzo ». C'est le premier ordinateur numérique chilien destiné au calcul scientifique, avec des transistors discrets. Il sert aux cours d'ingénierie (langage machine, ALGOL), pas à l'administration.
+- En 1965, 12 des 14 ordinateurs du pays sont des IBM. En 1966 arrivent les premiers IBM 360 (ENAP et Universidad de Chile). En **1968** est créée l'**ECOM** (Empresa Nacional de Computación), qui centralise l'informatique de l'État : c'est l'infrastructure sur laquelle s'appuiera Cybersyn. Les premières formations de programmeur·ses datent de 1968-1971.
+
+**Sources**
+1. Juan Álvarez et Claudio Gutiérrez, « Inicios, consolidación y expansión de la Computación en Chile (1961-1982) », SHIALC 2012 : https://www.cos.ufrj.br/shialc/2012/content/docs/3.7_SHIALCAlvarez_paper.pdf. Type : actes d'histoire, Département d'informatique de l'Université du Chili. Langue : espagnol. **[lu]**
+2. Claudio Gutiérrez et al., dossier « Lorenzo » : https://users.dcc.uchile.cl/~cgutierr/hcyt/lorenzo.pdf. Type : universitaire. Langue : espagnol. **[lu partiellement]** (téléchargé ; seule une recherche de mots-clés a été faite).
+3. Pour Cybersyn (rappel) : Eden Medina, *Cybernetic Revolutionaries*, MIT Press, 2011, doi:10.7551/mitpress/8417.001.0001 **[méta]**.
+
+**Points d'attention**
+- Ne pas dire que « Lorenzo » est le premier ordinateur chilien : il a été précédé par l'IBM 1401 des douanes (1961).
+- Aucune femme n'est nommée dans les sources lues sur le Chili d'avant 1970 (une secrétaire seulement est remerciée dans le dossier DCC).
+
+#### 2f. Femmes pionnières documentées (Argentine, autour de Clementina)
+
+**Faits clés**
+- **Rebeca Cherep de Guber (1926-2020)**, mathématicienne. En 1960, elle devient secrétaire technique de l'Instituto de Cálculo de l'UBA (nommée le 6 juin 1960 selon MacTutor) et **coordonne l'achat de Clementina** (installée le 7 décembre 1960, en service le 15 mai 1961). En 1966, elle démissionne avec la quasi-totalité de l'institut. Elle cofonde ensuite **ACT (Asesores Científico-Técnicos)**, présentée par l'UBA comme la première entreprise privée argentine de logiciel, dont elle est la gérante. Elle s'exile au Venezuela en 1977 (MacTutor) et revient avant 1983. Elle est coautrice, avec Sadosky, d'un manuel d'analyse toujours en usage. L'Instituto de Cálculo porte aujourd'hui son nom.
+- **Cecilia Tuwjasz de Berdichevsky (1925-2010)**. Elle suit le premier cours de programmation donné en Argentine par la Britannique Cicely Popplewell. Pour un calcul de physique, elle écrit « en moins d'une demi-heure » un programme qui fait en quelques minutes un calcul de plusieurs jours. L'UBA la présente comme « la primera programadora argentina ».
+- Autres membres de l'équipe initiale de Clementina citées par l'UBA : Viola Eandi, Alicia de Marval, María Rosa Pistol de Pignotti.
+
+**Sources**
+1. UBA Ciencia, « Rebeca Chereb de Guber, precursora de la computación argentina », 2 juillet 2025 : https://www.uba.ar/ubaciencia/noticias/723. Type : institution. Langue : espagnol. **[lu]**
+2. UBA Noticias, « Primera programadora », 2 juin 2023 : https://www.uba.ar/ubanoticias/noticias/37. Type : institution. Langue : espagnol. **[lu]**
+3. UBA Ciencia, « Cecilia Tuwjasz, la primera programadora argentina », 30 mars 2026 : https://www.uba.ar/ubaciencia/noticias/61. Type : institution. Langue : espagnol. **[lu]**
+4. J. J. O'Connor et E. F. Robertson, « Rebeca Cherep de Guber », MacTutor (Université de St Andrews), mis à jour en novembre 2022 : https://mathshistory.st-andrews.ac.uk/Biographies/Guber. Type : biographie universitaire avec références. Langue : anglais. **[lu]**
+5. Raúl Carnota, « The Beginning of Computer Science in Argentina and the Calculus Institute, 1957-1970 », *IEEE Annals of the History of Computing*, 2015, doi:10.1109/MAHC.2015.34. **[méta]**
+
+**Points d'attention**
+- **Le titre de « première programmeuse argentine » est donné par l'UBA tantôt à Guber (2023), tantôt à Berdichevsky (2026)**. C'est une contradiction interne. Il vaut mieux éviter le superlatif : écrire « parmi les premières programmeuses argentines », Guber ayant surtout organisé et dirigé, et Berdichevsky programmé.
+- L'UBA donne pour Guber une date de naissance tantôt au 2 juin, tantôt au 2 juillet 1926. Ne donner que l'année.
+- « Première entreprise privée argentine de logiciel » (ACT) : c'est une affirmation de l'UBA, non recoupée.
+
+#### Pistes d'historien·nes non exploitées (notices seulement)
+- Ivan da Costa Marques, « Brazil and its unenlightened despots: 1979/1980 », CLEI 2012, doi:10.1109/CLEI.2012.6427263 **[méta]** (sur la politique des mini-ordinateurs, la « reserva de mercado »).
+- Programme du SHIALC 2012 (Medellín), avec entre autres « El B-205 en la PUC-Rio » (Margarida de Souza Neves) et « Jorge González Martén, pionero costarricense » (Marta Calderón) : https://clei.org/clei2012/shialc.pdf **[lu]** (programme seulement).
+- Luis Germán Rodríguez Leal et Raúl Carnota (dir.), *Historias de las TIC en América Latina y el Caribe*, Fundación Telefónica, 2015 : https://en.fundaciontelefonica.com/publications/stories-of-icts-in-latin-america-and-the-caribbean/474 **[extrait]**.
+
+---
+
+### Liens bloqués à demander
+
+| URL | Problème | Ce qu'on espère y trouver |
+|---|---|---|
+| https://www.ecured.cu/CID_201 | 503 / connexion coupée (tout le domaine .cu) | Date du 18 avril 1970, équipe (Orlando Ramos, Luis Carrasco), caractéristiques, femmes de l'équipe |
+| https://www.ecured.cu/Historia_de_la_Inform%C3%A1tica_en_Cuba | idem | Chronologie cubaine (SILNA 999, CID, ICID, production 1971-1979) |
+| https://islas.uclv.edu.cu/index.php/islas/article/download/148/139/258 | connexion coupée | Article universitaire cubain (revue *Islas*) sur l'histoire de l'informatique à Cuba : source secondaire sérieuse pour la CID-201 |
+| https://www.mincom.gob.cu/es/printpdf/3854 | 503 | Page du ministère cubain des Communications sur les débuts de l'informatique |
+| https://alainet.org/en/node/195494 | 429 | Article « Cuba and computer technology » (contexte de la CID-201) |
+| https://www.ufrgs.br/enigma/edith-ranzini/ | 503 | Biographie d'Edith Ranzini (formation, carrière, références au CV Lattes) |
+| https://www.rodo.co.jp/series/86657/ | payant (début seul visible dans l'extrait) | Témoignage sur les perforatrices japonaises de 1963 (« キーパンチャーの病欠 ») |
+| https://www.gov-online.go.jp/eng/publicity/book/hlj/html/201112/201112_10.html | 403 | Portrait officiel japonais d'Asakawa Chieko (*Highlighting Japan*, décembre 2011) |
+| https://muse.jhu.edu/journals/ieee_annals_of_the_history_of_computing/v031/31.3.kita.pdf | non tenté (vraisemblablement payant) | Article d'IEEE Annals vol. 31 n° 3 (2009) sur l'informatique japonaise, peut-être utile pour les femmes et les centres de calcul |
+| doi:10.1109/MAHC.2015.34 (Carnota 2015) | payant | L'Instituto de Cálculo, avec les rôles de Guber, Berdichevsky et des autres femmes |
+| https://www.argentina.gob.ar/sites/default/files/anexo_clementina.pdf | téléchargé, pas encore lu | Annexe officielle sur l'équipe de Clementina (biographies des femmes) |
+
+---
+
+### Propositions d'événements pour la frise
+
+#### Sujet 1 : Japon
+
+1. **1958 : Yamamoto Kinko forme les programmeur·ses japonais·es**
+   - Texte : Mathématicienne entrée en 1948 au laboratoire du ministère des Communications, Yamamoto Kinko a écrit le logiciel de la MUSASINO-1, ordinateur à paramétrons achevé en 1957. En 1958, au centre de calcul commun de l'industrie électronique, elle co-crée l'assembleur pédagogique SIP et anime des séminaires qui forment une grande partie des premier·es programmeur·ses du pays.
+   - Région : asie. Thème : logiciel. Personnes : Yamamoto Kinko, Moriguti Sigeiti. Pionnière : oui.
+   - Source principale : IPSJ Computer Museum, « Yamamoto Kinko », https://museum.ipsj.or.jp/en/pioneer/k-yama.html
+
+2. **1964 : la « maladie des perforatrices » reconnue au Japon**
+   - Texte : Avec l'informatisation des banques et des bureaux, des milliers de jeunes femmes saisissent les données sur des perforatrices, parfois plus de 80 000 frappes par jour. En 1964, le ministère du Travail recommande de ne pas dépasser 40 000 frappes par jour et prévoit l'indemnisation de leurs troubles de la main : la saisie informatique est reconnue comme un travail qui use le corps.
+   - Région : asie. Thème : societe. Personnes : aucune nommée. Pionnière : non.
+   - Source principale : Maeda, Horiguchi et Hosokawa, « History of the Studies on Occupational Cervicobrachial Disorder in Japan », *Journal of Human Ergology*, 1982, https://www.jstage.jst.go.jp/article/jhe1972/11/1/11_1_17/_pdf/-char/ja (et Shioda 1994, https://d-arch.ide.go.jp/je_archive/english/society/book_jes7_d06.html)
+
+3. **1973 : JIPNET, un réseau japonais inspiré d'ARPANET**
+   - Texte : À la JIPDEC, Yamamoto Kinko dirige de 1973 à 1977 JIPNET, un réseau expérimental qui relie trois ordinateurs centraux japonais de marques différentes, sur le modèle d'ARPANET. L'expérience nourrit le réseau universitaire japonais N1.
+   - Région : asie. Thème : machines. Personnes : Yamamoto Kinko. Pionnière : oui.
+   - Source principale : IPSJ Computer Museum, « 山本欣子 », https://museum.ipsj.or.jp/pioneer/k-yama.html
+   - Variante années 1980 : Asakawa Chieko et le braille numérique (IBM Tokyo, milieu des années 1980 ; Home Page Reader en 1997), source : IEEE Spectrum, 2012.
+
+#### Sujet 2 : Amérique latine
+
+1. **1958 : un IBM 650 loué à l'UNAM, premier ordinateur du Mexique**
+   - Texte : Le 8 juin 1958, l'UNAM crée son Centro de Cálculo Electrónico autour d'un IBM 650 d'occasion, loué 25 000 pesos par mois. Pour le financer, l'université vend du temps de calcul à Pemex ou à la Sécurité sociale. Le Brésil avait déjà, fin 1957, une machine à cartes UNIVAC 120 : « premier d'Amérique latine » dépend donc de la définition retenue.
+   - Région : amerique-latine. Thème : machines. Personnes : Sergio F. Beltrán López, Nabor Carrillo. Pionnière : non.
+   - Source principale : de la Peña Sobarzo et Zárate Méndez, « De las tarjetas perforadas a Miztli », *El faro* (UNAM), 2018, https://elfaro.cic.unam.mx/wp-content/uploads/2019/08/FARO-60-anos-delcomputo-en-mexico.pdf
+
+2. **1967 : l'Uruguay accueille l'informatique exilée de Buenos Aires**
+   - Texte : Après la « Noche de los Bastones Largos » (1966), l'équipe de Clementina quitte l'UBA. À Montevideo, Manuel Sadosky dirige le nouveau Centro de Computación de l'Université de la République, qui ouvre en 1967 une formation d'informaticien·ne et reçoit un IBM 360 fin 1968. L'ingénieure Dolores Alía de Saravia en est l'une des cinq assistant·es fondateur·rices.
+   - Région : amerique-latine. Thème : societe. Personnes : Manuel Sadosky, Dolores Alía de Saravia, Oscar Maggiolo. Pionnière : oui.
+   - Source principale : Bermúdez et Urquhart, *Salvando la memoria de la computación en la Universidad de la República*, InCo, 2003, https://www.fing.edu.uy/inco/usuarios/jcabezas/historiacomp/ElRomance/papers/TR0319_Salvando_Bermudez_Urquhart.pdf
+
+3. **1972 : le « Patinho Feio », ordinateur conçu par des étudiant·es de São Paulo**
+   - Texte : Le 24 juillet 1972, l'École polytechnique de l'USP inaugure le Patinho Feio (« vilain petit canard »), construit par une classe de master à partir de circuits intégrés, avec 4 ko de mémoire. Edith Ranzini, jeune ingénieure du laboratoire, fait partie de l'équipe. La machine mène au G-10, puis au premier ordinateur commercial brésilien.
+   - Région : amerique-latine. Thème : machines. Personnes : Edith Ranzini, Antônio Hélio Guerra Vieira, Glen Langdon Jr. Pionnière : oui.
+   - Source principale : Domingos Zaparolli, « O legado do Patinho Feio », *Pesquisa FAPESP*, décembre 2022, https://revistapesquisa.fapesp.br/o-legado-do-patinho-feio/
+
+En réserve (à vérifier avant usage) : **1970, CID-201 à Cuba**, à n'utiliser qu'une fois l'EcuRed ou l'article *Islas* lus (seule source lue : *Computerwoche*, 1978) ; **1962, « Lorenzo » à l'Universidad de Chile** (source : Álvarez et Gutiérrez, SHIALC 2012, [lu]).

@@ -120,8 +120,8 @@ export const EVENEMENTS: Evenement[] = [
   },
   {
     annee: '1961', tri: 1961, titre: 'Clementina en Argentine',
-    texte: 'L’université de Buenos Aires inaugure Clementina, premier ordinateur scientifique du pays, à l’Instituto de Cálculo de Manuel Sadosky. Cecilia Berdichevsky en devient la première programmeuse. En 1966, la dictature disperse l’équipe.',
-    region: 'amerique-latine', theme: 'machines', personnes: ['Cecilia Berdichevsky', 'Manuel Sadosky'], pionniere: true,
+    texte: 'L’université de Buenos Aires inaugure Clementina, premier ordinateur scientifique du pays, à l’Instituto de Cálculo de Manuel Sadosky. Rebeca Guber coordonne son achat ; Cecilia Berdichevsky est parmi les premières à la programmer. En 1966, la dictature disperse l’équipe.',
+    region: 'amerique-latine', theme: 'machines', personnes: ['Rebeca Guber', 'Cecilia Berdichevsky', 'Manuel Sadosky'], pionniere: true,
     source: { titre: 'UBA Ciencia, « Clementina, la primera computadora científica »', url: 'https://www.uba.ar/ubaciencia/noticias/966' },
   },
   {
@@ -333,6 +333,66 @@ export const EVENEMENTS: Evenement[] = [
     texte: 'Une revue britannique recense un ICT 1202 « en commande » pour les East African Railways and Harbours, l’entreprise coloniale qui exploite rails et ports du Kenya, de l’Ouganda et du Tanganyika, pour sa comptabilité. La date de son installation n’est pas connue avec certitude.',
     region: 'afrique', theme: 'machines',
     source: { titre: 'Computer Conservation Society, listes de livraison des BTM / ICT 1200 (d’après Computer Survey, 1962)', url: 'https://ourcomputerheritage.org/Maincomp/Ict/ccs-t1x1.pdf' },
+  },
+  {
+    annee: 'vers 850', tri: 850, titre: 'Un instrument qui joue tout seul',
+    texte: 'À Bagdad, les trois frères Banū Mūsā décrivent un orgue hydraulique dont la mélodie est codée par des chevilles sur un cylindre tournant : changer de cylindre change l’air joué. C’est l’un des plus anciens exemples connus d’une séquence stockée sur un support interchangeable, mais pas un ordinateur : la machine rejoue une suite fixe, sans calculer.',
+    region: 'moyen-orient', theme: 'idees', personnes: ['Banū Mūsā'],
+    source: { titre: 'ZKM Karlsruhe, « Automatische hydraulische Orgel der Banū Mūsā ibn Shākir »', url: 'https://zkm.de/en/node/62659' },
+  },
+  {
+    annee: '1206', tri: 1206, titre: 'Le livre des machines d’al-Jazarī',
+    texte: 'À Diyarbakır, al-Jazarī achève pour un prince artuqide un traité qui décrit en détail cinquante machines : horloges à eau, fontaines, automates musicaux, pompes. Un arbre à chevilles y fait battre des tambours mécaniques. Y voir le « premier robot programmable » est une lecture moderne, discutée.',
+    region: 'moyen-orient', theme: 'machines', personnes: ['al-Jazarī'],
+    source: { titre: 'C. Canavas, « Al-Jazarī’s Compendium of Ingenious Devices », CNRS Éditions (2017)', url: 'https://books.openedition.org/editionscnrs/27688' },
+  },
+  {
+    annee: '1424', tri: 1424, titre: 'π à 16 décimales à Samarcande',
+    texte: 'À l’observatoire d’Ulugh Beg, al-Kāshī calcule π avec seize décimales exactes, un record pendant environ 180 ans. En 1427, sa Clé de l’arithmétique expose de façon systématique les fractions décimales, déjà connues avant lui.',
+    region: 'asie', theme: 'idees', personnes: ['al-Kāshī', 'Ulugh Beg'],
+    source: { titre: 'MacTutor (St Andrews), « Ghiyath al-Din Jamshid Mas’ud al-Kashi »', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Al-Kashi/' },
+  },
+  {
+    annee: '1955', tri: 1955.5, titre: 'WEIZAC à Rehovot',
+    texte: 'L’Institut Weizmann met en service en octobre 1955 WEIZAC, construit sur le modèle de la machine de Princeton, à l’initiative du mathématicien Chaim Pekeris. L’ingénieure Thelma Estrin fait partie de l’équipe dirigée par Gerald Estrin. La machine sert aux calculs scientifiques jusqu’en 1963.',
+    region: 'moyen-orient', theme: 'machines', personnes: ['Thelma Estrin', 'Gerald Estrin', 'Chaim Pekeris'], pionniere: true,
+    source: { titre: 'IEEE / ETHW, « Milestones: WEIZAC Computer, 1955 »', url: 'https://ethw.org/Milestones:WEIZAC_Computer,_1955' },
+  },
+  {
+    annee: '1958', tri: 1958.2, titre: 'Un IBM 650 loué par l’UNAM',
+    texte: 'Le 8 juin 1958, l’université nationale du Mexique crée son centre de calcul électronique autour d’un IBM 650 d’occasion, loué 25 000 pesos par mois ; elle vend du temps de calcul à Pemex ou à la Sécurité sociale pour le payer. « Premier ordinateur d’Amérique latine » dépend du critère : le Brésil avait une machine à cartes UNIVAC 120 fin 1957.',
+    region: 'amerique-latine', theme: 'machines', personnes: ['Sergio F. Beltrán López'],
+    source: { titre: 'de la Peña Sobarzo, Zárate Méndez, « De las tarjetas perforadas a Miztli », El faro (UNAM, 2018)', url: 'https://elfaro.cic.unam.mx/wp-content/uploads/2019/08/FARO-60-anos-delcomputo-en-mexico.pdf' },
+  },
+  {
+    annee: '1958', tri: 1958.7, titre: 'Yamamoto Kinko forme les programmeur·ses',
+    texte: 'Mathématicienne, Yamamoto Kinko écrit le logiciel de la MUSASINO-1, un ordinateur à paramétrons achevé en 1957. À partir de 1958, elle co-crée un assembleur pédagogique et anime des séminaires qui forment une grande partie des premier·es programmeur·ses du Japon. Elle est la seule femme parmi les pionnier·es retenu·es par la société savante japonaise d’informatique.',
+    region: 'asie', theme: 'logiciel', personnes: ['Yamamoto Kinko'], pionniere: true,
+    source: { titre: 'IPSJ Computer Museum, « Yamamoto Kinko »', url: 'https://museum.ipsj.or.jp/en/pioneer/k-yama.html' },
+  },
+  {
+    annee: '1960', tri: 1960.5, titre: 'Un IBM 650 pour les routes turques',
+    texte: 'Le 30 septembre 1960, la Direction générale des routes reçoit à Ankara un IBM 650, premier ordinateur de Turquie, financé en grande partie par l’aide américaine. Une petite équipe de mathématicien·nes formé·es en un mois s’en sert pour la paie, les stocks et le calcul des routes et des ponts.',
+    region: 'moyen-orient', theme: 'societe',
+    source: { titre: '« IBM Müdürü’nden Bir Dönemin Öyküsü », Capital (2002)', url: 'https://www.capital.com.tr/sektorler/teknoloji/ibm-mudurunden-bir-donemin-oykusu' },
+  },
+  {
+    annee: '1964', tri: 1964.5, titre: 'Le mal des perforatrices reconnu au Japon',
+    texte: 'Avec l’informatisation des banques et des bureaux, des milliers de jeunes femmes saisissent les données sur des perforatrices, jusqu’à 80 000 frappes par jour pour certaines. En 1964, le ministère du Travail recommande de ne pas dépasser 40 000 frappes par jour et prévoit l’indemnisation de leurs troubles : la saisie est reconnue comme un travail qui use le corps.',
+    region: 'asie', theme: 'societe', pionniere: true,
+    source: { titre: 'Maeda, Horiguchi, Hosokawa, « History of the Studies on Occupational Cervicobrachial Disorder in Japan », J. Human Ergology (1982)', url: 'https://www.jstage.jst.go.jp/article/jhe1972/11/1/11_1_17/_pdf/-char/ja' },
+  },
+  {
+    annee: '1967', tri: 1967, titre: 'L’informatique exilée à Montevideo',
+    texte: 'Après la répression de 1966 à Buenos Aires, Manuel Sadosky dirige le nouveau Centro de Computación de l’université de la République, en Uruguay, qui ouvre en 1967 une formation d’informaticien·ne et reçoit un IBM 360 fin 1968. L’ingénieure Dolores Alía de Saravia est l’une de ses cinq assistant·es fondateur·rices.',
+    region: 'amerique-latine', theme: 'societe', personnes: ['Manuel Sadosky', 'Dolores Alía de Saravia'], pionniere: true,
+    source: { titre: 'Bermúdez, Urquhart, « Salvando la memoria de la computación en la Universidad de la República » (InCo, 2003)', url: 'https://www.fing.edu.uy/inco/usuarios/jcabezas/historiacomp/ElRomance/papers/TR0319_Salvando_Bermudez_Urquhart.pdf' },
+  },
+  {
+    annee: '1972', tri: 1972.5, titre: 'Le « Patinho Feio » de São Paulo',
+    texte: 'Le 24 juillet 1972, l’École polytechnique de l’université de São Paulo inaugure le Patinho Feio (« vilain petit canard »), construit par une classe de master avec des circuits intégrés ; l’ingénieure Edith Ranzini fait partie de l’équipe. Ce n’est pas le premier ordinateur brésilien (des machines universitaires existaient dès 1960), mais il mène au premier ordinateur commercial du pays.',
+    region: 'amerique-latine', theme: 'machines', personnes: ['Edith Ranzini', 'Antônio Hélio Guerra Vieira'], pionniere: true,
+    source: { titre: 'D. Zaparolli, « O legado do Patinho Feio », Pesquisa FAPESP (2022)', url: 'https://revistapesquisa.fapesp.br/o-legado-do-patinho-feio/' },
   },
 ];
 
