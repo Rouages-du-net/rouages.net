@@ -16,12 +16,12 @@ frise filtrable par région, thème et pionnières (composant générique
 
 | # | Étape | Animation | Contenu |
 |---|---|---|---|
-| 0 | Deux mille ans de calcul | `FriseHistoire` | 46 événements (IIᵉ s. av. J.-C. – 1989), 8 régions dont Afrique et Océanie, filtres région / thème / pionnières, une source par événement |
-| 1 | Calculer avant les machines | texte | Pingala, al-Khwârizmî, Lovelace (Note G), calculatrices de Harvard, Greenwich, NACA, dames de la Carte du Ciel (Paris), mesureuses de Melbourne, calculateurs de l'ISI (Calcutta) ; mythes « première programmeuse », chiffres « arabes » |
-| 2 | Des machines partout dans le monde | texte | Z3, ABC, Colossus et les Wrens, Enigma (Polonais, Turing, Joan Clarke), ENIAC Six, Setun, TIFRAC, Clementina, Le Cap (1957), Ibadan (1964), Osofisan ; condamnation et pardon de Turing, Nuit des longs bâtons ; mythes « premier ordinateur » (procès de 1973), « Turing seul », « père de l'informatique », Colossus attribué à Turing |
+| 0 | Deux mille ans de calcul | `FriseHistoire` | 52 événements (IIᵉ s. av. J.-C. – 1989), 8 régions dont Afrique et Océanie, filtres région / thème / pionnières, une source par événement |
+| 1 | Calculer avant les machines | texte | Pingala, al-Khwârizmî, Lovelace (Note G), calculatrices de Harvard, Greenwich, NACA, dames de la Carte du Ciel (Paris), mesureuses de Melbourne, calculateurs de l'ISI (Calcutta), calculateur·rices du projet atomique soviétique (Olga Kramer), soroban contre calculatrice (Tokyo, 1946) ; mythes « première programmeuse », chiffres « arabes » |
+| 2 | Des machines partout dans le monde | texte | Z3, ABC, Colossus et les Wrens, MESM (Chkabara), FUJIC, paramétron, Enigma (Polonais, Turing, Joan Clarke), ENIAC Six, Setun, TIFRAC, Clementina, Le Cap (1957), Ibadan (1964), Osofisan ; condamnation et pardon de Turing, Nuit des longs bâtons ; mythes « premier ordinateur » (procès de 1973), « Turing seul », « père de l'informatique », Colossus attribué à Turing |
 | 3 | Programmer | texte | Hopper (A-0, FLOW-MATIC), Iouchtchenko (Adresse), Vaughan, Johnson, Easley, Keller, Hamilton, Shirley ; mythes COBOL, papillon, Apollo, pointeurs |
 | 4 | Puces et petites mains | texte | Conway et Mead, Dean, Lawson, Wilson et Furber, ouvrières de Hong Kong, Shiprock (occupation de 1975, deux lectures), Penang, maquiladoras ; mythes ARM et cartouche |
-| 5 | Des choix politiques | texte | OGAS, Cybersyn, réserve de marché brésilienne, Wang Xuan et Chen Kunqiu (brevet de 1982), TRON, registres de l'apartheid, LOGO en wolof à Dakar ; mythe des sanctions contre TRON |
+| 5 | Des choix politiques | texte | OGAS, Cybersyn, réserve de marché brésilienne, Wang Xuan et Chen Kunqiu (brevet de 1982), TRON, registres de l'apartheid, LOGO en wolof à Dakar (Fatimata Sèye Sylla, critiques du Centre mondial) ; mythe des sanctions contre TRON |
 | ✓ | Ce qu'il faut retenir | liste | cinq points |
 
 ## Choix et limites
@@ -45,7 +45,10 @@ frise filtrable par région, thème et pionnières (composant générique
   « calculateurs ».
 - Shiprock : la fermeture de 1975 est présentée avec ses deux lectures
   (conséquence de l'occupation ou prétexte).
-- Restent à chercher : URSS et Japon (calcul humain), le nom de
-  l'informaticienne qui dirigeait le LOGO wolof (archives UNESCO), une source
-  indépendante sur le livre-échantillon de 1980, le texte intégral de
-  Nakamura et ce que T. Mullaney dit de Wang Xuan.
+- Fatimata Sèye Sylla est nommée comme responsable du laboratoire de l'ENS
+  de Dakar (photo MIT, biographie, mémoire de 1985), pas comme
+  « informaticienne du ministère de la Recherche » : ce lien n'est pas vérifié.
+- Restent à chercher : le document UNESCO sur le projet de Dakar, la date
+  d'installation de l'ICT 1202 au Kenya, la Tanzanie (1965 ou 1968), le
+  Ghana, des programmeuses japonaises, et ce que T. Mullaney et J. Tsu écrivent
+  de Wang Xuan.
