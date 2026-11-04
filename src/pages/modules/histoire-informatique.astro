@@ -46,13 +46,14 @@ const etapes = [
   <Etape numero={0} titre="Deux mille ans de calcul" ancre="frise">
     <FriseHistoire slot="animation" donnees={FRISE_INFORMATIQUE} id="informatique" />
     <p slot="decouverte">
-      Une cinquantaine de dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
+      Une soixantaine de dates, d'un traité indien de poésie au premier processeur ARM. Filtre par
       région ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
     </p>
     <p slot="curieux">
       Les récits les plus connus racontent une suite d'hommes américains et britanniques. La frise
-      montre aussi l'Inde, Bagdad, l'URSS, l'Argentine, le Chili, le Brésil, le Nigeria, le Sénégal,
-      l'Afrique du Sud, l'Australie, la Chine et le Japon, et
+      montre aussi l'Inde, Bagdad, Samarcande, l'URSS, Israël, la Turquie, le Mexique, l'Argentine,
+      l'Uruguay, le Chili, le Brésil, le Nigeria, le Sénégal, l'Afrique du Sud, l'Australie, la Chine et
+      le Japon, et
       les femmes qui ont calculé, programmé et assemblé les puces.
     </p>
   </Etape>
@@ -71,6 +72,12 @@ const etapes = [
         tardifs y liront une forme d'écriture binaire. Au IXᵉ siècle, à Bagdad, al-Khwârizmî écrit sur
         le calcul avec les chiffres indiens : son nom a donné « algorithme », et son traité
         d'<em>al-jabr</em>, « algèbre ».
+      </p>
+      <p>
+        À la même époque, les frères Banū Mūsā décrivent un orgue dont la mélodie est codée par des
+        chevilles sur un cylindre interchangeable : une séquence enregistrée, pas encore un calcul. En
+        1206, al-Jazarī détaille cinquante machines, dont des automates musicaux. En 1424, à Samarcande,
+        al-Kāshī calcule π avec seize décimales exactes, un record pendant environ 180 ans.
       </p>
       <p>
         En 1843, Ada Lovelace publie ses notes sur la machine analytique de Charles Babbage. La Note G
@@ -113,7 +120,9 @@ const etapes = [
     <p slot="mythes">
       <strong>« Ada Lovelace est la première programmeuse. »</strong> La formule est contestée : il vaut
       mieux parler du premier algorithme publié destiné à une machine. Et <strong>al-Khwârizmî n'a pas
-      inventé les chiffres « arabes »</strong> : ils viennent d'Inde, il les a fait connaître.
+      inventé les chiffres « arabes »</strong> : ils viennent d'Inde, il les a fait connaître. Enfin, <strong>al-Jazarī n'a pas construit
+      « le premier robot programmable »</strong> : ses automates rejouent des séquences fixes, et
+      l'expression est une lecture moderne.
     </p>
   </Etape>
 
@@ -150,8 +159,8 @@ const etapes = [
         À l'université de Moscou, l'équipe de Nikolaï Broussentsov met en service fin 1958 Setun, qui
         calcule en ternaire (−1, 0, +1). À Bombay, l'équipe de R. Narasimhan met en service en 1960 le
         premier ordinateur conçu et construit en Inde, baptisé TIFRAC en 1962. À Buenos Aires,
-        l'université inaugure en 1961 Clementina, son premier ordinateur scientifique ; Cecilia
-        Berdichevsky en est la première programmeuse.
+        l'université inaugure en 1961 Clementina, son premier ordinateur scientifique : Rebeca Guber
+        coordonne son achat, et Cecilia Berdichevsky est parmi les premières à la programmer.
       </p>
       <p>
         Près de Kyiv, fin 1951, l'équipe de Sergueï Lebedev met en service la MESM, premier ordinateur
@@ -159,6 +168,14 @@ const etapes = [
         adjoints. Au Japon, l'ingénieur Okazaki Bunji construit presque seul FUJIC (1956), et l'université
         de Tokyo invente le paramétron, un composant bon marché qui équipera près de la moitié des
         ordinateurs japonais vers 1959.
+      </p>
+      <p>
+        En octobre 1955, l'Institut Weizmann, en Israël, met en service WEIZAC ; l'ingénieure Thelma
+        Estrin fait partie de l'équipe. En 1958, l'université nationale du Mexique loue un IBM 650 et
+        vend du temps de calcul pour le payer ; en 1960, la Turquie reçoit le sien pour calculer ses
+        routes. Après la répression de 1966 à Buenos Aires, Manuel Sadosky fonde en Uruguay un centre
+        d'informatique qui forme des informaticien·nes dès 1967. Et en 1972, à São Paulo, une classe de
+        master construit le « Patinho Feio », avec l'ingénieure Edith Ranzini.
       </p>
       <p>
         En Afrique, les premiers ordinateurs sont importés : dès 1957, l'administration de la province du
@@ -228,7 +245,9 @@ const etapes = [
       <p>
         Au MIT, Margaret Hamilton dirige l'équipe du logiciel embarqué des missions Apollo. Au Royaume-Uni,
         Stephanie Shirley fonde en 1962 une entreprise de programmeuses travaillant à domicile ; elle
-        signe ses lettres « Steve » pour qu'on lui réponde.
+        signe ses lettres « Steve » pour qu'on lui réponde. Au Japon, la mathématicienne Yamamoto Kinko
+        écrit le logiciel de l'ordinateur MUSASINO-1 (1957), puis forme à partir de 1958 une grande partie
+        des premier·es programmeur·ses du pays.
       </p>
     </div>
     <p slot="ingenieur">
@@ -285,6 +304,12 @@ const etapes = [
         1965), dans l'usine Fairchild de Shiprock, en territoire navajo, de 1965 à 1975 (plus d'un millier
         de personnes, surtout des femmes navajo), à Penang (Malaisie) chez Intel
         à partir de 1972, dans les <em>maquiladoras</em> du nord du Mexique.
+      </p>
+      <p>
+        La saisie des données use aussi les corps. Au Japon, des milliers de jeunes femmes tapent sur des
+        perforatrices, jusqu'à 80 000 frappes par jour pour certaines. En 1964, le ministère du Travail
+        recommande de ne pas dépasser 40 000 frappes par jour et prévoit d'indemniser leurs troubles de la
+        main et du bras.
       </p>
     </div>
     <p slot="ingenieur">
@@ -490,6 +515,20 @@ const etapes = [
       { auteur: 'M. Cassidy (San Jose Mercury News)', titre: 'What Went Wrong at Shiprock', url: 'https://mikecassidy.wordpress.com/2012/10/23/when-protesters-took-over-fairchilds-fab-on-the-navajo-reservation/', type: 'presse', annee: 2000, langue: 'en' },
       { auteur: 'Computer History Museum', titre: 'Fairchild Oral History Panel: Bipolar Digital Products', url: 'https://archive.computerhistory.org/resources/access/text/2015/07/102658280-05-01-acc.pdf', type: 'primaire', annee: 2007, langue: 'en' },
       { auteur: 'Bureau of Indian Affairs', titre: 'Electronics Industry Expanding on Navajo Reservation', url: 'https://www.bia.gov/as-ia/opa/online-press-release/electronics-industry-expanding-navajo-reservation', type: 'primaire', annee: 1966, langue: 'en' },
+      { auteur: 'J. Casulleras', titre: 'Banū Mūsā (Biographical Encyclopedia of Astronomers, Springer, PDF MacTutor)', url: 'https://mathshistory.st-andrews.ac.uk/BEA/banu_musa_bea.pdf', type: 'recherche', annee: 2007, langue: 'en' },
+      { auteur: 'ZKM Karlsruhe', titre: 'Automatische hydraulische Orgel der Banū Mūsā ibn Shākir (reconstruction)', url: 'https://zkm.de/en/node/62659', type: 'site', annee: 2015, langue: 'en' },
+      { auteur: 'C. Canavas', titre: 'Al-Jazarī’s Compendium of Ingenious Devices (CNRS Éditions)', url: 'https://books.openedition.org/editionscnrs/27688', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Ghiyath al-Din Jamshid Mas’ud al-Kashi (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Al-Kashi/', type: 'recherche', langue: 'en' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestone: WEIZAC Computer, 1955', url: 'https://ethw.org/Milestones:WEIZAC_Computer,_1955', type: 'site', langue: 'en' },
+      { auteur: 'Capital', titre: 'IBM Müdürü’nden Bir Dönemin Öyküsü', url: 'https://www.capital.com.tr/sektorler/teknoloji/ibm-mudurunden-bir-donemin-oykusu', type: 'presse', annee: 2002, langue: 'tr' },
+      { auteur: 'de la Peña Sobarzo, Zárate Méndez (UNAM)', titre: 'De las tarjetas perforadas a Miztli (El faro)', url: 'https://elfaro.cic.unam.mx/wp-content/uploads/2019/08/FARO-60-anos-delcomputo-en-mexico.pdf', type: 'site', annee: 2018, langue: 'es' },
+      { auteur: 'Bermúdez, Urquhart (InCo, Universidad de la República)', titre: 'Salvando la memoria de la computación en la Universidad de la República', url: 'https://www.fing.edu.uy/inco/usuarios/jcabezas/historiacomp/ElRomance/papers/TR0319_Salvando_Bermudez_Urquhart.pdf', type: 'recherche', annee: 2003, langue: 'es' },
+      { auteur: 'D. Zaparolli (Pesquisa FAPESP)', titre: 'O legado do Patinho Feio', url: 'https://revistapesquisa.fapesp.br/o-legado-do-patinho-feio/', type: 'presse', annee: 2022, langue: 'pt' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Rebeca Cherep de Guber (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Guber', type: 'recherche', langue: 'en' },
+      { auteur: 'UBA Ciencia', titre: 'Rebeca Chereb de Guber, precursora de la computación argentina', url: 'https://www.uba.ar/ubaciencia/noticias/723', type: 'site', annee: 2025, langue: 'es' },
+      { auteur: 'IPSJ Computer Museum', titre: 'Yamamoto Kinko', url: 'https://museum.ipsj.or.jp/en/pioneer/k-yama.html', type: 'site', langue: 'en' },
+      { auteur: 'Maeda, Horiguchi, Hosokawa', titre: 'History of the Studies on Occupational Cervicobrachial Disorder in Japan (J. Human Ergology 11)', url: 'https://www.jstage.jst.go.jp/article/jhe1972/11/1/11_1_17/_pdf/-char/ja', type: 'recherche', annee: 1982, langue: 'en' },
+      { auteur: 'S. Shioda (UNU Press)', titre: 'Innovation and Change in the Rapid Economic Growth Period (Technology Change and Female Labour in Japan, chap. 5)', url: 'https://d-arch.ide.go.jp/je_archive/english/society/book_jes7_d06.html', type: 'recherche', annee: 1994, langue: 'en' },
       { auteur: 'PKU News', titre: 'Wang Xuan: Exploring the way of independent innovation', url: 'https://english.pku.edu.cn/news_events/news/people/8889.html', type: 'site', annee: 2019, langue: 'en' },
       { auteur: 'Wangxuan Institute of Computer Technology (PKU)', titre: 'History', url: 'https://www.icst.pku.edu.cn/english/about_us/history/index.htm', type: 'site', langue: 'en' },
       { auteur: 'IEEE / ETHW', titre: 'Milestone: The Pioneering TRON Intelligent House, 1989', url: 'https://ethw.org/Milestones:The_Pioneering_TRON_Intelligent_House,_1989', type: 'site', langue: 'en' },
