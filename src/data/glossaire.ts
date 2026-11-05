@@ -511,6 +511,30 @@ export const GLOSSAIRE: Record<string, Entree> = {
     definition:
       "Petit langage pour décrire un motif de texte, par exemple « le mot je suis, puis n'importe quoi ». Un programme s'en sert pour reconnaître des phrases et en extraire des morceaux.",
   },
+  base: {
+    terme: 'Base (de numération)',
+    definition:
+      "Nombre de chiffres qu'on utilise pour écrire les nombres, et taille des paquets qu'on forme : 10 en décimal (0 à 9), 2 en binaire (0 et 1), 8 en octal, 16 en hexadécimal.",
+    voirAussi: ['bit', 'hexadecimal'],
+  },
+  hexadecimal: {
+    terme: 'Hexadécimal',
+    definition:
+      "Écriture des nombres en base 16, avec les chiffres 0 à 9 puis A à F (A vaut 10, F vaut 15). Un chiffre hexadécimal remplace exactement 4 bits : un octet s'écrit en deux chiffres, de 00 à FF.",
+    voirAussi: ['base', 'octet'],
+  },
+  'masque-reseau': {
+    terme: 'Masque de sous-réseau',
+    definition:
+      "Suite de 32 bits (en IPv4) dont les 1, tous à gauche, indiquent la partie « réseau » d'une adresse IP ; les 0 numérotent les machines. Exemple : 255.255.255.0, soit /24.",
+    voirAussi: ['adresse-ip', 'cidr'],
+  },
+  cidr: {
+    terme: 'Notation CIDR',
+    definition:
+      "Façon d'écrire un réseau avec une barre oblique et le nombre de bits du réseau : 192.0.2.0/24 veut dire « les 24 premiers bits désignent le réseau ». Adoptée en 1993 à la place des classes A, B et C.",
+    voirAussi: ['masque-reseau', 'adresse-ip'],
+  },
 };
 
 export function entree(id: string): Entree {

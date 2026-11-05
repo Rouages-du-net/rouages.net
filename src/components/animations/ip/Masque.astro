@@ -1,0 +1,152 @@
+---
+// Animation « Le masque : où s'arrête le réseau » (module « Adresses IP et
+// masques », étape 2). On choisit une longueur de préfixe /n (curseur) ou on
+// tape un masque en décimal pointé ; on voit les trois écritures du masque
+// (CIDR, décimal, binaire), puis l'ET logique adresse ET masque = réseau.
+// Références : RFC 950 (masques), RFC 4632 (CIDR), RFC 3021 (/31).
+---
+<div class="anim masque" data-masque>
+  <div class="anim-repli">
+    <p>
+      Le masque /24 s'écrit aussi 255.255.255.0, soit 24 bits à 1 puis 8 bits à 0 :
+      11111111.11111111.11111111.00000000. Les bits à 1 marquent la partie « réseau » de l'adresse. Avec
+      198.51.100.77/24, le réseau est 198.51.100.0, l'adresse de diffusion 198.51.100.255, et il reste
+      254 adresses pour les machines. Avec /17, le masque est 255.255.128.0.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="reglages-masque">
+        <label>Adresse
+          <input type="text" value="198.51.100.77" spellcheck="false" autocomplete="off" inputmode="decimal" data-ip />
+        </label>
+        <label class="curseur">Préfixe <output data-p-sortie>/24</output>
+          <input type="range" min="0" max="32" value="24" data-p />
+        </label>
+        <label>Masque
+          <input type="text" value="255.255.255.0" spellcheck="false" autocomplete="off" inputmode="decimal" data-m />
+        </label>
+      </div>
+      <div class="anim-commandes">
+        {[8, 16, 17, 24, 26, 30, 31].map((p) => <button type="button" data-prefixe={p}>/{p}</button>)}
+      </div>
+
+      <div class="table-bits" data-table aria-hidden="true"></div>
+      <p class="anim-note">En vert : la partie réseau (bits du masque à 1). En jaune : la partie machine (bits du masque à 0). Le réseau s’obtient par un ET logique, bit à bit.</p>
+
+      <dl class="resultats" data-resultats></dl>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { bits32, ecrireIPv4, lireIPv4, masque, prefixe, reseau } from '../../../lib/ip';
+  import { exposant, fr, versBase } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-masque]').forEach((racine) => {
+    activerScene(racine);
+    const champIp = racine.querySelector<HTMLInputElement>('[data-ip]')!;
+    const curseur = racine.querySelector<HTMLInputElement>('[data-p]')!;
+    const sortieP = racine.querySelector<HTMLOutputElement>('[data-p-sortie]')!;
+    const champM = racine.querySelector<HTMLInputElement>('[data-m]')!;
+    const table = racine.querySelector<HTMLElement>('[data-table]')!;
+    const resultats = racine.querySelector<HTMLElement>('[data-resultats]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let p = 24;
+    let ip = lireIPv4(champIp.value)!;
+
+    function rangee(nom: string, bits: string, classe = '') {
+      const r = document.createElement('div');
+      r.className = `rangee-bits ${classe}`;
+      r.append(Object.assign(document.createElement('span'), { className: 'nom-r', textContent: nom }));
+      const cases = document.createElement('span');
+      cases.className = 'cases';
+      [...bits].forEach((c, i) => {
+        if (i > 0 && i % 8 === 0) cases.append(Object.assign(document.createElement('span'), { className: 'sep', textContent: '.' }));
+        cases.append(Object.assign(document.createElement('span'), { className: `case ${i < p ? 'res' : 'hote'}`, textContent: c }));
+      });
+      r.append(cases);
+      table.append(r);
+    }
+
+    function ajouter(terme: string, valeur: string) {
+      resultats.append(Object.assign(document.createElement('dt'), { textContent: terme }), Object.assign(document.createElement('dd'), { textContent: valeur }));
+    }
+
+    function rendre(message?: string) {
+      const m = masque(p);
+      const r = reseau(ip, p);
+      curseur.value = String(p);
+      sortieP.textContent = `/${p}`;
+      table.replaceChildren();
+      rangee('Adresse', bits32(ip));
+      rangee('Masque', bits32(m), 'ligne-masque');
+      rangee('ET = réseau', bits32(r.reseau), 'ligne-resultat');
+      resultats.replaceChildren();
+      ajouter('Notation CIDR', `${ecrireIPv4(ip)}/${p}`);
+      ajouter('Masque en décimal', ecrireIPv4(m));
+      ajouter('Masque en binaire', bits32(m).match(/.{8}/g)!.join('.\u200b'));
+      ajouter('Masque en hexadécimal', versBase(m, 16, 8).match(/.{2}/g)!.join(' '));
+      ajouter('Adresse du réseau', p >= 31 ? `${ecrireIPv4(r.reseau)} (début du bloc, utilisable par une machine)` : ecrireIPv4(r.reseau));
+      ajouter('Adresse de diffusion', p >= 31 ? 'aucune (voir ci-dessous)' : ecrireIPv4(r.diffusion));
+      ajouter('Machines', r.adresses === 1 ? ecrireIPv4(r.premiere) : `de ${ecrireIPv4(r.premiere)} à ${ecrireIPv4(r.derniere)}`);
+      ajouter('Nombre d’adresses', `${fr(r.adresses)} (2${exposant(32 - p)})`);
+      ajouter('Adresses pour les machines', fr(r.hotes));
+      const explication =
+        p === 32 ? 'Un /32 désigne une seule adresse, une seule machine.'
+        : p === 31 ? 'Un /31 n’a que 2 adresses : on l’utilise pour relier deux routeurs, sans adresse de réseau ni de diffusion (RFC 3021).'
+        : `Les ${p} premiers bits (à 1 dans le masque) désignent le réseau ; les ${32 - p} derniers numérotent les machines. Sur ${fr(r.adresses)} adresses, la première est celle du réseau et la dernière sert à la diffusion : il en reste ${fr(r.hotes)}.`;
+      legende.textContent = (message ? message + ' ' : '') + explication;
+    }
+
+    curseur.addEventListener('input', () => { p = Number(curseur.value); champM.value = ecrireIPv4(masque(p)); rendre(); });
+    racine.querySelectorAll<HTMLButtonElement>('[data-prefixe]').forEach((b) =>
+      b.addEventListener('click', () => { p = Number(b.dataset.prefixe); champM.value = ecrireIPv4(masque(p)); rendre(); }),
+    );
+    champM.addEventListener('change', () => {
+      const m = lireIPv4(champM.value);
+      if (m === null) return void (legende.textContent = `« ${champM.value} » n’est pas écrit comme un masque : quatre nombres de 0 à 255 séparés par des points.`);
+      const q = prefixe(m);
+      if (q === null) return void (legende.textContent = `${champM.value} n’est pas un masque valide : en binaire (${bits32(m).match(/.{8}/g)!.join('.')}), tous les 1 doivent être à gauche, tous les 0 à droite.`);
+      p = q;
+      rendre(`${champM.value} = /${q} : ${q} bits à 1.`);
+    });
+    champIp.addEventListener('change', () => {
+      const v = lireIPv4(champIp.value);
+      if (v === null) return void (legende.textContent = `« ${champIp.value} » n’est pas une adresse IPv4 : quatre nombres de 0 à 255 séparés par des points.`);
+      ip = v;
+      rendre();
+    });
+    rendre();
+  });
+</script>
+
+<style>
+  .reglages-masque { display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: flex-end; }
+  .reglages-masque label { display: grid; gap: 0.25rem; font-weight: 600; font-size: 0.95rem; }
+  .reglages-masque input[type='text'] { font-family: var(--police-mono); font-size: 1rem; width: 10.5rem; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .curseur input { width: 11rem; accent-color: var(--accent); }
+  .curseur output { font-family: var(--police-mono); }
+  .table-bits { margin-top: 0.9rem; display: grid; gap: 0.25rem; }
+  :global(.masque .rangee-bits) { display: grid; grid-template-columns: 5.5rem 1fr; align-items: center; gap: 0.4rem; }
+  :global(.masque .nom-r) { font-size: 0.8rem; color: var(--muted); }
+  :global(.masque .cases) { display: grid; grid-template-columns: repeat(8, 1fr) 0.35rem repeat(8, 1fr) 0.35rem repeat(8, 1fr) 0.35rem repeat(8, 1fr); font-family: var(--police-mono); font-size: clamp(0.62rem, 2.3vw, 0.95rem); }
+  :global(.masque .case) { text-align: center; padding: 0.1rem 0; }
+  :global(.masque .case.res) { background: color-mix(in srgb, var(--ill-secret-b) 35%, transparent); }
+  :global(.masque .case.hote) { background: color-mix(in srgb, var(--ill-commun) 35%, transparent); }
+  :global(.masque .ligne-resultat .case) { font-weight: 700; }
+  :global(.masque .sep) { text-align: center; color: var(--muted); }
+  @media (max-width: 30rem) {
+    :global(.masque .rangee-bits) { grid-template-columns: 1fr; gap: 0.1rem; }
+  }
+  .resultats { display: grid; grid-template-columns: max-content 1fr; gap: 0.2rem 0.8rem; margin: 0.9rem 0 0; }
+  :global(.masque .resultats dt) { color: var(--muted); font-size: 0.9rem; }
+  :global(.masque .resultats dd) { margin: 0; font-family: var(--police-mono); overflow-wrap: anywhere; }
+  @media (max-width: 30rem) {
+    .resultats { grid-template-columns: 1fr; }
+    :global(.masque .resultats dd) { margin-bottom: 0.3rem; }
+  }
+</style>

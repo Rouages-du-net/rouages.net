@@ -1,0 +1,133 @@
+---
+// Animation « IPv6 : huit groupes en hexadécimal » (module « Adresses IP et
+// masques », étape 1). Pas à pas, on abrège une adresse selon la RFC 5952 :
+// zéros en tête supprimés, plus longue suite de groupes nuls remplacée par
+// « :: » (la première en cas d'égalité, jamais pour un seul groupe),
+// minuscules. Exemples dans le préfixe de documentation 2001:db8::/32 (RFC 3849).
+---
+<div class="anim ipv6" data-ipv6>
+  <div class="anim-repli">
+    <p>
+      Une adresse IPv6 compte 128 bits, écrits en 8 groupes de 4 chiffres hexadécimaux :
+      2001:0db8:0000:0000:0000:0000:0000:0001. On enlève les zéros en tête de chaque groupe
+      (2001:db8:0:0:0:0:0:1), puis on remplace la plus longue suite de groupes nuls par « :: » :
+      2001:db8::1.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="saisie-v6">Adresse IPv6
+        <input type="text" value="2001:0db8:0000:0000:0000:0000:0000:0001" spellcheck="false" autocomplete="off" data-adresse />
+      </label>
+      <div class="anim-commandes exemples">
+        <button type="button" data-exemple="2001:0db8:0000:0000:0000:0000:0000:0001">2001:db8::1</button>
+        <button type="button" data-exemple="2001:0db8:0000:0001:0000:0000:0000:00ff">deux suites de zéros</button>
+        <button type="button" data-exemple="2001:0db8:0000:0000:0001:0000:0000:0001">égalité</button>
+        <button type="button" data-exemple="2001:0db8:0000:0001:0001:0001:0001:0001">un seul groupe nul</button>
+        <button type="button" data-exemple="2001:db8::a:b">déjà abrégée</button>
+      </div>
+      <div class="groupes-v6" data-groupes aria-hidden="true"></div>
+      <p class="parties" data-parties></p>
+      <p class="resultat-v6" data-resultat></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { ecrireComplet, ecrireCourt, ecrireSansZeros, lireIPv6, suiteNulle } from '../../../lib/ip';
+
+  document.querySelectorAll<HTMLElement>('[data-ipv6]').forEach((racine) => {
+    activerScene(racine);
+    const champ = racine.querySelector<HTMLInputElement>('[data-adresse]')!;
+    const zone = racine.querySelector<HTMLElement>('[data-groupes]')!;
+    const parties = racine.querySelector<HTMLElement>('[data-parties]')!;
+    const resultat = racine.querySelector<HTMLElement>('[data-resultat]')!;
+
+    const span = (classe: string, texte: string) => Object.assign(document.createElement('span'), { className: classe, textContent: texte });
+
+    function dessiner(textes: string[], marque?: { debut: number; longueur: number }, fusion = false) {
+      zone.replaceChildren();
+      const groupe = (i: number) => {
+        const dansSuite = marque && i >= marque.debut && i < marque.debut + marque.longueur;
+        return span(`groupe-v6${i < 4 ? ' prefixe' : ' interface'}${dansSuite ? ' suite' : ''}`, textes[i]);
+      };
+      if (fusion && marque) {
+        // Groupes avant la suite, « :: » à sa place, groupes après.
+        for (let i = 0; i < marque.debut; i++) {
+          if (i > 0) zone.append(span('deux-points', ':'));
+          zone.append(groupe(i));
+        }
+        zone.append(span('groupe-v6 suite', '::'));
+        for (let i = marque.debut + marque.longueur; i < 8; i++) {
+          if (i > marque.debut + marque.longueur) zone.append(span('deux-points', ':'));
+          zone.append(groupe(i));
+        }
+        return;
+      }
+      textes.forEach((_, i) => {
+        if (i > 0) zone.append(span('deux-points', ':'));
+        zone.append(groupe(i));
+      });
+    }
+
+    const anim = pasAPas(racine, () => (lireIPv6(champ.value) ? 4 : 1), (etape) => {
+      const g = lireIPv6(champ.value);
+      resultat.textContent = '';
+      parties.textContent = '';
+      if (!g) {
+        zone.replaceChildren();
+        return 'Cette adresse n’est pas valide : 8 groupes de 1 à 4 chiffres hexadécimaux (0-9, a-f), séparés par « : », avec au plus un « :: ».';
+      }
+      const z = suiteNulle(g);
+      if (etape === 1) {
+        dessiner(ecrireComplet(g).split(':'));
+        parties.textContent = 'Les 4 premiers groupes (64 bits) désignent le plus souvent le réseau, les 4 derniers la machine sur ce réseau (identifiant d’interface).';
+        return `Forme complète : 8 groupes de 4 chiffres hexadécimaux. Chaque chiffre vaut 4 bits, chaque groupe 16 bits : 8 × 16 = 128 bits.`;
+      }
+      if (etape === 2) {
+        dessiner(ecrireSansZeros(g).split(':'));
+        return 'On enlève les zéros au début de chaque groupe : 0db8 devient db8, 0001 devient 1, 0000 devient 0. Les zéros de droite (comme dans 2001) restent.';
+      }
+      if (etape === 3) {
+        dessiner(ecrireSansZeros(g).split(':'), z ?? undefined);
+        if (!z) return 'On cherche une suite d’au moins deux groupes nuls… il n’y en a pas. Un seul groupe nul ne s’abrège pas avec « :: ».';
+        return `La plus longue suite de groupes nuls compte ${z.longueur} groupes (du ${z.debut + 1}ᵉ au ${z.debut + z.longueur}ᵉ). S’il y a égalité, on prend la première.`;
+      }
+      dessiner(ecrireSansZeros(g).split(':'), z ?? undefined, true);
+      const court = ecrireCourt(g);
+      resultat.textContent = court;
+      return z
+        ? `On remplace cette suite par « :: ». Un seul « :: » par adresse : sinon, on ne saurait pas combien de zéros chacun remplace. Résultat, en minuscules : ${court}.`
+        : `Pas de « :: » possible : l’adresse s’écrit ${court}.`;
+    });
+
+    champ.addEventListener('input', () => anim.aller(1));
+    racine.querySelectorAll<HTMLButtonElement>('[data-exemple]').forEach((b) =>
+      b.addEventListener('click', () => { champ.value = b.dataset.exemple!; anim.aller(1); }),
+    );
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .saisie-v6 { display: grid; gap: 0.3rem; font-weight: 600; }
+  .saisie-v6 input { font-family: var(--police-mono); font-size: 1rem; width: 100%; max-width: 30rem; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .exemples { margin-top: 0.5rem; }
+  .groupes-v6 { display: flex; flex-wrap: wrap; align-items: center; gap: 0.1rem; margin-top: 0.9rem; font-family: var(--police-mono); font-size: 1.05rem; min-height: 2.2rem; }
+  :global(.ipv6 .groupe-v6) { padding: 0.15rem 0.3rem; border-radius: 0.3rem; min-width: 1.2rem; text-align: center; }
+  :global(.ipv6 .groupe-v6.prefixe) { border-bottom: 3px solid var(--ill-client); }
+  :global(.ipv6 .groupe-v6.interface) { border-bottom: 3px solid var(--ill-paquet); }
+  :global(.ipv6 .groupe-v6.suite) { background: var(--accent); color: var(--bg); }
+  :global(.ipv6 .deux-points) { font-weight: 700; }
+  .parties { font-size: 0.9rem; color: var(--muted); margin: 0.4rem 0 0; min-height: 1.2em; }
+  .resultat-v6 { font-family: var(--police-mono); font-size: 1.25rem; font-weight: 700; margin: 0.4rem 0 0; min-height: 1.5em; overflow-wrap: anywhere; }
+</style>

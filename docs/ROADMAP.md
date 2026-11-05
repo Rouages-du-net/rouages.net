@@ -44,6 +44,12 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [ ] Carte interactive des acteurs et des rapports de force
 - [ ] Fiches institutions (IETF, ICANN, W3C, RIR, CNIL, Arcom…)
 
+## Phase 3 bis — Outils pour les cours
+
+- [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
+- [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines
+- Sources : [`sources/bases-ip.md`](sources/bases-ip.md)
+
 ## Phase 4 — Les histoires
 
 - [x] Composant de frise filtrable (région, thème, pionnières) — `src/components/FriseHistoire.astro`, générique (types dans `src/lib/frise.ts`, données de chaque histoire dans `src/data/`)

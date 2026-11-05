@@ -1,0 +1,172 @@
+---
+// Animation « Passer d'une base à l'autre » (module « Compter en binaire,
+// octal et hexadécimal », étape 2), pas à pas :
+// - du décimal vers la base b : divisions successives par b, puis lecture des
+//   restes de bas en haut ;
+// - de la base b vers le décimal : chaque chiffre fois son poids, puis somme.
+---
+<div class="anim conversion" data-conversion>
+  <div class="anim-repli">
+    <p>
+      <strong>Du décimal vers le binaire</strong> : on divise 13 par 2 (6, reste 1), puis 6 par 2 (3, reste 0),
+      3 par 2 (1, reste 1), 1 par 2 (0, reste 1). On lit les restes de bas en haut : 1101.
+    </p>
+    <p>
+      <strong>De l'hexadécimal vers le décimal</strong> : 2F = 2 × 16 + 15 × 1 = 47 (F vaut 15).
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="reglages-conv">
+        <fieldset>
+          <legend>Sens</legend>
+          <label><input type="radio" name="conv-sens" value="vers" checked /> du décimal vers la base</label>
+          <label><input type="radio" name="conv-sens" value="depuis" /> de la base vers le décimal</label>
+        </fieldset>
+        <fieldset>
+          <legend>Base</legend>
+          {[2, 8, 16].map((b) => (
+            <label><input type="radio" name="conv-base" value={b} checked={b === 2} /> {b}</label>
+          ))}
+        </fieldset>
+        <label class="saisie"><span data-saisie-nom>Nombre en décimal</span>
+          <input type="text" value="13" maxlength="12" spellcheck="false" autocomplete="off" data-saisie />
+        </label>
+      </div>
+      <ol class="calcul" data-calcul></ol>
+      <p class="resultat" data-resultat></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { CHIFFRES, NOMS_BASES, depuisBase, divisions, fr, poids, versBase } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-conversion]').forEach((racine) => {
+    activerScene(racine);
+    const saisie = racine.querySelector<HTMLInputElement>('[data-saisie]')!;
+    const nomSaisie = racine.querySelector<HTMLElement>('[data-saisie-nom]')!;
+    const calcul = racine.querySelector<HTMLOListElement>('[data-calcul]')!;
+    const resultat = racine.querySelector<HTMLElement>('[data-resultat]')!;
+    const sens = () => racine.querySelector<HTMLInputElement>('input[name="conv-sens"]:checked')!.value;
+    const base = () => Number(racine.querySelector<HTMLInputElement>('input[name="conv-base"]:checked')!.value);
+
+    // Valeur saisie, ou un message d'erreur.
+    function lire(): { n: number } | { erreur: string } {
+      const b = sens() === 'vers' ? 10 : base();
+      const n = depuisBase(saisie.value, b);
+      if (n === null) {
+        const permis = b === 16 ? '0 à 9 et A à F' : `0 à ${b - 1}`;
+        return { erreur: `« ${saisie.value} » n’est pas un nombre en ${NOMS_BASES[b]} : on n’y utilise que les chiffres ${permis}.` };
+      }
+      if (n > 1_000_000) return { erreur: 'Choisis un nombre plus petit (jusqu’à un million).' };
+      return { n };
+    }
+
+    function total() {
+      const l = lire();
+      if ('erreur' in l) return 1;
+      return sens() === 'vers' ? divisions(l.n, base()).length + 1 : poids(saisie.value, base()).length + 1;
+    }
+
+    function ligne(html: string, classe = '') {
+      const li = document.createElement('li');
+      li.innerHTML = html;
+      if (classe) li.className = classe;
+      calcul.append(li);
+      return li;
+    }
+
+    const anim = pasAPas(racine, total, (etape) => {
+      calcul.replaceChildren();
+      resultat.textContent = '';
+      const l = lire();
+      if ('erreur' in l) return l.erreur;
+      const b = base();
+      if (sens() === 'vers') {
+        const lignes = divisions(l.n, b);
+        const final = etape > lignes.length;
+        lignes.slice(0, Math.min(etape, lignes.length)).forEach((d) =>
+          ligne(`${fr(d.dividende)} ÷ ${b} = <b>${fr(d.quotient)}</b>, reste <span class="reste">${CHIFFRES[d.reste]}</span>${b === 16 && d.reste > 9 ? ` <small>(${d.reste})</small>` : ''}`, final ? 'lu' : ''),
+        );
+        calcul.classList.toggle('lecture', final);
+        if (!final) {
+          const d = lignes[etape - 1];
+          return d.quotient === 0
+            ? `Le quotient vaut 0 : on s’arrête. Il ne reste plus qu’à lire les restes.`
+            : `On divise ${fr(d.dividende)} par ${b} : ${fr(d.quotient)} paquets de ${b}, et il reste ${d.reste}. On recommence avec ${fr(d.quotient)}.`;
+        }
+        const ecrit = versBase(l.n, b);
+        resultat.textContent = `${fr(l.n)} = ${ecrit} en ${NOMS_BASES[b]}`;
+        return `On lit les restes de bas en haut (le dernier reste est le chiffre de gauche) : ${ecrit}.`;
+      }
+      const termes = poids(saisie.value, b);
+      const final = etape > termes.length;
+      termes.slice(0, Math.min(etape, termes.length)).forEach((t) =>
+        ligne(`<span class="reste">${t.chiffre}</span>${b === 16 && CHIFFRES.indexOf(t.chiffre) > 9 ? ` <small>(${CHIFFRES.indexOf(t.chiffre)})</small>` : ''} × ${fr(t.poids)} <small>(${b}<sup>${t.rang}</sup>)</small> = <b>${fr(t.valeur)}</b>`),
+      );
+      calcul.classList.remove('lecture');
+      if (!final) {
+        const t = termes[etape - 1];
+        return `Le chiffre ${t.chiffre} est au rang ${t.rang} : il compte ${t.rang === 0 ? 'pour 1' : `${fr(t.poids)} fois (${b} multiplié ${t.rang} fois par lui-même)`}.`;
+      }
+      resultat.textContent = `${termes.map((t) => fr(t.valeur)).join(' + ')} = ${fr(l.n)}`;
+      return `On additionne : ${saisie.value.toUpperCase()} en ${NOMS_BASES[b]} vaut ${fr(l.n)} en décimal.`;
+    });
+
+    function changerSens() {
+      // On garde le même nombre en changeant de sens.
+      if (sens() === 'vers') {
+        nomSaisie.textContent = 'Nombre en décimal';
+        const n = depuisBase(saisie.value, base());
+        if (n !== null) saisie.value = String(n);
+      } else {
+        nomSaisie.textContent = `Nombre en base ${base()}`;
+        const n = depuisBase(saisie.value, 10);
+        if (n !== null) saisie.value = versBase(n, base());
+      }
+      anim.aller(1);
+    }
+
+    racine.querySelectorAll('input[name="conv-sens"]').forEach((r) => r.addEventListener('change', changerSens));
+    let baseAvant = base();
+    racine.querySelectorAll('input[name="conv-base"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        if (sens() === 'depuis') {
+          const n = depuisBase(saisie.value, baseAvant);
+          nomSaisie.textContent = `Nombre en base ${base()}`;
+          if (n !== null) saisie.value = versBase(n, base());
+        }
+        baseAvant = base();
+        anim.aller(1);
+      }),
+    );
+    saisie.addEventListener('input', () => anim.aller(1));
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .reglages-conv { display: grid; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .reglages-conv fieldset { border: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; align-items: center; }
+  .reglages-conv legend { float: left; margin-right: 0.5rem; font-weight: 600; }
+  .reglages-conv input[type='radio'] { accent-color: var(--accent); }
+  .saisie { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-weight: 600; }
+  .saisie input { font-family: var(--police-mono); font-size: 1.1rem; width: 9rem; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); text-transform: uppercase; }
+  .calcul { font-family: var(--police-mono); margin: 0; padding-left: 0; list-style: none; min-height: 3rem; position: relative; }
+  :global(.conversion .calcul li) { padding: 0.15rem 0; }
+  :global(.conversion .reste) { display: inline-block; min-width: 1.4em; text-align: center; border-radius: 0.3rem; font-weight: 700; color: var(--accent); }
+  :global(.conversion .calcul.lecture li .reste) { background: var(--accent); color: var(--bg); }
+  .calcul.lecture { padding-right: 2rem; }
+  .calcul.lecture::after { content: '↑'; position: absolute; right: 0.4rem; bottom: 0; font-size: 1.6rem; color: var(--accent); }
+  .resultat { font-family: var(--police-mono); font-size: 1.15rem; font-weight: 700; margin: 0.5rem 0 0; min-height: 1.5em; overflow-wrap: anywhere; }
+</style>

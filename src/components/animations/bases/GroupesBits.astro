@@ -1,0 +1,150 @@
+---
+// Animation « Les raccourcis : hexadécimal et octal » (module « Compter en
+// binaire, octal et hexadécimal », étape 3). On bascule 12 bits ; on les
+// regroupe par 4 (un chiffre hexadécimal) ou par 3 (un chiffre octal), en
+// partant de la droite. En hexadécimal, les 3 chiffres donnent une couleur CSS
+// courte (#RGB) ; en octal, les 9 derniers bits donnent des droits Unix (rwx).
+const NB = 12;
+---
+<div class="anim groupes-bits" data-groupes-bits>
+  <div class="anim-repli">
+    <p>
+      Un chiffre hexadécimal vaut exactement 4 bits, un chiffre octal 3 bits. Pour passer du binaire à
+      l'hexadécimal, on coupe en paquets de 4 depuis la droite : 1111 0000 1010 donne F, 0, A, soit F0A.
+      Pour l'octal, on coupe par 3 : 111 101 101 donne 7, 5, 5, soit 755, les droits « rwxr-xr-x »
+      d'un fichier Unix.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix-groupes">
+        <legend>Regrouper par</legend>
+        <label><input type="radio" name="groupes-taille" value="4" checked /> 4 bits (hexadécimal)</label>
+        <label><input type="radio" name="groupes-taille" value="3" /> 3 bits (octal)</label>
+      </fieldset>
+      <div class="groupes" data-groupes></div>
+      <div class="lectures">
+        <p><span class="etiquette">Binaire</span> <strong data-bin></strong></p>
+        <p><span class="etiquette" data-nom-base>Hexadécimal</span> <strong data-court></strong></p>
+        <p><span class="etiquette">Décimal</span> <strong data-dec></strong></p>
+        <p data-bonus-hex><span class="etiquette">Couleur CSS <code data-css></code></span> <span class="pastille" data-pastille></span></p>
+        <p data-bonus-oct hidden><span class="etiquette">Droits Unix (9 derniers bits)</span> <strong data-droits></strong></p>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" data-prerempli="493">chmod 755</button>
+        <button type="button" data-prerempli="420">chmod 644</button>
+        <button type="button" data-prerempli="3840">couleur #F00</button>
+        <button type="button" data-prerempli="2730">101010101010</button>
+        <button type="button" data-prerempli="0">Tout à 0</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { droitsUnix, grouper, versBase } from '../../../lib/bases';
+
+  const NB = 12;
+
+  document.querySelectorAll<HTMLElement>('[data-groupes-bits]').forEach((racine) => {
+    activerScene(racine);
+    const zone = racine.querySelector<HTMLElement>('[data-groupes]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const sortie = (nom: string) => racine.querySelector<HTMLElement>(`[data-${nom}]`)!;
+    const taille = () => Number(racine.querySelector<HTMLInputElement>('input[name="groupes-taille"]:checked')!.value);
+    let n = 493;
+
+    function rendre(message?: string) {
+      const t = taille();
+      const bin = versBase(n, 2, NB);
+      // On complète à gauche pour avoir des groupes entiers (12 bits = 3 × 4 = 4 × 3).
+      const groupes = grouper(bin, t);
+      zone.replaceChildren();
+      let rang = NB - 1;
+      groupes.forEach((g, gi) => {
+        const boite = document.createElement('div');
+        boite.className = `groupe g${gi % 2}`;
+        const bits = document.createElement('div');
+        bits.className = 'bits-groupe';
+        for (const c of g) {
+          const r = rang--;
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'bit-g';
+          b.textContent = c;
+          b.setAttribute('aria-pressed', String(c === '1'));
+          b.setAttribute('aria-label', `Bit de poids ${2 ** r}`);
+          b.addEventListener('click', () => {
+            n ^= 1 << r;
+            rendre(`Bit de poids ${2 ** r} ${c === '1' ? 'éteint' : 'allumé'}.`);
+            zone.querySelector<HTMLButtonElement>(`[aria-label="Bit de poids ${2 ** r}"]`)?.focus();
+          });
+          bits.append(b);
+        }
+        const chiffre = document.createElement('p');
+        chiffre.className = 'chiffre-g';
+        chiffre.textContent = versBase(parseInt(g, 2), t === 4 ? 16 : 8);
+        const detail = document.createElement('p');
+        detail.className = 'detail-g';
+        detail.textContent = `= ${parseInt(g, 2)}`;
+        boite.append(bits, chiffre, detail);
+        zone.append(boite);
+      });
+      const court = groupes.map((g) => versBase(parseInt(g, 2), t === 4 ? 16 : 8)).join('');
+      sortie('bin').textContent = groupes.join(' ');
+      sortie('nom-base').textContent = t === 4 ? 'Hexadécimal' : 'Octal';
+      sortie('court').textContent = court;
+      sortie('dec').textContent = String(n);
+      racine.querySelector<HTMLElement>('[data-bonus-hex]')!.hidden = t !== 4;
+      racine.querySelector<HTMLElement>('[data-bonus-oct]')!.hidden = t !== 3;
+      sortie('css').textContent = `#${court}`;
+      // La couleur affichée est la donnée elle-même (comme le gris de l'animation « Un octet »).
+      sortie('pastille').style.background = `#${court}`;
+      sortie('droits').textContent = `${droitsUnix(n)} (propriétaire, groupe, autres)`;
+      legende.textContent =
+        (message ? message + ' ' : '') +
+        (t === 4
+          ? `Chaque paquet de 4 bits donne un chiffre de 0 à F : ${groupes.join(' ')} s’écrit ${court}.`
+          : `Chaque paquet de 3 bits donne un chiffre de 0 à 7 : ${groupes.join(' ')} s’écrit ${court}. Les trois derniers chiffres sont les droits du propriétaire, du groupe et des autres.`);
+    }
+
+    racine.querySelectorAll('input[name="groupes-taille"]').forEach((r) => r.addEventListener('change', () => rendre()));
+    racine.querySelectorAll<HTMLButtonElement>('[data-prerempli]').forEach((b) =>
+      b.addEventListener('click', () => {
+        n = Number(b.dataset.prerempli);
+        const t = b.textContent!;
+        if (t.startsWith('chmod')) racine.querySelector<HTMLInputElement>('input[name="groupes-taille"][value="3"]')!.checked = true;
+        if (t.startsWith('couleur')) racine.querySelector<HTMLInputElement>('input[name="groupes-taille"][value="4"]')!.checked = true;
+        rendre();
+      }),
+    );
+    rendre();
+  });
+</script>
+
+<style>
+  .choix-groupes { border: none; padding: 0; margin: 0 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; align-items: center; }
+  .choix-groupes legend { float: left; margin-right: 0.5rem; font-weight: 600; }
+  .choix-groupes input { accent-color: var(--accent); }
+  .groupes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  :global(.groupes-bits .groupe) { border-radius: 0.5rem; padding: 0.35rem; text-align: center; }
+  :global(.groupes-bits .groupe.g0) { border: 2px solid var(--ill-client); }
+  :global(.groupes-bits .groupe.g1) { border: 2px solid var(--ill-paquet); }
+  :global(.groupes-bits .bits-groupe) { display: flex; gap: 0.2rem; }
+  :global(.groupes-bits .bit-g) {
+    font-family: var(--police-mono); font-size: 1.05rem; font-weight: 700; width: 1.9rem; height: 2.2rem;
+    border: 1px solid var(--border); border-radius: 0.35rem; background: var(--bg); color: var(--fg); cursor: pointer;
+  }
+  :global(.groupes-bits .bit-g[aria-pressed='true']) { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  :global(.groupes-bits .bit-g:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+  :global(.groupes-bits .chiffre-g) { margin: 0.3rem 0 0; font-family: var(--police-mono); font-size: 1.5rem; font-weight: 700; }
+  :global(.groupes-bits .detail-g) { margin: 0; font-size: 0.75rem; color: var(--muted); }
+  .lectures { display: grid; gap: 0.2rem; margin-top: 0.75rem; }
+  .lectures p { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .lectures strong { font-family: var(--police-mono); overflow-wrap: anywhere; }
+  .etiquette { color: var(--muted); font-size: 0.9rem; min-width: 9rem; }
+  .pastille { display: inline-block; width: 2.5rem; height: 1.4rem; border-radius: 0.3rem; border: 1px solid var(--border); }
+</style>
