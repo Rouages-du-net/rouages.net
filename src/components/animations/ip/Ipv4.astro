@@ -1,0 +1,128 @@
+---
+// Animation « Une adresse IPv4, quatre octets » (module « Adresses IP et
+// masques », étape 0). On écrit une adresse en décimal pointé et l'on voit
+// ses 32 bits, octet par octet ; on peut aussi basculer les bits.
+// Exemples : adresses de documentation (RFC 5737) et privées (RFC 1918).
+---
+<div class="anim ipv4" data-ipv4>
+  <div class="anim-repli">
+    <p>
+      L'adresse 192.0.2.17 est faite de quatre octets : 192 = 11000000, 0 = 00000000, 2 = 00000010,
+      17 = 00010001. Mis bout à bout, cela fait 32 bits : 11000000 00000000 00000010 00010001.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="champs-ip" role="group" aria-label="Les quatre octets de l'adresse">
+        {[192, 0, 2, 17].map((v, i) => (
+          <>
+            {i > 0 && <span class="point" aria-hidden="true">.</span>}
+            <input type="number" min="0" max="255" value={v} inputmode="numeric" aria-label={`Octet ${i + 1}`} data-octet={i} />
+          </>
+        ))}
+      </div>
+      <div class="octets-bits" data-bits></div>
+      <div class="lectures">
+        <p><span class="etiquette">Sur 32 bits</span> <strong data-tout></strong></p>
+        <p><span class="etiquette">En hexadécimal</span> <strong data-hex></strong></p>
+        <p><span class="etiquette">Comme un seul nombre</span> <strong data-nombre></strong></p>
+      </div>
+      <p class="nature" data-nature aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-exemple="192.0.2.17">192.0.2.17</button>
+        <button type="button" data-exemple="198.51.100.200">198.51.100.200</button>
+        <button type="button" data-exemple="192.168.1.10">192.168.1.10 (box)</button>
+        <button type="button" data-exemple="10.0.0.1">10.0.0.1</button>
+      </div>
+      <p class="anim-note">Clique sur un bit pour le basculer. Chaque octet va de 0 (00000000) à 255 (11111111).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { bits32, ecrireIPv4, lireIPv4, nature, octets } from '../../../lib/ip';
+  import { fr, versBase } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-ipv4]').forEach((racine) => {
+    activerScene(racine);
+    const champs = [...racine.querySelectorAll<HTMLInputElement>('[data-octet]')];
+    const zone = racine.querySelector<HTMLElement>('[data-bits]')!;
+    const sortie = (nom: string) => racine.querySelector<HTMLElement>(`[data-${nom}]`)!;
+    let ip = lireIPv4('192.0.2.17')!;
+
+    function rendre(depuisChamps = false) {
+      const o = octets(ip);
+      if (!depuisChamps) champs.forEach((c, i) => (c.value = String(o[i])));
+      zone.replaceChildren();
+      o.forEach((v, i) => {
+        const bloc = document.createElement('div');
+        bloc.className = `bloc-octet o${i}`;
+        const bits = document.createElement('div');
+        bits.className = 'bits-octet';
+        versBase(v, 2, 8).split('').forEach((c, j) => {
+          const rangGlobal = 31 - (i * 8 + j);
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'bit-ip';
+          b.textContent = c;
+          b.setAttribute('aria-pressed', String(c === '1'));
+          b.setAttribute('aria-label', `Octet ${i + 1}, bit de poids ${2 ** (7 - j)}`);
+          b.addEventListener('click', () => {
+            ip = (ip ^ (2 ** rangGlobal)) >>> 0;
+            rendre();
+            zone.querySelectorAll<HTMLButtonElement>('.bit-ip')[i * 8 + j]?.focus();
+          });
+          bits.append(b);
+        });
+        const val = document.createElement('p');
+        val.className = 'valeur-octet';
+        val.textContent = String(v);
+        bloc.append(bits, val);
+        zone.append(bloc);
+      });
+      const b = bits32(ip);
+      sortie('tout').textContent = b.match(/.{8}/g)!.join(' ');
+      sortie('hex').textContent = o.map((v) => versBase(v, 16, 2)).join(' ');
+      sortie('nombre').textContent = fr(ip);
+      sortie('nature').textContent = nature(ip) ?? `${ecrireIPv4(ip)} : une adresse publique possible. Sur ce site, on n’utilise que des adresses d’exemple.`;
+    }
+
+    champs.forEach((c) =>
+      c.addEventListener('input', () => {
+        const valeurs = champs.map((x) => Math.max(0, Math.min(255, Math.round(Number(x.value) || 0))));
+        ip = lireIPv4(valeurs.join('.'))!;
+        rendre(true);
+      }),
+    );
+    champs.forEach((c) => c.addEventListener('change', () => rendre()));
+    racine.querySelectorAll<HTMLButtonElement>('[data-exemple]').forEach((b) =>
+      b.addEventListener('click', () => { ip = lireIPv4(b.dataset.exemple!)!; rendre(); }),
+    );
+    rendre();
+  });
+</script>
+
+<style>
+  .champs-ip { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem; margin-bottom: 0.75rem; }
+  .champs-ip input { width: 4.2rem; font-family: var(--police-mono); font-size: 1.15rem; padding: 0.25rem 0.3rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); text-align: center; }
+  .point { font-family: var(--police-mono); font-size: 1.4rem; font-weight: 700; }
+  .octets-bits { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  :global(.ipv4 .bloc-octet) { border-radius: 0.5rem; padding: 0.3rem; text-align: center; }
+  :global(.ipv4 .o0), :global(.ipv4 .o2) { border: 2px solid var(--ill-client); }
+  :global(.ipv4 .o1), :global(.ipv4 .o3) { border: 2px solid var(--ill-paquet); }
+  :global(.ipv4 .bits-octet) { display: flex; gap: 1px; }
+  :global(.ipv4 .bit-ip) {
+    font-family: var(--police-mono); font-size: 0.85rem; width: 1.15rem; height: 1.7rem; padding: 0;
+    border: 1px solid var(--border); border-radius: 0.25rem; background: var(--bg); color: var(--fg); cursor: pointer;
+  }
+  :global(.ipv4 .bit-ip[aria-pressed='true']) { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  :global(.ipv4 .bit-ip:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
+  :global(.ipv4 .valeur-octet) { margin: 0.2rem 0 0; font-family: var(--police-mono); font-weight: 700; }
+  .lectures { display: grid; gap: 0.2rem; margin-top: 0.75rem; }
+  .lectures p { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .lectures strong { font-family: var(--police-mono); overflow-wrap: anywhere; }
+  .etiquette { color: var(--muted); font-size: 0.9rem; min-width: 10rem; }
+  .nature { margin: 0.6rem 0 0; font-size: 0.95rem; }
+</style>

@@ -1,0 +1,153 @@
+---
+// Animation « Compter par paquets » (module « Compter en binaire, octal et
+// hexadécimal », étape 0). On choisit un nombre de jetons et une base ; pas à
+// pas, on les range en paquets de b, puis en paquets de paquets (b × b)…
+// Les chiffres du nombre sont les nombres de paquets de chaque taille.
+---
+<div class="anim paquets" data-paquets>
+  <div class="anim-repli">
+    <p>
+      Pour écrire 13 en base 2, on range 13 jetons par paires : 6 paires et 1 jeton seul. On range les
+      paires par deux : 3 paquets de 4 et 0 paire seule. Puis 1 paquet de 8 et 1 paquet de 4 seul. On lit
+      de gauche à droite : 1 paquet de 8, 1 de 4, 0 de 2, 1 jeton, soit <strong>1101</strong>. En base 10,
+      on ferait des paquets de 10 : 1 dizaine et 3 unités, soit 13.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="reglages-paquets">
+        <label>Nombre de jetons
+          <input type="range" min="0" max="100" value="13" data-n />
+          <output data-n-sortie>13</output>
+        </label>
+        <fieldset>
+          <legend>Paquets de</legend>
+          {[10, 2, 8, 16].map((b) => (
+            <label><input type="radio" name="paquets-base" value={b} checked={b === 2} /> {b}</label>
+          ))}
+        </fieldset>
+      </div>
+      <div class="table-paquets" data-table aria-hidden="true"></div>
+      <p class="ecriture" data-ecriture></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { CHIFFRES, NOMS_BASES, exposant, versBase } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-paquets]').forEach((racine) => {
+    activerScene(racine);
+    const champN = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const sortieN = racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!;
+    const table = racine.querySelector<HTMLElement>('[data-table]')!;
+    const ecriture = racine.querySelector<HTMLElement>('[data-ecriture]')!;
+    const base = () => Number(racine.querySelector<HTMLInputElement>('input[name="paquets-base"]:checked')!.value);
+    const n = () => Number(champN.value);
+    // Nombre de rangs du nombre écrit en base b (au moins 1).
+    const rangs = () => versBase(n(), base()).length;
+
+    // Un paquet de b^rang jetons, dessiné comme une boîte de points.
+    function paquet(rang: number, b: number) {
+      const boite = document.createElement('span');
+      boite.className = `paquet rang-${Math.min(rang, 3)}`;
+      const taille = b ** rang;
+      if (taille <= 64) {
+        for (let i = 0; i < taille; i++) boite.append(Object.assign(document.createElement('span'), { className: 'jeton' }));
+      } else {
+        boite.classList.add('gros');
+        boite.textContent = String(taille);
+      }
+      return boite;
+    }
+
+    // Niveau L : on a fait des paquets jusqu'à la taille b^L.
+    // Il reste floor(n / b^L) paquets de b^L, puis les chiffres des rangs inférieurs.
+    function rendre(niveau: number) {
+      const b = base(), N = n();
+      table.replaceChildren();
+      const chiffres = versBase(N, b).padStart(niveau + 1, '0');
+      const colonnes: { rang: number; nombre: number }[] = [];
+      colonnes.push({ rang: niveau, nombre: Math.floor(N / b ** niveau) });
+      for (let r = niveau - 1; r >= 0; r--) colonnes.push({ rang: r, nombre: CHIFFRES.indexOf(chiffres[chiffres.length - 1 - r]) });
+      for (const c of colonnes) {
+        const col = document.createElement('div');
+        col.className = 'colonne';
+        const titre = document.createElement('p');
+        titre.className = 'titre-colonne';
+        titre.textContent = c.rang === 0 ? 'jetons seuls' : `paquets de ${b ** c.rang}`;
+        const contenu = document.createElement('div');
+        contenu.className = 'contenu';
+        for (let i = 0; i < Math.min(c.nombre, 40); i++) contenu.append(paquet(c.rang, b));
+        if (c.nombre > 40) contenu.append(Object.assign(document.createElement('span'), { className: 'plus', textContent: `… ${c.nombre} en tout` }));
+        const chiffre = document.createElement('p');
+        chiffre.className = 'chiffre' + (c.nombre >= b ? ' trop' : '');
+        chiffre.textContent = c.nombre >= b ? String(c.nombre) : CHIFFRES[c.nombre];
+        col.append(titre, contenu, chiffre);
+        table.append(col);
+      }
+    }
+
+    function legende(niveau: number, final: boolean) {
+      const b = base(), N = n(), ecrit = versBase(N, b);
+      if (niveau === 0 && !final) return `${N} jeton${N > 1 ? 's' : ''} en vrac. On va les ranger en paquets de ${b}.`;
+      if (final) {
+        const morceaux = [...ecrit].map((c, i) => {
+          const r = ecrit.length - 1 - i;
+          return `${CHIFFRES.indexOf(c)} × ${r === 0 ? '1' : b ** r}`;
+        });
+        return `Fini : chaque colonne a moins de ${b} paquets. On lit les nombres de paquets de gauche à droite : ${ecrit} en ${NOMS_BASES[b]}. Vérification : ${morceaux.join(' + ')} = ${N}.`;
+      }
+      const taille = b ** niveau, nb = Math.floor(N / taille), reste = N % taille;
+      return `On regroupe par ${b} : ${nb} paquet${nb > 1 ? 's' : ''} de ${taille} (${b}${exposant(niveau)})${reste ? `, le reste ne bouge pas` : ''}.`;
+    }
+
+    const anim = pasAPas(racine, () => rangs() + 1, (etape) => {
+      const final = etape === rangs() + 1;
+      const niveau = final ? rangs() - 1 : etape - 1;
+      rendre(niveau);
+      ecriture.textContent = final ? `${n()} s’écrit ${versBase(n(), base())} en base ${base()}` : '';
+      return legende(niveau, final);
+    });
+
+    champN.addEventListener('input', () => {
+      sortieN.textContent = champN.value;
+      anim.aller(1);
+    });
+    racine.querySelectorAll('input[name="paquets-base"]').forEach((r) => r.addEventListener('change', () => anim.aller(1)));
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .reglages-paquets { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; margin-bottom: 0.75rem; }
+  .reglages-paquets label { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .reglages-paquets input[type='range'] { width: 10rem; accent-color: var(--accent); }
+  .reglages-paquets output { font-family: var(--police-mono); font-weight: 700; min-width: 2.5ch; }
+  .reglages-paquets fieldset { border: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; align-items: center; }
+  .reglages-paquets legend { float: left; margin-right: 0.5rem; font-weight: 600; }
+  .reglages-paquets input[type='radio'] { accent-color: var(--accent); }
+  .table-paquets { display: flex; flex-wrap: wrap; gap: 0.5rem; min-height: 6rem; }
+  :global(.paquets .colonne) { flex: 1 1 6rem; border: 1px dashed var(--border); border-radius: 0.5rem; padding: 0.4rem; display: flex; flex-direction: column; min-width: 0; }
+  :global(.paquets .titre-colonne) { margin: 0 0 0.3rem; font-size: 0.8rem; color: var(--muted); text-align: center; }
+  :global(.paquets .contenu) { display: flex; flex-wrap: wrap; gap: 0.25rem; align-content: flex-start; flex: 1; }
+  :global(.paquets .paquet) { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 2px; border-radius: 0.3rem; max-width: 4.6rem; }
+  :global(.paquets .rang-1) { border: 2px solid var(--ill-client); }
+  :global(.paquets .rang-2) { border: 2px solid var(--ill-paquet); }
+  :global(.paquets .rang-3) { border: 2px solid var(--ill-serveur); }
+  :global(.paquets .paquet.gros) { font-family: var(--police-mono); font-size: 0.75rem; padding: 0.2rem 0.35rem; }
+  :global(.paquets .jeton) { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--accent); }
+  :global(.paquets .plus) { font-size: 0.8rem; color: var(--muted); }
+  :global(.paquets .chiffre) { margin: 0.4rem 0 0; text-align: center; font-family: var(--police-mono); font-size: 1.6rem; font-weight: 700; }
+  :global(.paquets .chiffre.trop) { color: var(--muted); font-size: 1.1rem; }
+  .ecriture { font-family: var(--police-mono); font-size: 1.1rem; margin: 0.6rem 0 0; min-height: 1.5em; }
+</style>

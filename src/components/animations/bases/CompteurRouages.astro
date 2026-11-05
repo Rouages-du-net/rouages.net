@@ -1,0 +1,213 @@
+---
+// Animation « Le compteur à rouages » (module « Compter en binaire, octal et
+// hexadécimal », étape 1). Le même nombre est affiché sur quatre rangées de
+// roues : décimal, octal, hexadécimal, binaire. Chaque roue a autant de crans
+// que la base ; quand elle finit son tour (9 → 0, 7 → 0, F → 0, 1 → 0), elle
+// fait avancer d'un cran la roue de gauche : c'est la retenue.
+// Le comptage automatique s'arrête de lui-même après 16 pas.
+import { traceRouage } from '../../../lib/rouage';
+
+const RANGEES = [
+  { b: 10, roues: 4, nom: 'Décimal (base 10)' },
+  { b: 8, roues: 4, nom: 'Octal (base 8)' },
+  { b: 16, roues: 3, nom: 'Hexadécimal (base 16)' },
+  { b: 2, roues: 12, nom: 'Binaire (base 2)' },
+];
+const dents = (b: number) => (b === 2 ? 6 : b);
+---
+<div class="anim compteur-rouages" data-compteur-rouages>
+  <div class="anim-repli">
+    <p>De 0 à 16 dans les quatre bases :</p>
+    <table class="table-repli">
+      <thead><tr><th>Décimal</th><th>Octal</th><th>Hexadécimal</th><th>Binaire</th></tr></thead>
+      <tbody>
+        {Array.from({ length: 17 }, (_, n) => (
+          <tr><td>{n}</td><td>{n.toString(8)}</td><td>{n.toString(16).toUpperCase()}</td><td>{n.toString(2)}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      {RANGEES.map((r) => (
+        <div class={`rangee base-${r.b}`} data-base={r.b}>
+          <p class="nom-rangee">{r.nom} : <strong class="ecrit" data-ecrit></strong></p>
+          <div class="roues">
+            {Array.from({ length: r.roues }, (_, i) => {
+              const rang = r.roues - 1 - i;
+              const contenu = (
+                <>
+                  <svg viewBox="-11 -11 22 22" aria-hidden="true">
+                    <g class="engrenage"><path d={traceRouage(dents(r.b), 10, 7.8, 2.2)} fill-rule="evenodd" /></g>
+                  </svg>
+                  <span class="chiffre-roue">0</span>
+                  <span class="poids-roue">{r.b ** rang}</span>
+                </>
+              );
+              return r.b === 2 ? (
+                <button type="button" class="roue" data-rang={rang} aria-label={`Bit de poids ${2 ** rang}`} aria-pressed="false">{contenu}</button>
+              ) : (
+                <span class="roue" data-rang={rang}>{contenu}</span>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-plus="-1">−1</button>
+        <button type="button" class="principal" data-plus="1">+1</button>
+        <button type="button" data-auto>▶ Compter 16 pas</button>
+        <label class="valeur">Aller à
+          <input type="number" min="0" max="4095" value="0" inputmode="numeric" data-valeur />
+        </label>
+      </div>
+      <p class="anim-note">Les roues binaires sont des interrupteurs : clique dessus pour basculer un bit. Le nombre va de 0 à 4 095 (la plus grande valeur sur 12 roues binaires).</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { mouvementReduit } from '../../../lib/anim';
+  import { CHIFFRES, NOMS_BASES, versBase } from '../../../lib/bases';
+
+  const MAX = 4095;
+
+  document.querySelectorAll<HTMLElement>('[data-compteur-rouages]').forEach((racine) => {
+    activerScene(racine);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const champ = racine.querySelector<HTMLInputElement>('[data-valeur]')!;
+    const boutonAuto = racine.querySelector<HTMLButtonElement>('[data-auto]')!;
+    const rangees = [...racine.querySelectorAll<HTMLElement>('.rangee')].map((el) => ({
+      el,
+      b: Number(el.dataset.base),
+      roues: [...el.querySelectorAll<HTMLElement>('.roue')],
+      angles: [] as number[],
+    }));
+    rangees.forEach((r) => (r.angles = r.roues.map(() => 0)));
+    let n = 0;
+    let minuterie: number | undefined;
+    let pasRestants = 0;
+
+    const chiffre = (v: number, b: number, rang: number) => Math.floor(v / b ** rang) % b;
+
+    function afficher(ancien: number, sens: number) {
+      const retenues: string[] = [];
+      for (const r of rangees) {
+        let debordements = 0;
+        r.roues.forEach((roue, i) => {
+          const rang = Number(roue.dataset.rang);
+          const avant = chiffre(ancien, r.b, rang), apres = chiffre(n, r.b, rang);
+          let pas = 0;
+          if (sens > 0) pas = (apres - avant + r.b) % r.b;
+          else if (sens < 0) pas = -((avant - apres + r.b) % r.b);
+          else { pas = apres - avant; if (Math.abs(pas) > r.b / 2) pas -= Math.sign(pas) * r.b; }
+          r.angles[i] += (pas * 360) / r.b;
+          roue.querySelector<SVGGElement>('.engrenage')!.style.transform = `rotate(${r.angles[i]}deg)`;
+          roue.querySelector('.chiffre-roue')!.textContent = CHIFFRES[apres];
+          if (r.b === 2) roue.setAttribute('aria-pressed', String(apres === 1));
+          // Une roue qui repasse à 0 en montant (ou quitte 0 en descendant) pousse sa voisine.
+          const deborde = sens !== 0 && avant !== apres && (sens > 0 ? apres === 0 : avant === 0);
+          roue.classList.remove('retenue');
+          if (deborde) {
+            debordements++;
+            void roue.offsetWidth; // relance l'effet visuel
+            roue.classList.add('retenue');
+          }
+        });
+        r.el.querySelector('[data-ecrit]')!.textContent = versBase(n, r.b);
+        if (debordements) retenues.push(`${debordements} en ${NOMS_BASES[r.b]}`);
+      }
+      champ.value = String(n);
+      const debut = sens > 0 ? `${ancien} + 1 = ${n}.` : sens < 0 ? `${ancien} − 1 = ${n}.` : `Le nombre vaut ${n}.`;
+      legende.textContent =
+        `${debut} ` +
+        (retenues.length
+          ? `Une roue a fini son tour et fait avancer sa voisine (retenue) : ${retenues.join(', ')}.`
+          : sens !== 0
+            ? 'Aucune retenue : seule la roue des unités a tourné.'
+            : `En binaire : ${versBase(n, 2)}, en hexadécimal : ${versBase(n, 16)}.`);
+    }
+
+    function aller(v: number, sens: number) {
+      const ancien = n;
+      n = Math.max(0, Math.min(MAX, v));
+      if (n === ancien && sens !== 0) {
+        legende.textContent = n === 0 ? 'On ne descend pas sous 0.' : `${MAX} est la plus grande valeur de ce compteur.`;
+        return;
+      }
+      afficher(ancien, n === ancien ? 0 : sens);
+    }
+
+    function arreter() {
+      window.clearInterval(minuterie);
+      minuterie = undefined;
+      boutonAuto.textContent = '▶ Compter 16 pas';
+    }
+
+    racine.querySelectorAll<HTMLButtonElement>('[data-plus]').forEach((b) =>
+      b.addEventListener('click', () => { arreter(); aller(n + Number(b.dataset.plus), Number(b.dataset.plus)); }),
+    );
+    boutonAuto.addEventListener('click', () => {
+      if (minuterie !== undefined) return arreter();
+      pasRestants = 16;
+      boutonAuto.textContent = '⏸ Arrêter';
+      minuterie = window.setInterval(() => {
+        if (pasRestants-- <= 0 || n >= MAX) return arreter();
+        aller(n + 1, 1);
+      }, mouvementReduit() ? 900 : 700);
+    });
+    champ.addEventListener('change', () => {
+      arreter();
+      const v = Math.round(Number(champ.value));
+      aller(Number.isFinite(v) ? v : 0, 0);
+    });
+    rangees.find((r) => r.b === 2)!.roues.forEach((roue) =>
+      roue.addEventListener('click', () => {
+        arreter();
+        aller(n ^ (1 << Number(roue.dataset.rang)), 0);
+      }),
+    );
+    afficher(0, 0);
+  });
+</script>
+
+<style>
+  .rangee { margin-bottom: 0.9rem; }
+  .nom-rangee { margin: 0 0 0.3rem; font-size: 0.9rem; }
+  .ecrit { font-family: var(--police-mono); }
+  .roues { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: flex-start; }
+  .roue {
+    position: relative; display: inline-grid; justify-items: center; width: 2.6rem;
+    font: inherit; color: var(--fg); background: none; border: none; padding: 0;
+  }
+  .base-2 .roues { display: grid; grid-template-columns: repeat(12, minmax(0, 1.75rem)); gap: 0.15rem; }
+  .base-2 .roue { width: auto; cursor: pointer; }
+  /* Un petit espace tous les 4 bits : c'est un chiffre hexadécimal. */
+  .base-2 .roue[data-rang='8'], .base-2 .roue[data-rang='4'] { margin-left: 0.3rem; }
+  .roue svg { width: 100%; height: auto; display: block; }
+  .engrenage { transition: transform 0.45s ease-in-out; transform-origin: 0 0; }
+  .base-10 .engrenage { fill: var(--ill-client); }
+  .base-8 .engrenage { fill: var(--ill-paquet); }
+  .base-16 .engrenage { fill: var(--ill-secret-a); }
+  .base-2 .engrenage { fill: var(--muted); }
+  .base-2 .roue[aria-pressed='true'] .engrenage { fill: var(--ill-commun); }
+  .chiffre-roue {
+    position: absolute; top: 0; left: 0; right: 0; aspect-ratio: 1; display: grid; place-items: center;
+    font-family: var(--police-mono); font-weight: 700; font-size: 1rem; color: var(--fg);
+    pointer-events: none;
+  }
+  .chiffre-roue { text-shadow: 0 0 3px var(--card), 0 0 3px var(--card); }
+  .base-2 .chiffre-roue { font-size: 0.8rem; }
+  .base-2 .poids-roue { font-size: 0.5rem; }
+  .poids-roue { font-size: 0.6rem; color: var(--muted); font-family: var(--police-mono); }
+  .roue.retenue svg { animation: retenue 0.6s ease-out; }
+  @keyframes retenue { 0% { filter: drop-shadow(0 0 0 var(--accent)); } 40% { filter: drop-shadow(0 0 5px var(--accent)); } 100% { filter: none; } }
+  .roue:focus-visible { outline: 2px solid var(--accent); border-radius: 0.3rem; }
+  .valeur { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; }
+  .valeur input { width: 5.5rem; font: inherit; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .table-repli { border-collapse: collapse; font-family: var(--police-mono); }
+  .table-repli th, .table-repli td { border: 1px solid var(--border); padding: 0.15rem 0.6rem; text-align: right; }
+</style>

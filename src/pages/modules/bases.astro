@@ -1,0 +1,200 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Paquets from '../../components/animations/bases/Paquets.astro';
+import CompteurRouages from '../../components/animations/bases/CompteurRouages.astro';
+import Conversion from '../../components/animations/bases/Conversion.astro';
+import GroupesBits from '../../components/animations/bases/GroupesBits.astro';
+
+// Faits sourcés : voir docs/sources/bases-ip.md.
+const etapes = [
+  { ancre: 'paquets', court: 'Compter par paquets' },
+  { ancre: 'rouages', court: 'Le compteur à rouages' },
+  { ancre: 'conversion', court: 'Passer d’une base à l’autre' },
+  { ancre: 'raccourcis', court: 'Hexadécimal et octal' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Compter en binaire, octal et hexadécimal"
+  description="Décimal, binaire, octal, hexadécimal : comprendre les bases en rangeant des jetons en paquets, en faisant tourner des roues, et passer de l'une à l'autre pas à pas."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>Compter en binaire, octal et hexadécimal</h1>
+  <MiseAJour date="2026-11-05" />
+  <p class="chapo seulement-debut">
+    Écrire « 13 », c'est dire « une dizaine et trois unités ». Compter en binaire, en octal ou en
+    hexadécimal, c'est la même chose avec des paquets d'une autre taille : 2, 8 ou 16. Range des
+    jetons, fais tourner des roues, puis apprends à passer d'une base à l'autre.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Compter par paquets" ancre="paquets">
+    <Paquets slot="animation" />
+    <p slot="decouverte">
+      Pour compter beaucoup d'objets, on fait des paquets. En décimal, on fait des paquets de 10, puis
+      des paquets de 10 paquets (100), et ainsi de suite. Chaque chiffre dit combien il y a de paquets
+      d'une taille. En binaire, les paquets sont de 2 : on n'a donc besoin que de deux chiffres, 0 et 1.
+    </p>
+    <p slot="curieux">
+      La <Terme id="base">base</Terme>, c'est la taille des paquets. En base 2, les paquets valent 1, 2,
+      4, 8, 16… ; en base 8 : 1, 8, 64, 512… ; en base 16 : 1, 16, 256… Une colonne ne contient jamais
+      autant de paquets que la base : dès qu'on en a assez, on les regroupe dans la colonne de gauche.
+      C'est pour cela qu'il faut exactement autant de chiffres que la base.
+    </p>
+    <p slot="ingenieur">
+      Un nombre écrit d<sub>k</sub>…d<sub>1</sub>d<sub>0</sub> en base b vaut
+      d<sub>k</sub>×b<sup>k</sup> + … + d<sub>1</sub>×b + d<sub>0</sub>. On parle de numération
+      <em>positionnelle</em> : la valeur d'un chiffre dépend de sa place. Avec n chiffres en base b, on
+      écrit b<sup>n</sup> nombres différents, de 0 à b<sup>n</sup> − 1 : 8 bits donnent 256 valeurs, de
+      0 à 255.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le décimal n'est pas la seule base de l'histoire. Les Babyloniens comptaient en base 60, avec
+        seulement deux symboles ; il en reste nos 60 minutes et 60 secondes. Les Mayas comptaient en
+        base 20. La numération positionnelle décimale avec un zéro vient d'Inde, d'où elle est passée au
+        monde arabe puis à l'Europe. En 1703, Leibniz publie à Paris une <em>Explication de l'arithmétique
+        binaire</em>, avec la table des nombres écrits en 0 et en 1.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le binaire, c'est compliqué. »</strong> C'est exactement le même principe que le décimal,
+      avec des paquets de 2 au lieu de 10. Ce qui change, c'est qu'il faut plus de chiffres : 13 s'écrit
+      avec 2 chiffres en décimal, mais 4 en binaire (1101).
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le compteur à rouages" ancre="rouages">
+    <CompteurRouages slot="animation" />
+    <p slot="decouverte">
+      Un compteur de vélo ou de vieille voiture est fait de roues. Quand la roue des unités passe de 9 à
+      0, elle fait avancer d'un cran la roue des dizaines : c'est la retenue. Ici, quatre compteurs
+      tournent en même temps : en décimal, en octal, en hexadécimal et en binaire.
+    </p>
+    <p slot="curieux">
+      Chaque roue a autant de crans que la base : 10 en décimal, 8 en octal, 16 en hexadécimal, 2 en
+      binaire. La roue binaire des unités fait un tour complet tous les 2 pas, celle de l'octal tous les 8.
+      Compte de 15 à 16 : en hexadécimal, F devient 10 ; en binaire, quatre roues tournent d'un coup (1111
+      devient 10000).
+    </p>
+    <p slot="ingenieur">
+      Un ordinateur compte avec des registres de taille fixe : sur 8 bits, 255 + 1 donne 0 et la retenue
+      sort du registre (un « débordement »). Ce compteur s'arrête à 4 095, la plus grande valeur sur 12
+      bits ; un vrai processeur, lui, repartirait de 0 ou signalerait le débordement. Le module <a
+      href="/modules/ordinateur/#calcul">Comment marche un ordinateur</a> montre l'additionneur qui
+      calcule ces retenues.
+    </p>
+    <p slot="mythes">
+      <strong>« 10, c'est dix. »</strong> Seulement en décimal : « 10 » veut dire « un paquet et zéro
+      unité ». En binaire, 10 vaut deux ; en octal, huit ; en hexadécimal, seize. D'où la blague : « il y
+      a 10 sortes de personnes, celles qui comprennent le binaire et les autres ».
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Passer d'une base à l'autre" ancre="conversion">
+    <Conversion slot="animation" />
+    <p slot="decouverte">
+      Deux recettes suffisent. Pour écrire un nombre décimal dans une autre base, on le divise par la base
+      encore et encore, et on garde les restes. Pour revenir au décimal, on multiplie chaque chiffre par son
+      poids et on additionne.
+    </p>
+    <p slot="curieux">
+      Les restes des divisions sont les chiffres, du plus petit poids au plus grand : c'est pour cela qu'on
+      les lit de bas en haut. Dans l'autre sens, en hexadécimal, n'oublie pas que A vaut 10, B 11, C 12,
+      D 13, E 14 et F 15 : 2F = 2 × 16 + 15 = 47.
+    </p>
+    <p slot="ingenieur">
+      Les langages de programmation écrivent souvent ces bases avec un préfixe : <code>0x2F</code> en
+      hexadécimal, <code>0o57</code> en octal, <code>0b101111</code> en binaire (c'est le cas en Python,
+      par exemple). Pour passer d'une base à une autre qui n'est pas le décimal, le plus simple est souvent
+      de passer par le binaire (étape suivante).
+    </p>
+    <p slot="mythes">
+      <strong>« On lit les restes dans l'ordre. »</strong> Non : le premier reste est le chiffre des unités,
+      donc le plus à droite. Lu de haut en bas, 13 donnerait 1011 (11) au lieu de 1101.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Les raccourcis : hexadécimal et octal" ancre="raccourcis">
+    <GroupesBits slot="animation" />
+    <p slot="decouverte">
+      Une longue suite de 0 et de 1 est difficile à lire. Comme 16 = 2 × 2 × 2 × 2, un chiffre
+      <Terme id="hexadecimal">hexadécimal</Terme> remplace exactement 4 bits ; comme 8 = 2 × 2 × 2, un
+      chiffre octal en remplace 3. On coupe le binaire en paquets depuis la droite, et chaque paquet
+      devient un chiffre.
+    </p>
+    <p slot="curieux">
+      C'est pour cela que l'hexadécimal est partout en informatique : un <Terme id="octet">octet</Terme>
+      s'écrit en deux chiffres, de 00 à FF. Les couleurs du web s'écrivent ainsi (#FF0000 pour le rouge :
+      FF de rouge, 00 de vert, 00 de bleu), comme les adresses IPv6. L'octal sert surtout pour les droits
+      des fichiers sous Linux : <code>chmod 755</code> veut dire rwx pour le propriétaire, r-x pour le
+      groupe et les autres.
+    </p>
+    <p slot="ingenieur">
+      Les droits Unix tiennent sur 9 bits : 3 bits (lecture, écriture, exécution) pour le propriétaire, le
+      groupe et les autres. Trois bits, c'est un chiffre octal : 7 = 111 = rwx, 5 = 101 = r-x, 4 = 100 =
+      r--. Tu peux t'y exercer dans le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>.
+    </p>
+    <p slot="mythes">
+      <strong>« Les lettres de l'hexadécimal sont un code secret. »</strong> Ce sont juste des chiffres en
+      plus : après 9, il fallait six symboles pour 10 à 15, et on a pris A à F. Majuscules ou minuscules,
+      c'est la même valeur.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Une base, c'est une taille de paquets</strong> : 10, 2, 8 ou 16. Chaque chiffre compte des paquets d'une taille.</li>
+      <li><strong>Une retenue, c'est une roue qui a fini son tour</strong> et fait avancer sa voisine.</li>
+      <li><strong>Vers une base</strong> : divisions successives, restes lus de bas en haut. <strong>Vers le décimal</strong> : chiffres fois poids, puis somme.</li>
+      <li><strong>Hexadécimal = 4 bits, octal = 3 bits</strong> : on regroupe le binaire depuis la droite.</li>
+      <li><strong>On les croise partout</strong> : couleurs du web, droits des fichiers, adresses IP.</li>
+    </ol>
+    <p>
+      La suite logique : <a href="/modules/adresses-ip/">Adresses IP et masques</a>, où l'on lit des
+      adresses en binaire et en hexadécimal. Pour voir comment un ordinateur stocke et calcule ces bits :
+      <a href="/modules/ordinateur/">Comment marche un ordinateur</a>.
+    </p>
+
+  <Sources
+    verifie="2026-11-05"
+    sources={[
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Babylonian numerals (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/HistTopics/Babylonian_numerals/', type: 'recherche', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Mayan mathematics (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/HistTopics/Mayan_mathematics/', type: 'recherche', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Indian numerals (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/HistTopics/Indian_numerals/', type: 'recherche', langue: 'en' },
+      { auteur: 'G. W. Leibniz', titre: 'Explication de l’arithmétique binaire (fac-similé HAL)', url: 'https://hal.science/ads-00104781', type: 'primaire', annee: 1703 },
+      { auteur: 'The Open Group (POSIX)', titre: 'chmod', url: 'https://pubs.opengroup.org/onlinepubs/9799919799/utilities/chmod.html', type: 'primaire', langue: 'en' },
+      { auteur: 'W3C', titre: 'CSS Color Module Level 4 (notation hexadécimale)', url: 'https://www.w3.org/TR/css-color-4/', type: 'primaire', langue: 'en' },
+      { auteur: 'Python Software Foundation', titre: 'Lexical analysis : integer literals', url: 'https://docs.python.org/3/reference/lexical_analysis.html', type: 'primaire', langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

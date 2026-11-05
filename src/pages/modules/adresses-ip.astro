@@ -1,0 +1,183 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Ipv4 from '../../components/animations/ip/Ipv4.astro';
+import Ipv6 from '../../components/animations/ip/Ipv6.astro';
+import Masque from '../../components/animations/ip/Masque.astro';
+
+// Faits sourcés : voir docs/sources/bases-ip.md.
+const etapes = [
+  { ancre: 'ipv4', court: 'IPv4 : quatre octets' },
+  { ancre: 'ipv6', court: 'IPv6 : huit groupes' },
+  { ancre: 'masque', court: 'Le masque' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Adresses IP et masques"
+  description="Lire une adresse IPv4 en binaire, abréger une adresse IPv6, comprendre un masque de sous-réseau sous ses trois formes (/24, 255.255.255.0, 11111111…) et calculer réseau, diffusion et nombre de machines."
+>
+  <p class="tag">Comment ça marche · module en construction</p>
+  <h1>Adresses IP et masques</h1>
+  <MiseAJour date="2026-11-05" />
+  <p class="chapo seulement-debut">
+    Une <Terme id="adresse-ip">adresse IP</Terme> n'est qu'un nombre : 32 bits en IPv4, 128 en IPv6. On
+    l'écrit en décimal ou en hexadécimal pour qu'elle soit lisible. Un masque découpe ce nombre en deux :
+    le réseau, et la machine dans ce réseau. Pour suivre, il vaut mieux connaître le binaire et
+    l'hexadécimal : voir <a href="/modules/bases/">Compter en binaire, octal et hexadécimal</a>.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Une adresse IPv4, quatre octets" ancre="ipv4">
+    <Ipv4 slot="animation" />
+    <p slot="decouverte">
+      Une adresse IPv4 comme 192.0.2.17 est faite de quatre nombres de 0 à 255. Chacun tient dans un
+      <Terme id="octet">octet</Terme>, soit 8 bits. L'adresse entière fait donc 4 × 8 = 32 bits : c'est un
+      seul grand nombre, découpé en quatre pour être lisible.
+    </p>
+    <p slot="curieux">
+      Avec 32 bits, on peut écrire 2<sup>32</sup> adresses, soit environ 4,3 milliards : moins qu'il n'y a
+      d'humains, et bien moins qu'il n'y a d'appareils connectés. Certaines plages sont réservées : les
+      adresses privées (10.x.x.x, 172.16 à 172.31.x.x, 192.168.x.x) ne servent qu'à l'intérieur d'un
+      réseau local, derrière une box, et trois plages (dont 192.0.2.x) sont réservées aux exemples.
+    </p>
+    <p slot="ingenieur">
+      Les plages privées sont définies par la RFC 1918 ; une box les traduit en une adresse publique (NAT),
+      comme le montre le module <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a>. Les plages
+      de documentation (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) viennent de la RFC 5737 : on peut
+      les écrire dans un cours sans risquer de désigner une vraie machine.
+    </p>
+    <div slot="histoire">
+      <p>
+        IPv4 est décrit en septembre 1981 dans la RFC 791. Le 3 février 2011, l'IANA, qui gère la réserve
+        mondiale, distribue ses derniers blocs aux cinq registres régionaux. Le 25 novembre 2019, le registre
+        européen (RIPE NCC) annonce à son tour avoir épuisé sa réserve.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Il n'y a plus d'adresses IPv4. »</strong> Les réserves libres des registres sont épuisées,
+      mais les adresses déjà distribuées continuent de servir, se revendent ou se partagent (une box partage
+      une adresse publique entre tous les appareils de la maison).
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="IPv6 : huit groupes en hexadécimal" ancre="ipv6">
+    <Ipv6 slot="animation" />
+    <p slot="decouverte">
+      Une adresse <Terme id="ipv6">IPv6</Terme> fait 128 bits, quatre fois plus qu'en IPv4. Écrite en
+      décimal, elle serait illisible ; on l'écrit donc en <Terme id="hexadecimal">hexadécimal</Terme>, en 8
+      groupes de 4 chiffres séparés par « : ». Comme beaucoup de groupes valent zéro, des règles permettent
+      de l'abréger.
+    </p>
+    <p slot="curieux">
+      Deux règles : on enlève les zéros au début de chaque groupe, et on remplace une seule suite de groupes
+      nuls par « :: ». 2001:0db8:0000:0000:0000:0000:0000:0001 devient 2001:db8::1. Avec 128 bits, il y a
+      2<sup>128</sup> adresses, environ 3,4 × 10<sup>38</sup> : assez pour ne plus en manquer.
+    </p>
+    <p slot="ingenieur">
+      La RFC 4291 décrit l'architecture : la plupart des adresses ont un identifiant d'interface de 64 bits,
+      donc un réseau local est en général un /64. La RFC 5952 fixe une écriture unique pour que les outils
+      et les humains comparent facilement les adresses : zéros en tête supprimés, « :: » le plus long
+      possible (le premier en cas d'égalité), jamais pour un seul groupe, lettres en minuscules. Le préfixe
+      2001:db8::/32 est réservé à la documentation (RFC 3849).
+    </p>
+    <p slot="mythes">
+      <strong>« On peut mettre plusieurs :: pour aller plus vite. »</strong> Non : avec deux « :: », on ne
+      saurait pas combien de groupes nuls chacun remplace. Un seul par adresse.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le masque : où s'arrête le réseau" ancre="masque">
+    <Masque slot="animation" />
+    <p slot="decouverte">
+      Une adresse se lit comme une adresse postale : une partie dit dans quelle rue (le réseau), l'autre
+      quel numéro (la machine). Le <Terme id="masque-reseau">masque</Terme> dit où passe la frontière. Il
+      s'écrit de trois façons : /24, 255.255.255.0, ou 24 bits à 1 suivis de 8 bits à 0.
+    </p>
+    <p slot="curieux">
+      Dans un masque, les 1 sont toujours à gauche et les 0 à droite. Un octet du masque ne peut donc valoir
+      que 0, 128, 192, 224, 240, 248, 252, 254 ou 255 : /17 donne 255.255.128.0. Pour trouver l'adresse
+      du réseau, on garde les bits de l'adresse là où le masque vaut 1, et on met 0 ailleurs : c'est un ET
+      logique.
+    </p>
+    <p slot="ingenieur">
+      Avec un préfixe /n, le réseau compte 2<sup>32−n</sup> adresses. La première (tous les bits machine à
+      0) désigne le réseau, la dernière (tous à 1) sert à la diffusion : il reste 2<sup>32−n</sup> − 2
+      machines. Exceptions : un /31 relie deux routeurs avec ses 2 adresses (RFC 3021), un /32 désigne une
+      seule machine. L'ET logique est celui des <a href="/modules/ordinateur/#portes">portes logiques</a>.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1981, la RFC 791 découpait les adresses en classes fixes : A (réseau sur le premier octet), B (deux octets), C (trois
+        octets).
+        Les masques de sous-réseau arrivent en août 1985 (RFC 950). En 1993, pour freiner l'épuisement des
+        classes B, le CIDR permet n'importe quelle longueur de préfixe, que la notation « /n » indique
+        (RFC 1519, remplacée en 2006 par la RFC 4632).
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« 255.0.255.0 est un masque. »</strong> Non : en binaire, ses 1 ne sont pas tous à gauche.
+      Essaie-le dans l'animation. Et une adresse en 192.168 n'est pas forcément un /24 : c'est la box qui
+      choisit le masque.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Une adresse IPv4, c'est 32 bits</strong>, écrits en quatre octets de 0 à 255.</li>
+      <li><strong>Une adresse IPv6, c'est 128 bits</strong>, écrits en 8 groupes hexadécimaux, abrégés avec « :: » une seule fois.</li>
+      <li><strong>Un masque a trois écritures</strong> : /24 = 255.255.255.0 = 24 bits à 1 puis 8 à 0.</li>
+      <li><strong>Réseau = adresse ET masque</strong> ; la partie machine compte 2<sup>32−n</sup> adresses, moins le réseau et la diffusion.</li>
+      <li><strong>Pour les exemples</strong>, on utilise les plages réservées : 192.0.2.0/24 et 2001:db8::/32.</li>
+    </ol>
+    <p>
+      Pour voir ces adresses voyager : <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a>. Pour
+      revoir le binaire et l'hexadécimal : <a href="/modules/bases/">Compter en binaire, octal et
+      hexadécimal</a>.
+    </p>
+
+  <Sources
+    verifie="2026-11-05"
+    sources={[
+      { auteur: 'IETF', titre: 'RFC 791, Internet Protocol', url: 'https://www.rfc-editor.org/rfc/rfc791', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'J. Mogul, J. Postel', titre: 'RFC 950, Internet Standard Subnetting Procedure', url: 'https://www.rfc-editor.org/rfc/rfc950', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'V. Fuller, T. Li', titre: 'RFC 4632, Classless Inter-domain Routing (CIDR)', url: 'https://www.rfc-editor.org/rfc/rfc4632', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 1918, Address Allocation for Private Internets', url: 'https://www.rfc-editor.org/rfc/rfc1918', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 5737, IPv4 Address Blocks Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc5737', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'A. Retana et al.', titre: 'RFC 3021, Using 31-Bit Prefixes on IPv4 Point-to-Point Links', url: 'https://www.rfc-editor.org/rfc/rfc3021', type: 'primaire', annee: 2000, langue: 'en' },
+      { auteur: 'R. Hinden, S. Deering', titre: 'RFC 4291, IP Version 6 Addressing Architecture', url: 'https://www.rfc-editor.org/rfc/rfc4291', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'S. Kawamura, M. Kawashima', titre: 'RFC 5952, A Recommendation for IPv6 Address Text Representation', url: 'https://www.rfc-editor.org/rfc/rfc5952', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 3849, IPv6 Address Prefix Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc3849', type: 'primaire', annee: 2004, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 8200, Internet Protocol, Version 6 (IPv6) Specification', url: 'https://www.rfc-editor.org/rfc/rfc8200', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Number Resource Organization', titre: 'Free Pool of IPv4 Address Space Depleted', url: 'https://www.nro.net/ipv4-free-pool-depleted/', type: 'site', annee: 2011, langue: 'en' },
+      { auteur: 'RIPE NCC', titre: 'The RIPE NCC has run out of IPv4 Addresses', url: 'https://www.ripe.net/publications/news/the-ripe-ncc-has-run-out-of-ipv4-addresses/', type: 'site', annee: 2019, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>
