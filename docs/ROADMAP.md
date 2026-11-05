@@ -157,6 +157,7 @@ vérifier lors de la recherche.
 
 ## Ensuite
 
+- **Index et recherche des notions** : retrouver une notion (« masque », « rétropropagation », « Enigma »…) parmi tous les modules. Pistes : un index généré au build à partir du glossaire, des titres d'étapes et des frises ; une recherche côté navigateur, sans service tiers (par exemple Pagefind, servi par le site lui-même) ; une page « Index » alphabétique lisible sans JavaScript
 - Matérialité (câbles, datacenters, énergie)
 - Sécurité & vie privée
 - [x] Le dark net : routage en oignon, `.onion`, usages et limites *(`/modules/dark-net/`, relecture humaine à faire ; chiffres de Tor Metrics à dater à chaque mise à jour)*
