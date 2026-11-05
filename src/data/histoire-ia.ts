@@ -1,0 +1,365 @@
+// Frise de l'histoire de l'IA (module « Histoire de l'IA »), affichée par
+// src/components/FriseHistoire.astro. Chaque événement vient de
+// docs/sources/histoire-ia.md (qui renvoie aux dossiers des modules IA) ;
+// `source` est la source principale.
+import type { DonneesFrise, Evenement } from '../lib/frise';
+
+export const REGIONS: Record<string, string> = {
+  'amerique-nord': 'Amérique du Nord',
+  'amerique-latine': 'Amérique latine',
+  europe: 'Europe de l’Ouest',
+  'europe-est': 'URSS et Europe de l’Est',
+  'moyen-orient': 'Moyen-Orient',
+  afrique: 'Afrique',
+  asie: 'Asie',
+  oceanie: 'Océanie',
+  monde: 'Monde',
+};
+
+export const THEMES: Record<string, string> = {
+  idees: 'Idées et théories',
+  machines: 'Machines et programmes',
+  apprentissage: 'Apprendre des données',
+  societe: 'Travail, droit et société',
+};
+
+export const EVENEMENTS: Evenement[] = [
+  {
+    annee: 'vers 60', tri: 60, titre: 'Le théâtre mobile d’Héron',
+    texte: 'À Alexandrie, Héron décrit un petit théâtre d’automates dont les mouvements sont commandés par une corde enroulée sur un tambour. Selon le roboticien Noel Sharkey, c’est un candidat ancien au titre, disputé, de « machine programmable ».',
+    region: 'afrique', theme: 'machines', personnes: ['Héron d’Alexandrie'],
+    source: { titre: 'O. Tambini, « The forgotten history of the 800-year-old robot », TechRadar (2018)', url: 'https://www.techradar.com/news/the-forgotten-history-of-the-800-year-old-robot' },
+  },
+  {
+    annee: '1206', tri: 1206, titre: 'Les automates d’al-Jazarī',
+    texte: 'À Diyarbakır, al-Jazarī décrit cinquante machines, dont des automates musicaux commandés par un arbre à chevilles. Ils rejouent une séquence fixe : les appeler « premiers robots programmables » est une lecture moderne.',
+    region: 'moyen-orient', theme: 'machines', personnes: ['al-Jazarī'],
+    source: { titre: 'C. Canavas, « Al-Jazarī’s Compendium of Ingenious Devices », CNRS Éditions (2017)', url: 'https://books.openedition.org/editionscnrs/27688' },
+  },
+  {
+    annee: '1769-1770', tri: 1769, titre: 'Le Turc mécanique',
+    texte: 'Wolfgang von Kempelen présente à Vienne un automate joueur d’échecs. Un joueur humain caché dans le meuble jouait à sa place : l’illusion d’une machine pensante reposait sur un travail invisible.',
+    region: 'europe', theme: 'machines', personnes: ['Wolfgang von Kempelen'],
+    source: { titre: 'Heinz Nixdorf MuseumsForum, « The Chess Turk has been brought back to life »', url: 'https://www.hnf.de/en/permanent-exhibition/exhibition-areas/the-mechanization-of-information-technology/early-automatons-miracles-of-technology/the-chess-turk-has-been-brought-back-to-life.html' },
+  },
+  {
+    annee: '1843', tri: 1843, titre: 'L’objection de Lady Lovelace',
+    texte: 'Dans ses notes sur la machine analytique de Babbage, Ada Lovelace imagine qu’elle manipule d’autres symboles que des nombres, mais écrit qu’elle « n’a aucune prétention à créer quoi que ce soit ». Turing discutera cette phrase en 1950.',
+    region: 'europe', theme: 'idees', personnes: ['Ada Lovelace'], pionniere: true,
+    source: { titre: 'Menabrea & Lovelace, « Sketch of the Analytical Engine » (1843)', url: 'https://www.fourmilab.ch/babbage/sketch.html' },
+  },
+  {
+    annee: '1913', tri: 1913, titre: 'Markov compte les lettres de Pouchkine',
+    texte: 'À Saint-Pétersbourg, Andreï Markov analyse 20 000 lettres d’Eugène Onéguine et montre qu’une lettre dépend de la précédente. Ses « chaînes » sont l’ancêtre lointain des modèles qui prédisent le mot suivant ; lui analysait un texte, il n’en générait pas.',
+    region: 'europe-est', theme: 'idees', personnes: ['Andreï Markov'],
+    source: { titre: 'B. Hayes, « First Links in the Markov Chain », American Scientist (2013)', url: 'https://www.americanscientist.org/sites/americanscientist.org/files/201321152149545-2013-03Hayes.pdf' },
+  },
+  {
+    annee: 'vers 1914', tri: 1914, titre: 'L’automate d’échecs de Torres Quevedo',
+    texte: 'L’ingénieur espagnol Leonardo Torres Quevedo construit une machine électromécanique qui mate un roi seul avec un roi et une tour. En 1950, Shannon la juge « plus honnête » que le Turc mécanique.',
+    region: 'europe', theme: 'machines', personnes: ['Leonardo Torres Quevedo'],
+    source: { titre: 'C. Shannon, « Programming a Computer for Playing Chess » (1950)', url: 'https://vision.unipv.it/IA1/ProgrammingaComputerforPlayingChess.pdf' },
+  },
+  {
+    annee: '1939', tri: 1939, titre: 'Le Voder et ses opératrices',
+    texte: 'Aux Expositions universelles de New York et San Francisco, le Voder des Bell Labs produit une voix électrique « jouée » au clavier par des opératrices formées pendant environ un an, dont Helen Harper.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Homer Dudley', 'Helen Harper'], pionniere: true,
+    source: { titre: 'MIT Technology Review, « Vocal codes » (2003)', url: 'https://www.technologyreview.com/2003/11/01/274977/vocal-codes' },
+  },
+  {
+    annee: '1943', tri: 1943, titre: 'Le neurone formel',
+    texte: 'Warren McCulloch et Walter Pitts décrivent le neurone comme une petite unité logique qui s’active au-delà d’un seuil. Ce modèle très simplifié inspire les réseaux de neurones artificiels.',
+    region: 'amerique-nord', theme: 'idees', personnes: ['Warren McCulloch', 'Walter Pitts'],
+    source: { titre: 'W. McCulloch, W. Pitts, « A logical calculus of the ideas immanent in nervous activity » (1943), notice', url: 'https://doi.org/10.1007/BF02478259' },
+  },
+  {
+    annee: '1950', tri: 1950, titre: 'Le jeu de l’imitation',
+    texte: 'Alan Turing remplace la question « les machines peuvent-elles penser ? », qu’il juge vide de sens, par un jeu de l’imitation. Il répond à l’objection de Lovelace et propose des « machines qui apprennent ».',
+    region: 'europe', theme: 'idees', personnes: ['Alan Turing'],
+    source: { titre: 'A. M. Turing, « Computing Machinery and Intelligence », Mind (1950)', url: 'https://www.abelard.org/turpap/turpap.php' },
+  },
+  {
+    annee: '1955', tri: 1955, titre: 'Le mot « intelligence artificielle »',
+    texte: 'Le 31 août 1955, quatre chercheurs proposent une étude d’été sur « l’intelligence artificielle » à Dartmouth. L’atelier de 1956 donne un nom au domaine, mais les idées existaient avant (Turing, cybernétique).',
+    region: 'amerique-nord', theme: 'idees', personnes: ['John McCarthy', 'Marvin Minsky', 'Nathaniel Rochester', 'Claude Shannon'],
+    source: { titre: '« A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence » (1955)', url: 'http://jmc.stanford.edu/articles/dartmouth/dartmouth.pdf' },
+  },
+  {
+    annee: '1955', tri: 1955.5, titre: 'Traduire avec la BESM',
+    texte: 'À Moscou, une équipe de l’Académie des sciences programme l’ordinateur BESM pour traduire des textes scientifiques de l’anglais vers le russe, avec un dictionnaire d’environ 950 mots. La linguiste Izabella Bel’skaïa conçoit l’essentiel du système.',
+    region: 'europe-est', theme: 'machines', personnes: ['Izabella Bel’skaïa', 'Dmitri Panov', 'Olga Koulaguina', 'Igor Mel’tchouk'], pionniere: true,
+    source: { titre: 'I. K. Belskaja, « Machine translation of languages », Research (1957)', url: 'https://aclanthology.org/www.mt-archive.info/50/Research-1957-Belskaja.pdf' },
+  },
+  {
+    annee: '1955', tri: 1955.7, titre: 'La cybernétique réhabilitée',
+    texte: 'En 1954, un dictionnaire soviétique qualifie encore la cybernétique de « pseudo-science réactionnaire ». En 1955, Sobolev, Kitov et Liapounov publient un article qui la présente comme une science ; en 1959, l’Académie des sciences lui consacre un conseil.',
+    region: 'europe-est', theme: 'societe', personnes: ['Sergueï Sobolev', 'Anatoli Kitov', 'Alexeï Liapounov'],
+    source: { titre: 'B. Peters, « Normalizing Soviet Cybernetics » (2012)', url: 'https://nevzlincenter.huji.ac.il/sites/default/files/leonidnevzlin/files/47.2.peters.pdf' },
+  },
+  {
+    annee: '1956-1961', tri: 1956, titre: 'Des réseaux de sens pour traduire',
+    texte: 'À Cambridge, l’unité de recherche sur le langage de Margaret Masterman cherche à traduire par le sens plutôt que mot à mot. R. H. Richens (1956) puis Masterman (1961) y décrivent des « réseaux sémantiques », ancêtres des représentations de connaissances.',
+    region: 'europe', theme: 'idees', personnes: ['Margaret Masterman', 'R. H. Richens'], pionniere: true,
+    source: { titre: 'M. Masterman, « Semantic message detection for machine translation, using an interlingua » (1961)', url: 'https://aclanthology.org/www.mt-archive.info/50/NPL-1961-Masterman.pdf' },
+  },
+  {
+    annee: '1958', tri: 1958, titre: 'Le perceptron et l’emballement',
+    texte: 'Frank Rosenblatt présente le perceptron, une machine qui apprend à classer des formes. La presse annonce une machine capable de lire et de devenir « plus sage » : la démonstration réelle était bien plus modeste.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Frank Rosenblatt'],
+    source: { titre: 'Cornell Chronicle, « Professor’s perceptron paved the way for AI – 60 years too soon » (2019)', url: 'https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon' },
+  },
+  {
+    annee: '1959', tri: 1959, titre: 'Un programme de dames qui apprend',
+    texte: 'Arthur Samuel montre qu’un programme peut apprendre à jouer aux dames mieux que son auteur, après 8 à 10 heures de jeu. La célèbre définition « sans être explicitement programmé » est une paraphrase plus tardive.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Arthur Samuel'],
+    source: { titre: 'A. L. Samuel, « Some Studies in Machine Learning Using the Game of Checkers » (1959)', url: 'https://people.csail.mit.edu/brooks/idocs/Samuel.pdf' },
+  },
+  {
+    annee: '1961', tri: 1961, titre: 'MENACE, des boîtes d’allumettes qui apprennent',
+    texte: 'Donald Michie construit une machine faite de 304 boîtes d’allumettes et de perles qui apprend à jouer au morpion : on ajoute des perles après une victoire, on en retire après une défaite. C’est l’idée de l’apprentissage par renforcement.',
+    region: 'europe', theme: 'apprentissage', personnes: ['Donald Michie'],
+    source: { titre: 'O. Child, « MENACE: the Machine Educable Noughts And Crosses Engine », Chalkdust (2016)', url: 'https://chalkdustmagazine.com/features/menace-machine-educable-noughts-crosses-engine/' },
+  },
+  {
+    annee: '1964', tri: 1964, titre: 'L’école moscovite de reconnaissance des formes',
+    texte: 'À Moscou, Mark Aizerman, Emmanuel Braverman et Lev Rozonoer publient la méthode des « fonctions potentielles » pour apprendre à classer des formes. Ils y lisent une fonction comme un produit scalaire dans un autre espace : une idée que les machines à vecteurs de support exploiteront en 1992.',
+    region: 'europe-est', theme: 'apprentissage', personnes: ['Mark Aizerman', 'Emmanuel Braverman', 'Lev Rozonoer'],
+    source: { titre: 'Aizerman, Braverman, Rozonoer, Avtomatika i Telemekhanika 25-6 (1964), notice Math-Net.Ru', url: 'https://mathnet.ru/eng/at11677' },
+  },
+  {
+    annee: '1965', tri: 1965, titre: 'DENDRAL et les systèmes experts',
+    texte: 'À Stanford, DENDRAL aide à identifier la structure de molécules à partir de leurs spectres, en codant le savoir de chimistes sous forme de règles. Il ouvre la voie aux « systèmes experts ».',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Joshua Lederberg', 'Edward Feigenbaum', 'Bruce Buchanan', 'Carl Djerassi'],
+    source: { titre: 'National Library of Medicine, « The Joshua Lederberg Papers — Artificial Intelligence »', url: 'https://profiles.nlm.nih.gov/spotlight/bb/feature/ai' },
+  },
+  {
+    annee: '1965', tri: 1965.5, titre: 'Les ensembles flous',
+    texte: 'Lotfi Zadeh, né à Bakou et formé à Téhéran avant de rejoindre Berkeley, propose les « ensembles flous » : un élément peut appartenir à un ensemble un peu ou beaucoup. Cette logique graduée servira dans des automatismes, des métros aux machines à laver.',
+    region: 'moyen-orient', theme: 'idees', personnes: ['Lotfi Zadeh'],
+    source: { titre: 'Berkeley Engineering, « Remembering Lotfi Zadeh » (2017)', url: 'https://engineering.berkeley.edu/news/2017/09/remembering-lotfi-zadeh/' },
+  },
+  {
+    annee: '1966', tri: 1966, titre: 'ELIZA, et son auteur inquiet',
+    texte: 'Joseph Weizenbaum crée ELIZA, un programme qui imite un psychothérapeute en reformulant les phrases. Choqué de voir des personnes s’y confier, il devient l’un des premiers critiques de l’IA.',
+    region: 'amerique-nord', theme: 'societe', personnes: ['Joseph Weizenbaum'],
+    source: { titre: 'MIT News, nécrologie de Joseph Weizenbaum (2008)', url: 'https://news.mit.edu/2008/obit-weizenbaum-0310' },
+  },
+  {
+    annee: '1966-1972', tri: 1966.5, titre: 'Shakey et l’algorithme A*',
+    texte: 'Au SRI (Californie), une équipe dont fait partie Helen Chan Wolf étudie Shakey, un robot mobile qui perçoit et planifie. Pour lui, Peter Hart, Nils Nilsson et Bertram Raphael mettent au point en 1968 l’algorithme de recherche A*, encore utilisé par les GPS.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Helen Chan Wolf', 'Peter Hart', 'Nils Nilsson', 'Bertram Raphael'], pionniere: true,
+    source: { titre: 'IEEE Milestones, « Shakey: The World’s First Mobile, Intelligent Robot, 1972 »', url: 'https://ieeemilestones.ethw.org/Milestones:Shakey:_The_World%E2%80%99s_First_Mobile,_Intelligent_Robot,_1972' },
+  },
+  {
+    annee: '1967', tri: 1967, titre: 'Apprendre par descente de gradient',
+    texte: 'À Tokyo, Shun’ichi Amari publie une théorie de classifieurs qui corrigent leurs poids pas à pas, en suivant la pente de l’erreur : le principe de la descente de gradient stochastique, au cœur de l’apprentissage des réseaux actuels.',
+    region: 'asie', theme: 'apprentissage', personnes: ['Shun’ichi Amari'],
+    source: { titre: 'A. Griewank, « Who Invented the Reverse Mode of Differentiation? » (2012)', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.pdf' },
+  },
+  {
+    annee: '1968-1974', tri: 1968, titre: 'Mesurer ce qu’une machine peut apprendre',
+    texte: 'À Moscou, Vladimir Vapnik et Alexeï Tchervonenkis prouvent à quelles conditions un apprentissage sur des exemples se généralise. Leur « dimension VC » devient un pilier de la théorie, et mène aux machines à vecteurs de support (1992-1995).',
+    region: 'europe-est', theme: 'apprentissage', personnes: ['Vladimir Vapnik', 'Alexeï Tchervonenkis'],
+    source: { titre: 'IPU RAN, fiche A. Ya. Chervonenkis', url: 'https://www.ipu.ru/en/node/74418' },
+  },
+  {
+    annee: '1970-1986', tri: 1970, titre: 'La rétropropagation, plusieurs fois inventée',
+    texte: 'La méthode qui permet d’entraîner les réseaux de neurones a été trouvée plusieurs fois : Seppo Linnainmaa (1970), Paul Werbos (1974-1982), puis David Rumelhart, Geoffrey Hinton et Ronald Williams, qui la popularisent en 1986. La priorité reste débattue.',
+    region: 'monde', theme: 'apprentissage', personnes: ['Seppo Linnainmaa', 'Paul Werbos', 'David Rumelhart', 'Geoffrey Hinton', 'Ronald Williams'],
+    source: { titre: 'A. Griewank, « Who Invented the Reverse Mode of Differentiation? » (2012)', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.pdf' },
+  },
+  {
+    annee: '1971', tri: 1971, titre: 'Un réseau à huit couches à Kyiv',
+    texte: 'Alexeï Ivakhnenko décrit un réseau de huit couches construit couche par couche, par régression et sélection. Certains y voient l’ancêtre de l’apprentissage profond ; d’autres soulignent que la méthode diffère beaucoup des réseaux actuels.',
+    region: 'europe-est', theme: 'apprentissage', personnes: ['Alexeï Ivakhnenko'],
+    source: { titre: 'A. G. Ivakhnenko, « Polynomial Theory of Complex Systems », IEEE SMC (1971), notice', url: 'https://doi.org/10.1109/TSMC.1971.4308320' },
+  },
+  {
+    annee: '1971-1976', tri: 1971.5, titre: 'Comprendre la parole',
+    texte: 'Un programme américain finance la reconnaissance de la parole. À Carnegie Mellon, l’équipe de Raj Reddy, formé en Inde, construit Harpy, qui reconnaît 1 011 mots, et Hearsay-II, l’un des premiers systèmes « à tableau noir » où plusieurs modules coopèrent.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Raj Reddy', 'Bruce Lowerre'],
+    source: { titre: 'Computer History Museum, « Raj Reddy »', url: 'https://computerhistory.org/profile/raj-reddy/' },
+  },
+  {
+    annee: '1972', tri: 1972, titre: 'Peser les mots rares',
+    texte: 'Karen Spärck Jones propose de donner plus de poids aux mots rares d’une collection de documents : la pondération IDF. Cette idée simple devient un standard des moteurs de recherche.',
+    region: 'europe', theme: 'apprentissage', personnes: ['Karen Spärck Jones'], pionniere: true,
+    source: { titre: 'Computer Laboratory (Cambridge), nécrologie de Karen Spärck Jones', url: 'https://www.cl.cam.ac.uk/misc/obituaries/sparck-jones/' },
+  },
+  {
+    annee: '1973', tri: 1973, titre: 'Le rapport Lighthill',
+    texte: 'Au Royaume-Uni, le rapport de James Lighthill juge décevants les résultats de l’IA et pointe « l’explosion combinatoire ». Les financements britanniques reculent : c’est l’un des « hivers » de l’IA, une étiquette donnée après coup.',
+    region: 'europe', theme: 'societe', personnes: ['James Lighthill'],
+    source: { titre: 'J. Lighthill, « Artificial Intelligence: A General Survey » (1973)', url: 'http://www.chilton-computing.org.uk/inf/literature/reports/lighthill_report/p001.htm' },
+  },
+  {
+    annee: '1974', tri: 1974, titre: 'Kaissa, champion du monde',
+    texte: 'À Stockholm, le programme soviétique Kaissa remporte ses quatre parties et le premier championnat du monde des programmes d’échecs.',
+    region: 'europe-est', theme: 'machines', personnes: ['Gueorgui Adelson-Velski', 'Vladimir Arlazarov', 'Mikhaïl Donskoï'],
+    source: { titre: 'Computer History Museum, « Arlazarov, Ushkov, and Donskoy in Moscow »', url: 'https://www.computerhistory.org/chess/stl-431f4cc15a4a7/' },
+  },
+  {
+    annee: '1977', tri: 1977, titre: 'La méthode de Wu',
+    texte: 'Envoyé dans une usine d’ordinateurs pendant la Révolution culturelle, le mathématicien Wu Wenjun conçoit une méthode pour démontrer par le calcul des théorèmes de géométrie, en s’inspirant des mathématiques chinoises anciennes, très algorithmiques.',
+    region: 'asie', theme: 'idees', personnes: ['Wu Wenjun'],
+    source: { titre: 'MacTutor (St Andrews), « Wen-Tsun Wu »', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Wu_Wen-Tsun/' },
+  },
+  {
+    annee: '1978', tri: 1978, titre: 'Ruzena Bajcsy et la perception des robots',
+    texte: 'Formée à Bratislava puis à Stanford, Ruzena Bajcsy fonde à l’université de Pennsylvanie le laboratoire GRASP, consacré à la robotique et à la perception : vision par ordinateur, toucher, imagerie médicale.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Ruzena Bajcsy'], pionniere: true,
+    source: { titre: 'UC Berkeley EECS, « Ruzena Bajcsy »', url: 'https://www2.eecs.berkeley.edu/Faculty/Homepages/bajcsy.html' },
+  },
+  {
+    annee: '1979-1980', tri: 1979, titre: 'Le néocognitron',
+    texte: 'Aux laboratoires de la NHK, Kunihiko Fukushima conçoit un réseau de neurones en couches, inspiré du cortex visuel, qui reconnaît des formes même déplacées. Il préfigure les réseaux convolutifs actuels.',
+    region: 'asie', theme: 'apprentissage', personnes: ['Kunihiko Fukushima'],
+    source: { titre: 'Franklin Institute, « Kunihiko Fukushima »', url: 'https://www.fi.edu/laureates/kunihiko-fukushima' },
+  },
+  {
+    annee: '1980-1984', tri: 1980, titre: 'XCON, un système expert en entreprise',
+    texte: 'Chez Digital Equipment, XCON configure les commandes d’ordinateurs à l’aide de règles : 750 en 1980, 2 500 en 1984. L’entreprise apprend que maintenir un système expert coûte cher en personnel qualifié.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['John McDermott'],
+    source: { titre: 'S. Polit, « R1 and Beyond », AI Magazine 5-4 (1984)', url: 'https://ojs.aaai.org/index.php/aimagazine/article/view/460' },
+  },
+  {
+    annee: '1982-1992', tri: 1982, titre: 'Le pari japonais de la cinquième génération',
+    texte: 'Le Japon lance un grand programme public d’ordinateurs parallèles fondés sur la programmation logique, qui inquiète l’Europe et les États-Unis. En 1992, les évaluateurs saluent la recherche, mais aucun matériel commercialement compétitif n’en est sorti.',
+    region: 'asie', theme: 'machines', personnes: ['Kazuhiro Fuchi'],
+    source: { titre: 'E. Tick, ICOT Evaluation Report (1992)', url: 'https://www.airc.aist.go.jp/aitec-icot/ICOT/Museum/FinalEval/finaleval137.html' },
+  },
+  {
+    annee: '1982-1988', tri: 1982.5, titre: 'Penny Nii et les tableaux noirs',
+    texte: 'À Stanford, H. Penny Nii conçoit des systèmes où plusieurs modules de connaissance coopèrent en écrivant sur une mémoire commune, puis en publie en 1986 la synthèse de référence.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['H. Penny Nii'], pionniere: true,
+    source: { titre: 'H. P. Nii, « Blackboard Application Systems… », AI Magazine 7-3 (1986)', url: 'https://ojs.aaai.org/index.php/aimagazine/article/view/550' },
+  },
+  {
+    annee: '1985', tri: 1985, titre: 'Une mission IA chez Bull',
+    texte: 'L’ingénieure Alice Recoque, qui avait dirigé la conception du mini-ordinateur Mitra 15, lance la mission « intelligence artificielle » du groupe français Bull, d’où naît un centre de recherche dédié.',
+    region: 'europe', theme: 'machines', personnes: ['Alice Recoque'], pionniere: true,
+    source: { titre: '« Hommage à Alice Recoque », 1024 n° 17 (2021)', url: 'https://1024.societe-informatique-de-france.fr/1024/2021/04/1024_17_2021_119.pdf' },
+  },
+  {
+    annee: '1986', tri: 1986, titre: 'L’Inde lance le programme KBCS',
+    texte: 'Avec le Programme des Nations unies pour le développement, le gouvernement indien finance pendant cinq ans des centres de recherche en IA : systèmes experts, parole, vision, traduction anglais-hindi.',
+    region: 'asie', theme: 'societe', personnes: ['S. Ramani'],
+    source: { titre: 'S. Ramani, K. S. R. Anjaneyulu, « Knowledge Based Computer Systems in India » (1991)', url: 'https://www.cs.cmu.edu/afs/cs/Web/Groups/AI/pubs/lists/aidev/aidev4.txt' },
+  },
+  {
+    annee: '1987', tri: 1987, titre: 'L’action est située',
+    texte: 'Chez Xerox, l’anthropologue Lucy Suchman observe des personnes face à une photocopieuse « intelligente ». Elle montre qu’on n’agit pas en exécutant un plan mais en s’ajustant à la situation, une critique de l’IA planificatrice.',
+    region: 'amerique-nord', theme: 'societe', personnes: ['Lucy Suchman'], pionniere: true,
+    source: { titre: 'Recension de L. Suchman, Plans and Situated Actions, Intellectica (1989), notice', url: 'https://doi.org/10.3406/intel.1989.1374' },
+  },
+  {
+    annee: '1987-1989', tri: 1987.5, titre: 'Un nouvel « hiver »',
+    texte: 'Les promesses des systèmes experts ne sont pas tenues : entreprises fermées, adhésions en baisse, budget de la recherche militaire américaine en IA réduit de 47 à 31 millions de dollars entre 1987 et 1989.',
+    region: 'amerique-nord', theme: 'societe',
+    source: { titre: 'N. J. Nilsson, The Quest for Artificial Intelligence (2010), § 24.4', url: 'https://ai.stanford.edu/~nilsson/QAI/qai.pdf' },
+  },
+  {
+    annee: '1989', tri: 1989, titre: 'Lire les codes postaux',
+    texte: 'Aux Bell Labs, Yann LeCun et ses collègues entraînent par rétropropagation un réseau convolutif qui lit les codes postaux manuscrits. En 1998, leur système lit des millions de chèques ; la base MNIST de chiffres manuscrits, avec Corinna Cortes, devient un standard.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Yann LeCun', 'Corinna Cortes', 'Léon Bottou', 'Yoshua Bengio'], pionniere: true,
+    source: { titre: 'Y. LeCun et al., « Backpropagation Applied to Handwritten Zip Code Recognition » (1989)', url: 'http://yann.lecun.com/exdb/publis/pdf/lecun-89e.pdf' },
+  },
+  {
+    annee: '1997', tri: 1997, titre: 'Deep Blue bat Kasparov',
+    texte: 'Le 11 mai 1997, Deep Blue (IBM) gagne son match revanche contre Garry Kasparov, 3,5 à 2,5. Il n’apprenait pas : il examinait d’immenses arbres de coups avec 480 puces spécialisées conçues par Feng-hsiung Hsu.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Feng-hsiung Hsu', 'Garry Kasparov'],
+    source: { titre: 'IBM, « Deep Blue »', url: 'https://www.ibm.com/history/deep-blue' },
+  },
+  {
+    annee: '2000', tri: 2000, titre: 'Kismet, un robot sociable',
+    texte: 'Au MIT, Cynthia Breazeal soutient sa thèse sur Kismet, un robot à visage expressif conçu pour des échanges avec des humains. Il simule des émotions pour réguler l’interaction, sans les ressentir.',
+    region: 'amerique-nord', theme: 'machines', personnes: ['Cynthia Breazeal'], pionniere: true,
+    source: { titre: 'MIT AI Lab, projet Kismet', url: 'http://www.ai.mit.edu/projects/sociable/kismet.html' },
+  },
+  {
+    annee: '2009', tri: 2009, titre: 'ImageNet',
+    texte: 'L’équipe de Fei-Fei Li publie ImageNet, des millions d’images classées selon les mots du dictionnaire WordNet. L’étiquetage est confié à des travailleur·ses du clic. Cette base rendra possible l’essor de l’apprentissage profond.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Fei-Fei Li', 'Jia Deng', 'Kai Li'], pionniere: true,
+    source: { titre: 'Computer History Museum, « CHM Releases AlexNet Source Code »', url: 'https://computerhistory.org/blog/chm-releases-alexnet-source-code/' },
+  },
+  {
+    annee: '2012', tri: 2012, titre: 'AlexNet',
+    texte: 'Un réseau de neurones profond entraîné sur deux cartes graphiques remporte le concours ImageNet avec 15,3 % d’erreur, contre 26,2 % pour le suivant. Ce succès lance la vague actuelle de l’apprentissage profond.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Alex Krizhevsky', 'Ilya Sutskever', 'Geoffrey Hinton'],
+    source: { titre: 'A. Krizhevsky, I. Sutskever, G. Hinton, NeurIPS (2012)', url: 'https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf' },
+  },
+  {
+    annee: '2015-2016', tri: 2016, titre: 'AlphaGo',
+    texte: 'Le programme AlphaGo de DeepMind bat Fan Hui 5-0 en octobre 2015, puis Lee Sedol 4-1 à Séoul en mars 2016. Il combine réseaux de neurones, apprentissage par renforcement et recherche dans l’arbre des coups ; Aja Huang posait les pierres à sa place.',
+    region: 'asie', theme: 'apprentissage', personnes: ['Lee Sedol', 'Fan Hui', 'Aja Huang'],
+    source: { titre: 'D. Silver, A. Huang et al., Nature 529 (2016)', url: 'https://www.nature.com/articles/nature16961' },
+  },
+  {
+    annee: '2017', tri: 2017, titre: 'Le Transformeur',
+    texte: 'Huit chercheur·ses de Google, dont Niki Parmar, proposent le Transformeur, une architecture fondée uniquement sur le mécanisme d’« attention ». Elle devient la base des grands modèles de langage.',
+    region: 'amerique-nord', theme: 'apprentissage', personnes: ['Ashish Vaswani', 'Noam Shazeer', 'Niki Parmar', 'Jakob Uszkoreit', 'Llion Jones', 'Aidan N. Gomez', 'Łukasz Kaiser', 'Illia Polosukhin'], pionniere: true,
+    source: { titre: 'A. Vaswani et al., « Attention Is All You Need » (2017)', url: 'https://arxiv.org/abs/1706.03762' },
+  },
+  {
+    annee: '2017', tri: 2017.3, titre: 'Un plan chinois pour 2030',
+    texte: 'Le 20 juillet 2017, le gouvernement chinois publie son plan de développement de l’IA « de nouvelle génération », en trois étapes (2020, 2025, 2030), avec l’objectif de faire du pays le principal centre d’innovation en IA, y compris pour la défense et la « gouvernance sociale ».',
+    region: 'asie', theme: 'societe',
+    source: { titre: 'Conseil des affaires de l’État, 国发〔2017〕35号', url: 'https://www.gov.cn/zhengce/content/2017-07/20/content_5211996.htm' },
+  },
+  {
+    annee: '2017-2019', tri: 2017.6, titre: 'Deep Learning Indaba et Masakhane',
+    texte: 'En 2017, le premier Deep Learning Indaba réunit à Johannesburg des chercheur·ses du continent. En 2019 naît Masakhane, une communauté ouverte qui construit des outils de traduction pour les langues africaines, souvent oubliées par l’IA.',
+    region: 'afrique', theme: 'societe', personnes: ['Kathleen Siminyu', 'Vukosi Marivate', 'Jade Abbott', 'Wilhelmina Nekoto'], pionniere: true,
+    source: { titre: 'I. Orife et al., « Masakhane — Machine Translation For Africa » (2020)', url: 'https://arxiv.org/abs/2003.11529' },
+  },
+  {
+    annee: '2018', tri: 2018, titre: 'Gender Shades',
+    texte: 'Joy Buolamwini et Timnit Gebru testent trois logiciels commerciaux qui devinent le genre d’un visage : 0,8 % d’erreur au plus pour les hommes à peau claire, jusqu’à 34,7 % pour les femmes à peau foncée.',
+    region: 'amerique-nord', theme: 'societe', personnes: ['Joy Buolamwini', 'Timnit Gebru'], pionniere: true,
+    source: { titre: 'J. Buolamwini, T. Gebru, « Gender Shades », PMLR 81 (2018)', url: 'https://proceedings.mlr.press/v81/buolamwini18a.html' },
+  },
+  {
+    annee: '2018-2023', tri: 2018.5, titre: 'Le travail des données au Sud',
+    texte: 'Au Venezuela, pendant la crise économique, des milliers de personnes étiquettent des données pour l’IA pour quelques dizaines de centimes de l’heure ; des enquêtes décrivent le même travail aux Philippines, à Madagascar et en Argentine.',
+    region: 'amerique-latine', theme: 'societe', personnes: ['Milagros Miceli'], pionniere: true,
+    source: { titre: 'K. Hao, A. P. Hernández, MIT Technology Review (2022)', url: 'https://www.technologyreview.com/2022/04/20/1050392/ai-industry-appen-scale-data-labels/' },
+  },
+  {
+    annee: '2020', tri: 2020, titre: '« Perroquets stochastiques »',
+    texte: 'Un article d’Emily Bender, Timnit Gebru et leurs coautrices alerte sur les coûts et les risques des très grands modèles de langage. Le conflit autour de sa publication aboutit au départ de Gebru de Google en décembre 2020 : licenciement selon elle, démission selon Google.',
+    region: 'amerique-nord', theme: 'societe', personnes: ['Timnit Gebru', 'Emily M. Bender'], pionniere: true,
+    source: { titre: 'MIT Technology Review, 4 décembre 2020', url: 'https://www.technologyreview.com/2020/12/04/1013294/google-ai-ethics-research-paper-forced-out-timnit-gebru/' },
+  },
+  {
+    annee: '2021', tri: 2021, titre: 'Une recommandation mondiale',
+    texte: 'En novembre 2021, les États membres de l’UNESCO adoptent une recommandation sur l’éthique de l’IA : droits humains, égalité de genre, environnement, diversité culturelle. Elle n’est pas contraignante.',
+    region: 'monde', theme: 'societe',
+    source: { titre: 'UNESCO, Recommandation sur l’éthique de l’intelligence artificielle', url: 'https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence' },
+  },
+  {
+    annee: '2022', tri: 2022, titre: 'Les voix māori protégées',
+    texte: 'En Aotearoa Nouvelle-Zélande, le média Te Hiku Media protège ses enregistrements en te reo Māori par une licence de « kaitiakitanga » (tutelle) : les données d’une communauté doivent lui profiter.',
+    region: 'oceanie', theme: 'societe',
+    source: { titre: 'Te Hiku Media, « Data sovereignty and the Kaitiakitanga License »', url: 'https://tehiku.nz/te-hiku-tech/te-hiku-dev-korero/25141/data-sovereignty-and-the-kaitiakitanga-license' },
+  },
+  {
+    annee: '2022', tri: 2022.9, titre: 'ChatGPT',
+    texte: 'Le 30 novembre 2022, OpenAI ouvre au public ChatGPT, un agent conversationnel fondé sur un grand modèle de langage. Son succès rapide déclenche une course entre grandes entreprises.',
+    region: 'amerique-nord', theme: 'machines',
+    source: { titre: 'OpenAI, « ChatGPT: Optimizing Language Models for Dialogue » (copie Internet Archive)', url: 'https://web.archive.org/web/20221130180912/https://openai.com/blog/chatgpt/' },
+  },
+  {
+    annee: '2023', tri: 2023, titre: 'Les petites mains kényanes',
+    texte: 'Une enquête de TIME révèle que des employé·es de Sama à Nairobi étiquetaient pour OpenAI des textes violents pour moins de 2 dollars de l’heure (Sama conteste ces chiffres). En mai 2023, plus de 150 modérateur·rices votent à Nairobi la création d’un syndicat.',
+    region: 'afrique', theme: 'societe',
+    source: { titre: 'B. Perrigo, TIME, 18 janvier 2023', url: 'https://time.com/6247678/openai-chatgpt-kenya-workers/' },
+  },
+  {
+    annee: '2024', tri: 2024, titre: 'Le règlement européen sur l’IA',
+    texte: 'Le règlement (UE) 2024/1689 entre en vigueur le 1er août 2024 : il interdit certains usages et encadre les systèmes selon leur niveau de risque. État au 5 novembre 2026 : un règlement de juillet 2026 a repoussé une partie des obligations à 2027 et 2028.',
+    region: 'europe', theme: 'societe',
+    source: { titre: 'Règlement (UE) 2026/1744 (« Omnibus IA »), EUR-Lex', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744' },
+  },
+];
+
+export const FRISE_IA: DonneesFrise = { regions: REGIONS, themes: THEMES, evenements: EVENEMENTS };

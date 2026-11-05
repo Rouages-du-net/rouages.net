@@ -1,0 +1,328 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import FriseHistoire from '../../components/FriseHistoire.astro';
+import { FRISE_IA } from '../../data/histoire-ia';
+
+// Faits sourcés : voir docs/sources/histoire-ia.md.
+const etapes = [
+  { ancre: 'frise', court: 'Deux mille ans de machines' },
+  { ancre: 'avant', court: 'Avant le mot' },
+  { ancre: 'deux-voies', court: 'Deux façons de faire' },
+  { ancre: 'hivers', court: 'Hivers et critiques' },
+  { ancre: 'donnees', court: 'L’ère des données' },
+  { ancre: 'qui-decide', court: 'Qui décide ?' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Histoire de l’IA"
+  description="Des automates d'Alexandrie à ChatGPT : une histoire mondiale de l'intelligence artificielle, avec Moscou, Tokyo, Kyiv, Pékin, Johannesburg et les femmes qu'on oublie. Frise filtrable, mythes démontés."
+>
+  <p class="tag">Histoires · module en construction</p>
+  <h1>Histoire de l’IA</h1>
+  <MiseAJour date="2026-11-05" evolutif />
+  <p class="chapo seulement-debut">
+    L'intelligence artificielle n'est pas née en 1956 dans une université américaine, et elle n'est pas
+    l'œuvre de quelques génies. C'est une longue histoire d'automates, d'idées mathématiques, de modes et
+    de déceptions, écrite à Moscou, Tokyo, Kyiv, Pékin ou Johannesburg autant qu'en Californie, et portée
+    par des personnes qu'on cite rarement, jusqu'aux travailleur·ses qui étiquettent les données.
+  </p>
+
+  <div class="reglages">
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Deux mille ans de machines" ancre="frise">
+    <FriseHistoire slot="animation" donnees={FRISE_IA} id="ia" />
+    <p slot="decouverte">
+      Une cinquantaine de dates, des automates d'Alexandrie au règlement européen sur l'IA. Filtre par région
+      ou par thème, ou n'affiche que les pionnières. Chaque date a sa source.
+    </p>
+    <p slot="curieux">
+      Les récits habituels suivent une lignée américaine : Dartmouth, le perceptron, Deep Blue, ChatGPT. La
+      frise ajoute l'URSS (traduction automatique, théorie de l'apprentissage), le Japon (descente de gradient,
+      néocognitron), la Chine, l'Inde, l'Afrique et l'Océanie, et des femmes dont le travail compte : Masterman,
+      Spärck Jones, Bajcsy, Nii, Li, Buolamwini, Gebru…
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Avant le mot" ancre="avant">
+    <p slot="decouverte">
+      Bien avant les ordinateurs, on a construit des machines qui imitaient la vie : des automates qui
+      jouaient de la musique ou bougeaient tout seuls. Certains trichaient : le célèbre « Turc mécanique »,
+      un automate joueur d'échecs de 1770, cachait un joueur humain.
+    </p>
+    <div slot="curieux">
+      <p>
+        À Alexandrie, Héron décrit un théâtre d'automates commandé par une corde enroulée ; à Diyarbakır, en
+        1206, al-Jazarī détaille des automates musicaux à chevilles. En 1843, Ada Lovelace écrit que la machine
+        de Babbage « n'a aucune prétention à créer quoi que ce soit ». Vers 1914, l'Espagnol Leonardo Torres
+        Quevedo construit une vraie machine qui joue une fin de partie d'échecs.
+      </p>
+      <p>
+        En 1943, Warren McCulloch et Walter Pitts décrivent le neurone comme une petite unité logique. En 1950,
+        Alan Turing propose son « jeu de l'imitation » et imagine des machines qui apprennent.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Dès 1913, le mathématicien russe Andreï Markov compte les lettres d'un roman de Pouchkine et montre
+      qu'une lettre dépend de la précédente. Ses « chaînes de Markov » sont l'ancêtre lointain des modèles qui
+      prédisent le mot suivant (voir <a href="/modules/ia-texte/">Les IA qui écrivent</a>).
+    </p>
+    <div slot="histoire">
+      <p>
+        Le Turc mécanique illustre une constante : derrière l'illusion d'une machine autonome, il y a souvent du
+        travail humain caché. La plateforme de micro-tâches d'Amazon, qui a servi à étiqueter la base d'images ImageNet, s'appelle d'ailleurs « Mechanical Turk ».
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le test de Turing décide si une machine pense. »</strong> Turing jugeait cette question « trop
+      vide de sens » et proposait de la remplacer par un jeu. Voir <a href="/modules/machine-pense/">Une machine
+      peut-elle penser ?</a>
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Deux façons de faire" ancre="deux-voies">
+    <p slot="decouverte">
+      Dès les années 1950, deux idées s'affrontent. Écrire à la main les règles du raisonnement (« si la
+      molécule a tel pic, alors… ») : c'est l'IA symbolique. Ou laisser la machine apprendre à partir
+      d'exemples : c'est l'apprentissage automatique, qui domine aujourd'hui.
+    </p>
+    <div slot="curieux">
+      <p>
+        Du côté des règles : DENDRAL (1965) code le savoir de chimistes, XCON (1980) configure des ordinateurs,
+        le Japon lance en 1982 son projet de « cinquième génération ». À Cambridge, Margaret Masterman cherche à
+        traduire par le sens ; en Chine, Wu Wenjun démontre des théorèmes de géométrie par le calcul (1977).
+      </p>
+      <p>
+        Du côté de l'apprentissage : le perceptron de Rosenblatt (1958), le programme de dames de Samuel (1959),
+        les boîtes d'allumettes de Michie (1961). À Tokyo, Shun'ichi Amari décrit en 1967 la descente de
+        gradient stochastique ; à Moscou, Vapnik et Tchervonenkis fondent une théorie de l'apprentissage ; à la
+        NHK, Kunihiko Fukushima invente le néocognitron, ancêtre des réseaux qui voient.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      La rétropropagation, qui permet d'entraîner des réseaux à plusieurs couches, a été trouvée plusieurs fois :
+      Linnainmaa (1970), Werbos (1974), puis Rumelhart, Hinton et Williams (1986), qui la popularisent. Le module
+      <a href="/modules/apprendre/">Comment apprend une machine</a> la montre en action.
+    </p>
+    <div slot="histoire">
+      <p>
+        Les mots aussi ont une histoire. Le 31 août 1955, quatre chercheurs proposent une étude d'été sur
+        « l'intelligence artificielle » au Dartmouth College : le nom vient de là. Mais la cybernétique,
+        Turing, les neurones de McCulloch et Pitts existaient déjà, et l'URSS menait ses propres travaux,
+        d'abord freinés par une condamnation idéologique de la cybernétique, levée à partir de 1955.
+      </p>
+    </div>
+    <div slot="mythes">
+      <p>
+        <strong>« L'IA est née à Dartmouth en 1956. »</strong> L'atelier lui a donné son nom, pas ses idées.
+      </p>
+      <p>
+        <strong>« Le livre <em>Perceptrons</em> de Minsky et Papert (1969) a tué les réseaux de neurones. »</strong>
+        Il montrait les limites des perceptrons à une couche ; mais les financements avaient déjà reculé, et le
+        récit d'un « meurtre » a été construit après coup.
+      </p>
+      <p>
+        <strong>« Ivakhnenko a inventé l'apprentissage profond. »</strong> Son réseau à huit couches de 1971 est
+        revendiqué comme ancêtre par certains chercheurs ; d'autres soulignent que la méthode est très différente.
+        Les débats de priorité sont nombreux en IA.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Hivers et critiques" ancre="hivers">
+    <p slot="decouverte">
+      L'histoire de l'IA est faite de vagues : de grandes promesses, puis des déceptions et des coupes de
+      budget, qu'on appelle après coup des « hivers ». Elle est aussi faite de critiques venues de l'intérieur.
+    </p>
+    <div slot="curieux">
+      <p>
+        En 1973, au Royaume-Uni, le rapport Lighthill juge les résultats décevants et pointe « l'explosion
+        combinatoire » ; les financements reculent. À la fin des années 1980, les systèmes experts déçoivent à
+        leur tour : entreprises fermées, budgets réduits. Le module <a href="/modules/ia/#saisons">L'IA, c'est
+        quoi ?</a> montre ces printemps et ces hivers.
+      </p>
+      <p>
+        En 1966, Joseph Weizenbaum crée ELIZA, qui imite un psychothérapeute ; voyant des personnes s'y confier,
+        il devient l'un des premiers critiques de l'IA. En 1987, l'anthropologue Lucy Suchman montre que nos
+        actions s'ajustent aux situations au lieu de suivre des plans, ce que l'IA de l'époque ignorait.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      « L'explosion combinatoire » : le nombre de possibilités à examiner grandit si vite qu'aucun ordinateur
+      ne peut tout essayer. Deep Blue a battu Kasparov en 1997 en examinant d'immenses arbres de coups avec 480
+      puces spécialisées conçues par Feng-hsiung Hsu, mais sans rien apprendre.
+    </p>
+    <p slot="mythes">
+      <strong>« Il y a eu deux hivers de l'IA, partout. »</strong> Le mot est une étiquette donnée après coup,
+      surtout pour le Royaume-Uni et les États-Unis. Pendant ce temps, le Japon finançait sa cinquième
+      génération (1982-1992) et l'Inde son programme KBCS (1986).
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="L'ère des données" ancre="donnees">
+    <p slot="decouverte">
+      À partir des années 2010, trois ingrédients se rejoignent : d'immenses quantités de données, des cartes
+      graphiques puissantes, et les réseaux de neurones « profonds ». L'apprentissage automatique bat alors des
+      records, jusqu'aux agents conversationnels comme ChatGPT (2022).
+    </p>
+    <div slot="curieux">
+      <p>
+        En 2009, l'équipe de Fei-Fei Li publie ImageNet, des millions d'images étiquetées. En 2012, le réseau
+        AlexNet y écrase la concurrence. En 2016, AlphaGo bat Lee Sedol au go. En 2017, huit chercheur·ses de
+        Google, dont Niki Parmar, proposent le Transformeur, base des grands modèles de langage.
+      </p>
+      <p>
+        Derrière ces données, il y a des personnes : des travailleur·ses du clic qui étiquettent des images et
+        des textes, au Venezuela, aux Philippines, à Madagascar, au Kenya. En 2023, une enquête révèle que des
+        employé·es kényan·es étiquetaient pour OpenAI des textes violents pour moins de 2 dollars de l'heure.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Les réseaux convolutifs (Fukushima en 1979, LeCun en 1989) et le Transformeur (2017) sont détaillés dans
+      <a href="/modules/ia-voir/">Les IA qui voient</a> et <a href="/modules/ia-texte/">Les IA qui écrivent</a>.
+      Le travail des données est au cœur de <a href="/modules/ia-collective/">L'IA, fruit d'une intelligence
+      collective</a>.
+    </p>
+    <p slot="mythes">
+      <strong>« L'IA apprend toute seule. »</strong> Elle apprend sur des données choisies, nettoyées et
+      étiquetées par des humains, et des humains corrigent ses réponses. Comme le Turc mécanique en 1770, une
+      partie de « l'intelligence » est du travail humain qu'on ne voit pas.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Qui décide ?" ancre="qui-decide">
+    <p slot="decouverte">
+      L'IA n'est pas seulement une technique : elle touche à l'emploi, aux droits, aux langues, aux inégalités.
+      Chercheur·ses, communautés et États se disputent la façon de la construire et de l'encadrer.
+    </p>
+    <div slot="curieux">
+      <p>
+        En 2018, Joy Buolamwini et Timnit Gebru montrent que des logiciels de reconnaissance de visages se
+        trompent bien plus sur les femmes à peau foncée. En 2020, un article qui alerte sur les risques des grands
+        modèles de langage conduit au départ de Gebru de Google : licenciement selon elle, démission selon
+        l'entreprise.
+      </p>
+      <p>
+        En Afrique, le Deep Learning Indaba (2017) et la communauté Masakhane (2019) construisent des outils pour
+        les langues africaines ; en Aotearoa Nouvelle-Zélande, Te Hiku Media protège ses enregistrements en māori.
+        La Chine publie en 2017 un plan pour devenir le premier centre d'innovation en IA en 2030 ; l'UNESCO
+        adopte en 2021 une recommandation sur l'éthique de l'IA ; l'Union européenne adopte en 2024 un règlement.
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Le règlement européen (UE) 2024/1689, en vigueur depuis le 1er août 2024, interdit certains usages et
+      classe les autres selon leur niveau de risque. État au 5 novembre 2026 : un règlement de juillet 2026
+      (« Omnibus IA ») a repoussé une partie des obligations à 2027 et 2028. Le détail est dans <a
+      href="/modules/ia-classer/">Les IA qui classent</a>.
+    </p>
+    <p slot="mythes">
+      <strong>« L'IA se fait dans la Silicon Valley, le reste du monde la subit. »</strong> La frise montre des
+      apports de Moscou, Kyiv, Tokyo, Pékin, Bombay ou Johannesburg ; et des communautés construisent leurs
+      propres outils, à leurs conditions.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>L'IA n'a ni date de naissance ni inventeur unique</strong> : Dartmouth lui a donné un nom en 1956, pas ses idées.</li>
+      <li><strong>Deux voies</strong> : écrire des règles, ou apprendre à partir d'exemples. La seconde domine depuis les années 2010.</li>
+      <li><strong>Des vagues d'espoir et de déception</strong>, les « hivers », surtout au Royaume-Uni et aux États-Unis.</li>
+      <li><strong>Une histoire mondiale</strong> : URSS, Japon, Chine, Inde, Afrique y ont apporté des idées et des machines.</li>
+      <li><strong>Du travail humain partout</strong>, des opératrices du Voder aux annotateur·rices de Nairobi.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/ia/">les modules IA</a>, et les histoires de <a
+      href="/modules/histoire-informatique/">l'informatique</a> et d'<a href="/modules/histoire-internet/">internet</a>.
+    </p>
+
+  <Sources
+    verifie="2026-11-05"
+    sources={[
+      { auteur: 'O. Tambini (TechRadar)', titre: 'The forgotten history of the 800-year-old robot', url: 'https://www.techradar.com/news/the-forgotten-history-of-the-800-year-old-robot', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'C. Canavas', titre: 'Al-Jazarī’s Compendium of Ingenious Devices (CNRS Éditions)', url: 'https://books.openedition.org/editionscnrs/27688', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'Heinz Nixdorf MuseumsForum', titre: 'The Chess Turk has been brought back to life', url: 'https://www.hnf.de/en/permanent-exhibition/exhibition-areas/the-mechanization-of-information-technology/early-automatons-miracles-of-technology/the-chess-turk-has-been-brought-back-to-life.html', type: 'site', langue: 'en' },
+      { auteur: 'L. F. Menabrea, A. A. Lovelace', titre: 'Sketch of the Analytical Engine (transcription)', url: 'https://www.fourmilab.ch/babbage/sketch.html', type: 'primaire', annee: 1843, langue: 'en' },
+      { auteur: 'B. Hayes', titre: 'First Links in the Markov Chain (American Scientist)', url: 'https://www.americanscientist.org/sites/americanscientist.org/files/201321152149545-2013-03Hayes.pdf', type: 'recherche', annee: 2013, langue: 'en' },
+      { auteur: 'C. Shannon', titre: 'Programming a Computer for Playing Chess', url: 'https://vision.unipv.it/IA1/ProgrammingaComputerforPlayingChess.pdf', type: 'primaire', annee: 1950, langue: 'en' },
+      { auteur: 'MIT Technology Review', titre: 'Vocal codes', url: 'https://www.technologyreview.com/2003/11/01/274977/vocal-codes', type: 'presse', annee: 2003, langue: 'en' },
+      { auteur: 'W. McCulloch, W. Pitts', titre: 'A logical calculus of the ideas immanent in nervous activity, notice', url: 'https://doi.org/10.1007/BF02478259', type: 'primaire', annee: 1943, langue: 'en' },
+      { auteur: 'A. M. Turing', titre: 'Computing Machinery and Intelligence (Mind)', url: 'https://www.abelard.org/turpap/turpap.php', type: 'primaire', annee: 1950, langue: 'en' },
+      { auteur: 'J. McCarthy, M. Minsky, N. Rochester, C. Shannon', titre: 'A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence', url: 'http://jmc.stanford.edu/articles/dartmouth/dartmouth.pdf', type: 'primaire', annee: 1955, langue: 'en' },
+      { auteur: 'I. K. Belskaja', titre: 'Machine translation of languages (Research)', url: 'https://aclanthology.org/www.mt-archive.info/50/Research-1957-Belskaja.pdf', type: 'primaire', annee: 1957, langue: 'en' },
+      { auteur: 'B. Peters', titre: 'Normalizing Soviet Cybernetics', url: 'https://nevzlincenter.huji.ac.il/sites/default/files/leonidnevzlin/files/47.2.peters.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'M. Masterman', titre: 'Semantic message detection for machine translation, using an interlingua', url: 'https://aclanthology.org/www.mt-archive.info/50/NPL-1961-Masterman.pdf', type: 'primaire', annee: 1961, langue: 'en' },
+      { auteur: 'Cornell Chronicle', titre: 'Professor’s perceptron paved the way for AI – 60 years too soon', url: 'https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'A. L. Samuel', titre: 'Some Studies in Machine Learning Using the Game of Checkers', url: 'https://people.csail.mit.edu/brooks/idocs/Samuel.pdf', type: 'primaire', annee: 1959, langue: 'en' },
+      { auteur: 'O. Child (Chalkdust)', titre: 'MENACE: the Machine Educable Noughts And Crosses Engine', url: 'https://chalkdustmagazine.com/features/menace-machine-educable-noughts-crosses-engine/', type: 'presse', annee: 2016, langue: 'en' },
+      { auteur: 'M. A. Aizerman, E. M. Braverman, L. I. Rozonoer', titre: 'Méthode des fonctions potentielles, Avtomatika i Telemekhanika 25-6, notice', url: 'https://mathnet.ru/eng/at11677', type: 'primaire', annee: 1964, langue: 'ru' },
+      { auteur: 'National Library of Medicine', titre: 'The Joshua Lederberg Papers — Artificial Intelligence', url: 'https://profiles.nlm.nih.gov/spotlight/bb/feature/ai', type: 'site', langue: 'en' },
+      { auteur: 'Berkeley Engineering', titre: 'Remembering Lotfi Zadeh', url: 'https://engineering.berkeley.edu/news/2017/09/remembering-lotfi-zadeh/', type: 'site', annee: 2017, langue: 'en' },
+      { auteur: 'MIT News', titre: 'Nécrologie de Joseph Weizenbaum', url: 'https://news.mit.edu/2008/obit-weizenbaum-0310', type: 'site', annee: 2008, langue: 'en' },
+      { auteur: 'IEEE Milestones', titre: 'Shakey: The World’s First Mobile, Intelligent Robot, 1972', url: 'https://ieeemilestones.ethw.org/Milestones:Shakey:_The_World%E2%80%99s_First_Mobile,_Intelligent_Robot,_1972', type: 'site', langue: 'en' },
+      { auteur: 'A. Griewank', titre: 'Who Invented the Reverse Mode of Differentiation?', url: 'https://www.maths.tcd.ie/EMIS/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'IPU RAN', titre: 'A. Ya. Chervonenkis', url: 'https://www.ipu.ru/en/node/74418', type: 'site', langue: 'en' },
+      { auteur: 'A. G. Ivakhnenko', titre: 'Polynomial Theory of Complex Systems (IEEE SMC), notice', url: 'https://doi.org/10.1109/TSMC.1971.4308320', type: 'primaire', annee: 1971, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Raj Reddy', url: 'https://computerhistory.org/profile/raj-reddy/', type: 'site', langue: 'en' },
+      { auteur: 'Computer Laboratory, University of Cambridge', titre: 'Karen Spärck Jones (nécrologie)', url: 'https://www.cl.cam.ac.uk/misc/obituaries/sparck-jones/', type: 'site', annee: 2007, langue: 'en' },
+      { auteur: 'J. Lighthill', titre: 'Artificial Intelligence: A General Survey', url: 'http://www.chilton-computing.org.uk/inf/literature/reports/lighthill_report/p001.htm', type: 'primaire', annee: 1973, langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'Arlazarov, Ushkov, and Donskoy in Moscow', url: 'https://www.computerhistory.org/chess/stl-431f4cc15a4a7/', type: 'site', langue: 'en' },
+      { auteur: 'J. J. O’Connor, E. F. Robertson', titre: 'Wen-Tsun Wu (MacTutor, St Andrews)', url: 'https://mathshistory.st-andrews.ac.uk/Biographies/Wu_Wen-Tsun/', type: 'recherche', langue: 'en' },
+      { auteur: 'UC Berkeley EECS', titre: 'Ruzena Bajcsy', url: 'https://www2.eecs.berkeley.edu/Faculty/Homepages/bajcsy.html', type: 'site', langue: 'en' },
+      { auteur: 'Franklin Institute', titre: 'Kunihiko Fukushima', url: 'https://www.fi.edu/laureates/kunihiko-fukushima', type: 'site', langue: 'en' },
+      { auteur: 'S. Polit', titre: 'R1 and Beyond (AI Magazine 5-4)', url: 'https://ojs.aaai.org/index.php/aimagazine/article/view/460', type: 'primaire', annee: 1984, langue: 'en' },
+      { auteur: 'E. Tick', titre: 'ICOT Evaluation Report', url: 'https://www.airc.aist.go.jp/aitec-icot/ICOT/Museum/FinalEval/finaleval137.html', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'H. P. Nii', titre: 'Blackboard Application Systems… (AI Magazine 7-3)', url: 'https://ojs.aaai.org/index.php/aimagazine/article/view/550', type: 'primaire', annee: 1986, langue: 'en' },
+      { auteur: 'Société informatique de France', titre: 'Hommage à Alice Recoque (1024 n° 17)', url: 'https://1024.societe-informatique-de-france.fr/1024/2021/04/1024_17_2021_119.pdf', type: 'site', annee: 2021 },
+      { auteur: 'S. Ramani, K. S. R. Anjaneyulu', titre: 'Knowledge Based Computer Systems in India', url: 'https://www.cs.cmu.edu/afs/cs/Web/Groups/AI/pubs/lists/aidev/aidev4.txt', type: 'primaire', annee: 1991, langue: 'en' },
+      { auteur: 'Intellectica', titre: 'Recension de L. Suchman, Plans and Situated Actions, notice', url: 'https://doi.org/10.3406/intel.1989.1374', type: 'recherche', annee: 1989 },
+      { auteur: 'N. J. Nilsson', titre: 'The Quest for Artificial Intelligence', url: 'https://ai.stanford.edu/~nilsson/QAI/qai.pdf', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'Y. LeCun et al.', titre: 'Backpropagation Applied to Handwritten Zip Code Recognition', url: 'http://yann.lecun.com/exdb/publis/pdf/lecun-89e.pdf', type: 'primaire', annee: 1989, langue: 'en' },
+      { auteur: 'IBM', titre: 'Deep Blue', url: 'https://www.ibm.com/history/deep-blue', type: 'site', langue: 'en' },
+      { auteur: 'MIT AI Lab', titre: 'Kismet', url: 'http://www.ai.mit.edu/projects/sociable/kismet.html', type: 'site', langue: 'en' },
+      { auteur: 'Computer History Museum', titre: 'CHM Releases AlexNet Source Code', url: 'https://computerhistory.org/blog/chm-releases-alexnet-source-code/', type: 'site', langue: 'en' },
+      { auteur: 'A. Krizhevsky, I. Sutskever, G. Hinton', titre: 'ImageNet Classification with Deep Convolutional Neural Networks (NeurIPS)', url: 'https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'D. Silver, A. Huang et al.', titre: 'Mastering the game of Go with deep neural networks and tree search (Nature 529)', url: 'https://www.nature.com/articles/nature16961', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'A. Vaswani et al.', titre: 'Attention Is All You Need', url: 'https://arxiv.org/abs/1706.03762', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Conseil des affaires de l’État (Chine)', titre: 'Plan de développement de l’IA de nouvelle génération, 国发〔2017〕35号', url: 'https://www.gov.cn/zhengce/content/2017-07/20/content_5211996.htm', type: 'primaire', annee: 2017, langue: 'zh' },
+      { auteur: 'I. Orife et al.', titre: 'Masakhane — Machine Translation For Africa', url: 'https://arxiv.org/abs/2003.11529', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'J. Buolamwini, T. Gebru', titre: 'Gender Shades (PMLR 81)', url: 'https://proceedings.mlr.press/v81/buolamwini18a.html', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'K. Hao, A. P. Hernández (MIT Technology Review)', titre: 'How the AI industry profits from catastrophe', url: 'https://www.technologyreview.com/2022/04/20/1050392/ai-industry-appen-scale-data-labels/', type: 'presse', annee: 2022, langue: 'en' },
+      { auteur: 'MIT Technology Review', titre: 'We read the paper that forced Timnit Gebru out of Google', url: 'https://www.technologyreview.com/2020/12/04/1013294/google-ai-ethics-research-paper-forced-out-timnit-gebru/', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'UNESCO', titre: 'Recommendation on the Ethics of Artificial Intelligence', url: 'https://www.unesco.org/en/legal-affairs/recommendation-ethics-artificial-intelligence', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'Te Hiku Media', titre: 'Data sovereignty and the Kaitiakitanga License', url: 'https://tehiku.nz/te-hiku-tech/te-hiku-dev-korero/25141/data-sovereignty-and-the-kaitiakitanga-license', type: 'site', langue: 'en' },
+      { auteur: 'OpenAI', titre: 'ChatGPT: Optimizing Language Models for Dialogue (copie Internet Archive)', url: 'https://web.archive.org/web/20221130180912/https://openai.com/blog/chatgpt/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'B. Perrigo (TIME)', titre: 'OpenAI Used Kenyan Workers on Less Than $2 Per Hour', url: 'https://time.com/6247678/openai-chatgpt-kenya-workers/', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2026/1744 (« Omnibus IA »)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744', type: 'primaire', annee: 2026 },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>
