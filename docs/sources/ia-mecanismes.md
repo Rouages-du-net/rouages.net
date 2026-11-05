@@ -155,7 +155,7 @@ Manuel de référence utilisé partout : Jurafsky & Martin, *Speech and Language
 - Le Transformeur de 2017 est un encodeur-décodeur pour la traduction ; les GPT n'en utilisent que la partie décodeur (« decoder-only », cf. Meta pour Llama 3 [sujet 9]).
 - Dans les modèles GPT (décodeurs), un token ne regarde que les tokens précédents (attention « causale ») ; ne pas dire « chaque mot regarde tous les autres » sans nuance.
 - Ne pas affirmer qu'une tête correspond à une fonction linguistique précise : certaines têtes semblent spécialisées (figures 3-5 de l'article : anaphores, structure), mais c'est une interprétation partielle.
-- Le chiffre 1,5 milliard concerne la plus grande version de GPT-2 (quatre tailles publiées). Huit auteurs, tous des hommes : à mentionner sans en faire une attribution unique (« une équipe de Google Brain et Google Research »).
+- Le chiffre 1,5 milliard concerne la plus grande version de GPT-2 (quatre tailles publiées). Huit auteur·rices, dont Niki Parmar (correction du 5 novembre 2026 : une version antérieure de ce dossier disait « tous des hommes », ce qui est faux) : à mentionner sans en faire une attribution unique (« une équipe de Google Brain et Google Research »).
 
 ---
 

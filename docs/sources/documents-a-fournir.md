@@ -4,7 +4,8 @@ Sources que les recherches automatiques n'ont pas pu ouvrir (accès refusé,
 page payante, site hors ligne). Si tu en récupères une, dépose le PDF, des
 captures ou le texte dans la conversation, puis coche la ligne et note la date.
 Les dossiers de recherche correspondants sont dans
-[`informatique.md`](informatique.md) (compléments 1 à 6).
+[`informatique.md`](informatique.md) (compléments 1 à 6) et
+[`histoire-ia.md`](histoire-ia.md) (compléments 1 et 2).
 
 Légende de la priorité :
 
@@ -12,7 +13,7 @@ Légende de la priorité :
 - **2** : consolide un fait déjà publié (seconde source, date exacte) ;
 - **3** : utile pour approfondir.
 
-Mis à jour le 5 novembre 2026.
+Mis à jour le 5 novembre 2026 (section « Histoire de l'IA » ajoutée).
 
 ## Histoire de l'informatique
 
@@ -82,3 +83,32 @@ Mis à jour le 5 novembre 2026.
 | [ ] | 2 | New York Times, « Plant that Indians seized is now shut », 13 mars 1975 | https://www.nytimes.com/1975/03/13/archives/plant-that-indians-seized-is-now-shut.html | Date et motifs de la fermeture de Shiprock |
 | [ ] | 3 | R. Rojas, « How to make Zuse's Z3 a universal computer », *IEEE Annals*, 1998 | https://doi.org/10.1109/85.707574 | Argument sur l'universalité théorique du Z3 |
 | [ ] | 3 | J. Lamy, « La Carte du Ciel et la création du “Bureau des dames” à l'Observatoire de Toulouse », *Nuncius*, 2006 | https://doi.org/10.1163/221058706x00045 | Noms et conditions des « dames » de Toulouse |
+
+## Histoire de l'IA
+
+### Débloquer des faits non publiés
+
+| ✓ | Prio. | Document | Lien | Ce qu'on y cherche |
+|---|---|---|---|---|
+| [ ] | 1 | Université Waseda, page sur WABOT-1 | https://www.humanoid.waseda.ac.jp/booklet/kato_2.html | Seconde source sur le robot humanoïde de 1973 (composants, capacités) |
+| [ ] | 1 | Jiang, Song, Chen, l'IA en Chine, *AI Magazine*, 1983 | https://aaai.org/ojs/index.php/aimagazine/article/download/417/353 | L'IA en Chine dans les années 1970 ; fondation de l'association chinoise d'IA (1981) |
+| [ ] | 1 | Article universitaire (Heidelberg) sur l'histoire de l'IA en Chine | https://hasp.ub.uni-heidelberg.de/journals/chakt/article/download/25094/24498/51174 | IA pendant et après la Révolution culturelle |
+| [ ] | 2 | Débats du Parlement indien, mars 1988 | https://eparlib.nic.in/bitstream/123456789/2566444/1/08_X_02-03-1988_p74_p74_u1411.pdf | Date (septembre 1986 ?) et budget du programme KBCS |
+
+### Consolider des faits publiés
+
+| ✓ | Prio. | Document | Lien | Ce qu'on y cherche |
+|---|---|---|---|---|
+| [ ] | 2 | New York Times, 8 juillet 1958, sur le perceptron | https://www.nytimes.com/1958/07/08/archives/new-navy-device-learns-by-doing-psychologist-shows-embryo-of.html | Titre exact et citations de l'emballement médiatique |
+| [ ] | 2 | OpenAI, « Introducing ChatGPT » | https://openai.com/index/chatgpt/ | Date du 30 novembre 2022, « research preview » (seconde source à la copie d'archive) |
+| [ ] | 2 | Règlement (UE) 2024/1689 (AI Act), texte officiel | https://eur-lex.europa.eu/eli/reg/2024/1689/oj | Date d'adoption, article 113 (entrée en vigueur et application) |
+| [ ] | 2 | UNESCO, texte de la recommandation sur l'éthique de l'IA | https://unesdoc.unesco.org/ark:/48223/pf0000381137 | Date exacte d'adoption (23 novembre 2021 ?) |
+| [ ] | 2 | *Nature*, articles de 1992 sur la cinquième génération | https://www.nature.com/articles/357619b0 et https://www.nature.com/articles/356273b0 | Bilan critique du projet japonais (ICOT) |
+| [ ] | 2 | Deng, Li et al., article ImageNet (CVPR 2009) | https://www.image-net.org/static_files/papers/imagenet_cvpr09.pdf | Taille de la base, rôle de Mechanical Turk |
+| [ ] | 2 | MIT Museum, Kismet | https://mitmuseum.mit.edu/collections/exhibition/4 | Datation du robot Kismet |
+| [ ] | 3 | S. Gerovitch, *From Newspeak to Cyberspeak* (MIT Press) | https://mitpress.mit.edu/9780262572255/from-newspeak-to-cyberspeak/ | Dates de la campagne anti-cybernétique en URSS et du Conseil de cybernétique (1959) |
+| [ ] | 3 | New York Times, 2016, sur la querelle de priorité de J. Schmidhuber | https://www.nytimes.com/2016/11/27/technology/artificial-intelligence-pioneer-jurgen-schmidhuber-overlooked.html | Les positions dans le débat sur les « inventeurs » de l'apprentissage profond |
+| [ ] | 3 | Notice CiNii de l'article de Fukushima (1979) | https://cir.nii.ac.jp/crid/1522262180163676160 | Référence de la première version japonaise du néocognitron |
+| [ ] | 3 | MIT Press, notice de *Perceptrons* (Minsky et Papert) | https://mitpress.mit.edu/9780262631112/perceptrons/ | Éditions de 1969 et 1988 |
+| [ ] | 3 | Discover Magazine, le Turc mécanique et Amazon Mechanical Turk | https://www.discovermagazine.com/the-mechanical-turk-how-a-chess-playing-hoax-inspired-real-computers-40766 | Lien documenté entre l'automate de 1770 et le nom de la plateforme |
+| [ ] | 3 | Futura Sciences, sur Alice Recoque | https://www.futura-sciences.com/tech/actualites/intelligence-artificielle-ils-ont-invente-intelligence-artificielle-alice-recoque-pionniere-francaise-histoire-oubliee-130574/ | Seconde source sur la mission IA de Bull (1985) |
