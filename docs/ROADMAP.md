@@ -48,6 +48,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
 - [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines
+- [x] **Découper un réseau en sous-réseaux** *(`/modules/sous-reseaux/`, relecture humaine à faire)* — parts égales (bits empruntés, alignement), plan VLSM pas à pas, exercices corrigés reproductibles (six types), IPv6 : /48, /56 et /64
 - Sources : [`sources/bases-ip.md`](sources/bases-ip.md)
 
 ## Phase 4 — Les histoires

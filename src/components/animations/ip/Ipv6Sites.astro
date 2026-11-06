@@ -1,0 +1,90 @@
+---
+// Animation « IPv6 : des /64 à volonté » (module « Découper un réseau en
+// sous-réseaux », étape 3). Un site reçoit un préfixe /48, /56 ou /60 ; chaque
+// réseau local est un /64 (RFC 4291, RFC 7421). Le numéro de sous-réseau
+// s'écrit dans le 4e groupe hexadécimal. Exemples dans 2001:db8::/32 (RFC 3849).
+const SITES = [
+  { p: 48, base: 0x0000, texte: '2001:db8:abcd::/48' },
+  { p: 56, base: 0xab00, texte: '2001:db8:abcd:ab00::/56' },
+  { p: 60, base: 0xabc0, texte: '2001:db8:abcd:abc0::/60' },
+];
+---
+<div class="anim ipv6-sites" data-ipv6-sites data-sites={JSON.stringify(SITES)}>
+  <div class="anim-repli">
+    <p>
+      Un site qui reçoit 2001:db8:abcd::/48 dispose de 16 bits (entre /48 et /64) pour numéroter ses réseaux
+      locaux : 2¹⁶ = 65 536 réseaux /64, de 2001:db8:abcd:0::/64 à 2001:db8:abcd:ffff::/64. Avec un /56, il
+      en reste 2⁸ = 256.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix-site">
+        <legend>Le fournisseur d’accès attribue</legend>
+        {SITES.map((s, i) => <label><input type="radio" name="site-v6" value={i} checked={i === 0} /> <code>{s.texte}</code></label>)}
+      </fieldset>
+      <label class="curseur-v6">Numéro du réseau local <output data-n-sortie>0</output>
+        <input type="range" min="0" max="65535" value="1" data-n />
+      </label>
+      <p class="adresse-v6" data-adresse aria-hidden="true"></p>
+      <p class="anim-note">Vert : préfixe du site. Violet : numéro du réseau local (bits entre le préfixe et /64). Jaune : identifiant d’interface (64 bits, choisi par chaque machine).</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { exposant, fr } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-ipv6-sites]').forEach((racine) => {
+    activerScene(racine);
+    const sites = JSON.parse(racine.dataset.sites!) as { p: number; base: number; texte: string }[];
+    const curseur = racine.querySelector<HTMLInputElement>('[data-n]')!;
+    const sortie = racine.querySelector<HTMLOutputElement>('[data-n-sortie]')!;
+    const adresse = racine.querySelector<HTMLElement>('[data-adresse]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const site = () => sites[Number(racine.querySelector<HTMLInputElement>('input[name="site-v6"]:checked')!.value)];
+
+    const span = (classe: string, texte: string) => Object.assign(document.createElement('span'), { className: classe, textContent: texte });
+
+    function rendre() {
+      const s = site();
+      const bits = 64 - s.p; // bits de numéro de réseau local, dans le 4e groupe
+      const max = 2 ** bits - 1;
+      curseur.max = String(max);
+      if (Number(curseur.value) > max) curseur.value = String(max);
+      const n = Number(curseur.value);
+      sortie.textContent = `${n} (${n.toString(16)} en hexadécimal)`;
+      const groupe = (s.base | n).toString(16).padStart(4, '0');
+      const fixes = 4 - bits / 4; // chiffres hexadécimaux du 4e groupe qui appartiennent au site
+      adresse.replaceChildren(
+        span('site', '2001:db8:abcd:'),
+        span('site', groupe.slice(0, fixes)),
+        span('local', groupe.slice(fixes)),
+        span('iid', '::/64'),
+      );
+      legende.textContent =
+        `Avec ${s.texte}, il reste ${bits} bits (de /${s.p} à /64) pour numéroter les réseaux locaux : 2${exposant(bits)} = ${fr(2 ** bits)} réseaux /64. ` +
+        `Le réseau n° ${n} est 2001:db8:abcd:${groupe.replace(/^0+(?=.)/, '')}::/64 ; chacun peut contenir 2${exposant(64)} adresses, bien plus qu’il n’y aura jamais de machines.`;
+    }
+
+    racine.querySelectorAll('input[name="site-v6"]').forEach((r) => r.addEventListener('change', rendre));
+    curseur.addEventListener('input', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .choix-site { border: none; padding: 0; margin: 0 0 0.75rem; display: grid; gap: 0.3rem; }
+  .choix-site legend { font-weight: 600; margin-bottom: 0.3rem; }
+  .choix-site input { accent-color: var(--accent); }
+  .curseur-v6 { display: grid; gap: 0.25rem; font-weight: 600; font-size: 0.95rem; }
+  .curseur-v6 input { width: 100%; max-width: 24rem; accent-color: var(--accent); }
+  .curseur-v6 output { font-family: var(--police-mono); font-weight: 400; }
+  .adresse-v6 { font-family: var(--police-mono); font-size: clamp(1rem, 4.5vw, 1.5rem); font-weight: 700; margin: 0.8rem 0 0.4rem; overflow-wrap: anywhere; }
+  :global(.ipv6-sites .site) { background: color-mix(in srgb, var(--ill-secret-b) 35%, transparent); }
+  :global(.ipv6-sites .local) { background: color-mix(in srgb, var(--ill-secret-a) 45%, transparent); }
+  :global(.ipv6-sites .iid) { background: color-mix(in srgb, var(--ill-commun) 35%, transparent); }
+</style>

@@ -94,3 +94,36 @@ S = site institutionnel.
   RFC 3849) et des plages privées (RFC 1918).
 - Nombre d'hôtes d'un réseau : 2^(32 − n) − 2 en général (adresse de réseau et
   de diffusion retirées), mais 2 pour un /31 (RFC 3021) et 1 pour un /32.
+
+## 3. Sous-réseaux et VLSM (module `/modules/sous-reseaux/`, recherche du 6 novembre 2026)
+
+**Faits clés**
+
+- RFC 950 (août 1985) : les valeurs « tout à 0 » et « tout à 1 » du champ de
+  sous-réseau « should not be assigned to actual (physical) subnets » [20].
+- RFC 1878 (décembre 1995) : les tables incluent ces sous-réseaux « per the
+  current, standards-based practice for using all definable subnets »
+  (renvoi à la RFC 1812) ; l'exclusion est qualifiée d'**obsolète** (« This
+  practice is obsolete! ») [21] [22].
+- RFC 3021 (2000) : /31 sur les liaisons point à point [14].
+- IPv6 : identifiant d'interface de 64 bits pour presque toutes les adresses,
+  d'où des réseaux locaux en /64 (RFC 4291 ; analyse de la frontière fixe dans
+  la RFC 7421, janvier 2015) [15] [24].
+- RFC 6177 (mars 2011, BCP 157, remplace la RFC 3177 qui recommandait le /48) :
+  pas de taille imposée aux sites, mais « at least one /64, and in most cases
+  significantly more » ; les registres encouragent aussi des /56 [23].
+
+**Sources**
+
+20. J. Mogul, J. Postel, RFC 950, 1985 — https://www.rfc-editor.org/rfc/rfc950 — P — en
+21. T. Pummill, B. Manning, RFC 1878, *Variable Length Subnet Table For IPv4*, décembre 1995 — https://www.rfc-editor.org/rfc/rfc1878 — P — en
+22. F. Baker, RFC 1812, *Requirements for IP Version 4 Routers*, juin 1995 — https://www.rfc-editor.org/rfc/rfc1812 — P — en
+23. T. Narten, G. Huston, L. Roberts, RFC 6177, *IPv6 Address Assignment to End Sites*, mars 2011 — https://www.rfc-editor.org/rfc/rfc6177 — P — en
+24. B. Carpenter et al., RFC 7421, *Analysis of the 64-bit Boundary in IPv6 Addressing*, janvier 2015 — https://www.rfc-editor.org/rfc/rfc7421 — P — en
+
+**Points d'attention**
+
+- L'astuce « 256 − octet du masque » est une méthode de calcul, pas une règle
+  normative ; elle vaut pour l'octet où passe la frontière.
+- Les exercices n'utilisent que les plages de documentation (RFC 5737) et
+  10.0.0.0/8 (RFC 1918).

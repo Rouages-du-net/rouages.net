@@ -1,0 +1,180 @@
+---
+// Animation « Des parts à la bonne taille » (module « Découper un réseau en
+// sous-réseaux », étape 1) : plan d'adressage à masques de longueur variable
+// (VLSM). On modifie les besoins (nom, nombre de machines, liaison entre
+// routeurs) ; pas à pas, on trie du plus grand au plus petit, puis on attribue
+// à chacun le plus petit bloc aligné qui lui suffit. Calculs : planVLSM().
+const BESOINS = [
+  { nom: 'Wi-Fi invités', machines: 100, liaison: false },
+  { nom: 'Salle informatique', machines: 50, liaison: false },
+  { nom: 'Administration', machines: 20, liaison: false },
+  { nom: 'Liaison entre routeurs', machines: 2, liaison: true },
+];
+---
+<div class="anim plan-vlsm" data-plan-vlsm>
+  <div class="anim-repli">
+    <p>
+      Avec 192.0.2.0/24 et quatre besoins (Wi-Fi 100 machines, salle 50, administration 20, liaison entre
+      routeurs 2), on attribue du plus grand au plus petit : Wi-Fi 192.0.2.0/25 (126 machines), salle
+      192.0.2.128/26 (62), administration 192.0.2.192/27 (30), liaison 192.0.2.224/31 (2). Il reste
+      192.0.2.226 à 192.0.2.255 pour plus tard.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="base-vlsm">Réseau à découper
+        <input type="text" value="192.0.2.0/24" spellcheck="false" autocomplete="off" data-base />
+      </label>
+      <table class="besoins">
+        <caption class="visuellement-cache">Besoins en adresses</caption>
+        <thead><tr><th scope="col">Réseau</th><th scope="col">Machines</th><th scope="col">Liaison</th><th scope="col"><span class="visuellement-cache">Retirer</span></th></tr></thead>
+        <tbody data-besoins>
+          {BESOINS.map((b) => (
+            <tr>
+              <td><input type="text" value={b.nom} aria-label="Nom du réseau" data-nom /></td>
+              <td><input type="number" min="1" max="100000" value={b.machines} aria-label="Nombre de machines" data-machines /></td>
+              <td><input type="checkbox" checked={b.liaison} aria-label="Liaison entre deux routeurs (/31 possible)" data-liaison /></td>
+              <td><button type="button" class="retirer" aria-label="Retirer ce réseau" data-retirer>✕</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button type="button" class="anim-bouton" data-ajouter>+ Ajouter un réseau</button>
+
+      <div class="barre-vlsm" data-barre aria-hidden="true"></div>
+      <ol class="attrib" data-attrib></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { ecrireIPv4, lireIPv4, planVLSM, prefixePour, reseau, type Besoin } from '../../../lib/ip';
+  import { fr } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-plan-vlsm]').forEach((racine) => {
+    activerScene(racine);
+    const champ = racine.querySelector<HTMLInputElement>('[data-base]')!;
+    const corps = racine.querySelector<HTMLElement>('[data-besoins]')!;
+    const barre = racine.querySelector<HTMLElement>('[data-barre]')!;
+    const liste = racine.querySelector<HTMLOListElement>('[data-attrib]')!;
+
+    const lireBase = () => {
+      const m = champ.value.trim().match(/^([\d.]+)\/(\d{1,2})$/);
+      const ip = m ? lireIPv4(m[1]) : null;
+      const p = m ? Number(m[2]) : NaN;
+      return ip !== null && p >= 8 && p <= 30 ? { ip, p } : null;
+    };
+    const besoins = (): Besoin[] =>
+      [...corps.querySelectorAll('tr')].map((tr, i) => ({
+        nom: tr.querySelector<HTMLInputElement>('[data-nom]')!.value.trim() || `Réseau ${i + 1}`,
+        machines: Math.max(1, Math.round(Number(tr.querySelector<HTMLInputElement>('[data-machines]')!.value) || 1)),
+        liaison: tr.querySelector<HTMLInputElement>('[data-liaison]')!.checked,
+      }));
+    const echapper = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+    const tries = () => [...besoins()].sort((a, b) => b.machines - a.machines);
+
+    function dessiner(n: number) {
+      const base = lireBase()!;
+      const total = reseau(base.ip, base.p).adresses;
+      const plan = planVLSM(base.ip, base.p, besoins());
+      const attrs = plan.attributions.slice(0, n);
+      barre.replaceChildren();
+      liste.replaceChildren();
+      const debut = reseau(base.ip, base.p).reseau;
+      let curseur = debut;
+      attrs.forEach((a, i) => {
+        if (a.reseau > curseur) barre.append(Object.assign(document.createElement('span'), { className: 'trou', style: `flex: ${a.reseau - curseur}` }));
+        const bloc = Object.assign(document.createElement('span'), { className: `bloc c${i % 4}`, style: `flex: ${a.adresses}` });
+        barre.append(bloc);
+        curseur = a.reseau + a.adresses;
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="nom-a c${i % 4}">${echapper(a.besoin.nom)}</span> ${fr(a.besoin.machines)} machine${a.besoin.machines > 1 ? 's' : ''} → <code>${ecrireIPv4(a.reseau)}/${a.prefixe}</code> (${fr(a.hotes)} adresses de machines, ${fr(a.perdues)} inutilisée${a.perdues > 1 ? 's' : ''})`;
+        liste.append(li);
+      });
+      if (debut + total > curseur) barre.append(Object.assign(document.createElement('span'), { className: 'libre', style: `flex: ${debut + total - curseur}` }));
+      return plan;
+    }
+
+    const anim = pasAPas(racine, () => (lireBase() ? besoins().length + 2 : 1), (etape) => {
+      const base = lireBase();
+      if (!base) { barre.replaceChildren(); liste.replaceChildren(); return 'Écris le réseau sous la forme adresse/préfixe, par exemple 192.0.2.0/24 (préfixe de /8 à /30).'; }
+      const t = tries();
+      if (etape === 1) {
+        dessiner(0);
+        return `On range les besoins du plus grand au plus petit : ${t.map((b) => `${b.nom} (${fr(b.machines)})`).join(', ')}. Les grands blocs d’abord : ils sont plus difficiles à caser et restent bien alignés.`;
+      }
+      const n = etape - 1;
+      const plan = dessiner(n);
+      if (plan.manque && plan.attributions.length < n) {
+        return `Plus de place pour « ${plan.manque.nom} » (${fr(plan.manque.machines)} machines) : il ne reste que ${fr(plan.reste)} adresses dans ${champ.value}. Il faut un réseau de départ plus grand, ou des besoins plus petits.`;
+      }
+      if (n > t.length) {
+        const r = plan.attributions.reduce((s, a) => s + a.perdues, 0);
+        return `Plan terminé : ${plan.attributions.length} sous-réseaux. Il reste ${fr(plan.reste)} adresses libres en fin de bloc pour plus tard, et ${fr(r)} adresses de machines inutilisées dans les sous-réseaux.`;
+      }
+      const a = plan.attributions[n - 1];
+      const q = prefixePour(a.besoin.machines, a.besoin.liaison)!;
+      const explication = a.besoin.liaison && q === 31
+        ? 'une liaison entre deux routeurs n’a besoin que de 2 adresses : un /31 suffit (RFC 3021).'
+        : `il faut 2^k − 2 ≥ ${fr(a.besoin.machines)}, soit ${32 - q} bits de machine : /${q} (${fr(a.hotes)} machines).`;
+      return `« ${a.besoin.nom} » : ${explication} Premier bloc libre et aligné : ${ecrireIPv4(a.reseau)}/${a.prefixe}.`;
+    });
+
+    function lier(tr: HTMLTableRowElement) {
+      tr.querySelectorAll('input').forEach((i) => i.addEventListener('input', () => anim.aller(1)));
+      tr.querySelector('[data-retirer]')!.addEventListener('click', () => {
+        if (corps.querySelectorAll('tr').length > 1) { tr.remove(); anim.aller(1); }
+      });
+    }
+    corps.querySelectorAll('tr').forEach((tr) => lier(tr as HTMLTableRowElement));
+    racine.querySelector('[data-ajouter]')!.addEventListener('click', () => {
+      const modele = corps.querySelector('tr')!.cloneNode(true) as HTMLTableRowElement;
+      modele.querySelector<HTMLInputElement>('[data-nom]')!.value = `Réseau ${corps.querySelectorAll('tr').length + 1}`;
+      modele.querySelector<HTMLInputElement>('[data-machines]')!.value = '10';
+      modele.querySelector<HTMLInputElement>('[data-liaison]')!.checked = false;
+      corps.append(modele);
+      lier(modele);
+      anim.aller(1);
+      modele.querySelector<HTMLInputElement>('[data-nom]')!.focus();
+    });
+    champ.addEventListener('change', () => anim.aller(1));
+    anim.aller(1);
+  });
+</script>
+
+<style>
+  .base-vlsm { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.6rem; }
+  .base-vlsm input { font-family: var(--police-mono); font-size: 1rem; width: 11rem; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .besoins { border-collapse: collapse; margin-bottom: 0.5rem; width: 100%; max-width: 32rem; }
+  .besoins th { text-align: left; font-size: 0.85rem; color: var(--muted); font-weight: 600; padding: 0 0.25rem 0.2rem; }
+  .besoins td { padding: 0.15rem 0.25rem; }
+  .besoins input[type='text'], .besoins input[type='number'] { width: 100%; font: inherit; font-size: 0.9rem; padding: 0.2rem 0.35rem; border: 1px solid var(--border); border-radius: 0.35rem; background: var(--bg); color: var(--fg); }
+  .besoins td:nth-child(2) { width: 6rem; }
+  .besoins td:nth-child(3), .besoins td:nth-child(4) { width: 2.5rem; text-align: center; }
+  .besoins input[type='checkbox'] { accent-color: var(--accent); }
+  .retirer { font: inherit; background: none; border: 1px solid var(--border); border-radius: 999px; width: 1.8rem; height: 1.8rem; cursor: pointer; color: var(--muted); }
+  .barre-vlsm { display: flex; gap: 1px; height: 1.6rem; margin: 0.9rem 0 0.5rem; border-radius: 0.3rem; overflow: hidden; background: var(--border); }
+  :global(.plan-vlsm .bloc), :global(.plan-vlsm .trou), :global(.plan-vlsm .libre) { min-width: 2px; }
+  :global(.plan-vlsm .libre) { background: var(--card); }
+  :global(.plan-vlsm .trou) { background: var(--bg); }
+  :global(.plan-vlsm .c0) { background: var(--ill-client); }
+  :global(.plan-vlsm .c1) { background: var(--ill-paquet); }
+  :global(.plan-vlsm .c2) { background: var(--ill-secret-a); }
+  :global(.plan-vlsm .c3) { background: var(--ill-serveur); }
+  .attrib { font-size: 0.92rem; padding-left: 1.6rem; margin: 0.4rem 0; min-height: 1rem; }
+  :global(.plan-vlsm .attrib li) { margin-bottom: 0.25rem; overflow-wrap: anywhere; }
+  :global(.plan-vlsm .nom-a) { font-weight: 700; padding-left: 0.3rem; border-left: 0.4rem solid; background: none !important; }
+  :global(.plan-vlsm .nom-a.c0) { border-color: var(--ill-client); }
+  :global(.plan-vlsm .nom-a.c1) { border-color: var(--ill-paquet); }
+  :global(.plan-vlsm .nom-a.c2) { border-color: var(--ill-secret-a); }
+  :global(.plan-vlsm .nom-a.c3) { border-color: var(--ill-serveur); }
+</style>
