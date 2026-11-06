@@ -1,0 +1,73 @@
+---
+// Animation « Où passe ton message ? » (module « La matérialité du
+// numérique », étape 0). Pas à pas, un message va de Paris à Lagos par des
+// objets bien réels ; la dernière étape coupe un câble. Schéma simplifié :
+// le trajet réel dépend des opérateurs. Données : src/data/materialite.ts.
+import { TRAJET } from '../../../data/materialite';
+---
+<div class="anim trajet" data-trajet>
+  <div class="anim-repli">
+    <ol>
+      {TRAJET.map((t) => <li><strong>{t.lieu}</strong> : {t.quoi}</li>)}
+      <li><strong>Si un câble est coupé</strong> : le trafic passe par d'autres câbles, plus chargés ; en 2024, une réparation a pris 51 jours en moyenne.</li>
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="etapes-trajet" data-etapes aria-hidden="true">
+        {TRAJET.map((t, i) => <li data-i={i}><span class="point"></span><span class="lieu">{t.lieu}</span></li>)}
+      </ol>
+      <p class="detail" data-detail></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { TRAJET } from '../../../data/materialite';
+
+  document.querySelectorAll<HTMLElement>('[data-trajet]').forEach((racine) => {
+    activerScene(racine);
+    const etapes = [...racine.querySelectorAll<HTMLElement>('[data-etapes] li')];
+    const detail = racine.querySelector<HTMLElement>('[data-detail]')!;
+    pasAPas(racine, () => TRAJET.length + 1, (n) => {
+      const coupure = n > TRAJET.length;
+      etapes.forEach((li, i) => {
+        li.classList.toggle('passe', i < n);
+        li.classList.toggle('ici', i === n - 1);
+        li.classList.toggle('coupe', coupure && i === 3);
+      });
+      racine.classList.toggle('en-panne', coupure);
+      if (coupure) {
+        detail.textContent = '';
+        return 'Un câble est coupé, le plus souvent par une ancre ou un chalut (environ deux pannes sur trois). Le trafic bascule sur d’autres câbles, plus chargés. Il faut envoyer l’un des quelque soixante navires câbliers du monde : en 2024, une réparation a pris 51 jours en moyenne.';
+      }
+      const t = TRAJET[n - 1];
+      detail.textContent = t.quoi;
+      return `${t.lieu}.`;
+    });
+  });
+</script>
+
+<style>
+  .etapes-trajet { list-style: none; padding: 0; margin: 0 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.4rem 0; position: relative; }
+  .etapes-trajet li { flex: 1 1 5.5rem; display: grid; justify-items: center; gap: 0.3rem; text-align: center; font-size: 0.8rem; color: var(--muted); position: relative; }
+  .etapes-trajet li::before { content: ''; position: absolute; top: 0.55rem; left: -50%; width: 100%; height: 3px; background: var(--border); z-index: 0; }
+  .etapes-trajet li:first-child::before { display: none; }
+  .etapes-trajet li.passe::before { background: var(--accent); }
+  .etapes-trajet li.coupe::before { background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px); }
+  .point { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--card); border: 3px solid var(--border); position: relative; z-index: 1; }
+  .passe .point { border-color: var(--accent); }
+  .ici .point { background: var(--accent); }
+  .passe .lieu { color: var(--fg); }
+  .coupe .point { background: var(--bg); border-style: dashed; }
+  .detail { min-height: 3em; max-width: var(--mesure); margin: 0.5rem 0 0; }
+</style>

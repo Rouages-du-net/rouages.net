@@ -1,0 +1,85 @@
+---
+// Animation « Une requête, combien ? » (module « La matérialité du
+// numérique », étape 3). Les estimations publiées pour une action en ligne,
+// avec leur année, leur auteur et leur périmètre : c'est le périmètre qui
+// explique la plupart des écarts. Barres d'énergie en échelle logarithmique.
+import { ESTIMATIONS } from '../../../data/materialite';
+const actions = [...new Set(ESTIMATIONS.map((e) => e.action))];
+---
+<div class="anim estimations" data-estimations>
+  <div class="anim-repli">
+    <ul>
+      {ESTIMATIONS.map((e) => <li><strong>{e.action}</strong> : {e.valeur} ({e.annee}, {e.qui} ; périmètre : {e.perimetre}).</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="choix-action">Action
+        <select data-action-choix>
+          <option value="">toutes les estimations</option>
+          {actions.map((a) => <option value={a}>{a}</option>)}
+        </select>
+      </label>
+      <ol class="liste-est" data-liste></ol>
+      <p class="anim-note">Barre : énergie par action, quand elle est donnée, en échelle logarithmique, de 0,1 à 100 Wh : chaque tiers de la largeur vaut dix fois plus. Les cadres en pointillés n’ont pas de valeur en Wh. « Partie prenante » : chiffre publié par l’entreprise elle-même.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { ESTIMATIONS } from '../../../data/materialite';
+
+  document.querySelectorAll<HTMLElement>('[data-estimations]').forEach((racine) => {
+    activerScene(racine);
+    const choix = racine.querySelector<HTMLSelectElement>('[data-action-choix]')!;
+    const liste = racine.querySelector<HTMLOListElement>('[data-liste]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    // Échelle de 0,1 Wh à 100 Wh.
+    const largeur = (wh: number) => `${Math.max(3, ((Math.log10(wh) + 1) / 3) * 100)}%`;
+
+    function rendre() {
+      const a = choix.value;
+      const choisies = ESTIMATIONS.filter((e) => !a || e.action === a);
+      liste.replaceChildren(
+        ...choisies.map((e) => {
+          const li = document.createElement('li');
+          const tete = document.createElement('p');
+          tete.className = 'tete';
+          tete.append(Object.assign(document.createElement('strong'), { textContent: e.action }), document.createTextNode(` : ${e.valeur}`));
+          const barre = document.createElement('span');
+          barre.className = 'barre-est';
+          if (e.wh !== undefined) barre.style.width = largeur(e.wh);
+          else barre.classList.add('vide');
+          const meta = document.createElement('p');
+          meta.className = 'meta';
+          meta.textContent = `${e.annee} · ${e.qui}${e.partiePrenante ? ' · partie prenante' : ''} · périmètre : ${e.perimetre}`;
+          const src = Object.assign(document.createElement('a'), { href: e.source.url, textContent: e.source.titre, className: 'src' });
+          li.append(tete, barre, meta, src);
+          return li;
+        }),
+      );
+      legende.textContent = a.startsWith('Une question à ChatGPT')
+        ? 'Trois estimations, de 0,3 à 3 Wh : l’écart vient surtout de l’année (des modèles et des puces plus efficaces) et des hypothèses. Aucune ne compte ton téléphone ni la fabrication des serveurs.'
+        : !a
+          ? 'Ces chiffres ne s’additionnent pas et se comparent mal : chacun a son année, son auteur et son périmètre. Google annonce 0,26 mL d’eau par question, Mistral 45 mL : Mistral compte aussi la fabrication et l’eau utilisée pour produire l’électricité.'
+          : `${choisies.length} estimation${choisies.length > 1 ? 's' : ''} pour « ${a} ». Regarde toujours qui publie, en quelle année, et ce qui est compté.`;
+    }
+
+    choix.addEventListener('change', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .choix-action { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 22rem; }
+  .choix-action select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .liste-est { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.8rem; }
+  :global(.estimations .tete) { margin: 0; }
+  :global(.estimations .barre-est) { display: block; height: 0.7rem; margin: 0.25rem 0; border-radius: 0.2rem; background: var(--ill-paquet); }
+  :global(.estimations .barre-est.vide) { width: 100%; background: none; border: 1px dashed var(--border); }
+  :global(.estimations .meta) { margin: 0; font-size: 0.85rem; color: var(--muted); }
+  :global(.estimations .src) { font-size: 0.8rem; overflow-wrap: anywhere; }
+</style>

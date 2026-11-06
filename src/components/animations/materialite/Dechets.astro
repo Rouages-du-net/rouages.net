@@ -1,0 +1,67 @@
+---
+// Animation « Et après ? » (module « La matérialité du numérique », étape 4) :
+// où vont les 62 millions de tonnes de déchets électroniques de 2022 (ONU,
+// Global E-waste Monitor 2024), puis un curseur « je garde mon téléphone
+// N ans » (calcul simple à partir du chiffre ADEME de fabrication).
+import { DECHETS } from '../../../data/materialite';
+---
+<div class="anim dechets" data-dechets data-smartphone="80.2">
+  <div class="anim-repli">
+    <p>
+      En 2022, le monde a produit {DECHETS.total} millions de tonnes de déchets électroniques ({DECHETS.parHabitant} kg par
+      personne). Seuls {DECHETS.documentes} millions de tonnes (22,3 %) ont été collectés et recyclés de façon
+      documentée ; environ {DECHETS.informel} millions de tonnes passent par le secteur informel ; {DECHETS.frontieres} millions
+      de tonnes ont traversé des frontières, dont {DECHETS.nonControles} sans contrôle. Garder son téléphone 5 ans plutôt
+      que 2 divise par 2,5 l'empreinte de fabrication par année d'usage.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="titre-flux">Déchets électroniques du monde en 2022 : {DECHETS.total} millions de tonnes</p>
+      <div class="flux" aria-hidden="true">
+        <span class="part doc" style={`flex: ${DECHETS.documentes}`}>{DECHETS.documentes} Mt recyclées de façon documentée</span>
+        <span class="part inf" style={`flex: ${DECHETS.informel}`}>{DECHETS.informel} Mt secteur informel</span>
+        <span class="part autre" style={`flex: ${DECHETS.total - DECHETS.documentes - DECHETS.informel}`}>le reste : réparé, stocké, jeté, mal connu</span>
+      </div>
+      <p class="anim-note">Les blocs ne se recoupent pas exactement : ce sont des estimations de l’ONU. {DECHETS.frontieres} Mt ont traversé des frontières, dont {DECHETS.nonControles} Mt par des circuits non contrôlés, des pays riches vers des pays plus pauvres.</p>
+
+      <label class="duree">Je garde mon téléphone <output data-annees>3 ans</output>
+        <input type="range" min="1" max="8" value="3" data-duree />
+      </label>
+      <p class="empreinte" data-empreinte aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-dechets]').forEach((racine) => {
+    activerScene(racine);
+    const kg = Number(racine.dataset.smartphone);
+    const curseur = racine.querySelector<HTMLInputElement>('[data-duree]')!;
+    const annees = racine.querySelector<HTMLOutputElement>('[data-annees]')!;
+    const sortie = racine.querySelector<HTMLElement>('[data-empreinte]')!;
+    const rendre = () => {
+      const n = Number(curseur.value);
+      annees.textContent = `${n} an${n > 1 ? 's' : ''}`;
+      const parAn = (kg * 0.99) / n;
+      sortie.textContent = `Fabrication répartie sur ${n} an${n > 1 ? 's' : ''} : environ ${parAn.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} kg de CO₂e par année d’usage (calcul simple : ${kg.toLocaleString('fr-FR')} kg pour fabriquer un smartphone selon l’ADEME, divisés par la durée d’usage).`;
+    };
+    curseur.addEventListener('input', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .titre-flux { font-weight: 700; margin: 0 0 0.4rem; }
+  .flux { display: flex; gap: 2px; min-height: 3.2rem; border-radius: 0.4rem; overflow: hidden; font-size: 0.75rem; }
+  .part { display: grid; place-items: center; padding: 0.25rem; text-align: center; color: var(--fg); min-width: 0; overflow-wrap: anywhere; }
+  .doc { background: color-mix(in srgb, var(--ill-secret-b) 55%, transparent); }
+  .inf { background: color-mix(in srgb, var(--ill-commun) 55%, transparent); }
+  .autre { background: color-mix(in srgb, var(--muted) 30%, transparent); }
+  .duree { display: grid; gap: 0.25rem; font-weight: 600; margin-top: 1rem; max-width: 24rem; }
+  .duree input { accent-color: var(--accent); }
+  .empreinte { margin: 0.5rem 0 0; max-width: var(--mesure); }
+</style>

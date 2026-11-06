@@ -381,7 +381,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'C’est un geste simple, à la portée de chacun·e, qui donne l’impression d’agir. Ce qui compte vraiment : garder ses appareils longtemps, les faire réparer, en acheter moins, et préférer le Wi-Fi au réseau mobile.',
-    aVenir: 'La matérialité du numérique',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#combien' },
     dossier: 'vrai-ou-faux.md',
     verifie: '2026-11-06',
     sources: [
@@ -409,7 +409,7 @@ export const FICHES: Fiche[] = [
     ],
     pourquoi:
       'La comparaison avec la voiture est parlante, et elle a été reprise par de nombreux médias. Ce qui pèse le plus, c’est souvent l’écran lui-même, sa fabrication et sa consommation, plus que les serveurs.',
-    aVenir: 'La matérialité du numérique',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#combien' },
     dossier: 'vrai-ou-faux.md',
     verifie: '2026-11-06',
     sources: [
@@ -417,6 +417,32 @@ export const FICHES: Fiche[] = [
       { auteur: 'Carbon Brief', titre: 'Factcheck: What is the carbon footprint of streaming video on Netflix?', url: 'https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix/', type: 'presse', annee: 2020, langue: 'en' },
       { auteur: 'ADEME', titre: 'Impact CO₂, streaming vidéo', url: 'https://impactco2.fr/outils/usagenumerique/streamingvideo', type: 'primaire', annee: 2026 },
       { auteur: 'ADEME', titre: 'Impact CO₂, voiture thermique', url: 'https://impactco2.fr/outils/transport/voiturethermique', type: 'primaire', annee: 2025 },
+    ],
+  },
+  {
+    slug: 'agbogbloshie',
+    idee: 'Agbogbloshie, au Ghana, est la plus grande décharge électronique du monde.',
+    verdict: 'faux',
+    enBref:
+      'C’était une cour de ferraille de moins d’un demi-kilomètre carré à Accra, où l’on démontait surtout des voitures et des métaux, et aussi des appareils électroniques. Le site a été rasé en juillet 2021. Les dangers, eux, étaient bien réels.',
+    vrai: [
+      'Des appareils électroniques y étaient démontés et des câbles brûlés pour en tirer le cuivre, avec de graves risques pour la santé : fumées, plomb, mercure.',
+      'Selon l’ONU, 5,1 millions de tonnes de déchets électroniques ont traversé des frontières en 2022, dont 3,3 millions par des circuits non contrôlés, des pays riches vers des pays plus pauvres.',
+    ],
+    faux: [
+      'La zone de démontage faisait moins d’un demi-kilomètre carré ; Guiyu, en Chine, était bien plus vaste, selon les chercheur·ses Maja van der Velden (université d’Oslo) et Martin Oteng-Ababio (université du Ghana).',
+      'Le chiffre de « 250 000 tonnes par an à Agbogbloshie » venait d’un rapport de 2011 de la Convention de Bâle qui portait sur cinq pays d’Afrique de l’Ouest réunis.',
+      'L’essentiel des déchets du Ghana est produit sur place. Et le site n’existe plus sous cette forme : le 1er juillet 2021, les autorités du Grand Accra ont rasé la cour, où travaillaient environ 10 000 ferrailleurs.',
+    ],
+    pourquoi:
+      'Les images de fumées noires sont saisissantes, et le récit « nos déchets finissent en Afrique » est en partie vrai. Mais il efface les personnes qui y travaillaient, et le savoir-faire des réparateur·rices d’Accra, de Lagos ou de Nairobi.',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#apres' },
+    dossier: 'materialite.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'M. van der Velden, M. Oteng-Ababio', titre: 'Six myths about electronic waste in Agbogbloshie, Ghana (Africa Is a Country)', url: 'https://africasacountry.com/2019/03/six-myths-about-electronic-waste-in-agbogbloshie-ghana', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'C. P. Baldé et al. (UNITAR, UIT)', titre: 'Rapport mondial sur les déchets d’équipements électriques et électroniques 2024', url: 'https://ewastemonitor.info/wp-content/uploads/2024/12/GEM_2024_FR_28_NOV-web.pdf', type: 'primaire', annee: 2024 },
+      { auteur: 'T. Ngnenbe, J. Bediako Koomson (Daily Graphic)', titre: 'Agbogbloshie reclaimed land under siege', url: 'https://www.graphic.com.gh/news/general-news/ghana-news-agbogbloshie-reclaimed-land-under-siege-scrap-dealers-onion-sellers-occupy-80-acre-land.html', type: 'presse', annee: 2025, langue: 'en' },
     ],
   },
 ];
