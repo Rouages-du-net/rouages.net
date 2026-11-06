@@ -32,6 +32,11 @@ Redirect 301 /jeux/terminus/ /jeux/quetes-de-sysadmin/
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
+  # Recherche (Pagefind) : le point d'entrée change à chaque compilation sans
+  # changer de nom ; les fragments d'index, eux, sont nommés par leur empreinte.
+  <If "%{REQUEST_URI} =~ m#^/pagefind/(pagefind\.js|pagefind-entry\.json)$#">
+    Header set Cache-Control "no-cache"
+  </If>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>

@@ -25,7 +25,7 @@ const etapes = [
   title="Histoire de l’IA"
   description="Des automates d'Alexandrie à ChatGPT : une histoire mondiale de l'intelligence artificielle, avec Moscou, Tokyo, Kyiv, Pékin, Johannesburg et les femmes qu'on oublie. Frise filtrable, mythes démontés."
 >
-  <p class="tag">Histoires · module en construction</p>
+  <p class="tag" data-pagefind-ignore>Histoires · module en construction</p>
   <h1>Histoire de l’IA</h1>
   <MiseAJour date="2026-11-05" evolutif />
   <p class="chapo seulement-debut">
@@ -35,10 +35,10 @@ const etapes = [
     par des personnes qu'on cite rarement, jusqu'aux travailleur·ses qui étiquettent les données.
   </p>
 
-  <div class="reglages">
+  <div class="reglages" data-pagefind-ignore>
     <SelecteurNiveau />
     <ModeLecture />
-    <p class="tag">Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
   </div>
 
   <Frise etapes={etapes} />

@@ -72,6 +72,12 @@ header.site a { color: var(--fg); text-decoration: none; font-weight: 700; }
 .entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .entete nav { display: flex; gap: 1rem; }
 .entete nav a { font-weight: 500; color: var(--muted); }
+.recherche-entete { display: flex; gap: 0.25rem; }
+.recherche-entete input {
+  font: inherit; font-size: 0.9rem; width: 11rem; max-width: 100%; padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--fg);
+}
+.recherche-entete button { font: inherit; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.55rem; cursor: pointer; color: var(--fg); }
 .logo { display: inline-flex; align-items: center; gap: 0.5rem; }
 .logo svg { width: 1.6rem; height: 1.6rem; color: var(--accent); }
 footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2rem 0; color: var(--muted); font-size: .9rem; }
@@ -97,6 +103,8 @@ footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2r
   padding: 1rem;
 }
 .anim-cadre-defile { overflow-x: auto; }
+.anim-repli { overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; }
 .anim-legende { margin: 0.75rem 0 0.25rem; font-weight: 600; min-height: 3em; }
 .anim-note { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .anim-commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }

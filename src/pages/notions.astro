@@ -1,0 +1,147 @@
+---
+// Index des notions, généré à la compilation : termes du glossaire (avec les
+// étapes des modules où ils apparaissent), personnes citées dans les frises,
+// idées reçues, et table des matières des modules. Lisible sans JavaScript.
+import Base from '../layouts/Base.astro';
+import { GLOSSAIRE } from '../data/glossaire';
+import { FICHES } from '../data/vrai-ou-faux';
+import { FRISE_INTERNET } from '../data/histoire-internet';
+import { FRISE_INFORMATIQUE } from '../data/histoire-informatique';
+import { FRISE_IA } from '../data/histoire-ia';
+import type { DonneesFrise } from '../lib/frise';
+
+// --- Modules : titre, étapes, termes du glossaire employés dans chaque étape.
+const sources = import.meta.glob('./modules/*.astro', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+
+interface EtapeModule { titre: string; ancre: string; termes: string[] }
+interface Module { slug: string; titre: string; etapes: EtapeModule[] }
+
+const modules: Module[] = Object.entries(sources).map(([chemin, texte]) => {
+  const slug = chemin.replace('./modules/', '').replace('.astro', '');
+  const titre = texte.match(/<Base\s+title="([^"]+)"/)?.[1] ?? slug;
+  const morceaux = texte.split('<Etape ').slice(1);
+  const etapes = morceaux.map((m) => ({
+    titre: m.match(/titre="([^"]+)"/)?.[1] ?? '',
+    ancre: m.match(/ancre="([^"]+)"/)?.[1] ?? '',
+    termes: [...m.matchAll(/<Terme id="([^"]+)"/g)].map((x) => x[1]),
+  })).filter((e) => e.ancre);
+  return { slug, titre, etapes };
+}).sort((a, b) => a.titre.localeCompare(b.titre, 'fr'));
+
+// --- Notions du glossaire, avec les étapes où elles sont employées.
+const usages: Record<string, { lien: string; texte: string }[]> = {};
+for (const m of modules)
+  for (const e of m.etapes)
+    for (const t of new Set(e.termes)) (usages[t] ??= []).push({ lien: `/modules/${m.slug}/#${e.ancre}`, texte: `${m.titre} — ${e.titre}` });
+
+const lettre = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/^[^A-Za-z]+/, '').charAt(0).toUpperCase() || '#';
+const trier = <T,>(liste: T[], cle: (x: T) => string) => [...liste].sort((a, b) => cle(a).localeCompare(cle(b), 'fr', { sensitivity: 'base' }));
+
+const notions = trier(Object.entries(GLOSSAIRE).map(([id, e]) => ({ id, ...e })), (n) => n.terme);
+const lettresNotions = [...new Set(notions.map((n) => lettre(n.terme)))];
+
+// --- Personnes citées dans les frises (une personne peut apparaître plusieurs fois).
+const FRISES: { donnees: DonneesFrise; lien: string; nom: string }[] = [
+  { donnees: FRISE_INTERNET, lien: '/modules/histoire-internet/', nom: 'Histoire d’internet' },
+  { donnees: FRISE_INFORMATIQUE, lien: '/modules/histoire-informatique/', nom: 'Histoire de l’informatique' },
+  { donnees: FRISE_IA, lien: '/modules/histoire-ia/', nom: 'Histoire de l’IA' },
+];
+const personnes = new Map<string, { annee: string; titre: string; lien: string; frise: string }[]>();
+for (const f of FRISES)
+  for (const e of f.donnees.evenements)
+    for (const p of e.personnes ?? []) {
+      if (!personnes.has(p)) personnes.set(p, []);
+      personnes.get(p)!.push({ annee: e.annee, titre: e.titre, lien: `${f.lien}#frise`, frise: f.nom });
+    }
+const listePersonnes = trier([...personnes.entries()], ([nom]) => nom);
+
+const fiches = trier(FICHES, (f) => f.idee.replace(/^[«\s]+/, ''));
+---
+<Base title="Index des notions" description="Toutes les notions, personnes, idées reçues et étapes des modules du site, rangées de A à Z." indexer={false}>
+  <h1>Index des notions</h1>
+  <p class="chapo">
+    Toutes les notions du site, rangées de A à Z, avec les étapes des modules où elles sont expliquées ;
+    puis les personnes citées dans les frises, les idées reçues et le sommaire de chaque module. Pour
+    chercher un mot partout, utilisez la <a href="/recherche/">recherche</a>.
+  </p>
+
+  <nav class="sommaire" aria-label="Parties de l'index">
+    <a href="#notions">Notions</a> · <a href="#personnes">Personnes</a> · <a href="#idees-recues">Idées reçues</a> · <a href="#modules">Modules</a>
+  </nav>
+
+  <section id="notions" aria-labelledby="titre-notions">
+    <h2 id="titre-notions">Notions ({notions.length})</h2>
+    <nav class="lettres" aria-label="Lettres">
+      {lettresNotions.map((l) => <a href={`#lettre-${l}`}>{l}</a>)}
+    </nav>
+    {lettresNotions.map((l) => (
+      <>
+        <h3 id={`lettre-${l}`} class="lettre">{l}</h3>
+        <dl class="entrees">
+          {notions.filter((n) => lettre(n.terme) === l).map((n) => (
+            <div class="entree">
+              <dt><a href={`/glossaire/#${n.id}`}>{n.terme}</a></dt>
+              <dd>
+                <p>{n.definition}</p>
+                {usages[n.id]?.length ? (
+                  <p class="usages">Expliqué dans : {usages[n.id].map((u, i) => <>{i > 0 && ' ; '}<a href={u.lien}>{u.texte}</a></>)}</p>
+                ) : null}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </>
+    ))}
+  </section>
+
+  <section id="personnes" aria-labelledby="titre-personnes">
+    <h2 id="titre-personnes">Personnes citées dans les frises ({listePersonnes.length})</h2>
+    <ul class="personnes">
+      {listePersonnes.map(([nom, ev]) => (
+        <li><strong>{nom}</strong> : {ev.map((e, i) => <>{i > 0 && ' ; '}<a href={e.lien}>{e.annee}, {e.titre}</a> <span class="frise">({e.frise})</span></>)}</li>
+      ))}
+    </ul>
+  </section>
+
+  <section id="idees-recues" aria-labelledby="titre-idees">
+    <h2 id="titre-idees">Idées reçues ({fiches.length})</h2>
+    <ul class="liste-simple">
+      {fiches.map((f) => <li><a href={`/vrai-ou-faux/${f.slug}/`}>{f.idee}</a></li>)}
+    </ul>
+  </section>
+
+  <section id="modules" aria-labelledby="titre-modules">
+    <h2 id="titre-modules">Modules et leurs étapes ({modules.length})</h2>
+    <ul class="modules">
+      {modules.map((m) => (
+        <li>
+          <a href={`/modules/${m.slug}/`} class="nom-module">{m.titre}</a>
+          <ol>
+            {m.etapes.map((e) => <li><a href={`/modules/${m.slug}/#${e.ancre}`}>{e.titre}</a></li>)}
+          </ol>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.1rem; max-width: var(--mesure); }
+  .sommaire { margin: 1rem 0 2rem; font-weight: 600; }
+  section { margin-bottom: 3rem; }
+  .lettres { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.5rem 0 1rem; }
+  .lettres a { display: inline-grid; place-items: center; min-width: 2rem; height: 2rem; border: 1px solid var(--border); border-radius: 0.4rem; text-decoration: none; font-weight: 700; }
+  .lettre { margin: 1.5rem 0 0.5rem; font-size: 1.4rem; color: var(--accent); scroll-margin-top: 1rem; }
+  .entrees { margin: 0; max-width: var(--mesure); }
+  .entree { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .entree dt { font-weight: 700; }
+  .entree dd { margin: 0.2rem 0 0; }
+  .entree dd p { margin: 0.2rem 0; }
+  .usages { font-size: 0.92rem; color: var(--muted); }
+  .personnes, .liste-simple { max-width: var(--mesure); padding-left: 1.2rem; }
+  .personnes li, .liste-simple li { margin-bottom: 0.35rem; }
+  .frise { color: var(--muted); font-size: 0.9rem; }
+  .modules { list-style: none; padding: 0; max-width: var(--mesure); display: grid; gap: 1rem; }
+  .nom-module { font-weight: 700; }
+  .modules ol { margin: 0.25rem 0 0; padding-left: 1.6rem; }
+</style>
