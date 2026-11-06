@@ -10,7 +10,7 @@ interface Props {
 const { date, evolutif } = Astro.props;
 const lisible = new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
-<p class={`maj${evolutif ? ' evolutif' : ''}`}>
+<p class={`maj${evolutif ? ' evolutif' : ''}`} data-pagefind-ignore>
   {evolutif && <span aria-hidden="true">⏳ </span>}Mis à jour le <time datetime={date}>{lisible}</time>.
   {evolutif && <>Ce sujet évolue vite ({evolutif}) : vérifie s'il y a du nouveau depuis cette date.</>}
 </p>

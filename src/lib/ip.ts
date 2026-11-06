@@ -101,3 +101,78 @@ export function ecrireCourt(g: number[]): string {
   const apres = g.slice(z.debut + z.longueur).map((x) => x.toString(16)).join(':');
   return `${avant}::${apres}`;
 }
+
+// ---------- Sous-réseaux (RFC 950, RFC 1878, RFC 3021) ----------
+
+export interface SousReseau extends Reseau {
+  prefixe: number;
+}
+
+/** Découpe le réseau ip/p en sous-réseaux égaux de préfixe q (q ≥ p). Au plus `max` résultats. */
+export function decouper(ip: number, p: number, q: number, max = 256): { total: number; liste: SousReseau[] } {
+  const debut = reseau(ip, p).reseau;
+  const total = 2 ** (q - p);
+  const taille = 2 ** (32 - q);
+  const liste: SousReseau[] = [];
+  for (let i = 0; i < Math.min(total, max); i++) liste.push({ ...reseau(debut + i * taille, q), prefixe: q });
+  return { total, liste };
+}
+
+/** Plus petit préfixe offrant au moins n adresses de machines (n = 2 → /30, ou /31 si `liaison`). */
+export function prefixePour(n: number, liaison = false): number | null {
+  if (n <= 0) return null;
+  if (liaison && n <= 2) return 31;
+  for (let p = 30; p >= 0; p--) if (2 ** (32 - p) - 2 >= n) return p;
+  return null;
+}
+
+export interface Besoin {
+  nom: string;
+  machines: number;
+  liaison?: boolean; // liaison point à point entre deux routeurs : /31 possible (RFC 3021)
+}
+
+export interface Attribution extends SousReseau {
+  besoin: Besoin;
+  perdues: number; // adresses de machines inutilisées dans ce sous-réseau
+}
+
+/**
+ * Plan d'adressage à masques de longueur variable (VLSM) : on trie les besoins
+ * du plus grand au plus petit et on attribue à chacun, dans l'ordre, le plus
+ * petit bloc aligné qui lui suffit. Renvoie les attributions, ou l'indice du
+ * besoin qui ne rentre plus.
+ */
+export function planVLSM(ip: number, p: number, besoins: Besoin[]): { attributions: Attribution[]; manque?: Besoin; reste: number } {
+  const base = reseau(ip, p);
+  const fin = base.reseau + base.adresses; // première adresse hors du réseau
+  const tries = [...besoins].sort((a, b) => b.machines - a.machines);
+  const attributions: Attribution[] = [];
+  let curseur = base.reseau;
+  for (const b of tries) {
+    const q = prefixePour(b.machines, b.liaison);
+    if (q === null || q < p) return { attributions, manque: b, reste: fin - curseur };
+    const taille = 2 ** (32 - q);
+    // Un bloc /q commence à un multiple de sa taille (alignement).
+    const debut = Math.ceil(curseur / taille) * taille;
+    if (debut + taille > fin) return { attributions, manque: b, reste: fin - curseur };
+    const r = reseau(debut, q);
+    attributions.push({ ...r, prefixe: q, besoin: b, perdues: r.hotes - b.machines });
+    curseur = debut + taille;
+  }
+  return { attributions, reste: fin - curseur };
+}
+
+// ---------- Exercices (tirage pseudo-aléatoire reproductible) ----------
+
+/** Générateur pseudo-aléatoire déterministe (mulberry32) : même graine, mêmes exercices. */
+export function hasard(graine: number) {
+  let a = graine >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}

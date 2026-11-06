@@ -280,4 +280,169 @@ export const FICHES: Fiche[] = [
       { auteur: 'F. H. Messerli', titre: 'Chocolate Consumption, Cognitive Function, and Nobel Laureates (NEJM 367)', url: 'https://doi.org/10.1056/NEJMon1211064', type: 'recherche', annee: 2012, langue: 'en' },
     ],
   },
+  {
+    slug: 'navigation-privee-anonyme',
+    idee: 'La navigation privée me rend anonyme sur internet.',
+    verdict: 'faux',
+    enBref:
+      'La navigation privée efface, à la fermeture de la fenêtre, ce que ton propre appareil garde : historique, cookies, formulaires. Elle ne cache rien aux sites visités, à ton fournisseur d’accès, ni à ton école ou ton employeur sur leur réseau.',
+    vrai: [
+      'Chrome, Firefox et Safari n’enregistrent pas l’historique d’une session privée et effacent ses cookies à la fermeture. C’est utile sur un ordinateur partagé : la personne suivante ne voit ni tes recherches ni tes comptes restés connectés.',
+      'Safari isole chaque onglet privé et y active une protection renforcée contre le pistage ; Chrome bloque par défaut les cookies tiers en navigation privée.',
+    ],
+    faux: [
+      'Ta demande traverse ta box, ton fournisseur d’accès, le réseau de ton école ou de ton employeur, puis arrive au site, avec la même adresse IP qu’en temps normal. Chrome l’écrit lui-même : les sites, ton employeur ou ton fournisseur d’accès peuvent encore voir ton activité.',
+      'Même sans cookie, un site peut reconnaître ton navigateur à son « empreinte » : taille d’écran, polices, langue, version. En 2010, 83,6 % des navigateurs testés par l’EFF étaient uniques ; une étude de 2018 sur deux millions d’empreintes trouve 33,6 % d’uniques. Bloquer les cookies n’y change rien, rappelle la CNIL.',
+      'En avril 2024, pour clore une action collective américaine, Google a accepté de supprimer des milliards de données collectées pendant des sessions Incognito et de préciser son avertissement : le mode ne change rien à ce que collectent les sites visités.',
+    ],
+    pourquoi:
+      'Le nom (« privé », « Incognito ») et l’icône d’espion le suggèrent, et sur l’écran tout disparaît vraiment. On confond ce que garde son propre appareil et ce que voit le réseau.',
+    module: { titre: 'Surveillance et vie privée', lien: '/modules/surveillance-vie-privee/#unique' },
+    dossier: 'vrai-ou-faux.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'Google', titre: 'Naviguer en mode navigation privée (Aide Google Chrome)', url: 'https://support.google.com/chrome/answer/95464?hl=fr', type: 'primaire' },
+      { auteur: 'Apple', titre: 'Naviguer de manière privée dans Safari sur Mac', url: 'https://support.apple.com/fr-fr/guide/safari/ibrw1069/mac', type: 'primaire' },
+      { auteur: 'CNIL', titre: 'La navigation privée pour limiter les risques de piratage de vos comptes en ligne', url: 'https://www.cnil.fr/fr/la-navigation-privee-pour-limiter-les-risques-de-piratage-de-vos-comptes-en-ligne', type: 'primaire', annee: 2016 },
+      { auteur: 'P. Eckersley (EFF)', titre: 'How Unique Is Your Web Browser?', url: 'https://coveryourtracks.eff.org/static/browser-uniqueness.pdf', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'A. Gómez-Boix, P. Laperdrix, B. Baudry', titre: 'Hiding in the Crowd: an Analysis of the Effectiveness of Browser Fingerprinting at Large Scale (WWW 2018)', url: 'https://doi.org/10.1145/3178876.3186097', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'Brown et al. c. Google LLC', titre: 'Settlement Agreement, n° 4:20-cv-03664-YGR', url: 'https://www.classaction.org/media/brown-et-al-v-google-llc-et-al-settlement-agreement.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+    ],
+  },
+  {
+    slug: 'cloud-dematerialise',
+    idee: 'Le cloud, c’est dématérialisé.',
+    verdict: 'faux',
+    enBref:
+      'Le « nuage » est fait d’ordinateurs bien réels, rangés dans des centres de données, reliés par des câbles et alimentés en électricité. En 2024, ces centres ont consommé environ 415 TWh dans le monde, 1,5 % de l’électricité mondiale, selon l’Agence internationale de l’énergie.',
+    vrai: [
+      'Pour l’utilisateur·rice, le service est « ailleurs » : on ne sait pas sur quelle machine sont ses photos, souvent copiées dans plusieurs centres. Le mot décrit l’expérience, pas l’infrastructure.',
+      'Le nuage vient des schémas d’ingénieur·es : un petit dessin pour dire « ici, le réseau, dont on ne détaille pas l’intérieur ».',
+    ],
+    faux: [
+      'Les centres de données du monde ont consommé environ 415 TWh en 2024 ; l’AIE prévoit à peu près un doublement d’ici 2030 (environ 945 TWh dans son scénario de base), surtout à cause de l’IA.',
+      'En France, le numérique représente 11 % de la consommation électrique et 4,4 % de l’empreinte carbone (chiffres 2022, ADEME et Arcep). Les centres de données en font 46 %, et plus de la moitié de nos usages sont hébergés à l’étranger.',
+      'Les données voyagent par plus de 1,5 million de kilomètres de câbles sous-marins (TeleGeography, 2026). Chez les opérateurs interrogés par l’Arcep, la consommation électrique des centres de données a augmenté de 12 % en 2024.',
+    ],
+    pourquoi:
+      'On ne voit jamais ces machines, les services sont gratuits ou presque, et le vocabulaire (« nuage », « virtuel », « en ligne ») efface leur poids.',
+    module: { titre: 'De l’Entrée à la page', lien: '/modules/entree-a-la-page/#serveur' },
+    dossier: 'vrai-ou-faux.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'Agence internationale de l’énergie', titre: 'Energy and AI in East Asia (reprend les chiffres de Energy and AI, 2025)', url: 'https://iea.blob.core.windows.net/assets/431d7d22-039e-46d3-9832-090a8b4075fc/EnergyandAIinEastAsia.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ADEME et Arcep', titre: 'Évaluation de l’impact environnemental du numérique en France, mise à jour (données 2022)', url: 'https://ecoresponsable.numerique.gouv.fr/docs/2024/etude-ademe-impacts-environnementaux-numerique.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Arcep', titre: 'Enquête annuelle « Pour un numérique soutenable », édition 2026', url: 'https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/impact-environnemental/enquete-annuelle-pour-un-numerique-soutenable-edition-2026.html', type: 'primaire', annee: 2026 },
+      { auteur: 'TeleGeography', titre: 'Submarine Cable FAQs', url: 'https://www2.telegeography.com/submarine-cable-faqs-frequently-asked-questions', type: 'site', annee: 2026, langue: 'en' },
+    ],
+  },
+  {
+    slug: 'fichier-supprime',
+    idee: 'Un fichier supprimé, corbeille vidée, a disparu.',
+    verdict: 'nuance',
+    enBref:
+      'Vider la corbeille efface surtout la référence au fichier. Sur un disque dur, ses données restent en place jusqu’à ce que quelque chose les recouvre, et un logiciel peut souvent les récupérer. Sur un SSD, elles disparaissent souvent vite, mais sans garantie.',
+    vrai: [
+      'Pour l’usage courant, le fichier n’apparaît plus et sa place est réutilisable.',
+      'Sur un SSD, le nettoyage interne de la puce peut détruire très vite des données supprimées : dans une expérience de 2010, elles devenaient en grande partie irrécupérables quelques minutes après un formatage rapide, alors que tout restait récupérable sur un disque dur.',
+    ],
+    faux: [
+      'Un disque garde une sorte de table des matières. Supprimer un fichier efface surtout sa ligne dans cette table ; les données restent, marquées « place libre ». Microsoft propose d’ailleurs un outil pour récupérer des fichiers que la corbeille ne peut plus restaurer, en conseillant d’utiliser le moins possible l’ordinateur avant d’essayer.',
+      'Sur un SSD, ces mécanismes laissent parfois des copies cachées : en 2011, des chercheur·ses de San Diego n’ont trouvé aucune méthode d’effacement de fichier fiable sur ces disques.',
+      'Écraser un fichier « sept fois » n’est plus la règle : le NIST (2025) juge que ces écrasements multiples protègent très peu sur les SSD. Il recommande les commandes d’effacement du fabricant ou l’effacement cryptographique (détruire la clé d’un disque chiffré).',
+    ],
+    pourquoi:
+      'Le fichier disparaît de l’écran, et l’icône de la corbeille vidée donne l’image d’un vrai ramassage. Avant de vendre ou donner un appareil, la CNIL recommande un effacement sécurisé, avec un logiciel certifié ou la réinitialisation prévue par le fabricant.',
+    module: { titre: 'Comment marche un ordinateur (la mémoire)', lien: '/modules/ordinateur/#memoire' },
+    dossier: 'vrai-ou-faux.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'NIST', titre: 'SP 800-88 Rev. 2, Guidelines for Media Sanitization', url: 'https://csrc.nist.gov/pubs/sp/800/88/r2/final', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'M. Wei, L. M. Grupp, F. E. Spada, S. Swanson (USENIX FAST)', titre: 'Reliably Erasing Data From Flash-Based Solid State Drives', url: 'https://www.usenix.org/legacy/events/fast11/tech/full_papers/Wei.pdf', type: 'recherche', annee: 2011, langue: 'en' },
+      { auteur: 'G. B. Bell, R. Boddington', titre: 'Solid State Drives: The Beginning of the End for Current Practice in Digital Forensic Recovery? (JDFSL 5-3)', url: 'https://commons.erau.edu/jdfsl/vol5/iss3/1/', type: 'recherche', annee: 2010, langue: 'en' },
+      { auteur: 'CNIL', titre: 'Sécurité : encadrer la maintenance et la fin de vie des matériels et logiciels', url: 'https://www.cnil.fr/fr/securite-encadrer-la-maintenance-et-la-fin-de-vie-des-materiels-et-logiciels', type: 'primaire', annee: 2024 },
+      { auteur: 'Microsoft', titre: 'Récupération de fichiers Windows', url: 'https://support.microsoft.com/fr-fr/windows/r%C3%A9cup%C3%A9ration-de-fichiers-windows-61f5b28a-f5b8-3cc2-0f8e-a63cb4e1d4c4', type: 'primaire' },
+    ],
+  },
+  {
+    slug: 'supprimer-mails',
+    idee: 'Supprimer ses vieux mails sauve la planète.',
+    verdict: 'nuance',
+    enBref:
+      'Garder un mail stocké coûte très peu : selon l’ADEME, un gigaoctet conservé un an dans le cloud pèse environ 0,24 g de CO₂e. L’essentiel de l’empreinte du numérique vient de la fabrication des appareils : faire durer son téléphone compte bien plus que vider sa boîte.',
+    vrai: [
+      'Stocker n’est pas gratuit : disques, centres de données, électricité. L’ADEME confirme que vider sa boîte de ses mails les plus lourds réduit son impact, mais « dans une faible proportion ».',
+      'Les grosses pièces jointes envoyées à beaucoup de monde pèsent plus que de simples messages.',
+    ],
+    faux: [
+      'Ordre de grandeur, à partir des facteurs de l’ADEME : vider 10 Go de mails évite environ 2,4 g de CO₂e par an, l’équivalent d’une quinzaine de mètres en voiture. La fabrication d’un seul smartphone pèse environ 80 kg de CO₂e, à 99 % pour sa fabrication.',
+      'En France, la fabrication des équipements représente 60 % de l’empreinte carbone du numérique, l’usage 40 % (ADEME et Arcep, chiffres 2022).',
+      'Le chiffre alarmant qui circule, « 19 g par mail », est souvent attribué à une étude de l’ADEME de 2011 qui supposait des courriels d’un mégaoctet en moyenne, avec pièces jointes. L’ADEME affiche aujourd’hui des valeurs bien plus basses, qui dépendent beaucoup des hypothèses.',
+    ],
+    pourquoi:
+      'C’est un geste simple, à la portée de chacun·e, qui donne l’impression d’agir. Ce qui compte vraiment : garder ses appareils longtemps, les faire réparer, en acheter moins, et préférer le Wi-Fi au réseau mobile.',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#combien' },
+    dossier: 'vrai-ou-faux.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'ADEME', titre: 'Impact CO₂, usage numérique (FAQ : vider sa boîte mail permet-il de réduire son impact numérique ?)', url: 'https://impactco2.fr/outils/usagenumerique', type: 'primaire', annee: 2026 },
+      { auteur: 'ADEME', titre: 'Impact CO₂, un an de stockage d’un Go dans le cloud', url: 'https://impactco2.fr/outils/usagenumerique/stockagedonnee', type: 'primaire', annee: 2026 },
+      { auteur: 'ADEME', titre: 'Impact CO₂, smartphone (étude ADEME-Arcep, mise à jour 2025)', url: 'https://impactco2.fr/outils/numerique/smartphone', type: 'primaire', annee: 2025 },
+      { auteur: 'ADEME et Arcep', titre: 'Évaluation de l’impact environnemental du numérique en France, mise à jour (données 2022)', url: 'https://ecoresponsable.numerique.gouv.fr/docs/2024/etude-ademe-impacts-environnementaux-numerique.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Enerzine', titre: 'Mail, requête web et clé USB pèsent lourd en CO2 (étude ADEME de 2011)', url: 'https://www.enerzine.com/mail-requete-web-et-cle-usb-pesent-lourds-en-co2-i/13551-2011-07', type: 'presse', annee: 2011 },
+    ],
+  },
+  {
+    slug: 'streaming-voiture',
+    idee: 'Une heure de vidéo en streaming pollue autant que plusieurs kilomètres en voiture.',
+    verdict: 'nuance',
+    enBref:
+      'Le chiffre le plus cité (une demi-heure de vidéo = 1,6 kg de CO₂, environ 6 km en voiture) venait d’une erreur de conversion, corrigée en 2020. Les estimations sérieuses tournent autour de quelques dizaines de grammes par heure, soit quelques centaines de mètres en voiture, et varient d’un facteur 10 à 30.',
+    vrai: [
+      'La vidéo est l’usage le plus gourmand en données, et l’ADEME conseille de réduire ces usages.',
+      'Une heure de vidéo émet bien quelque chose : 36 g de CO₂ en moyenne mondiale (2019, électricité seule) selon l’Agence internationale de l’énergie, 64 g de CO₂e selon l’ADEME, qui compte aussi la fabrication des appareils. Soit environ 250 à 450 mètres en voiture thermique.',
+    ],
+    faux: [
+      'Le chiffre viral de 2019 venait d’une interview, avec une erreur entre mégaoctets et mégabits : un débit huit fois trop gros. Le Shift Project, dont il venait, l’a reconnu en juin 2020 ; corrigé, son modèle donne encore 0,4 kg par heure, plus que l’AIE.',
+      'Aucun chiffre unique n’est juste pour tout le monde : une grande télévision consomme environ 100 fois plus qu’un smartphone, la 4K demande environ 10 fois plus de données que la définition standard, et la 4G pèse plus que le Wi-Fi. Le Shift Project trouve un facteur 32 entre le cas le plus sobre et le plus lourd.',
+      'L’électricité change tout : en France, où elle est surtout bas carbone, une demi-heure de vidéo correspond à une dizaine de mètres en voiture selon Carbon Brief.',
+    ],
+    pourquoi:
+      'La comparaison avec la voiture est parlante, et elle a été reprise par de nombreux médias. Ce qui pèse le plus, c’est souvent l’écran lui-même, sa fabrication et sa consommation, plus que les serveurs.',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#combien' },
+    dossier: 'vrai-ou-faux.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'The Shift Project', titre: 'Did The Shift Project really overestimate the carbon footprint of online video?', url: 'https://theshiftproject.org/app/uploads/2025/04/2020-06_Did-TSP-overestimate-the-carbon-footprint-of-online-video_EN.pdf', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Carbon Brief', titre: 'Factcheck: What is the carbon footprint of streaming video on Netflix?', url: 'https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix/', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'ADEME', titre: 'Impact CO₂, streaming vidéo', url: 'https://impactco2.fr/outils/usagenumerique/streamingvideo', type: 'primaire', annee: 2026 },
+      { auteur: 'ADEME', titre: 'Impact CO₂, voiture thermique', url: 'https://impactco2.fr/outils/transport/voiturethermique', type: 'primaire', annee: 2025 },
+    ],
+  },
+  {
+    slug: 'agbogbloshie',
+    idee: 'Agbogbloshie, au Ghana, est la plus grande décharge électronique du monde.',
+    verdict: 'faux',
+    enBref:
+      'C’était une cour de ferraille de moins d’un demi-kilomètre carré à Accra, où l’on démontait surtout des voitures et des métaux, et aussi des appareils électroniques. Le site a été rasé en juillet 2021. Les dangers, eux, étaient bien réels.',
+    vrai: [
+      'Des appareils électroniques y étaient démontés et des câbles brûlés pour en tirer le cuivre, avec de graves risques pour la santé : fumées, plomb, mercure.',
+      'Selon l’ONU, 5,1 millions de tonnes de déchets électroniques ont traversé des frontières en 2022, dont 3,3 millions par des circuits non contrôlés, des pays riches vers des pays plus pauvres.',
+    ],
+    faux: [
+      'La zone de démontage faisait moins d’un demi-kilomètre carré ; Guiyu, en Chine, était bien plus vaste, selon les chercheur·ses Maja van der Velden (université d’Oslo) et Martin Oteng-Ababio (université du Ghana).',
+      'Le chiffre de « 250 000 tonnes par an à Agbogbloshie » venait d’un rapport de 2011 de la Convention de Bâle qui portait sur cinq pays d’Afrique de l’Ouest réunis.',
+      'L’essentiel des déchets du Ghana est produit sur place. Et le site n’existe plus sous cette forme : le 1er juillet 2021, les autorités du Grand Accra ont rasé la cour, où travaillaient environ 10 000 ferrailleurs.',
+    ],
+    pourquoi:
+      'Les images de fumées noires sont saisissantes, et le récit « nos déchets finissent en Afrique » est en partie vrai. Mais il efface les personnes qui y travaillaient, et le savoir-faire des réparateur·rices d’Accra, de Lagos ou de Nairobi.',
+    module: { titre: 'La matérialité du numérique', lien: '/modules/materialite/#apres' },
+    dossier: 'materialite.md',
+    verifie: '2026-11-06',
+    sources: [
+      { auteur: 'M. van der Velden, M. Oteng-Ababio', titre: 'Six myths about electronic waste in Agbogbloshie, Ghana (Africa Is a Country)', url: 'https://africasacountry.com/2019/03/six-myths-about-electronic-waste-in-agbogbloshie-ghana', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'C. P. Baldé et al. (UNITAR, UIT)', titre: 'Rapport mondial sur les déchets d’équipements électriques et électroniques 2024', url: 'https://ewastemonitor.info/wp-content/uploads/2024/12/GEM_2024_FR_28_NOV-web.pdf', type: 'primaire', annee: 2024 },
+      { auteur: 'T. Ngnenbe, J. Bediako Koomson (Daily Graphic)', titre: 'Agbogbloshie reclaimed land under siege', url: 'https://www.graphic.com.gh/news/general-news/ghana-news-agbogbloshie-reclaimed-land-under-siege-scrap-dealers-onion-sellers-occupy-80-acre-land.html', type: 'presse', annee: 2025, langue: 'en' },
+    ],
+  },
 ];

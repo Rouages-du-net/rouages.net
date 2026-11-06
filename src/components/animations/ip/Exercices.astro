@@ -1,0 +1,134 @@
+---
+// Exercices corrigés (module « Découper un réseau en sous-réseaux », étape 2).
+// Chaque exercice a un numéro (sa graine) : le même numéro donne toujours le
+// même exercice, pour qu'un·e enseignant·e puisse le donner en classe.
+// Sans JavaScript : six exercices fixes, avec leur correction dépliable.
+import { exercice } from '../../../lib/exercices-ip';
+
+const fixes = (['reseau', 'diffusion', 'machines', 'masque', 'prefixe', 'meme'] as const).map((t, i) => exercice(101 + i, t));
+---
+<div class="anim exercices" data-exercices>
+  <div class="anim-repli">
+    <ol class="fixes">
+      {fixes.map((e) => (
+        <li>
+          <p><strong>{e.type}.</strong> {e.enonce}</p>
+          <details>
+            <summary>Correction</summary>
+            <ol>{e.correction.map((c) => <li>{c}</li>)}</ol>
+            <p>Réponse : <strong>{e.reponse}</strong></p>
+          </details>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="entete-ex">
+        <label>Type
+          <select data-type>
+            <option value="">tous les types</option>
+            <option value="reseau">Adresse du réseau</option>
+            <option value="diffusion">Adresse de diffusion</option>
+            <option value="machines">Nombre de machines</option>
+            <option value="masque">Masque en décimal</option>
+            <option value="prefixe">Préfixe pour N machines</option>
+            <option value="meme">Même réseau ?</option>
+          </select>
+        </label>
+        <label>Exercice n°
+          <input type="number" min="1" max="999999" value="1" inputmode="numeric" data-numero />
+        </label>
+      </div>
+      <p class="enonce" data-enonce></p>
+      <form class="reponse" data-form>
+        <label for="ex-reponse" class="visuellement-cache">Ta réponse</label>
+        <input id="ex-reponse" type="text" autocomplete="off" spellcheck="false" data-reponse />
+        <button type="submit" class="anim-bouton principal">Vérifier</button>
+      </form>
+      <p class="aide" data-aide></p>
+      <p class="verdict" aria-live="polite" data-verdict></p>
+      <details class="correction" data-correction>
+        <summary>Voir la correction</summary>
+        <ol data-etapes></ol>
+        <p>Réponse : <strong data-solution></strong></p>
+      </details>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-suivant>Exercice suivant ▶</button>
+        <span class="score" data-score aria-live="polite"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { exercice, juste } from '../../../lib/exercices-ip';
+
+  document.querySelectorAll<HTMLElement>('[data-exercices]').forEach((racine) => {
+    activerScene(racine);
+    const el = <T extends HTMLElement>(n: string) => racine.querySelector<T>(`[data-${n}]`)!;
+    const type = el<HTMLSelectElement>('type');
+    const numero = el<HTMLInputElement>('numero');
+    const champ = el<HTMLInputElement>('reponse');
+    const verdict = el<HTMLElement>('verdict');
+    const correction = el<HTMLDetailsElement>('correction');
+    let reussis = 0, tentes = 0, dejaCompte = false;
+    let courant = exercice(1);
+
+    function afficher() {
+      const n = Math.max(1, Math.round(Number(numero.value) || 1));
+      numero.value = String(n);
+      courant = exercice(n, (type.value || undefined) as Parameters<typeof exercice>[1]);
+      el('enonce').textContent = courant.enonce;
+      el('aide').textContent = `Réponse attendue : ${courant.aide}.`;
+      verdict.textContent = '';
+      verdict.className = 'verdict';
+      champ.value = '';
+      correction.open = false;
+      el('etapes').replaceChildren(...courant.correction.map((c) => Object.assign(document.createElement('li'), { textContent: c })));
+      el('solution').textContent = courant.reponse;
+      dejaCompte = false;
+    }
+
+    el<HTMLFormElement>('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!champ.value.trim()) { verdict.textContent = 'Écris d’abord une réponse.'; return; }
+      const ok = juste(champ.value, courant.reponse);
+      if (!dejaCompte) { tentes++; if (ok) reussis++; dejaCompte = true; }
+      verdict.textContent = ok ? 'Juste !' : 'Pas tout à fait. Réessaie, ou ouvre la correction.';
+      verdict.className = `verdict ${ok ? 'ok' : 'ko'}`;
+      el('score').textContent = `${reussis} juste${reussis > 1 ? 's' : ''} sur ${tentes} exercice${tentes > 1 ? 's' : ''}`;
+    });
+    el('suivant').addEventListener('click', () => {
+      numero.value = String((Number(numero.value) || 0) + 1);
+      afficher();
+      champ.focus();
+    });
+    numero.addEventListener('change', afficher);
+    type.addEventListener('change', afficher);
+    // Premier exercice tiré au hasard, pour varier d'une visite à l'autre.
+    numero.value = String(1 + Math.floor(Math.random() * 9999));
+    afficher();
+  });
+</script>
+
+<style>
+  .fixes { padding-left: 1.4rem; }
+  .fixes > li { margin-bottom: 0.8rem; }
+  .entete-ex { display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; margin-bottom: 0.6rem; }
+  .entete-ex label { display: grid; gap: 0.2rem; font-size: 0.9rem; font-weight: 600; }
+  .entete-ex select, .entete-ex input { font: inherit; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .entete-ex input { width: 7rem; }
+  .enonce { font-size: 1.1rem; font-weight: 600; min-height: 3em; overflow-wrap: anywhere; }
+  .reponse { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .reponse input { flex: 1 1 12rem; font-family: var(--police-mono); font-size: 1.05rem; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .aide { font-size: 0.85rem; color: var(--muted); margin: 0.3rem 0 0; }
+  .verdict { font-weight: 700; min-height: 1.5em; margin: 0.5rem 0; }
+  .verdict.ok { color: var(--ill-secret-b); }
+  .verdict.ko { color: var(--accent); }
+  .correction { margin: 0.4rem 0; }
+  .correction ol { font-family: var(--police-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
+  .score { color: var(--muted); font-size: 0.9rem; }
+</style>

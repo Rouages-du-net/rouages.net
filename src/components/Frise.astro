@@ -7,7 +7,7 @@ interface Props {
 }
 const { etapes } = Astro.props;
 ---
-<nav class="frise" aria-label="Étapes du parcours">
+<nav class="frise" aria-label="Étapes du parcours" data-pagefind-ignore>
   <ol>
     {etapes.map((e, i) => (
       <li><a href={`#${e.ancre}`}><span class="pastille" aria-hidden={e.pastille ? 'true' : undefined}>{e.pastille ?? i}</span><span class="court">{e.court}</span></a></li>

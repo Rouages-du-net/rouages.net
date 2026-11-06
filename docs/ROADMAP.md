@@ -48,6 +48,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
 - [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines
+- [x] **Découper un réseau en sous-réseaux** *(`/modules/sous-reseaux/`, relecture humaine à faire)* — parts égales (bits empruntés, alignement), plan VLSM pas à pas, exercices corrigés reproductibles (six types), IPv6 : /48, /56 et /64
 - Sources : [`sources/bases-ip.md`](sources/bases-ip.md)
 
 ## Phase 4 — Les histoires
@@ -151,14 +152,14 @@ vérifier lors de la recherche.
 - [x] Terminus : histoire « La Machine à remonter le temps » (`git`)
 - [x] Terminus : histoire « Les Archives » (`du`, `df`, `find`, `tar`)
 - [x] ~~Terminus : suites possibles~~ — déplacé dans le dépôt de Quêtes de Sysadmin (feuille de route du jeu)
-- [x] Idées reçues : 10 premières fiches « Vrai ou faux ? » *(`/vrai-ou-faux/`, relecture humaine à faire ; à venir : navigation privée, cloud dématérialisé, fichier supprimé, mails et streaming)*
+- [x] Idées reçues : 16 fiches « Vrai ou faux ? » *(`/vrai-ou-faux/`, relecture humaine à faire ; ajoutées le 6 novembre 2026 : navigation privée, cloud dématérialisé, fichier supprimé, mails, streaming, Agbogbloshie)*
 - [x] Page `/jeux/` : jeux pour apprendre, classés par thème (74 jeux vérifiés les 17, 24 et 25 octobre 2026, filtres « en français », « gratuits », « sans compte ») ; à revérifier régulièrement
 - [x] Terminus devient un projet séparé, « Quêtes de Sysadmin » (dépôt `Rouages-du-net/quetes-de-sysadmin`, site sysadmin.rouages.net) ; la page `/jeux/quetes-de-sysadmin/` l'intègre sans copier son code, `/jeux/terminus/` y redirige, et la progression des joueur·ses est gardée (clé `rouages-terminus`)
 
 ## Ensuite
 
-- **Index et recherche des notions** : retrouver une notion (« masque », « rétropropagation », « Enigma »…) parmi tous les modules. Pistes : un index généré au build à partir du glossaire, des titres d'étapes et des frises ; une recherche côté navigateur, sans service tiers (par exemple Pagefind, servi par le site lui-même) ; une page « Index » alphabétique lisible sans JavaScript
-- Matérialité (câbles, datacenters, énergie)
+- [x] **Index et recherche des notions** *(`/notions/` et `/recherche/`, avec Pagefind)* : retrouver une notion (« masque », « rétropropagation », « Enigma »…) parmi tous les modules. Pistes : un index généré au build à partir du glossaire, des titres d'étapes et des frises ; une recherche côté navigateur, sans service tiers (par exemple Pagefind, servi par le site lui-même) ; une page « Index » alphabétique lisible sans JavaScript
+- [x] **La matérialité du numérique** *(`/modules/materialite/`, relecture humaine à faire ; chiffres à mettre à jour chaque année)* — câbles, centres de données, électricité et eau, métaux, ordres de grandeur et leurs périmètres, déchets
 - Sécurité & vie privée
 - [x] Le dark net : routage en oignon, `.onion`, usages et limites *(`/modules/dark-net/`, relecture humaine à faire ; chiffres de Tor Metrics à dater à chaque mise à jour)*
 - Savoirs : édition scientifique, libre accès, Sci-Hub et Alexandra Elbakyan, communs de la connaissance

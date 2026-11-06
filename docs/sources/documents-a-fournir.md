@@ -13,7 +13,7 @@ Légende de la priorité :
 - **2** : consolide un fait déjà publié (seconde source, date exacte) ;
 - **3** : utile pour approfondir.
 
-Mis à jour le 5 novembre 2026 (section « Histoire de l'IA » ajoutée).
+Mis à jour le 6 novembre 2026 (sections « Matérialité » et « Vrai ou faux » ajoutées).
 
 ## Histoire de l'informatique
 
@@ -112,3 +112,28 @@ Mis à jour le 5 novembre 2026 (section « Histoire de l'IA » ajoutée).
 | [ ] | 3 | MIT Press, notice de *Perceptrons* (Minsky et Papert) | https://mitpress.mit.edu/9780262631112/perceptrons/ | Éditions de 1969 et 1988 |
 | [ ] | 3 | Discover Magazine, le Turc mécanique et Amazon Mechanical Turk | https://www.discovermagazine.com/the-mechanical-turk-how-a-chess-playing-hoax-inspired-real-computers-40766 | Lien documenté entre l'automate de 1770 et le nom de la plateforme |
 | [ ] | 3 | Futura Sciences, sur Alice Recoque | https://www.futura-sciences.com/tech/actualites/intelligence-artificielle-ils-ont-invente-intelligence-artificielle-alice-recoque-pionniere-francaise-histoire-oubliee-130574/ | Seconde source sur la mission IA de Bull (1985) |
+
+## Matérialité du numérique
+
+| ✓ | Prio. | Document | Lien | Ce qu'on y cherche |
+|---|---|---|---|---|
+| [ ] | 1 | AIE, *Key Questions on Energy and AI* (avril 2026) | https://www.iea.org/reports/key-questions-on-energy-and-ai | Consommation 2025 en TWh (≈ 485 ?), projection 2030 révisée, énergie par requête |
+| [ ] | 1 | AIE, *Global Critical Minerals Outlook 2025* | https://www.iea.org/reports/global-critical-minerals-outlook-2025 | Part de la Chine dans le raffinage des terres rares et du cobalt |
+| [ ] | 1 | RTE, *Bilan prévisionnel 2025*, chapitre consommation | https://www.rte-france.com/ | Projections des centres de données en TWh (2030-2035) |
+| [ ] | 2 | ADEME, *Prospective d'évolution des consommations des centres de données… 2024 à 2060* | https://librairie.ademe.fr/ | URL officielle du rapport (le site cite une copie de presse) |
+| [ ] | 2 | LBNL, rapport 2024 sur les centres de données américains | https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report.pdf | États-Unis : électricité et eau |
+| [ ] | 2 | A. L. Gulley, *PNAS*, 2023 (texte intégral) | https://www.pnas.org/doi/10.1073/pnas.2212037120 | Méthode de l'estimation de la part artisanale du cobalt |
+| [ ] | 2 | Amnesty International, rapport *This is what we die for* (2016) | https://www.amnesty.org/en/documents/afr62/3183/2016/en/ | Méthode et passages exacts sur le travail des enfants |
+| [ ] | 3 | OCDE, chaînes d'approvisionnement du cobalt et du cuivre en RDC | https://www.oecd.org/en/publications/interconnected-supply-chains-a-comprehensive-look-at-due-diligence-challenges-and-opportunities-sourcing-cobalt-and-copper-from-the-democratic-republic-of-the-congo_ee23f8a0-en.html | Cobalt artisanal, travail des enfants |
+| [ ] | 3 | G. Akese, thèse sur Agbogbloshie | https://research.library.mun.ca/14273/1/thesis.pdf | Le regard d'une géographe ghanéenne sur le site |
+| [ ] | 3 | Freitag et al., *Patterns*, 2021 (texte intégral) | https://www.cell.com/patterns/fulltext/S2666-3899(21)00188-4 | Tableau comparatif des estimations de la part du numérique |
+
+## Vrai ou faux (fiches 11 à 15)
+
+| ✓ | Prio. | Document | Lien | Ce qu'on y cherche |
+|---|---|---|---|---|
+| [ ] | 2 | Mozilla, « Common Myths about Private Browsing » | https://support.mozilla.org/en-US/kb/common-myths-about-private-browsing | Source primaire Firefox pour la fiche navigation privée |
+| [ ] | 2 | AIE, G. Kamiya, « The carbon footprint of streaming video: fact-checking the headlines » | https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines | Version AIE du calcul de la fiche streaming |
+| [ ] | 3 | Brown c. Google, approbation définitive de l'accord (CourtListener) | https://www.courtlistener.com/ | Date et contenu de l'approbation par la juge |
+| [ ] | 3 | Rapport ADEME de 2011 sur le courriel | (introuvable en ligne) | Origine exacte du « 19 g par mail » |
+

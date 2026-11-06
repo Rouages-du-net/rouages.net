@@ -1,0 +1,143 @@
+---
+// Recherche plein texte du site, avec Pagefind (https://pagefind.app) :
+// l'index est fabriqué après la compilation (`pagefind --site dist`) et servi
+// par le site lui-même, dans /pagefind/ ; aucune ressource tierce.
+import Base from '../layouts/Base.astro';
+---
+<Base title="Rechercher" description="Rechercher une notion, une personne ou un mot dans tous les modules du site." indexer={false}>
+  <h1>Rechercher</h1>
+  <form class="recherche" action="/recherche/" method="get" role="search" data-recherche>
+    <label for="q">Une notion, une personne, un mot</label>
+    <div class="ligne">
+      <input id="q" type="search" name="q" autocomplete="off" spellcheck="false" data-champ />
+      <button type="submit" class="anim-bouton principal">Rechercher</button>
+    </div>
+  </form>
+
+  <p class="etat" aria-live="polite" data-etat>
+    Sans JavaScript, la recherche n'est pas disponible : l'<a href="/notions/">index des notions</a> et le
+    <a href="/glossaire/">glossaire</a> donnent accès à tous les modules.
+  </p>
+  <ol class="resultats" data-resultats></ol>
+  <p class="anim-note">Vous ne trouvez pas ? Parcourez l'<a href="/notions/">index des notions</a>, rangé de A à Z.</p>
+</Base>
+
+<script>
+  const racine = document.querySelector<HTMLFormElement>('[data-recherche]')!;
+  const champ = racine.querySelector<HTMLInputElement>('[data-champ]')!;
+  const etat = document.querySelector<HTMLElement>('[data-etat]')!;
+  const liste = document.querySelector<HTMLOListElement>('[data-resultats]')!;
+
+  type Resultat = {
+    url: string;
+    excerpt: string;
+    meta: { title?: string };
+    sub_results?: { title: string; url: string; excerpt: string }[];
+  };
+  type Pagefind = {
+    options: (o: object) => Promise<void>;
+    search: (q: string) => Promise<{ results: { data: () => Promise<Resultat> }[] }>;
+  };
+
+  let pagefind: Pagefind | null = null;
+  let demande = 0;
+
+  async function charger(): Promise<Pagefind | null> {
+    if (pagefind) return pagefind;
+    try {
+      // Chemin construit à l'exécution : le fichier n'existe qu'après `pagefind`.
+      const chemin = '/pagefind/' + 'pagefind.js';
+      pagefind = (await import(/* @vite-ignore */ chemin)) as Pagefind;
+      await pagefind.options({ excerptLength: 22 });
+      return pagefind;
+    } catch {
+      etat.textContent = 'La recherche n’est pas disponible pour le moment. Utilisez l’index des notions.';
+      return null;
+    }
+  }
+
+  // Les extraits de Pagefind sont du texte où seuls les <mark> sont du HTML.
+  function extrait(html: string) {
+    const p = document.createElement('p');
+    p.className = 'extrait';
+    html.split(/(<mark>.*?<\/mark>)/).forEach((morceau) => {
+      const m = morceau.match(/^<mark>(.*)<\/mark>$/);
+      if (m) p.append(Object.assign(document.createElement('mark'), { textContent: m[1] }));
+      else p.append(document.createTextNode(morceau.replace(/&#39;|&apos;/g, '’').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')));
+    });
+    return p;
+  }
+
+  async function chercher(q: string) {
+    const n = ++demande;
+    liste.replaceChildren();
+    if (!q.trim()) {
+      etat.textContent = 'Tapez un mot : « masque », « Enigma », « rétropropagation », « Ada Lovelace »…';
+      return;
+    }
+    const pf = await charger();
+    if (!pf || n !== demande) return;
+    etat.textContent = 'Recherche…';
+    const { results } = await pf.search(q);
+    const donnees = await Promise.all(results.slice(0, 20).map((r) => r.data()));
+    if (n !== demande) return;
+    etat.textContent = results.length === 0
+      ? `Aucun résultat pour « ${q} ». Essayez un autre mot, ou l’index des notions.`
+      : results.length === 1 ? `1 page pour « ${q} ».` : `${results.length} pages pour « ${q} »${results.length > 20 ? ' (les 20 premières)' : ''}.`;
+    for (const d of donnees) {
+      const li = document.createElement('li');
+      const titre = (d.meta.title ?? d.url).replace(/ · Les rouages du net$/, '');
+      const lien = Object.assign(document.createElement('a'), { href: d.url, textContent: titre, className: 'titre' });
+      li.append(lien, extrait(d.excerpt));
+      // Les étapes où le mot apparaît (titres d'étape munis d'une ancre).
+      const sous = (d.sub_results ?? []).filter((s) => s.url !== d.url && s.url.includes('#')).slice(0, 3);
+      if (sous.length) {
+        const ul = document.createElement('ul');
+        ul.className = 'etapes';
+        for (const s of sous) {
+          const sli = document.createElement('li');
+          sli.append(Object.assign(document.createElement('a'), { href: s.url, textContent: s.title.replace(/^Étape \d+ : /, '') }));
+          ul.append(sli);
+        }
+        li.append(ul);
+      }
+      liste.append(li);
+    }
+  }
+
+  let minuterie: number | undefined;
+  champ.addEventListener('input', () => {
+    window.clearTimeout(minuterie);
+    minuterie = window.setTimeout(() => {
+      const q = champ.value;
+      history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : location.pathname);
+      chercher(q);
+    }, 250);
+  });
+  racine.addEventListener('submit', (e) => {
+    e.preventDefault();
+    history.replaceState(null, '', `?q=${encodeURIComponent(champ.value)}`);
+    chercher(champ.value);
+  });
+
+  const initiale = new URLSearchParams(location.search).get('q') ?? '';
+  champ.value = initiale;
+  const entete = document.querySelector<HTMLInputElement>('#recherche-entete');
+  if (entete) entete.value = initiale;
+  chercher(initiale);
+  if (!initiale) champ.focus();
+</script>
+
+<style>
+  .recherche { max-width: var(--mesure); margin: 1rem 0; }
+  .recherche label { display: block; font-weight: 600; margin-bottom: 0.35rem; }
+  .ligne { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .ligne input { flex: 1 1 14rem; font: inherit; font-size: 1.1rem; padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--card); color: var(--fg); }
+  .etat { color: var(--muted); max-width: var(--mesure); }
+  .resultats { list-style: none; padding: 0; margin: 1rem 0; max-width: var(--mesure); display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.1rem; }
+  :global(.resultats li) { overflow-wrap: anywhere; }
+  :global(.resultats .titre) { font-weight: 700; font-size: 1.1rem; }
+  :global(.resultats .extrait) { margin: 0.25rem 0 0; color: var(--fg); }
+  :global(.resultats mark) { background: none; color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 0.15em; }
+  :global(.resultats .etapes) { margin: 0.3rem 0 0; padding-left: 1.2rem; font-size: 0.95rem; }
+</style>

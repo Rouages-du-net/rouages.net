@@ -1,0 +1,271 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Trajet from '../../components/animations/materialite/Trajet.astro';
+import Electricite from '../../components/animations/materialite/Electricite.astro';
+import Telephone from '../../components/animations/materialite/Telephone.astro';
+import Estimations from '../../components/animations/materialite/Estimations.astro';
+import Dechets from '../../components/animations/materialite/Dechets.astro';
+
+// Faits sourcés : voir docs/sources/materialite.md.
+const etapes = [
+  { ancre: 'cables', court: 'Où passe ton message ?' },
+  { ancre: 'centres', court: 'L’usine à calcul' },
+  { ancre: 'telephone', court: 'Avant d’être allumé' },
+  { ancre: 'combien', court: 'Une requête, combien ?' },
+  { ancre: 'apres', court: 'Et après ?' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="La matérialité du numérique"
+  description="Câbles sous-marins, centres de données, électricité, eau, métaux, déchets : ce que pèse vraiment le numérique, chiffres sourcés et datés, et pourquoi ils varient tant."
+>
+  <p class="tag" data-pagefind-ignore>Comment ça marche · module en construction</p>
+  <h1>La matérialité du numérique</h1>
+  <MiseAJour date="2026-11-06" evolutif />
+  <p class="chapo seulement-debut">
+    Le numérique n'est pas « dans les nuages ». Un message voyage par des câbles au fond des océans, une photo
+    dort sur des disques qui consomment de l'électricité et de l'eau, un téléphone contient des métaux extraits
+    au Congo ou en Chine, et finit un jour en déchet. Ce module suit ces objets, chiffres à l'appui, en disant à
+    chaque fois d'où vient le chiffre et ce qu'il compte.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Où passe ton message ?" ancre="cables">
+    <Trajet slot="animation" />
+    <p slot="decouverte">
+      Un message envoyé de Paris à Lagos ne passe pas par l'espace : il voyage par des fibres optiques, sous les
+      routes puis au fond de la mer. Plus de 1,5 million de kilomètres de <Terme id="cable-sous-marin">câbles
+      sous-marins</Terme> relient les continents.
+    </p>
+    <p slot="curieux">
+      Au large, un câble n'est pas plus épais qu'un tuyau d'arrosage, et il est simplement posé sur le fond.
+      Environ deux cents pannes par an, aux deux tiers causées par la pêche et les ancres. Une soixantaine de
+      navires câbliers dans le monde les réparent : en 2024, une réparation a pris 51 jours en moyenne, le temps
+      d'obtenir les autorisations et un navire.
+    </p>
+    <p slot="ingenieur">
+      Les géants du numérique (Google, Meta, Microsoft, Amazon) utilisaient 75 % de la capacité des câbles en
+      2025 et en financent de plus en plus. En Afrique, le câble 2Africa (45 000 km, plus de 33 pays) est achevé
+      en 2025. Le module <a href="/modules/entree-a-la-page/#voyage">De l'Entrée à la page</a> suit les paquets
+      sur ce chemin.
+    </p>
+    <div slot="histoire">
+      <p>
+        En février 2024, trois câbles sont endommagés en mer Rouge, très probablement par l'ancre d'un cargo
+        touché par un missile houthi. Le 25 décembre 2024, en mer Baltique, le pétrolier <em>Eagle S</em> est
+        accusé d'avoir rompu des câbles en traînant son ancre ; la Russie nie toute implication. État au
+        6 novembre 2026 : la cour d'appel d'Helsinki a relancé la procédure en août 2026.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Internet passe par les satellites. »</strong> Selon des chiffres de la FCC cités par
+      TeleGeography, les satellites ne font que 0,37 % de la capacité internationale des États-Unis. Et
+      <strong>« les requins mangent les câbles »</strong> : aucune panne due à des morsures entre 2007 et 2014,
+      selon l'association internationale des câbles sous-marins.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="L'usine à calcul" ancre="centres">
+    <Electricite slot="animation" />
+    <p slot="decouverte">
+      Le « cloud », ce sont des <Terme id="datacenter">centres de données</Terme> : des bâtiments remplis
+      d'ordinateurs allumés jour et nuit, qu'il faut alimenter et refroidir. En 2024, ils ont consommé environ
+      1,5 % de l'électricité mondiale.
+    </p>
+    <p slot="curieux">
+      Ce chiffre comprend tout : messageries, vidéos, sites, stockage de photos. L'IA n'en est pas encore la
+      majorité, mais c'est elle qui fait grimper la courbe : l'AIE prévoit un doublement d'ici 2030. Et la
+      moyenne cache des écarts : certaines régions concentrent les centres, au point de peser sur leur réseau
+      électrique.
+    </p>
+    <div slot="ingenieur">
+      <p>
+        L'eau sert au refroidissement. Il faut distinguer l'eau prélevée, l'eau rejetée et l'eau
+        <em>consommée</em> (évaporée). Google, qui publie les trois, annonce environ 31 milliards de litres
+        consommés en 2024, en hausse de 28 % ; les sites refroidis à l'air n'en consomment presque pas. L'eau
+        « compensée » ailleurs ne revient pas dans le bassin où elle a été prise.
+      </p>
+      <p>
+        Les chiffres de la France sont des estimations de modèle (inventaire et extrapolation), et les
+        projections de l'ADEME et de RTE ne mesurent pas la même chose : toujours préciser le scénario.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Mes données sont en France. »</strong> Selon l'ADEME, plus de la moitié des usages numériques
+      des Français sont hébergés dans des centres de données à l'étranger. Voir aussi la fiche <a
+      href="/vrai-ou-faux/cloud-dematerialise/">« Le cloud, c'est dématérialisé »</a>.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Ce que pèse un téléphone avant d'être allumé" ancre="telephone">
+    <Telephone slot="animation" />
+    <p slot="decouverte">
+      L'essentiel de l'empreinte d'un téléphone est fait avant même qu'on l'allume : extraire les métaux, graver
+      les puces, assembler, transporter. Pour un smartphone, la fabrication représente la grande majorité de son
+      empreinte carbone.
+    </p>
+    <p slot="curieux">
+      En France, la fabrication des équipements représente 60 % de l'empreinte carbone du numérique, l'usage
+      40 % ; les terminaux (téléphones, ordinateurs, télévisions) en font la moitié (ADEME et Arcep, données
+      2022). Clique sur les pièces du téléphone pour voir d'où viennent leurs matières.
+    </p>
+    <p slot="ingenieur">
+      L'ADEME estimait le numérique à 2,5 % de l'empreinte carbone française (données 2020), puis à 4,4 %
+      (données 2022). Ce bond vient surtout d'un changement de méthode : les centres de données situés à
+      l'étranger sont désormais comptés. Un bon exemple de chiffre qui « bouge » sans que la réalité ait changé
+      autant.
+    </p>
+    <p slot="mythes">
+      <strong>« Le cobalt sert surtout à nos téléphones. »</strong> Il sert surtout aux batteries, et de plus en
+      plus à celles des voitures électriques. Et <strong>les terres rares ne sont pas rares</strong> : ce sont
+      les gisements exploitables qui le sont.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Une requête, combien ?" ancre="combien">
+    <Estimations slot="animation" />
+    <p slot="decouverte">
+      Combien coûte une recherche, une question à un agent conversationnel, une heure de vidéo ? Les chiffres
+      publiés varient de 1 à 100. Ce n'est pas qu'on se trompe : chacun ne compte pas la même chose.
+    </p>
+    <div slot="curieux">
+      <p>
+        Cinq raisons font varier les chiffres : <strong>le périmètre</strong> (le serveur seul, ou aussi le
+        réseau, ton écran, la fabrication des puces) ; <strong>l'année</strong> (l'efficacité progresse vite) ;
+        <strong>l'électricité</strong> (charbon ou nucléaire et renouvelables) ; <strong>la tâche</strong> (une
+        réponse courte, une image, un agent qui enchaîne les étapes) ; et <strong>qui publie</strong> (l'entreprise
+        elle-même, ou des chercheur·ses sans accès aux serveurs).
+      </p>
+    </div>
+    <p slot="ingenieur">
+      Pour la part du numérique dans les émissions mondiales, une revue de 2021 (Freitag et al.) donne 2,1 à
+      3,9 % en corrigeant les estimations publiées ; l'Arcep retient « 3 à 4 % ». Les chercheuses Sasha Luccioni
+      et Emma Strubell ont montré qu'un modèle génératif « à tout faire » coûte bien plus qu'un modèle spécialisé
+      pour la même tâche.
+    </p>
+    <p slot="mythes">
+      <strong>« Une heure de vidéo, c'est des kilomètres en voiture. »</strong> Ce chiffre venait d'une erreur
+      de conversion, corrigée en 2020 : voir la fiche <a href="/vrai-ou-faux/streaming-voiture/">Vrai ou
+      faux</a>. Et <a href="/vrai-ou-faux/supprimer-mails/">supprimer ses vieux mails</a> change très peu de
+      chose.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Et après ?" ancre="apres">
+    <Dechets slot="animation" />
+    <p slot="decouverte">
+      Un appareil finit en déchet. En 2022, le monde a produit 62 millions de tonnes de déchets électroniques,
+      7,8 kg par personne, et seule une petite partie est recyclée de façon documentée. Le geste qui compte le
+      plus : garder ses appareils longtemps.
+    </p>
+    <p slot="curieux">
+      Ces déchets ne sont pas surtout des téléphones : téléphones, ordinateurs portables et routeurs font
+      environ 8 % du total, loin derrière les petits appareils (jouets, aspirateurs, cigarettes électroniques…).
+      L'Europe produit le plus de déchets par habitant (17,6 kg) et en recycle le plus (42,8 %) ; en Afrique, la
+      collecte officielle est inférieure à 1 %.
+    </p>
+    <p slot="ingenieur">
+      Environ 18 millions de tonnes passent par le secteur informel : démontage à la main, sans protection,
+      brûlage des câbles, bains d'acide. Selon l'ONU, l'exposition chronique touche de manière disproportionnée
+      les femmes enceintes et les enfants. Mais ce secteur répare aussi : à Accra, Lagos ou Nairobi, des
+      réparateur·rices très qualifié·es prolongent la vie des appareils.
+    </p>
+    <div slot="histoire">
+      <p>
+        Agbogbloshie, à Accra, a été présenté comme la « plus grande décharge électronique du monde ». Les
+        chercheur·ses Maja van der Velden et Martin Oteng-Ababio ont démonté ce mythe : une cour de ferraille de
+        moins d'un demi-kilomètre carré, où l'on démontait surtout des voitures et des métaux. Le site a été rasé
+        en juillet 2021 ; quelque 10 000 ferrailleurs y travaillaient.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Ce qui n'est pas recyclé est jeté. »</strong> Les 22,3 % recyclés sont ceux qui sont
+      <em>documentés</em> : une partie du reste est réparée, revendue ou recyclée hors des circuits officiels.
+      Voir la fiche <a href="/vrai-ou-faux/agbogbloshie/">Agbogbloshie</a>.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Le numérique est matériel</strong> : câbles, bâtiments, électricité, eau, métaux, déchets.</li>
+      <li><strong>Les centres de données</strong> pèsent 1,5 % de l'électricité mondiale (2024), et l'IA fait grimper la courbe.</li>
+      <li><strong>La fabrication pèse plus que l'usage</strong> : 60 % de l'empreinte du numérique en France.</li>
+      <li><strong>Un chiffre sans périmètre ne veut rien dire</strong> : qui le publie, en quelle année, et que compte-t-il ?</li>
+      <li><strong>Le geste qui compte</strong> : acheter moins d'appareils et les garder plus longtemps.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : les fiches <a href="/vrai-ou-faux/">Vrai ou faux ?</a> sur le cloud, les mails,
+      le streaming et Agbogbloshie, et <a href="/modules/ia-texte/#fabrication">Les IA qui écrivent</a> pour l'énergie et l'eau de l'IA.
+    </p>
+
+  <Sources
+    verifie="2026-11-06"
+    sources={[
+      { auteur: 'TeleGeography', titre: 'Submarine Cable Frequently Asked Questions', url: 'https://www2.telegeography.com/submarine-cable-faqs-frequently-asked-questions', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'M. Brookes', titre: 'Réponse écrite à la U.S.-China Economic and Security Review Commission (navires câbliers)', url: 'https://www.uscc.gov/sites/default/files/2026-04/Rear_Admiral_Mike_Brookes_Question_for_the_Record_Response.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'E. Luoma (Reuters, Insurance Journal)', titre: 'Finnish Court Dismisses Case Against Crew in Baltic Sea Cable Breach Trial', url: 'https://www.insurancejournal.com/news/international/2025/10/03/842354.htm', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'A. Martin (The Record)', titre: 'Finland appeals court revives case against Eagle S officers over cable breaks', url: 'https://therecord.media/finland-appeals-court-revives-case-against-eagle-s', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Agence internationale de l’énergie', titre: 'Energy and AI in East Asia (reprend le cadrage mondial de Energy and AI)', url: 'https://iea.blob.core.windows.net/assets/431d7d22-039e-46d3-9832-090a8b4075fc/EnergyandAIinEastAsia.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'N. Kauf (AIE)', titre: 'Key questions on energy and AI (présentation, Asia Clean Energy Forum)', url: 'https://asiacleanenergyforum.adb.org/wp-content/uploads/2026/06/Key-questions-on-energy-and-AI.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'T. Brilland et al. (ADEME)', titre: 'Évaluation de l’impact environnemental du numérique en France, mise à jour de l’étude ADEME-Arcep', url: 'https://ecoresponsable.numerique.gouv.fr/docs/2024/etude-ademe-impacts-environnementaux-numerique.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Groupement CLIK pour l’ADEME', titre: 'Prospective d’évolution des consommations des centres de données en France de 2024 à 2060 (copie Édition Multimédi@)', url: 'https://www.editionmultimedia.fr/wp-content/uploads/2026/01/Rapport-de-lAdeme-sur-la-consommation-les-datacenters-06-01-26.pdf', type: 'primaire', annee: 2026 },
+      { auteur: 'RTE', titre: 'Bilan prévisionnel 2025 (conférence de presse)', url: 'https://assets.rte-france.com/prod/public/2025-12/BP2025-conference-presse-slides.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Google', titre: '2025 Environmental Report', url: 'https://www.gstatic.com/gumdrop/sustainability/google-2025-environmental-report.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Focus Taiwan (CNA)', titre: 'TSMC buying trucked-in water in preparation for supply shortages', url: 'https://focustaiwan.tw/society/202102230022', type: 'presse', annee: 2021, langue: 'en' },
+      { auteur: 'E. Feng (NPR)', titre: 'Epic drought in Taiwan pits farmers against high-tech factories for water', url: 'https://laist.com/news/npr-news/epic-drought-in-taiwan-pits-farmers-against-high-tech-factories-for-water', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'TSMC', titre: '2024 Annual Report, p. 159 (eau)', url: 'https://investor.tsmc.com/static/annualReports/2024/english/ebook/files/basic-html/page159.html', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'USGS', titre: 'Mineral Commodity Summaries 2026 : Cobalt', url: 'https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-cobalt.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Cobalt Institute', titre: 'Cobalt Market Report 2025', url: 'https://www.cobaltinstitute.org/resource/cobalt-market-report-2025/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'A. L. Gulley', titre: 'China, the Democratic Republic of the Congo, and artisanal cobalt mining from 2000 through 2020 (PNAS 120), notice', url: 'https://doi.org/10.1073/pnas.2212037120', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'Amnesty International', titre: 'Exposed: Child labour behind smart phone and electric car batteries', url: 'https://www.amnesty.org/en/latest/news/2016/01/child-labour-behind-smart-phone-and-electric-car-batteries/', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'USGS', titre: 'Mineral Commodity Summaries 2026 : Rare Earths', url: 'https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-rare-earths.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'USGS', titre: 'Mineral Commodity Summaries 2026 : Tantalum', url: 'https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-tantalum.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'M. Pronczuk (AP)', titre: 'UN experts say Rwanda supported rebels in Congo and smuggled minerals at “unprecedented levels”', url: 'https://www.ksat.com/news/world/2025/07/04/un-experts-say-rwanda-supported-rebels-in-congo-and-smuggled-minerals-at-unprecedented-levels/', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'ADEME', titre: 'Impact CO₂, smartphone', url: 'https://impactco2.fr/outils/numerique/smartphone', type: 'primaire', annee: 2025 },
+      { auteur: 'U. Hölzle (Google)', titre: 'Powering a Google search', url: 'https://googleblog.blogspot.com/2009/01/powering-google-search.html', type: 'primaire', annee: 2009, langue: 'en' },
+      { auteur: 'J. You (Epoch AI)', titre: 'How much energy does ChatGPT use?', url: 'https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'S. Altman', titre: 'The Gentle Singularity', url: 'https://blog.samaltman.com/the-gentle-singularity', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'A. Vahdat, J. Dean (Google)', titre: 'How much energy does Google’s AI use? We did the math', url: 'https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Mistral AI', titre: 'Our contribution to a global environmental standard for AI', url: 'https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'A. S. Luccioni, Y. Jernite, E. Strubell', titre: 'Power Hungry Processing: Watts Driving the Cost of AI Deployment?, résumé', url: 'https://arxiv.org/abs/2311.16863', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'G. Kamiya (Carbon Brief)', titre: 'Factcheck: What is the carbon footprint of streaming video on Netflix?', url: 'https://www.carbonbrief.org/factcheck-what-is-the-carbon-footprint-of-streaming-video-on-netflix/', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'D. Molloy (BBC News)', titre: 'Climate change: Can sending fewer emails really save the planet?', url: 'https://www.bbc.com/news/technology-55002423', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'C. Freitag et al.', titre: 'The real climate and transformative impact of ICT (Patterns 2-9), notice', url: 'https://doi.org/10.1016/j.patter.2021.100340', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'Arcep', titre: 'L’empreinte environnementale du numérique', url: 'https://www.arcep.fr/la-regulation/grands-dossiers-thematiques-transverses/lempreinte-environnementale-du-numerique.html', type: 'site' },
+      { auteur: 'C. P. Baldé et al. (UNITAR, UIT)', titre: 'Rapport mondial sur les déchets d’équipements électriques et électroniques 2024', url: 'https://ewastemonitor.info/wp-content/uploads/2024/12/GEM_2024_FR_28_NOV-web.pdf', type: 'primaire', annee: 2024 },
+      { auteur: 'M. van der Velden, M. Oteng-Ababio', titre: 'Six myths about electronic waste in Agbogbloshie, Ghana (Africa Is a Country)', url: 'https://africasacountry.com/2019/03/six-myths-about-electronic-waste-in-agbogbloshie-ghana', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'T. Ngnenbe, J. Bediako Koomson (Daily Graphic)', titre: 'Agbogbloshie reclaimed land under siege', url: 'https://www.graphic.com.gh/news/general-news/ghana-news-agbogbloshie-reclaimed-land-under-siege-scrap-dealers-onion-sellers-occupy-80-acre-land.html', type: 'presse', annee: 2025, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

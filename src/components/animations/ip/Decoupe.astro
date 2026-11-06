@@ -1,0 +1,125 @@
+---
+// Animation « Couper en parts égales » (module « Découper un réseau en
+// sous-réseaux », étape 0). On part d'un réseau (192.0.2.0/24 par défaut) et
+// d'un nouveau préfixe plus long : on « emprunte » des bits à la partie
+// machine. On voit les bits, la barre de l'espace d'adresses découpée, et la
+// liste des sous-réseaux. Références : RFC 950, RFC 1878.
+---
+<div class="anim decoupe" data-decoupe>
+  <div class="anim-repli">
+    <p>
+      Pour découper 192.0.2.0/24 en 4 sous-réseaux, on prend 2 bits de la partie machine (2² = 4) : le préfixe
+      passe de /24 à /26. Chaque sous-réseau a 2⁶ = 64 adresses, dont 62 pour des machines : 192.0.2.0/26,
+      192.0.2.64/26, 192.0.2.128/26 et 192.0.2.192/26.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="reglages-decoupe">
+        <label>Réseau de départ
+          <input type="text" value="192.0.2.0/24" spellcheck="false" autocomplete="off" data-base />
+        </label>
+        <label class="curseur">Nouveau préfixe <output data-q-sortie>/26</output>
+          <input type="range" min="24" max="30" value="26" data-q />
+        </label>
+      </div>
+      <div class="bits-decoupe" data-bits aria-hidden="true"></div>
+      <p class="anim-note">Vert : bits du réseau de départ. Violet : bits empruntés, qui numérotent les sous-réseaux. Jaune : bits des machines.</p>
+      <div class="barre" data-barre aria-hidden="true"></div>
+      <ol class="liste-sr" data-liste></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { bits32, decouper, ecrireIPv4, lireIPv4 } from '../../../lib/ip';
+  import { exposant, fr } from '../../../lib/bases';
+
+  document.querySelectorAll<HTMLElement>('[data-decoupe]').forEach((racine) => {
+    activerScene(racine);
+    const champ = racine.querySelector<HTMLInputElement>('[data-base]')!;
+    const curseur = racine.querySelector<HTMLInputElement>('[data-q]')!;
+    const sortieQ = racine.querySelector<HTMLOutputElement>('[data-q-sortie]')!;
+    const zoneBits = racine.querySelector<HTMLElement>('[data-bits]')!;
+    const barre = racine.querySelector<HTMLElement>('[data-barre]')!;
+    const liste = racine.querySelector<HTMLOListElement>('[data-liste]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let ip = lireIPv4('192.0.2.0')!, p = 24;
+
+    function lireBase(): boolean {
+      const m = champ.value.trim().match(/^([\d.]+)\/(\d{1,2})$/);
+      const v = m ? lireIPv4(m[1]) : null;
+      const pp = m ? Number(m[2]) : NaN;
+      if (v === null || !(pp >= 1 && pp <= 29)) {
+        legende.textContent = 'Écris un réseau sous la forme adresse/préfixe, par exemple 192.0.2.0/24 ou 10.0.0.0/16 (préfixe de /1 à /29).';
+        return false;
+      }
+      ip = v; p = pp;
+      curseur.min = String(p + 1);
+      curseur.max = String(Math.min(30, p + 10));
+      if (Number(curseur.value) <= p || Number(curseur.value) > Number(curseur.max)) curseur.value = String(Math.min(30, p + 2));
+      return true;
+    }
+
+    function rendre() {
+      const q = Number(curseur.value);
+      sortieQ.textContent = `/${q}`;
+      const { total, liste: srs } = decouper(ip, p, q, 64);
+      // Bits : réseau, empruntés, machines.
+      zoneBits.replaceChildren();
+      const b = bits32(srs[0].reseau);
+      [...b].forEach((c, i) => {
+        if (i > 0 && i % 8 === 0) zoneBits.append(Object.assign(document.createElement('span'), { className: 'sep', textContent: '.' }));
+        const cl = i < p ? 'res' : i < q ? 'emprunt' : 'hote';
+        zoneBits.append(Object.assign(document.createElement('span'), { className: `case ${cl}`, textContent: i < q && i >= p ? 'n' : i >= q ? 'm' : c }));
+      });
+      // Barre : un bloc par sous-réseau (au plus 64 dessinés).
+      barre.replaceChildren();
+      srs.forEach((_, i) => barre.append(Object.assign(document.createElement('span'), { className: `bloc c${i % 4}` })));
+      liste.replaceChildren();
+      srs.slice(0, 16).forEach((s, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="nom-sr c${i % 4}">${ecrireIPv4(s.reseau)}/${q}</span> machines ${ecrireIPv4(s.premiere)} → ${ecrireIPv4(s.derniere)}, diffusion ${ecrireIPv4(s.diffusion)}`;
+        liste.append(li);
+      });
+      if (total > 16) liste.append(Object.assign(document.createElement('li'), { className: 'suite', textContent: `… et ${fr(total - 16)} autres sous-réseaux, jusqu’à ${ecrireIPv4(decouper(ip, p, q, total).liste[total - 1]?.reseau ?? 0)}/${q}.` }));
+      const k = q - p;
+      legende.textContent = `On emprunte ${k} bit${k > 1 ? 's' : ''} à la partie machine : 2${exposant(k)} = ${fr(total)} sous-réseaux /${q}, de 2${exposant(32 - q)} = ${fr(2 ** (32 - q))} adresses chacun, soit ${fr(2 ** (32 - q) - 2)} machines par sous-réseau. Chaque sous-réseau commence à un multiple de ${fr(2 ** (32 - q))}.`;
+    }
+
+    champ.addEventListener('change', () => { if (lireBase()) rendre(); });
+    curseur.addEventListener('input', rendre);
+    lireBase();
+    rendre();
+  });
+</script>
+
+<style>
+  .reglages-decoupe { display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: flex-end; margin-bottom: 0.75rem; }
+  .reglages-decoupe label { display: grid; gap: 0.25rem; font-weight: 600; font-size: 0.95rem; }
+  .reglages-decoupe input[type='text'] { font-family: var(--police-mono); font-size: 1rem; width: 11rem; padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .curseur input { width: 11rem; accent-color: var(--accent); }
+  .bits-decoupe { display: grid; grid-template-columns: repeat(8, 1fr) 0.35rem repeat(8, 1fr) 0.35rem repeat(8, 1fr) 0.35rem repeat(8, 1fr); font-family: var(--police-mono); font-size: clamp(0.62rem, 2.3vw, 0.95rem); margin-bottom: 0.3rem; }
+  :global(.decoupe .case) { text-align: center; padding: 0.1rem 0; }
+  :global(.decoupe .case.res) { background: color-mix(in srgb, var(--ill-secret-b) 35%, transparent); }
+  :global(.decoupe .case.emprunt) { background: color-mix(in srgb, var(--ill-secret-a) 45%, transparent); font-weight: 700; }
+  :global(.decoupe .case.hote) { background: color-mix(in srgb, var(--ill-commun) 35%, transparent); }
+  :global(.decoupe .sep) { text-align: center; color: var(--muted); }
+  .barre { display: flex; gap: 1px; height: 1.6rem; margin: 0.8rem 0 0.5rem; border-radius: 0.3rem; overflow: hidden; }
+  :global(.decoupe .bloc) { flex: 1; }
+  :global(.decoupe .c0) { background: var(--ill-client); }
+  :global(.decoupe .c1) { background: var(--ill-paquet); }
+  :global(.decoupe .c2) { background: var(--ill-secret-a); }
+  :global(.decoupe .c3) { background: var(--ill-serveur); }
+  .liste-sr { font-size: 0.9rem; padding-left: 1.6rem; margin: 0.4rem 0; }
+  :global(.decoupe .liste-sr li) { margin-bottom: 0.2rem; overflow-wrap: anywhere; }
+  :global(.decoupe .nom-sr) { font-family: var(--police-mono); font-weight: 700; padding: 0 0.25rem; border-radius: 0.2rem; background: none !important; border-left: 0.4rem solid; }
+  :global(.decoupe .nom-sr.c0) { border-color: var(--ill-client); }
+  :global(.decoupe .nom-sr.c1) { border-color: var(--ill-paquet); }
+  :global(.decoupe .nom-sr.c2) { border-color: var(--ill-secret-a); }
+  :global(.decoupe .nom-sr.c3) { border-color: var(--ill-serveur); }
+  :global(.decoupe .suite) { list-style: none; color: var(--muted); }
+</style>

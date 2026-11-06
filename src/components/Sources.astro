@@ -31,7 +31,7 @@ const LANGUES: Record<string, string> = { en: 'en anglais', es: 'en espagnol', d
 
 const date = new Date(verifie).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
-<aside class="sources" aria-labelledby="titre-sources">
+<aside class="sources" aria-labelledby="titre-sources" data-pagefind-ignore>
   <h2 id="titre-sources">Sources</h2>
   <ul>
     {sources.map((s) => (

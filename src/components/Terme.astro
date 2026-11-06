@@ -12,7 +12,7 @@ const { id } = Astro.props;
 const e = entree(id);
 const idBulle = `def-${id}-${Math.random().toString(36).slice(2, 8)}`;
 ---
-<span class="terme"><a href={`/glossaire/#${id}`} aria-describedby={idBulle}><slot>{e.terme}</slot></a><span class="bulle" role="tooltip" id={idBulle}><strong>{e.terme}</strong> — {e.definition}</span></span>
+<span class="terme"><a href={`/glossaire/#${id}`} aria-describedby={idBulle}><slot>{e.terme}</slot></a><span class="bulle" role="tooltip" id={idBulle} data-pagefind-ignore><strong>{e.terme}</strong> — {e.definition}</span></span>
 
 <style>
   .terme { position: relative; }

@@ -1,0 +1,74 @@
+---
+// Animation « L'usine à calcul » (module « La matérialité du numérique »,
+// étape 1) : consommation électrique des centres de données, monde (AIE) ou
+// France (ADEME), en barres. Les projections sont des scénarios.
+import { ELEC_FRANCE, ELEC_MONDE } from '../../../data/materialite';
+---
+<div class="anim electricite" data-electricite data-monde={JSON.stringify(ELEC_MONDE)} data-france={JSON.stringify(ELEC_FRANCE)}>
+  <div class="anim-repli">
+    <p>
+      Monde (Agence internationale de l'énergie) : environ 415 TWh en 2024, 945 TWh en 2030 et 1 200 TWh en
+      2035 dans le scénario de référence. France (ADEME) : environ 10 TWh en 2024, 36,7 TWh en 2035 sans
+      politique de transition.
+    </p>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="choix-elec">
+        <legend>Échelle</legend>
+        <label><input type="radio" name="elec-echelle" value="monde" checked /> le monde</label>
+        <label><input type="radio" name="elec-echelle" value="france" /> la France</label>
+      </fieldset>
+      <ol class="barres" data-barres aria-hidden="true"></ol>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-electricite]').forEach((racine) => {
+    activerScene(racine);
+    const donnees = { monde: JSON.parse(racine.dataset.monde!), france: JSON.parse(racine.dataset.france!) } as Record<string, { annee: string; twh: number; note: string }[]>;
+    const barres = racine.querySelector<HTMLElement>('[data-barres]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const fr = (n: number) => n.toLocaleString('fr-FR');
+
+    function rendre() {
+      const ech = racine.querySelector<HTMLInputElement>('input[name="elec-echelle"]:checked')!.value;
+      const liste = donnees[ech];
+      const max = Math.max(...liste.map((d) => d.twh));
+      barres.replaceChildren(
+        ...liste.map((d) => {
+          const li = document.createElement('li');
+          const etiquette = Object.assign(document.createElement('span'), { className: 'annee', textContent: d.annee });
+          const barre = Object.assign(document.createElement('span'), { className: d.note.startsWith('scénario') ? 'barre projection' : 'barre' });
+          barre.style.width = `${(d.twh / max) * 100}%`;
+          const valeur = Object.assign(document.createElement('span'), { className: 'valeur', textContent: `${fr(d.twh)} TWh (${d.note})` });
+          li.append(etiquette, barre, valeur);
+          return li;
+        }),
+      );
+      legende.textContent = ech === 'monde'
+        ? 'En 2024, les centres de données du monde ont consommé environ 415 TWh, 1,5 % de l’électricité mondiale. L’AIE prévoit environ 945 TWh en 2030 dans son scénario de référence, surtout à cause de l’IA ; la hausse a été de 17 à 20 % en 2025 selon l’AIE. Les barres hachurées sont des projections.'
+        : 'En France, 352 centres de données ont été recensés en 2024, soit environ 10 TWh avec les salles informatiques des entreprises (estimation de modèle). Sans politique de transition, l’ADEME prévoit 3,7 fois plus en 2035. Plus de la moitié des usages français sont hébergés à l’étranger.';
+    }
+
+    racine.querySelectorAll('input[name="elec-echelle"]').forEach((r) => r.addEventListener('change', rendre));
+    rendre();
+  });
+</script>
+
+<style>
+  .choix-elec { border: none; padding: 0; margin: 0 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; }
+  .choix-elec legend { float: left; margin-right: 0.5rem; font-weight: 600; }
+  .choix-elec input { accent-color: var(--accent); }
+  .barres { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  :global(.electricite .barres li) { display: grid; grid-template-columns: 3rem 1fr; gap: 0.2rem 0.6rem; align-items: center; }
+  :global(.electricite .annee) { font-family: var(--police-mono); font-weight: 700; grid-row: span 2; }
+  :global(.electricite .barre) { height: 1.3rem; background: var(--ill-serveur); border-radius: 0.25rem; transition: width 0.4s ease-out; }
+  :global(.electricite .barre.projection) { background: repeating-linear-gradient(45deg, var(--ill-serveur) 0 6px, transparent 6px 10px); border: 1px solid var(--ill-serveur); }
+  :global(.electricite .valeur) { font-size: 0.85rem; color: var(--muted); }
+</style>

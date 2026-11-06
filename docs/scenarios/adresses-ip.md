@@ -24,5 +24,5 @@ décimal pointé, binaire), avec le calcul du réseau par un ET logique.
   RFC 5952.
 - Exemples : adresses de documentation (RFC 5737, RFC 3849) et privées
   (RFC 1918) uniquement.
-- Pas encore traités : découpage en sous-réseaux (VLSM), IPv6 en mode mixte
-  (::ffff:192.0.2.1), calcul de masque IPv6.
+- Découpage en sous-réseaux : voir le module suivant (`docs/scenarios/sous-reseaux.md`).
+- Pas encore traités : IPv6 en mode mixte (::ffff:192.0.2.1).

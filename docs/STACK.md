@@ -16,6 +16,7 @@ Un hébergement cPanel mutualisé sert très bien des **fichiers statiques**
 | Visualisations | **D3** / SVG | Cartes, frises, graphes d'acteurs |
 | Schémas | **Mermaid** | Diagrammes en texte, faciles à maintenir |
 | IA dans le navigateur | **Transformers.js** ou modèle maison minuscule | Démonstrations sans serveur |
+| Recherche | **[Pagefind](https://pagefind.app)** (index fabriqué après `astro build`, servi dans `/pagefind/`) | Recherche plein texte sans serveur ni service tiers ; ce qui est indexé : le `<main>` des pages (`data-pagefind-body`), sauf les sources, réglages, bulles du glossaire (`data-pagefind-ignore`) ; une page s'exclut avec `<Base indexer={false}>` |
 | Langues | i18n d'Astro (FR d'abord, EN ensuite) | Prévu dès le départ, ajouté plus tard |
 | Mesure d'audience | Aucune, ou une solution sans cookie auto-hébergée | Cohérent avec le propos |
 
@@ -38,7 +39,7 @@ Un hébergement cPanel mutualisé sert très bien des **fichiers statiques**
 ```bash
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # génère dist/
+npm run build     # génère dist/ puis l'index de recherche (dist/pagefind/)
 npm run preview   # sert dist/ localement
 ```
 

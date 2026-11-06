@@ -13,7 +13,7 @@ const { fiche, i } = Astro.props as { fiche: Fiche; i: number };
 const suivante = FICHES[(i + 1) % FICHES.length];
 ---
 <Base title={`«\u00a0${fiche.idee}\u00a0» Vrai ou faux\u00a0?`} description={fiche.enBref}>
-  <p class="tag"><a href="/vrai-ou-faux/">Vrai ou faux ?</a></p>
+  <p class="tag" data-pagefind-ignore><a href="/vrai-ou-faux/">Vrai ou faux ?</a></p>
   <h1>«&nbsp;{fiche.idee}&nbsp;»</h1>
   <MiseAJour date={fiche.verifie} />
   <p class="verdict-ligne"><span class={`verdict ${fiche.verdict}`}>{LIBELLES[fiche.verdict]}</span></p>

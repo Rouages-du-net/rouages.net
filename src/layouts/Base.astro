@@ -7,11 +7,13 @@ import Rouage from '../components/Rouage.astro';
 interface Props {
   title?: string;
   description?: string;
+  indexer?: boolean; // false : page exclue de la recherche (Pagefind)
 }
 
 const {
   title,
   description = "Internet, l'informatique et l'IA expliqués de manière animée, sans masquer la vraie technologie.",
+  indexer = true,
 } = Astro.props;
 const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net';
 ---
@@ -36,10 +38,15 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
     <header class="site">
       <div class="wrap entete">
         <a href="/" class="logo"><Rouage />Les rouages du net</a>
-        <nav aria-label="Navigation principale"><a href="/ia/">L'IA</a> <a href="/glossaire/">Glossaire</a> <a href="/jeux/">Jeux</a></nav>
+        <nav aria-label="Navigation principale"><a href="/ia/">L'IA</a> <a href="/notions/">Notions</a> <a href="/glossaire/">Glossaire</a> <a href="/jeux/">Jeux</a></nav>
+        <form class="recherche-entete" action="/recherche/" method="get" role="search">
+          <label for="recherche-entete" class="visuellement-cache">Rechercher sur le site</label>
+          <input id="recherche-entete" type="search" name="q" placeholder="Rechercher…" autocomplete="off" />
+          <button type="submit" aria-label="Lancer la recherche">🔍</button>
+        </form>
       </div>
     </header>
-    <main class="wrap">
+    <main class="wrap" data-pagefind-body={indexer ? '' : undefined}>
       <slot />
     </main>
     <footer class="site">
