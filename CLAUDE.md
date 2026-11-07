@@ -15,7 +15,9 @@ sont **en français**. Écriture inclusive au point médian quand c'est naturel
   sans attendre qu'on la demande.
 - Si la PR précédente de la branche a été fusionnée, repartir de `main` à jour
   avant de commencer.
-- Avant de pousser : `npm run build` doit passer ; pour tout changement visible,
+- Avant de pousser : `npm test`, `npm run build` et `npm run test:navigateur`
+  doivent passer (la CI les relance sur chaque PR et avant chaque déploiement) ;
+  pour tout changement visible,
   vérifier la page dans Chromium (Playwright, `executablePath:
   '/opt/pw-browsers/chromium'`, `args: ['--headless=new']`), y compris à 375 px
   de large (pas de défilement horizontal) et sans erreur console.
@@ -93,6 +95,9 @@ Consignes à donner à tout agent de recherche web :
 ```bash
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # génère dist/
+npm run build     # génère dist/ et l'index de recherche (Pagefind)
 npm run preview   # sert dist/
+npm test                  # tests unitaires (Vitest, tests/unit/)
+npm run test:navigateur   # toutes les pages dans Chromium (Playwright, tests/navigateur/)
+npm run liens             # vérifie les liens externes de dist/ (aussi chaque mois en CI)
 ```

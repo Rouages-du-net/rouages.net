@@ -1,0 +1,82 @@
+import { expect, test, type Locator } from '@playwright/test';
+import { erreurs, lectureContinue } from './outils';
+
+test.beforeEach(async ({ page }) => { await lectureContinue(page); });
+
+async function jusquAuBout(anim: Locator) {
+  const suivant = anim.locator('[data-action="suivant"]');
+  for (let i = 0; i < 20 && !(await suivant.isDisabled()); i++) await suivant.click();
+}
+
+test.describe('frises', () => {
+  for (const [module, region] of [['histoire-internet', 'afrique'], ['histoire-informatique', 'europe-est'], ['histoire-ia', 'asie']]) {
+    test(`${module} : les filtres masquent les événements`, async ({ page }) => {
+      const err = erreurs(page);
+      await page.goto(`/modules/${module}/`);
+      const frise = page.locator('[data-frise-histoire]');
+      const total = await frise.locator('.evenements > li').count();
+      expect(await frise.locator('.evenements > li:visible').count()).toBe(total);
+      await frise.locator(`input[value="${region}"]`).check();
+      const n = await frise.locator('.evenements > li:visible').count();
+      expect(n).toBeGreaterThan(0);
+      expect(n).toBeLessThan(total);
+      await expect(frise.locator('[data-compte]')).toContainText(`${n} événement`);
+      await frise.locator('[data-pionnieres]').check();
+      expect(await frise.locator('.evenements > li:visible').count()).toBeLessThanOrEqual(n);
+      expect(err).toEqual([]);
+    });
+  }
+});
+
+test('bases : paquets, compteur et conversion', async ({ page }) => {
+  await page.goto('/modules/bases/');
+  const paquets = page.locator('[data-paquets]');
+  await jusquAuBout(paquets);
+  await expect(paquets.locator('[data-ecriture]')).toContainText('1101');
+  const compteur = page.locator('[data-compteur-rouages]');
+  await compteur.locator('[data-valeur]').fill('15');
+  await compteur.locator('[data-valeur]').dispatchEvent('change');
+  await compteur.locator('[data-plus="1"]').click();
+  await expect(compteur.locator('[data-ecrit]')).toHaveText(['16', '20', '10', '10000']);
+  const conversion = page.locator('[data-conversion]');
+  await jusquAuBout(conversion);
+  await expect(conversion.locator('[data-resultat]')).toContainText('1101');
+});
+
+test('adresses IP : masque et IPv6', async ({ page }) => {
+  await page.goto('/modules/adresses-ip/');
+  const masque = page.locator('[data-masque]');
+  await masque.locator('[data-prefixe="17"]').click();
+  await expect(masque.locator('dd').nth(1)).toHaveText('255.255.128.0');
+  await masque.locator('[data-m]').fill('255.0.255.0');
+  await masque.locator('[data-m]').dispatchEvent('change');
+  await expect(masque.locator('.anim-legende')).toContainText('pas un masque valide');
+  const v6 = page.locator('[data-ipv6]');
+  await jusquAuBout(v6);
+  await expect(v6.locator('[data-resultat]')).toHaveText('2001:db8::1');
+});
+
+test('sous-réseaux : plan VLSM et exercices', async ({ page }) => {
+  await page.goto('/modules/sous-reseaux/');
+  const plan = page.locator('[data-plan-vlsm]');
+  await jusquAuBout(plan);
+  await expect(plan.locator('.attrib code')).toHaveText(['192.0.2.0/25', '192.0.2.128/26', '192.0.2.192/27', '192.0.2.224/31']);
+  const ex = page.locator('[data-exercices]');
+  const solution = (await ex.locator('[data-solution]').textContent())!;
+  await ex.locator('[data-reponse]').fill(solution);
+  await ex.locator('[data-form] button').click();
+  await expect(ex.locator('[data-verdict]')).toHaveText('Juste !');
+});
+
+test('recherche : trouve une notion et renvoie à l’étape', async ({ page }) => {
+  await page.goto('/recherche/?q=masque');
+  await expect(page.locator('[data-etat]')).toContainText('pour « masque »');
+  await expect(page.locator('.resultats .etapes a[href*="/modules/adresses-ip/#"]').first()).toBeVisible();
+});
+
+test('index des notions : notions, personnes, modules', async ({ page }) => {
+  await page.goto('/notions/');
+  expect(await page.locator('.entree').count()).toBeGreaterThan(50);
+  expect(await page.locator('.personnes li').count()).toBeGreaterThan(100);
+  await expect(page.locator('.entree', { hasText: 'Masque de sous-réseau' }).locator('.usages')).toContainText('Adresses IP et masques');
+});

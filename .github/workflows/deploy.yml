@@ -11,7 +11,8 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # Playwright 1.56 ne prend pas en charge Ubuntu 26.04 (ubuntu-latest) : on fixe 24.04.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
 
@@ -21,7 +22,14 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - name: Tests unitaires
+        run: npm test
       - run: npm run build
+      # Un échec des tests bloque l'envoi : le site en ligne reste dans son état précédent.
+      - name: Navigateur Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Tests dans le navigateur
+        run: npm run test:navigateur
 
       - name: Envoi FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
