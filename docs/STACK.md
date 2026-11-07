@@ -40,6 +40,10 @@ Un hébergement cPanel mutualisé sert très bien des **fichiers statiques**
 npm install
 npm run dev       # http://localhost:4321
 npm run build     # génère dist/ puis l'index de recherche (dist/pagefind/)
+npm test                  # tests unitaires : calculs et données (Vitest)
+npm run test:navigateur   # chaque page à 1000 et 375 px, avec et sans JavaScript,
+                          # et les animations qui calculent (Playwright)
+npm run liens             # vérifie les liens externes (rapport Markdown)
 npm run preview   # sert dist/ localement
 ```
 
@@ -78,3 +82,18 @@ serveur dans `.ftp-deploy-sync-state.json`).
 
 `public/.htaccess` active HTTPS forcé, la compression, le cache longue durée
 des fichiers versionnés d'Astro (`/_astro/`), et la page 404.
+
+## Tests
+
+- **Unitaires** (`tests/unit/`, Vitest) : calculs des bases, des adresses IP,
+  des sous-réseaux et des exercices ; cohérence des données (chaque événement de
+  frise et chaque fiche a une source, renvois du glossaire).
+- **Navigateur** (`tests/navigateur/`, Playwright) : chaque page de `dist/` à
+  1000 et 375 px avec JavaScript (aucune erreur console, pas de défilement
+  horizontal, scènes affichées) et à 375 px sans JavaScript (replis à la place
+  des scènes) ; plus les animations qui calculent (frises, bases, masques,
+  sous-réseaux, recherche, index). Le site est servi par `scripts/servir.mjs`
+  (`astro preview` passe en arrière-plan sans terminal).
+- **CI** : `.github/workflows/tests.yml` sur chaque PR ; `deploy.yml` relance les
+  tests avant l'envoi FTP ; `liens.yml` vérifie les liens le 3 de chaque mois
+  (rapport dans le résumé de la tâche).

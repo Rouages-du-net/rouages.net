@@ -1,0 +1,24 @@
+name: Vérifier les liens
+
+# Les sources citées vieillissent : une fois par mois, on vérifie tous les
+# liens externes du site et on publie le rapport dans le résumé de la tâche.
+on:
+  schedule:
+    - cron: '17 4 3 * *'
+  workflow_dispatch:
+
+jobs:
+  liens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      - name: Vérification des liens externes
+        run: npm run liens

@@ -1,0 +1,30 @@
+name: Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - name: Tests unitaires
+        run: npm test
+      - name: Compilation (et index de recherche)
+        run: npm run build
+      - name: Navigateur Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Tests dans le navigateur (toutes les pages, 1000 et 375 px, sans JavaScript)
+        run: npm run test:navigateur
