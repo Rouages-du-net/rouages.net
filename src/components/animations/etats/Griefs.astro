@@ -1,0 +1,32 @@
+---
+// Animation « Censure ou règles de sécurité ? » (module « États et
+// régulation », étape 2) : ce que la Commission reproche vraiment aux
+// plateformes au titre du DSA, d'après ses communiqués. On devine, puis on
+// lit le grief. Données : src/data/etats.ts.
+import { GRIEFS } from '../../../data/etats';
+---
+<div class="anim griefs">
+  <p class="consigne">Selon toi, que reproche l’Union européenne à chaque plateforme ? Ouvre une carte pour lire le vrai grief, tiré du communiqué de la Commission.</p>
+  <ul class="cartes">
+    {GRIEFS.map((g) => (
+      <li>
+        <details>
+          <summary><strong>{g.qui}</strong> <span class="date">({g.date})</span></summary>
+          <p>{g.reproche}</p>
+          <p class="issue">{g.issue}</p>
+        </details>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .consigne { margin: 0 0 0.6rem; max-width: var(--mesure); }
+  .cartes { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 0.5rem; }
+  .cartes details { height: 100%; box-sizing: border-box; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--card); padding: 0.6rem 0.8rem; }
+  .cartes summary { cursor: pointer; }
+  .cartes details[open] { border-color: var(--accent); }
+  .date { color: var(--muted); font-size: 0.85rem; }
+  .cartes p { margin: 0.5rem 0 0; font-size: 0.92rem; }
+  .issue { font-weight: 600; }
+</style>

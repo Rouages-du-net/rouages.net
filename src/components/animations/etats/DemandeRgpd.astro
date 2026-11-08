@@ -1,0 +1,74 @@
+---
+// Animation « Ce que le RGPD te permet de demander » (module « États et
+// régulation », étape 1) : un modèle de lettre qui change selon le droit
+// choisi (articles 15, 17, 20, 22 et 12 § 3 du RGPD). Tout se passe dans le
+// navigateur : rien n'est envoyé ni enregistré.
+const DROITS = [
+  { id: 'acces', nom: 'Savoir ce qu’on a sur moi', article: '15', demande: 'de me confirmer si vous traitez des données personnelles me concernant et, si c’est le cas, de m’en communiquer une copie, ainsi que les finalités du traitement, les destinataires, la durée de conservation et la source des données' },
+  { id: 'effacement', nom: 'Faire effacer mes données', article: '17', demande: 'd’effacer les données personnelles me concernant, notamment parce qu’elles ne sont plus nécessaires au regard des finalités pour lesquelles elles ont été collectées, ou parce que je retire mon consentement' },
+  { id: 'portabilite', nom: 'Récupérer mes données', article: '20', demande: 'de me transmettre les données personnelles me concernant que je vous ai fournies, dans un format structuré, couramment utilisé et lisible par machine' },
+  { id: 'decision', nom: 'Contester une décision automatique', article: '22', demande: 'de m’indiquer si la décision me concernant a été prise exclusivement par un traitement automatisé et, si c’est le cas, d’obtenir une intervention humaine, d’exprimer mon point de vue et de contester cette décision' },
+];
+const lettre = (d: (typeof DROITS)[number], org: string) =>
+  `Madame, Monsieur,\n\nEn application de l’article ${d.article} du règlement général sur la protection des données (RGPD), je vous demande ${d.demande}.\n\nConformément à l’article 12, paragraphe 3, du RGPD, je vous remercie de me répondre dans un délai d’un mois à compter de la réception de cette demande.\n\nVeuillez agréer, Madame, Monsieur, mes salutations distinguées.\n\n[Ton nom]\n[Le moyen de te recontacter]\n\nÀ : ${org}`;
+---
+<div class="anim demande" data-demande data-droits={JSON.stringify(DROITS)}>
+  <div class="anim-repli">
+    <p>Modèle de demande d’accès (article 15 du RGPD) :</p>
+    <pre>{lettre(DROITS[0], '[nom de l’organisation]')}</pre>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="droits" role="radiogroup" aria-label="Le droit à exercer">
+        {DROITS.map((d, i) => <button type="button" role="radio" class="anim-bouton" data-droit={d.id} aria-checked={i === 0 ? 'true' : 'false'}>{d.nom}</button>)}
+      </div>
+      <label class="org">Organisation visée <input type="text" data-org placeholder="ex. le site, l’appli, l’entreprise" autocomplete="off" /></label>
+      <pre class="lettre" data-lettre tabindex="0" aria-label="Lettre générée"></pre>
+      <div class="anim-commandes">
+        <button type="button" data-action="copier" class="principal">Copier la lettre</button>
+        <span class="anim-note" data-copie aria-live="polite"></span>
+      </div>
+      <p class="anim-note">Rien n’est envoyé ni enregistré : la lettre est fabriquée dans ton navigateur. Joindre une pièce d’identité n’est demandé qu’en cas de doute raisonnable sur ton identité. Sans réponse au bout d’un mois, tu peux saisir la CNIL.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-demande]').forEach((racine) => {
+    activerScene(racine);
+    const droits: { id: string; nom: string; article: string; demande: string }[] = JSON.parse(racine.dataset.droits!);
+    const org = racine.querySelector<HTMLInputElement>('[data-org]')!;
+    const sortie = racine.querySelector<HTMLElement>('[data-lettre]')!;
+    const copie = racine.querySelector<HTMLElement>('[data-copie]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let choisi = droits[0];
+    const rendre = () => {
+      const o = org.value.trim() || '[nom de l’organisation]';
+      sortie.textContent = `Madame, Monsieur,\n\nEn application de l’article ${choisi.article} du règlement général sur la protection des données (RGPD), je vous demande ${choisi.demande}.\n\nConformément à l’article 12, paragraphe 3, du RGPD, je vous remercie de me répondre dans un délai d’un mois à compter de la réception de cette demande.\n\nVeuillez agréer, Madame, Monsieur, mes salutations distinguées.\n\n[Ton nom]\n[Le moyen de te recontacter]\n\nÀ : ${o}`;
+      racine.querySelectorAll<HTMLButtonElement>('[data-droit]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.droit === choisi.id)));
+      copie.textContent = '';
+    };
+    racine.querySelectorAll<HTMLButtonElement>('[data-droit]').forEach((b) => b.addEventListener('click', () => {
+      choisi = droits.find((d) => d.id === b.dataset.droit)!;
+      rendre();
+      legende.textContent = `« ${choisi.nom} » : c’est l’article ${choisi.article} du RGPD.`;
+    }));
+    org.addEventListener('input', rendre);
+    racine.querySelector('[data-action="copier"]')!.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(sortie.textContent ?? ''); copie.textContent = 'Lettre copiée.'; }
+      catch { copie.textContent = 'Copie impossible : sélectionne le texte à la main.'; }
+    });
+    rendre();
+  });
+</script>
+
+<style>
+  .droits { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; }
+  .droits [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .org { display: grid; gap: 0.25rem; font-weight: 600; max-width: 24rem; margin-bottom: 0.6rem; }
+  .org input { font: inherit; padding: 0.3rem 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); min-width: 0; }
+  .lettre, .anim-repli pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--police); font-size: 0.92rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.7rem 0.9rem; margin: 0; max-width: var(--mesure); }
+</style>

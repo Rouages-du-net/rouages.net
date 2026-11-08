@@ -1,0 +1,64 @@
+---
+// Animation « Le guichet unique » (module « États et régulation », étape 1) :
+// le cas Meta, de la plainte à l'amende de 1,2 milliard d'euros (communiqué
+// de la DPC irlandaise, 22 mai 2023). Données : src/data/etats.ts.
+import { GUICHET } from '../../../data/etats';
+---
+<div class="anim guichet" data-guichet>
+  <div class="anim-repli">
+    <ol>{GUICHET.map((g) => <li><strong>{g.etape}</strong> : {g.texte}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="autorites" data-autorites aria-hidden="true">
+        <span class="chef">IE</span>
+        <span class="autres">{Array.from({ length: 47 }, (_, i) => <span class="a" data-i={i}></span>)}</span>
+        <span class="cepd">CEPD</span>
+      </div>
+      <ol class="etapes" data-etapes aria-hidden="true">{GUICHET.map((g) => <li>{g.etape}</li>)}</ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { GUICHET } from '../../../data/etats';
+
+  document.querySelectorAll<HTMLElement>('[data-guichet]').forEach((racine) => {
+    activerScene(racine);
+    const etapes = [...racine.querySelectorAll<HTMLElement>('[data-etapes] li')];
+    const autres = [...racine.querySelectorAll<HTMLElement>('.a')];
+    const zone = racine.querySelector<HTMLElement>('[data-autorites]')!;
+    pasAPas(racine, () => GUICHET.length, (n) => {
+      etapes.forEach((li, i) => { li.classList.toggle('passe', i < n); li.classList.toggle('ici', i === n - 1); });
+      zone.dataset.etape = String(n);
+      autres.forEach((a, i) => {
+        a.classList.toggle('consulte', n >= 3);
+        a.classList.toggle('objection', n >= 4 && i < 4);
+      });
+      return GUICHET[n - 1].texte;
+    });
+  });
+</script>
+
+<style>
+  .autorites { display: grid; grid-template-columns: auto 1fr auto; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; }
+  .chef, .cepd { font-weight: 700; font-family: var(--police-mono); padding: 0.4rem 0.5rem; border: 2px solid var(--border); border-radius: 0.4rem; }
+  .autres { display: flex; flex-wrap: wrap; gap: 3px; }
+  .a { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: color-mix(in srgb, var(--muted) 30%, transparent); }
+  .a.consulte { background: var(--ill-reseau); }
+  .a.objection { background: var(--ill-commun); outline: 2px solid var(--fg); }
+  [data-etape='2'] .chef, [data-etape='3'] .chef, [data-etape='4'] .chef, [data-etape='6'] .chef { border-color: var(--accent); }
+  [data-etape='5'] .cepd, [data-etape='6'] .cepd { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
+  .etapes { list-style: none; padding: 0; margin: 0 0 0.5rem; display: flex; flex-wrap: wrap; gap: 0.3rem; font-size: 0.8rem; }
+  .etapes li { padding: 0.15rem 0.5rem; border: 1px solid var(--border); border-radius: 1rem; color: var(--muted); }
+  .etapes li.passe { color: var(--fg); }
+  .etapes li.ici { border-color: var(--accent); font-weight: 700; }
+</style>

@@ -1,0 +1,63 @@
+---
+// Animation « Neutralité du net » (module « États et régulation », étape 4) :
+// un fournisseur d'accès veut traiter des applis différemment ; on décide si
+// c'est permis en Europe (règlement 2015/2120, arrêt Telenor de la CJUE,
+// 2020), puis on voit le « yo-yo » américain.
+const CAS = [
+  { action: 'Ralentir une appli de vidéo concurrente de la sienne', permis: false, texte: 'Interdit : les fournisseurs d’accès « traitent tout le trafic de façon égale et sans discrimination, restriction ou interférence » (article 3, paragraphe 3, du règlement européen de 2015).' },
+  { action: 'Rendre une appli de musique gratuite, hors forfait, et bloquer les autres une fois le forfait épuisé', permis: false, texte: 'Interdit : en 2020, dans l’affaire Telenor, la Cour de justice de l’UE juge contraire au règlement ce « tarif nul » qui favorise certaines applis pendant que les autres sont bloquées ou ralenties. En Inde, le régulateur avait interdit dès 2016 les tarifs différents selon les contenus, ce qui a mis fin à Free Basics de Facebook.' },
+  { action: 'Gérer un embouteillage passager sur son réseau, sans regarder quelle appli est utilisée', permis: true, texte: 'Permis : une gestion « raisonnable » du trafic reste autorisée, si elle est transparente, proportionnée, temporaire, et ne dépend pas de qui envoie les données.' },
+  { action: 'Bloquer un site sur ordre d’un juge', permis: true, texte: 'Permis : le règlement prévoit cette exception, quand une loi ou une décision de justice l’impose. C’est la question du blocage, plus loin dans ce module.' },
+];
+---
+<div class="anim neutralite" data-neutralite data-cas={JSON.stringify(CAS)}>
+  <div class="anim-repli">
+    <ul>{CAS.map((c) => <li><strong>{c.action}</strong> : {c.texte}</li>)}</ul>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="cas" data-cas-texte></p>
+      <div class="anim-commandes">
+        <button type="button" class="anim-bouton" data-rep="1">Permis</button>
+        <button type="button" class="anim-bouton" data-rep="0">Interdit</button>
+        <button type="button" class="principal" data-action="suivant-cas" disabled>Cas suivant ▶</button>
+        <span class="anim-note" data-n></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-neutralite]').forEach((racine) => {
+    activerScene(racine);
+    const cas: { action: string; permis: boolean; texte: string }[] = JSON.parse(racine.dataset.cas!);
+    const texte = racine.querySelector<HTMLElement>('[data-cas-texte]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const suivant = racine.querySelector<HTMLButtonElement>('[data-action="suivant-cas"]')!;
+    const compteur = racine.querySelector<HTMLElement>('[data-n]')!;
+    const reps = [...racine.querySelectorAll<HTMLButtonElement>('[data-rep]')];
+    let i = 0;
+    const montrer = () => {
+      texte.textContent = `Ton fournisseur d’accès veut… ${cas[i].action.charAt(0).toLowerCase()}${cas[i].action.slice(1)}.`;
+      reps.forEach((b) => { b.disabled = false; });
+      suivant.disabled = true;
+      compteur.textContent = `${i + 1} / ${cas.length}`;
+      suivant.textContent = i === cas.length - 1 ? 'Recommencer ↺' : 'Cas suivant ▶';
+    };
+    reps.forEach((b) => b.addEventListener('click', () => {
+      const juste = (b.dataset.rep === '1') === cas[i].permis;
+      reps.forEach((x) => { x.disabled = true; });
+      legende.textContent = `${juste ? 'Oui.' : 'Non.'} ${cas[i].texte}${i === cas.length - 1 ? ' Aux États-Unis, la neutralité a été adoptée en 2015, abrogée en 2017, rétablie en 2024, puis annulée par une cour d’appel le 2 janvier 2025.' : ''}`;
+      suivant.disabled = false;
+    }));
+    suivant.addEventListener('click', () => { i = (i + 1) % cas.length; legende.textContent = ''; montrer(); });
+    montrer();
+  });
+</script>
+
+<style>
+  .cas { font-weight: 600; margin: 0 0 0.5rem; max-width: var(--mesure); min-height: 3em; }
+</style>
