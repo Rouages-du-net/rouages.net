@@ -380,9 +380,10 @@ plupart des grandes affaires ne sont pas terminées.
 7. Saveri Law Firm (avocats des plaignant·es), « AI Art Generators Copyright Litigation » —
    https://www.saverilawfirm.com/our-cases/ai-artgenerators-copyright-litigation — S (partie)
    — en — lu partiellement.
-8. U.S. District Court N.D. Cal., fiche de l'affaire —
-   https://cand.uscourts.gov/cases-e-filing/cases/323-cv-00201-who/andersen-et-al-v-stability-ai-ltd-et-al
-   — P — en — lu partiellement (date de dépôt 13 janv. 2023).
+8. U.S. District Court N.D. Cal., décisions publiées dans l'affaire 3:23-cv-00201 (GovInfo) —
+   https://www.govinfo.gov/app/details/USCOURTS-cand-3_23-cv-00201
+   — P — en — lu partiellement (date de dépôt 13 janv. 2023). Remplace la fiche du site du
+   tribunal (cand.uscourts.gov), en 404 au 8 novembre 2026.
 9. Schor Z., NYU JIPEL, « Andersen v. Stability AI: The Landmark Case… », 2 déc. 2024 —
    https://jipel.law.nyu.edu/andersen-v-stability-ai-the-landmark-case-unpacking-the-copyright-risks-of-ai-image-generators/
    — R — en — lu partiellement.

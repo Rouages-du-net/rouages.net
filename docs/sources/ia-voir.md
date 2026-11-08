@@ -362,7 +362,7 @@ error rates for darker-skinned females (ranging from 20.8% for Microsoft to 34.7
    https://www.media.mit.edu/publications/actionable-auditing-investigating-the-impact-of-publicly-naming-biased-performance-results-of-commercial-ai-products/
    — P, anglais, **résumé seulement** (PDF ACM bloqué ; métadonnées Crossref vérifiées).
 3. P. Grother, M. Ngan, K. Hanaoka, *Face Recognition Vendor Test (FRVT) Part 3: Demographic Effects*, NISTIR 8280,
-   décembre 2019. https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8280.pdf — P, anglais, **lu partiellement** (résumé exécutif).
+   décembre 2019. https://doi.org/10.6028/NIST.IR.8280 — P, anglais, **lu partiellement** (résumé exécutif).
 
 ### Points d'attention
 - Gender Shades évalue la **classification de genre** (homme/femme), pas l'identification d'une personne. Ne pas confondre
