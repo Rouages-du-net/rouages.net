@@ -1,0 +1,506 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Couches from '../../components/animations/gouvernance/Couches.astro';
+import ParcoursRfc from '../../components/animations/gouvernance/ParcoursRfc.astro';
+import TriRfc from '../../components/animations/gouvernance/TriRfc.astro';
+import Hum from '../../components/animations/gouvernance/Hum.astro';
+import Salle from '../../components/animations/gouvernance/Salle.astro';
+import Adresse from '../../components/animations/gouvernance/Adresse.astro';
+import Racine from '../../components/animations/gouvernance/Racine.astro';
+import Couper from '../../components/animations/gouvernance/Couper.astro';
+
+// Faits sourcés : voir docs/sources/gouvernance-technique.md.
+const etapes = [
+  { ancre: 'couches', court: 'Qui dirige internet ?' },
+  { ancre: 'rfc', court: 'Les RFC' },
+  { ancre: 'consensus', court: 'Ni rois ni votes' },
+  { ancre: 'salle', court: 'Ouvert à tous ?' },
+  { ancre: 'adresses', court: 'Les adresses' },
+  { ancre: 'racine', court: 'Les noms et la racine' },
+  { ancre: 'etats', court: 'Et les États ?' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Gouvernance technique : qui écrit les règles du réseau ?"
+  description="IETF et RFC, W3C, ICANN, registres régionaux, serveurs racine, ONU : qui écrit les règles techniques d'internet, comment elles sont décidées, et qui en est absent."
+>
+  <p class="tag" data-pagefind-ignore>Qui décide · module en construction</p>
+  <h1>Gouvernance technique : qui écrit les règles du réseau ?</h1>
+  <MiseAJour date="2026-11-08" evolutif />
+  <p class="chapo seulement-debut">
+    Pour que ton téléphone parle à un serveur au Japon, il faut que des milliards d'appareils suivent les mêmes
+    règles : comment découper les messages, comment nommer les sites, à qui donner quelle adresse. Personne ne
+    « possède » internet, mais ces règles ne tombent pas du ciel. Ce module montre qui les écrit, comment elles
+    sont décidées, et qui manque autour de la table.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Qui dirige internet ?" ancre="couches">
+    <Couches slot="animation" />
+    <p slot="decouverte">
+      Personne ne dirige tout internet. Il est fait de couches, et chaque couche a ses règles, écrites par des
+      organisations différentes : l'<Terme id="ietf">IETF</Terme> pour les protocoles, l'<Terme id="icann">ICANN</Terme>
+      pour les noms de domaine, cinq <Terme id="rir">registres régionaux</Terme> pour les adresses, le
+      <Terme id="w3c">W3C</Terme> pour une partie du web.
+    </p>
+    <p slot="curieux">
+      Ces règles sont presque toutes <strong>volontaires</strong>. « L'IETF fait des normes volontaires », écrit-elle,
+      et « elle ne contrôle pas, ni même ne surveille internet ». Pourquoi tout le monde les suit, alors ? Parce
+      qu'un appareil qui ne parle pas comme les autres ne peut parler à personne.
+    </p>
+    <p slot="ingenieur">
+      Les lois des États s'ajoutent à ces règles techniques : protection des données, blocage de sites,
+      fréquences radio. Ce module parle des règles techniques ; les lois feront l'objet d'un module « États et
+      régulation ».
+    </p>
+    <p slot="mythes">
+      <strong>« Internet n'a pas de règles. »</strong> Il en a des milliers, publiées et numérotées. Mais aucune
+      organisation n'a le pouvoir de les imposer seule. <strong>« Tim Berners-Lee a inventé internet. »</strong> Il
+      a inventé le <em>web</em> en 1989 au CERN, une application qui fonctionne sur internet. La première RFC date
+      de 1969, vingt ans plus tôt.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Les RFC : des règles qui demandent l'avis" ancre="rfc">
+    <div slot="animation">
+      <ParcoursRfc />
+      <TriRfc />
+    </div>
+    <p slot="decouverte">
+      Les règles d'internet s'appellent des <Terme id="rfc">RFC</Terme>, pour <em>Request for Comments</em> :
+      « appel à commentaires ». Ce sont des documents numérotés, gratuits, lisibles par tout le monde. IP, TCP,
+      HTTP, le DNS, TLS : chaque protocole a ses RFC.
+    </p>
+    <p slot="curieux">
+      Une RFC n'est pas forcément une norme : certaines sont des informations, des expériences, et même des
+      poissons d'avril (des pigeons voyageurs, une cafetière). État au 8 novembre 2026 : environ 8 900 RFC
+      publiées (la numérotation, elle, a dépassé 10 000, avec des trous), dont seulement 101 au rang le plus
+      élevé, « norme d'internet ». La plupart des protocoles très utilisés restent des « normes proposées ».
+    </p>
+    <p slot="ingenieur">
+      Une RFC n'est jamais corrigée une fois publiée : une nouvelle RFC la « met à jour » ou la « rend obsolète ».
+      Le processus est décrit par la RFC 2026 (1996), simplifiée en 2011 (RFC 6410) : deux niveaux de norme au
+      lieu de trois. Les documents sont accompagnés d'une politique de brevets qui oblige à déclarer ceux qu'on
+      connaît.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le 7 avril 1969, Steve Crocker, étudiant à UCLA, publie la RFC 1 pour le petit groupe qui prépare
+        l'ARPANET, avec Steve Carr (Utah) et Jeff Rulifson (SRI). Il racontera : « La plupart d'entre nous étaient
+        des étudiant·es et nous pensions qu'une équipe de professionnels finirait par arriver. » De peur de vexer
+        les « vrais » concepteurs, il passe une nuit blanche à trouver des mots humbles : <em>Request for
+        Comments</em>.
+      </p>
+      <p>
+        Jon Postel devient l'éditeur des RFC en 1971. <strong>Joyce K. Reynolds</strong>, chercheuse à l'ISI comme
+        lui, cosigne avec lui des RFC essentielles, assure la relecture finale de la plupart des RFC, puis codirige
+        la série après la mort de Postel en 1998, jusqu'en 2006. <strong>Elizabeth Feinler</strong> dirige au SRI le
+        centre d'information du réseau, qui tient le registre des noms de machines de 1972 à 1989. Le système
+        des noms de domaine (.com, .edu…) est le fruit d'un travail collectif entre son équipe et l'ISI.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Une RFC, c'est une loi d'internet. »</strong> Non : personne n'est obligé de la suivre. Et
+      <strong>« Steve Crocker a inventé les RFC tout seul »</strong> : il décrit lui-même un travail de groupe,
+      surtout d'étudiants.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Ni rois, ni présidents, ni votes" ancre="consensus">
+    <Hum slot="animation" />
+    <p slot="decouverte">
+      À l'IETF, on ne vote pas. Les décisions se prennent par « consensus approximatif » : pas besoin que tout le
+      monde soit d'accord, mais aucune objection sérieuse ne doit rester sans réponse. Pour sentir la salle, on
+      fredonne parfois au lieu de lever la main : le « hum ».
+    </p>
+    <p slot="curieux">
+      L'IETF n'a pas de membres : n'importe qui peut s'inscrire sur la liste de discussion d'un groupe de travail
+      et proposer un brouillon. Chacun·e parle en son nom, même payé·e par une entreprise. Tout est public et
+      archivé. Seule l'inscription aux réunions est payante (avec des exonérations).
+    </p>
+    <p slot="ingenieur">
+      La RFC 7282 (2014) explique le consensus approximatif : « L'absence de désaccord compte plus que
+      l'accord » ; « les hums ne devraient pas servir de votes ». Elle reconnaît aussi une dérive : « de plus en
+      plus de nos actions ne se distinguent plus d'un vote ». Les responsables (IESG, IAB) sont choisis par un
+      comité de nomination dont les dix membres votants sont <strong>tirés au sort</strong> parmi des volontaires.
+    </p>
+    <div slot="histoire">
+      <p>
+        En juillet 1992, à Cambridge (Massachusetts), David Clark projette une diapositive restée célèbre :
+        « Nous rejetons les rois, les présidents et le vote. Nous croyons au consensus approximatif et au code qui
+        tourne. » Cette phrase est née d'une crise : en juin, à Kobe (Japon), l'IAB, le conseil d'architecture,
+        avait semblé imposer d'en haut un remplaçant à IP. Beaucoup avaient alors demandé : « Qui prend les
+        décisions dans la communauté internet ? Qui choisit qui les prend ? »
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Une décision technique peut être politique. En 2000, l'IETF refuse de concevoir des fonctions d'écoute
+        légale dans ses protocoles : ce n'est pas à un organisme international de répondre aux lois de chaque pays,
+        et cela affaiblirait la sécurité de tous (RFC 2804). En 2014, après la plénière de novembre 2013 sur la
+        surveillance, elle déclare que « la surveillance généralisée est une attaque » (RFC 7258).
+      </p>
+      <p>
+        L'autre point de vue s'exprime aussi à l'IETF : des opérateurs ont documenté ce que le chiffrement
+        généralisé les empêche de faire pour gérer et protéger leurs réseaux (RFC 8404, 2018). Le DNS par HTTPS
+        (DoH, RFC 8484) protège la vie privée, mais contourne des filtrages : en 2019, une association de
+        fournisseurs d'accès britanniques a désigné Mozilla « méchant d'internet » pour cela, avant de retirer la
+        nomination.
+      </p>
+    </div>
+    <p slot="verifie">
+      Toutes les discussions sont publiques : la liste des groupes de travail de l'IETF et leurs archives sont sur
+      datatracker.ietf.org, et chaque RFC se lit gratuitement sur rfc-editor.org.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Ouvert à tous… vraiment ?" ancre="salle">
+    <Salle slot="animation" />
+    <p slot="decouverte">
+      Tout le monde peut participer à l'IETF. Mais il faut du temps, parler anglais (« l'IETF travaille
+      uniquement en anglais ») et souvent un employeur qui paie les voyages. Résultat : environ 9 % de femmes, et
+      plus des trois quarts des participant·es viennent d'Europe ou d'Amérique du Nord.
+    </p>
+    <p slot="curieux">
+      Le lieu compte : à la réunion de Shenzhen, en mars 2026, plus d'un tiers des inscrit·es venaient de Chine ;
+      à Montréal et à Vienne, les États-Unis arrivaient en tête. La part des auteur·rices nord-américain·es des RFC
+      est passée de 75 % en 2001 à 44 % en 2020, au profit de l'Europe et de l'Asie.
+    </p>
+    <p slot="ingenieur">
+      Quelques entreprises fournissent une grande part du travail : en 2020, environ 12 % des auteur·rices de
+      RFC travaillaient chez Cisco et 7 % chez Huawei, selon une étude universitaire. L'IETF répond que chacun·e
+      participe à titre individuel, et que les objections doivent recevoir une réponse technique, quelle que soit
+      leur origine.
+    </p>
+    <div slot="histoire">
+      <p>
+        Des femmes et des personnes venues du monde entier ont pourtant tenu des rôles clés.
+        <strong>Lixia Zhang</strong>, qui a grandi dans le nord de la Chine et appris seule l'anglais pendant la
+        Révolution culturelle, conçoit le protocole RSVP et siège deux fois à l'IAB. <strong>Radia
+        Perlman</strong> invente l'algorithme qui évite les boucles dans les réseaux Ethernet. <strong>Jun
+        Murai</strong> relie le Japon dès 1984. Le Français <strong>Christian Huitema</strong> préside l'IAB de 1993
+        à 1995, <strong>Leslie Daigle</strong> de 2002 à 2007, et <strong>Alissa Cooper</strong> est la seule femme à
+        avoir présidé l'IETF (2017-2021).
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Le web a ses propres maisons. Le <Terme id="w3c">W3C</Terme>, fondé en 1994 par Tim Berners-Lee, a voulu
+        dès le départ une présence mondiale : il a été hébergé à la fois au MIT, en France (par l'Inria, puis
+        l'ERCIM), au Japon (université Keio) et, à partir de 2013, en Chine (université Beihang). Depuis 2023, c'est une organisation d'intérêt
+        public indépendante. Contrairement à l'IETF, il a des <em>membres</em> qui cotisent.
+      </p>
+      <p>
+        En 2017, le W3C adopte EME, qui permet aux sites de diffuser des vidéos protégées contre la copie (DRM)
+        sans module externe. Pour Tim Berners-Lee, sans cela les navigateurs l'auraient fait hors du W3C ; l'EFF,
+        une association de défense des libertés numériques, quitte le W3C en protestation, au nom de la recherche
+        en sécurité et de l'accessibilité. Quant au HTML, il est écrit depuis 2019 par le WHATWG, un groupe fondé en
+        2004 par des personnes d'Apple, de Mozilla et d'Opera : ce sont les éditeurs de navigateurs qui y ont le
+        dernier mot.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="D'où vient ton adresse IP ?" ancre="adresses">
+    <Adresse slot="animation" />
+    <p slot="decouverte">
+      Chaque <Terme id="adresse-ip">adresse IP</Terme> a été distribuée de main en main : l'<Terme id="iana">IANA</Terme>
+      donne de grands blocs à cinq registres régionaux, qui en donnent des morceaux aux opérateurs, qui en donnent
+      une à ta box.
+    </p>
+    <p slot="curieux">
+      Le 3 février 2011, l'IANA a distribué ses cinq derniers grands blocs IPv4, un par registre. Les registres se
+      sont vidés l'un après l'autre ; seul AFRINIC attribue encore de petits blocs neufs. Ailleurs, les adresses
+      IPv4 s'achètent et se revendent : environ 20 dollars l'adresse en 2026, selon des courtiers. D'où
+      l'importance d'<Terme id="ipv6">IPv6</Terme>.
+    </p>
+    <p slot="ingenieur">
+      Les règles d'attribution ne sont pas écrites par le personnel des registres : n'importe qui peut proposer
+      une politique sur une liste de discussion ouverte, adoptée par consensus de la communauté de la région. Les
+      registres se coordonnent dans la NRO (2003) ; une règle mondiale doit être adoptée à l'identique dans les
+      cinq régions.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le RIPE NCC ouvre à Amsterdam le 1er avril 1992 ; <strong>Anne Lord</strong> et <strong>Mirjam
+        Kühne</strong> font partie de sa toute petite équipe dès 1994. L'APNIC naît en 1993 à Tokyo, LACNIC en
+        2002 en Uruguay. AFRINIC, installé à Maurice, est accrédité en 2005, après des années
+        d'efforts d'ingénieurs africains, dont le Ghanéen <strong>Nii Quaynor</strong>, président de son premier
+        conseil, et le Sud-Africain Alan Barrett.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        <strong>AFRINIC dans la tourmente (état au 8 novembre 2026).</strong> En 2021, AFRINIC veut reprendre plus
+        de six millions d'adresses attribuées à Cloud Innovation, une société des Seychelles, en estimant qu'elles
+        sont louées et utilisées hors d'Afrique, contrairement aux règles. L'entreprise répond que ses adresses ont
+        été obtenues légalement et qu'aucune règle n'impose de les utiliser dans la région ; elle obtient en justice
+        le gel des comptes d'AFRINIC (levé en octobre 2021).
+      </p>
+      <p>
+        Suivent des années de procès à Maurice : plus de conseil d'administration complet à partir de 2022, un
+        administrateur nommé par la justice en 2023, une élection annulée en 2025, une autre en septembre 2025. En
+        juillet 2025, Cloud Innovation demande la liquidation d'AFRINIC ; en mai 2026, la Cour suprême de Maurice
+        autorise l'ICANN à intervenir dans la procédure. Un nouveau directeur général doit prendre ses fonctions le
+        1er janvier 2027. AFRINIC dénonce une « guerre judiciaire » ; l'ICANN et les autres registres soutiennent la
+        remise en ordre ; des voix africaines s'inquiètent aussi de l'influence de quelques États sur le nouveau
+        conseil.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Les noms et la racine" ancre="racine">
+    <Racine slot="animation" />
+    <p slot="decouverte">
+      Au sommet du <Terme id="dns">DNS</Terme>, l'annuaire d'internet, il y a la <Terme id="serveur-racine">racine</Terme> :
+      la liste de toutes les extensions (.fr, .com, .africa…). Elle est coordonnée par l'ICANN, une organisation
+      à but non lucratif fondée en 1998, et servie par plus de 2 000 copies dans le monde.
+    </p>
+    <p slot="curieux">
+      Pourquoi 13 lettres ? Parce qu'au départ, une réponse DNS devait tenir dans 512 octets : il n'y avait de
+      place que pour 13 noms de serveurs. Aujourd'hui, chaque lettre est copiée des centaines de fois grâce à
+      l'<Terme id="anycast">anycast</Terme>. Et la racine est signée (DNSSEC) : une fausse réponse se détecte.
+    </p>
+    <p slot="ingenieur">
+      En général quatre fois par an, une cérémonie des clés signe la racine. Elle réunit des représentant·es de confiance
+      venu·es de 22 pays, de Maurice au Brésil, de la Palestine à l'Islande ; aucun·e ne travaille pour l'ICANN.
+      La clé maîtresse a été changée le 11 octobre 2018, puis le 11 octobre 2026 ; pour ce second changement,
+      l'ICANN étudiait encore quelques incidents limités (état au 15 octobre 2026).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1972, Jon Postel commence à noter dans un carnet les numéros utilisés par l'ARPANET : c'est l'origine de
+        l'IANA. En 1998, le gouvernement américain confie la fonction à l'ICANN, sous contrat ; <strong>Esther
+        Dyson</strong> préside son premier conseil. Ce contrat a pris fin le 1er octobre 2016 : le gouvernement
+        américain n'approuve plus chaque modification de la racine. Le 5 mai 2010, les premières extensions en
+        écriture non latine entrent dans la racine, toutes en arabe : Égypte, Arabie saoudite, Émirats.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Qui a droit à .amazon : l'entreprise ou les huit pays du bassin amazonien ? Après des années de conflit,
+        l'ICANN l'a attribué à l'entreprise (délégué en 2020), avec des noms réservés aux États, que ceux-ci jugeaient
+        insuffisants. Pour .africa, soutenu par l'Union africaine, un concurrent a contesté jusqu'aux tribunaux
+        américains ; l'extension est en service depuis 2017.
+      </p>
+      <p>
+        Le déséquilibre se voit dans les candidatures aux nouvelles extensions : en 2012, 911 venaient d'Amérique
+        du Nord et 17 d'Afrique ; au cycle de 2026, 864 et 16.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Internet a 13 serveurs racine. »</strong> Il a 13 <em>identités</em>, tenues par 12 organisations
+      (dont trois hors des États-Unis : en Suède, aux Pays-Bas et au Japon), et environ 2 000 copies dans plus de
+      150 pays. <strong>« Les États-Unis contrôlent internet. »</strong> Jusqu'en 2016, ils avaient un vrai levier
+      sur le sommet du DNS, pas sur les câbles ni sur les contenus. Depuis, ce contrat a disparu ; restent que
+      l'ICANN est une association californienne, et que dix lettres sur treize sont tenues par des organisations
+      américaines.
+    </p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Et les États ?" ancre="etats">
+    <Couper slot="animation" />
+    <p slot="decouverte">
+      Deux visions s'opposent. Pour les un·es, internet doit être gouverné de façon <Terme id="multipartite">multipartite</Terme> :
+      entreprises, techniciens, société civile et États ensemble. Pour d'autres, les grandes décisions publiques
+      reviennent aux États, à égalité, par exemple à l'ONU.
+    </p>
+    <p slot="curieux">
+      L'UIT, l'agence de l'ONU pour les télécommunications, est la plus ancienne organisation internationale
+      moderne : elle est née à Paris en 1865 pour le télégraphe. Elle fixe des règles pour les fréquences et les
+      télécoms, où chaque État a une voix. Elle ne normalise pas les protocoles d'internet : c'est le rôle de
+      l'IETF.
+    </p>
+    <p slot="ingenieur">
+      En 2012, à Dubaï, une conférence de l'UIT révise un traité sur les télécommunications ; 55 États, dont les
+      États-Unis, refusent de le signer, à cause de la place qu'il donne à internet. En 2019, Huawei et
+      des opérateurs chinois proposent à l'UIT un « New IP » pour les réseaux de 2030 ; ses critiques y voient un
+      contrôle déplacé vers le cœur du réseau, et l'UIT ne le retient pas en 2020.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le Sommet mondial sur la société de l'information (Genève 2003, Tunis 2005) crée le Forum sur la
+        gouvernance de l'internet (FGI) : un lieu de discussion, sans pouvoir de décision. En 2013, après les
+        révélations sur la surveillance américaine, les organisations techniques demandent à « mondialiser »
+        l'ICANN ; en 2014, le Brésil réunit NETmundial à São Paulo. Le 17 décembre 2025, l'Assemblée générale de
+        l'ONU, sans vote, rend le FGI permanent et réaffirme le modèle multipartite. Le FGI 2026 se tient à Nairobi,
+        du 14 au 18 décembre (état au 8 novembre 2026).
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        <strong>Pour un rôle plus fort des États</strong> : la Chine, la Russie et d'autres pays écrivent en 2011 à
+        l'ONU que les politiques publiques de l'internet sont « un droit souverain des États ». L'Inde propose la
+        même année un comité de l'ONU de 50 États, sans vouloir « contrôler internet ». Beaucoup de pays du Sud
+        soulignent qu'ils sont peu représentés dans les organismes techniques, et que l'ICANN reste soumise au droit
+        américain.
+      </p>
+      <p>
+        <strong>Pour le modèle multipartite</strong> : les décisions sont ouvertes à toute personne et prises par
+        consensus ; les organismes techniques refusent de servir d'arme politique (refus de couper la Russie en
+        2022) ; confier internet aux seuls gouvernements risquerait la censure et la fragmentation. Les deux camps
+        ont leurs angles morts : l'ouverture formelle n'empêche pas la domination de quelques pays et entreprises,
+        et l'égalité entre États ne dit rien des citoyen·nes de chacun.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'ONU gouverne internet. »</strong> Non : le FGI n'a « aucune fonction de contrôle » et ses
+      conclusions ne sont pas contraignantes. <strong>« L'ICANN peut couper un pays. »</strong> En 2022, elle a
+      refusé de le faire, rappelant que « personne n'a la capacité de contrôler internet ou de l'éteindre ».
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Personne ne dirige tout internet</strong> : chaque couche a ses règles et ses organisations (IETF, W3C, ICANN, registres régionaux, UIT).</li>
+      <li><strong>Les règles sont volontaires</strong> : une RFC ne s'impose que parce que tout le monde a intérêt à être compatible.</li>
+      <li><strong>On décide par consensus, pas par vote</strong> : aucune objection sérieuse ne doit rester sans réponse.</li>
+      <li><strong>Ouvert ne veut pas dire égal</strong> : peu de femmes, peu de pays du Sud, beaucoup d'entreprises.</li>
+      <li><strong>Les choix techniques sont aussi politiques</strong> : écoute légale, chiffrement, adresses, noms, place des États.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a> pour voir ces règles
+      à l'œuvre (DNS, TLS, BGP), <a href="/modules/adresses-ip/">Adresses IP et masques</a> pour les écritures
+      d'adresses, et <a href="/modules/histoire-internet/">l'histoire d'internet</a>.
+    </p>
+
+  <Sources
+    verifie="2026-11-08"
+    sources={[
+      { auteur: 'S. Crocker', titre: 'RFC 1 : Host Software', url: 'https://www.rfc-editor.org/rfc/rfc1', type: 'primaire', annee: 1969, langue: 'en' },
+      { auteur: 'J. Reynolds, J. Postel', titre: 'RFC 1000 : The Request for Comments Reference Guide (récit de S. Crocker)', url: 'https://www.rfc-editor.org/rfc/rfc1000', type: 'primaire', annee: 1987, langue: 'en' },
+      { auteur: 'H. Flanagan (dir.)', titre: 'RFC 8700 : Fifty Years of RFCs', url: 'https://www.rfc-editor.org/rfc/rfc8700', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'Index des RFC (comptage au 8 novembre 2026)', url: 'https://www.rfc-editor.org/rfc-index.txt', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'S. Bradner', titre: 'RFC 2026 : The Internet Standards Process', url: 'https://www.rfc-editor.org/rfc/rfc2026', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'R. Housley, D. Crocker, E. Burger', titre: 'RFC 6410 : Reducing the Standards Track to Two Maturity Levels', url: 'https://www.rfc-editor.org/rfc/rfc6410', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'D. Waitzman', titre: 'RFC 1149 : IP Datagrams on Avian Carriers', url: 'https://www.rfc-editor.org/rfc/rfc1149', type: 'primaire', annee: 1990, langue: 'en' },
+      { auteur: 'L. Masinter', titre: 'RFC 2324 : Hyper Text Coffee Pot Control Protocol', url: 'https://www.rfc-editor.org/rfc/rfc2324', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'IETF', titre: 'Introduction to the IETF', url: 'https://www.ietf.org/about/introduction/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 4677 : The Tao of IETF', url: 'https://www.rfc-editor.org/rfc/rfc4677', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'P. Resnick', titre: 'RFC 7282 : On Consensus and Humming in the IETF', url: 'https://www.rfc-editor.org/rfc/rfc7282', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'M. Kucherawy (dir.)', titre: 'RFC 8713 : IAB, IESG, IETF Trust and IETF LLC Selection (NomCom)', url: 'https://www.rfc-editor.org/rfc/rfc8713', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'D. Clark', titre: 'A Cloudy Crystal Ball (actes de la 24e réunion de l’IETF, p. 539-543)', url: 'https://www.ietf.org/proceedings/24.pdf', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'S. Crocker', titre: 'RFC 1396 : The Process for Organization of Internet Standards Working Group', url: 'https://www.rfc-editor.org/rfc/rfc1396', type: 'primaire', annee: 1993, langue: 'en' },
+      { auteur: 'IAB, IESG', titre: 'RFC 2804 : IETF Policy on Wiretapping', url: 'https://www.rfc-editor.org/rfc/rfc2804', type: 'primaire', annee: 2000, langue: 'en' },
+      { auteur: 'S. Farrell, H. Tschofenig', titre: 'RFC 7258 : Pervasive Monitoring Is an Attack', url: 'https://www.rfc-editor.org/rfc/rfc7258', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'K. Moriarty, A. Morton', titre: 'RFC 8404 : Effects of Pervasive Encryption on Operators', url: 'https://www.rfc-editor.org/rfc/rfc8404', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'P. Hoffman, P. McManus', titre: 'RFC 8484 : DNS Queries over HTTPS (DoH)', url: 'https://www.rfc-editor.org/rfc/rfc8484', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'M. Nottingham', titre: 'RFC 8890 : The Internet is for End Users', url: 'https://www.rfc-editor.org/rfc/rfc8890', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'The Register', titre: 'ISPA clears Mozilla of Internet Villain nomination', url: 'https://www.theregister.com/2019/07/10/ispa_clears_mozilla', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'IETF', titre: 'IETF Snapshot 2025 (enquête communautaire)', url: 'https://www.ietf.org/media/documents/IETF-Snapshot-2025.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'J. Daley (IETF)', titre: 'Report on the experience of women participating in the IETF', url: 'https://www.ietf.org/blog/report-experience-of-women-participating-in-the-ietf/', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'IETF Datatracker', titre: 'Inscriptions par pays, IETF 124 (Montréal)', url: 'https://datatracker.ietf.org/stats/meeting/124/country/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'IETF Datatracker', titre: 'Inscriptions par pays, IETF 125 (Shenzhen)', url: 'https://datatracker.ietf.org/stats/meeting/125/country/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IETF Datatracker', titre: 'Inscriptions par pays, IETF 126 (Vienne)', url: 'https://datatracker.ietf.org/stats/meeting/126/country/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'S. McQuistin et al.', titre: 'Characterising the IETF Through the Lens of RFC Deployment (ACM IMC)', url: 'https://tysong.github.io/files/IMC21.pdf', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'IESG', titre: 'Anciens membres de l’IESG (présidences de l’IETF)', url: 'https://www.ietf.org/about/groups/iesg/past-members/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IAB', titre: 'Anciens membres de l’IAB', url: 'https://www.iab.org/about/members/past-iab-members/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Internet Society', titre: 'Bob Braden et Joyce K. Reynolds reçoivent le prix Postel', url: 'https://www.internetsociety.org/news/press-releases/2006/bob-braden-joyce-k-reynolds-receive-postel-award/', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Elizabeth Feinler', url: 'https://www.internethalloffame.org/inductee/elizabeth-feinler/', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Lixia Zhang', url: 'https://www.internethalloffame.org/inductee/lixia-zhang/', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Radia Perlman', url: 'https://www.internethalloffame.org/inductee/radia-perlman/', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Jun Murai', url: 'https://www.internethalloffame.org/inductee/jun-murai/', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Nii Quaynor', url: 'https://www.internethalloffame.org/inductee/nii-quaynor/', type: 'site', langue: 'en' },
+      { auteur: 'W3C', titre: 'History', url: 'https://www.w3.org/about/history/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'W3C', titre: 'W3C publie EME comme Recommandation', url: 'https://www.w3.org/press-releases/2017/eme-recommendation/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'T. Berners-Lee', titre: 'On EME in HTML5', url: 'https://www.w3.org/blog/2017/02/on-eme-in-html5/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'EFF (C. Doctorow)', titre: 'An open letter to the W3C Director, CEO, team and membership', url: 'https://www.eff.org/deeplinks/2017/09/open-letter-w3c-director-ceo-team-and-membership', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'WHATWG', titre: 'FAQ', url: 'https://whatwg.org/faq', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'W3C, WHATWG', titre: 'Memorandum of Understanding (28 mai 2019)', url: 'https://www.w3.org/2019/04/WHATWG-W3C-MOU.html', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'W3C WAI', titre: 'WCAG 2 Overview', url: 'https://www.w3.org/WAI/standards-guidelines/wcag/', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'ICANN', titre: 'History of ICANN', url: 'https://www.icann.org/history', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IANA', titre: 'About us', url: 'https://www.iana.org/about', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Esther Dyson, Tripti Sinha, Sally Costerton (communiqué)', url: 'https://www.icann.org/resources/press-material/release-2023-03-08-en', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'NTIA (L. Strickling)', titre: 'Statement on IANA Functions Contract', url: 'https://www.ntia.gov/press-release/2016/statement-assistant-secretary-strickling-iana-functions-contract', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Root Zone Maintainer Service Agreement is now effective', url: 'https://www.icann.org/en/blogs/details/root-zone-maintainer-service-agreement-is-now-effective-20-10-2016-en', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Statuts (bylaws) : avis du GAC, communauté habilitée, siège', url: 'https://www.icann.org/resources/pages/governance/bylaws-en', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Policy Outlook Report ICANN86 (membres du GAC)', url: 'https://itp.cdn.icann.org/en/files/policy-update/icann86-policy-outlook-report-14-05-2026-en.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Congressional Research Service', titre: 'Internet Domain Names: Background and Policy Issues (97-868)', url: 'https://www.everycrsreport.com/reports/97-868.html', type: 'recherche', annee: 2016, langue: 'en' },
+      { auteur: 'ICANN et al.', titre: 'Déclaration de Montevideo sur l’avenir de la coopération internet', url: 'https://www.icann.org/en/announcements/details/montevideo-statement-on-the-future-of-internet-cooperation-7-10-2013-en', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'Root Server Operators', titre: 'root-servers.org (instances, état au 8 novembre 2026)', url: 'https://root-servers.org/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN RSSAC', titre: 'FAQ : pourquoi 13 identités, cache, DNSSEC', url: 'https://www.icann.org/en/rssac/faq', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IANA', titre: 'Root KSK Ceremonies', url: 'https://www.iana.org/dnssec/ceremonies', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IANA', titre: 'Trusted Community Representatives', url: 'https://www.iana.org/dnssec/tcrs', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Root Zone KSK Rollover (2018)', url: 'https://www.icann.org/resources/pages/ksk-rollover-2018-en', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'ICANN', titre: 'ICANN Reports Root Zone KSK Rollover Completed as Planned', url: 'https://www.icann.org/en/announcements/details/icann-reports-root-zone-ksk-rollover-completed-as-planned-15-10-2026-en', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Premiers ccTLD IDN dans la racine (5 mai 2010)', url: 'https://www.icann.org/en/announcements/details/first-idn-cctlds-available-5-5-2010-en', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'ICANN', titre: 'New gTLD Reveal Day : candidatures de 2012', url: 'https://www.icann.org/en/announcements/details/new-gtld-reveal-day---applied-for-strings-13-6-2012-en', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'ICANN', titre: 'ICANN Reveals 2026 Round Applications', url: 'https://icann.org/en/announcements/details/icann-reveals-2026-round-applications-for-new-generic-top-level-domains-07-10-2026-en', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Résolution sur .amazon et l’OTCA (15 mai 2019)', url: 'https://archive.icann.org/historical-resolution-tracking-feature/consideration-amazon-corporations-proposal-acto-member-states-continuing-concerns-re-amazon-new-gtld.html', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'IANA', titre: 'Délégation de .amazon', url: 'https://www.iana.org/domains/root/db/amazon.html', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'ICANN', titre: 'Le panel IRP donne raison à DCA (.africa)', url: 'https://www.icann.org/en/announcements/details/independent-review-panel-finds-in-favor-of-dca-trust-makes-recommendation-to-icanns-board-to-resume-evaluation-of-dcas-application-10-7-2015-en', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'ICANN', titre: 'DCA c. ICANN (procédure en Californie)', url: 'https://www.icann.org/resources/pages/dca-v-icann-2016-01-26-en', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'IANA', titre: 'Délégation de .africa', url: 'https://www.iana.org/domains/root/db/africa.html', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'NRO', titre: 'Les registres régionaux', url: 'https://www.nro.net/about/rirs/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'NRO', titre: 'Policy development', url: 'https://www.nro.net/policy/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'RIPE NCC', titre: 'RIPE-781 : Policy Development Process in RIPE', url: 'https://www.ripe.net/publications/docs/ripe-781/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'RIPE NCC', titre: 'Celebrating 25 years of the RIPE NCC', url: 'https://www.ripe.net/about-us/news/celebrating-25-years-of-the-ripe-ncc/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'D. Karrenberg', titre: 'Message sur l’équipe du RIPE NCC (10 novembre 1994)', url: 'https://lists.ripe.net/pipermail/ripe-org-closed/1994/msg00000.html', type: 'primaire', annee: 1994, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'History', url: 'https://afrinic.net/history', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'In memoriam : Alan Barrett', url: 'https://afrinic.net/memoriam-of-alan-barrett', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ARIN', titre: 'Les derniers blocs IPv4 de l’IANA (3 février 2011)', url: 'https://www.arin.net/vault/announcements/20110203', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'APNIC', titre: 'Keep calm and carry on: the status of IPv4 address allocation', url: 'https://blog.apnic.net/2019/12/13/keep-calm-and-carry-on-the-status-of-ipv4-address-allocation/', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'ARIN', titre: 'ARIN reaches IPv4 depletion', url: 'https://www.arin.net/blog/2015/09/24/arin-reaches-ipv4-depletion/', type: 'primaire', annee: 2015, langue: 'en' },
+      { auteur: 'RIPE NCC', titre: 'The RIPE NCC has run out of IPv4 addresses', url: 'https://www.ripe.net/ripe/mail/archives/ripe-list/2019-November/001712.html', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'IPv4 Exhaustion', url: 'https://afrinic.net/exhaustion', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IPregistry', titre: 'IPv4 market mid-2026 (estimation de courtiers)', url: 'https://ipregistry.co/blog/ipv4-market-mid-2026', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'ICANN', titre: 'ICANN Update on AFRINIC (septembre 2023)', url: 'https://www.icann.org/en/announcements/details/icann-update-on-afrinic-22-09-2023-en', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'Member update: organisational stability and ongoing legal challenges', url: 'https://afrinic.net/afrinic-member-update-organisational-stability-and-ongoing-legal-challenges', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'Communiqué du 15 mai 2026', url: 'https://afrinic.net/afrinic-communique-15052026', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'AFRINIC', titre: 'Appointment of Mr Mike Silber as CEO-designate', url: 'https://afrinic.net/appointment-of-mr-mike-silber-as-ceo-designate', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Larus (Lu Heng)', titre: 'Lu Heng on internet governance (point de vue de Cloud Innovation)', url: 'https://larus.net/blog/lu-heng-on-internet-governance/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'The Register', titre: 'AFRINIC election called: what next?', url: 'https://www.theregister.com/2025/09/15/afrinic_election_called_what_next/', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'CircleID (E. Vitus)', titre: 'The February case that could end Africa’s internet registry', url: 'https://circleid.com/posts/the-february-case-that-could-end-africas-internet-registry', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'UIT', titre: 'ITU is born (1865)', url: 'https://www.itu.int/en/history/Pages/ITUBorn1865.aspx', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'UIT', titre: 'Le SMSI : Genève 2003, Tunis 2005', url: 'https://www.itu.int/net/wsis/basic/about.html', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'SMSI', titre: 'Agenda de Tunis pour la société de l’information', url: 'https://www.itu.int/net/wsis/docs2/tunis/off/6rev1.html', type: 'primaire', annee: 2005, langue: 'en' },
+      { auteur: 'Nations unies', titre: 'Pacte numérique mondial', url: 'https://www.un.org/pact-for-the-future/en/annex-i-global-digital-compact', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Assemblée générale des Nations unies', titre: 'Résolution A/RES/80/173 (examen SMSI+20)', url: 'https://digitallibrary.un.org/record/4097834/files/A_RES_80_173-EN.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'W. Kleinwächter (CircleID)', titre: 'WSIS+20: a small light of hope in a darkening political landscape', url: 'https://circleid.com/posts/wsis20-a-small-light-of-hope-in-a-darkening-political-landscape', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Nations unies', titre: 'FGI 2026, Nairobi', url: 'https://indico.un.org/event/1024890/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Chine, Russie, Tadjikistan, Ouzbékistan', titre: 'Lettre à l’ONU : code de conduite (A/66/359)', url: 'https://documents.un.org/api/symbol/access?s=A/66/359&l=en&t=pdf', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'Inde', titre: 'Proposition d’un comité de l’ONU pour les politiques de l’internet (CIRP)', url: 'https://itforchange.net/sites/default/files/939/India-UN-CIRP-Proposal-at-UNGA-2011.pdf', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'ARIN', titre: 'WCIT-12 wrap-up', url: 'https://www.arin.net/vault/blog/2012/12/19/wcit-12-wrap-up-conference-concludes-but-internet-governance-discussions-arent-going-anywhere/', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'Internet Society', titre: 'FAQ sur « New IP »', url: 'https://www.internetsociety.org/?p=164792', type: 'site', annee: 2022, langue: 'en' },
+      { auteur: 'M. Hogewoning (RIPE Labs)', titre: 'Do we need a new IP?', url: 'https://labs.ripe.net/author/marco_hogewoning/do-we-need-a-new-ip', type: 'site', annee: 2020, langue: 'en' },
+      { auteur: 'The Register', titre: 'We have Huawei to make the internet better (New IP)', url: 'https://www.theregister.com/2020/06/04/we_have_huawei_to_make/', type: 'presse', annee: 2020, langue: 'en' },
+      { auteur: 'G. Marby (ICANN)', titre: 'Réponse au vice-Premier ministre ukrainien (2 mars 2022)', url: 'https://www.icann.org/en/system/files/correspondence/marby-to-fedorov-02mar22-en.pdf', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'RIPE NCC', titre: 'Response to request from Ukrainian government', url: 'https://www.ripe.net/about-us/news/ripe-ncc-response-to-request-from-ukrainian-government/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Wikipédia', titre: 'Request for comments (pour aller plus loin)', url: 'https://fr.wikipedia.org/wiki/Request_for_comments', type: 'wikipedia' },
+      { auteur: 'Wikipédia', titre: 'Internet Engineering Task Force (pour aller plus loin)', url: 'https://fr.wikipedia.org/wiki/Internet_Engineering_Task_Force', type: 'wikipedia' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

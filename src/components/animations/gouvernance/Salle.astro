@@ -84,8 +84,8 @@ const pc = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 }
 </script>
 
 <style>
-  .choix-vue { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 24rem; }
-  .choix-vue select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); max-width: 100%; }
+  .choix-vue { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 24rem; }
+  .choix-vue select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); width: 100%; min-width: 0; }
   .barres { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.35rem; }
   .barres :global(li) { display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr auto; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
   .barres :global(.barre) { height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.2rem; overflow: hidden; }

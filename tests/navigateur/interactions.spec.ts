@@ -108,3 +108,27 @@ test('portes logiques : bon nombre d’entrées et sortie juste', async ({ page 
   await expect(lampe).toHaveClass(/allumee/);
   expect(err).toEqual([]);
 });
+
+test('gouvernance technique : tri des RFC, hum, racine, adresses', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/gouvernance-technique/');
+  const tri = page.locator('[data-tri-rfc]');
+  await expect(tri.locator('[data-carte]')).toContainText('RFC 791');
+  await tri.locator('[data-statut="Internet Standard"]').click();
+  await expect(tri.locator('.anim-legende')).toContainText('Oui');
+  await tri.locator('[data-action="suivante"]').click();
+  await expect(tri.locator('[data-carte]')).toContainText('RFC 1149');
+  await tri.locator('[data-statut="Proposed Standard"]').click();
+  await expect(tri.locator('.anim-legende')).toContainText('Expérimentale');
+  const hum = page.locator('[data-hum]');
+  await jusquAuBout(hum);
+  await expect(hum.locator('[data-etat]')).toContainText('Consensus approximatif');
+  const racine = page.locator('[data-racine]');
+  await racine.locator('.lettre', { hasText: 'M' }).click();
+  await expect(racine.locator('.anim-legende')).toContainText('WIDE Project');
+  expect(await racine.locator('.pt.choisi').count()).toBe(3);
+  const adresse = page.locator('[data-adresse]');
+  await jusquAuBout(adresse);
+  await expect(adresse.locator('.anim-legende')).toContainText('Ton appareil');
+  expect(err).toEqual([]);
+});

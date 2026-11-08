@@ -1,0 +1,71 @@
+---
+// Animation « D'où vient ton adresse IP ? » (module « Gouvernance
+// technique », étape 4) : de l'IANA à ton téléphone, pas à pas, puis le
+// tableau des cinq registres régionaux. Données : src/data/gouvernance.ts.
+import { CHAINE_ADRESSE, RIRS } from '../../../data/gouvernance';
+---
+<div class="anim adresse" data-adresse>
+  <div class="anim-repli">
+    <ol>
+      {CHAINE_ADRESSE.map((c) => <li><strong>{c.qui}</strong> ({c.bloc}) : {c.texte}</li>)}
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="chaine" data-chaine aria-hidden="true">
+        {CHAINE_ADRESSE.map((c) => <li><span class="qui">{c.qui}</span><span class="bloc">{c.bloc}</span></li>)}
+      </ol>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-rir">
+    <table>
+      <caption>Les cinq registres régionaux (RIR)</caption>
+      <thead><tr><th scope="col">Registre</th><th scope="col">Région</th><th scope="col">Siège</th><th scope="col">Fondé en</th><th scope="col">IPv4</th></tr></thead>
+      <tbody>
+        {RIRS.map((r) => <tr><th scope="row">{r.nom}</th><td>{r.region}</td><td>{r.siege}</td><td>{r.fondation}</td><td>{r.ipv4}</td></tr>)}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { CHAINE_ADRESSE } from '../../../data/gouvernance';
+
+  document.querySelectorAll<HTMLElement>('[data-adresse]').forEach((racine) => {
+    activerScene(racine);
+    const maillons = [...racine.querySelectorAll<HTMLElement>('[data-chaine] li')];
+    pasAPas(racine, () => CHAINE_ADRESSE.length, (n) => {
+      maillons.forEach((li, i) => {
+        li.classList.toggle('passe', i < n);
+        li.classList.toggle('ici', i === n - 1);
+      });
+      const c = CHAINE_ADRESSE[n - 1];
+      return `${c.qui} : ${c.bloc}. ${c.texte}`;
+    });
+  });
+</script>
+
+<style>
+  .chaine { list-style: none; padding: 0; margin: 0 0 0.75rem; display: grid; gap: 0.35rem; }
+  .chaine li { display: grid; grid-template-columns: minmax(7rem, 12rem) 1fr; gap: 0.5rem; align-items: center; padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); opacity: 0.45; position: relative; }
+  .chaine li + li { margin-left: 0.8rem; }
+  .chaine li.passe { opacity: 1; }
+  .chaine li.ici { border-color: var(--accent); box-shadow: inset 0.35rem 0 0 var(--accent); }
+  .qui { font-weight: 700; font-size: 0.9rem; }
+  .bloc { font-family: var(--police-mono); font-size: 0.82rem; overflow-wrap: anywhere; }
+  @media (max-width: 30rem) { .chaine li { grid-template-columns: 1fr; gap: 0.1rem; } .chaine li + li { margin-left: 0.4rem; } }
+  .table-rir { overflow-x: auto; margin-top: 1rem; }
+  .table-rir table { border-collapse: collapse; font-size: 0.88rem; min-width: 34rem; }
+  .table-rir caption { text-align: left; font-weight: 700; margin-bottom: 0.3rem; }
+  .table-rir th, .table-rir td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+</style>
