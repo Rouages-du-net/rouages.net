@@ -1,0 +1,74 @@
+---
+// Animation « Fabrique une phrase de passe » (module « Se protéger »,
+// étape 0) : des mots tirés au sort dans le navigateur (crypto.getRandomValues),
+// l'entropie qui en découle, et le temps moyen d'une attaque par force brute
+// selon deux vitesses. Jamais de saisie du vrai mot de passe : rien n'est
+// envoyé ni enregistré. Données : src/data/proteger.ts, src/data/mots-phrases.ts.
+import { VITESSES, SEUILS } from '../../../data/proteger';
+---
+<div class="anim phrase" data-phrase data-vitesses={JSON.stringify(VITESSES)} data-seuils={JSON.stringify(SEUILS)}>
+  <div class="anim-repli">
+    <p>
+      Une phrase de passe est faite de mots tirés au sort, par exemple avec des dés, dans une liste connue. Avec une
+      liste de 512 mots, chaque mot apporte 9 bits ; 6 mots donnent 54 bits, 9 mots 81 bits (le seuil de 80 bits de
+      la CNIL pour un mot de passe seul). Avec la liste de 7 776 mots de l'EFF, chaque mot apporte 12,9 bits : 6 mots
+      donnent environ 77 bits.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="nb">Nombre de mots : <output data-n>6</output>
+        <input type="range" min="3" max="12" value="6" data-curseur />
+      </label>
+      <p class="mots" data-mots aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="tirer">Tirer d’autres mots ↺</button>
+      </div>
+      <p class="bits"><strong data-bits></strong> <span data-seuil></span></p>
+      <ul class="durees" data-durees></ul>
+      <p class="anim-note">Les mots sont tirés au sort dans ton navigateur parmi une liste de 512 noms communs : rien n’est envoyé ni enregistré. Pour un vrai compte, utilise un gestionnaire de mots de passe ou des dés. Les temps sont des moyennes pour un attaquant qui connaît la liste mais pas les mots ; ils ne valent que pour des mots vraiment tirés au hasard.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { dureeForceBrute, dureeLisible, entropie, phrase } from '../../../lib/securite';
+  import { MOTS } from '../../../data/mots-phrases';
+
+  document.querySelectorAll<HTMLElement>('[data-phrase]').forEach((racine) => {
+    activerScene(racine);
+    const vitesses: { id: string; nom: string; essais: number }[] = JSON.parse(racine.dataset.vitesses!);
+    const seuils: { bits: number; qui: string }[] = JSON.parse(racine.dataset.seuils!);
+    const curseur = racine.querySelector<HTMLInputElement>('[data-curseur]')!;
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    let mots: string[] = [];
+    const tirer = () => { mots = phrase(MOTS, Number(curseur.value)); rendre(); };
+    function rendre() {
+      const n = Number(curseur.value);
+      if (mots.length !== n) mots = mots.length > n ? mots.slice(0, n) : [...mots, ...phrase(MOTS, n - mots.length)];
+      q('[data-n]').textContent = String(n);
+      q('[data-mots]').textContent = mots.join(' ');
+      const b = entropie(MOTS.length, n);
+      q('[data-bits]').textContent = `${b} bits d’entropie.`;
+      const atteint = seuils.filter((s) => b >= s.bits);
+      q('[data-seuil]').textContent = atteint.length ? `Atteint : ${atteint.at(-1)!.qui} (${atteint.at(-1)!.bits} bits).` : `Sous le plus bas seuil cité (${seuils[0].bits} bits).`;
+      q('[data-durees]').replaceChildren(...vitesses.map((v) => {
+        const li = document.createElement('li');
+        li.textContent = `Attaque ${v.nom} : ${dureeLisible(dureeForceBrute(b, v.essais))} en moyenne.`;
+        return li;
+      }));
+    }
+    curseur.addEventListener('input', rendre);
+    racine.querySelector('[data-action="tirer"]')!.addEventListener('click', tirer);
+    tirer();
+  });
+</script>
+
+<style>
+  .nb { display: grid; gap: 0.25rem; font-weight: 600; max-width: 22rem; }
+  .nb input { accent-color: var(--accent); }
+  .mots { font-family: var(--police-mono); font-size: 1.15rem; font-weight: 700; padding: 0.6rem 0.8rem; margin: 0.7rem 0 0; background: var(--bg); border: 1px solid var(--border); border-radius: 0.4rem; overflow-wrap: anywhere; }
+  .bits { margin: 0.8rem 0 0.3rem; }
+  .durees { margin: 0 0 0.6rem; padding-left: 1.2rem; }
+</style>

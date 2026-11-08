@@ -1,0 +1,71 @@
+---
+// Animation « Hameçonnage ou pas ? » (module « Se protéger », étape 2) : six
+// messages fictifs (domaines .example), on répond, l'explication s'affiche.
+// Exemples inspirés du rapport 2025 de Cybermalveillance.gouv.fr. Données :
+// src/data/proteger.ts.
+import { MESSAGES } from '../../../data/proteger';
+---
+<div class="anim hamecon" data-hamecon data-messages={JSON.stringify(MESSAGES)}>
+  <div class="anim-repli">
+    <ol>{MESSAGES.map((m) => <li><strong>{m.canal}, de {m.de}</strong> : « {m.texte} » — {m.explication}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="message">
+        <p class="entete"><span data-canal></span> · <span data-de></span></p>
+        <p class="corps" data-texte></p>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" class="anim-bouton" data-rep="1">Piège</button>
+        <button type="button" class="anim-bouton" data-rep="0">Pas de piège</button>
+        <button type="button" class="principal" data-action="suivant-message" disabled>Message suivant ▶</button>
+        <span class="anim-note" data-n></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-hamecon]').forEach((racine) => {
+    activerScene(racine);
+    const messages: { canal: string; de: string; texte: string; piege: boolean; explication: string }[] = JSON.parse(racine.dataset.messages!);
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const reps = [...racine.querySelectorAll<HTMLButtonElement>('[data-rep]')];
+    const suivant = q('[data-action="suivant-message"]') as HTMLButtonElement;
+    let i = 0;
+    let bons = 0;
+    const montrer = () => {
+      const m = messages[i];
+      q('[data-canal]').textContent = m.canal;
+      q('[data-de]').textContent = m.de;
+      q('[data-texte]').textContent = m.texte;
+      reps.forEach((b) => { b.disabled = false; });
+      suivant.disabled = true;
+      suivant.textContent = i === messages.length - 1 ? 'Recommencer ↺' : 'Message suivant ▶';
+      q('[data-n]').textContent = `${i + 1} / ${messages.length}`;
+    };
+    reps.forEach((b) => b.addEventListener('click', () => {
+      const m = messages[i];
+      const juste = (b.dataset.rep === '1') === m.piege;
+      if (juste) bons++;
+      reps.forEach((x) => { x.disabled = true; });
+      q('.anim-legende').textContent = `${juste ? 'Bien vu.' : 'Raté.'} ${m.explication}${i === messages.length - 1 ? ` Score : ${bons} sur ${messages.length}.` : ''}`;
+      suivant.disabled = false;
+    }));
+    suivant.addEventListener('click', () => {
+      if (i === messages.length - 1) { i = 0; bons = 0; } else i++;
+      q('.anim-legende').textContent = '';
+      montrer();
+    });
+    montrer();
+  });
+</script>
+
+<style>
+  .message { border: 1px solid var(--border); border-radius: 0.8rem; background: var(--bg); padding: 0.7rem 0.9rem; max-width: 34rem; }
+  .entete { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--muted); overflow-wrap: anywhere; }
+  .corps { margin: 0; overflow-wrap: anywhere; }
+</style>
