@@ -1,0 +1,94 @@
+---
+// Animation « Qui est dans la salle ? » (module « Gouvernance technique »,
+// étape 2) : inscriptions par pays à trois réunions de l'IETF (Datatracker),
+// et enquête communautaire 2025 (genre, régions, secteurs ; réponses
+// déclaratives). Données : src/data/gouvernance.ts.
+import { REUNIONS, ENQUETE_2025 } from '../../../data/gouvernance';
+const pc = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+---
+<div class="anim salle" data-salle>
+  <div class="anim-repli">
+    <ul>
+      {REUNIONS.map((r) => <li><strong>{r.nom}</strong> : {r.total} inscriptions, dont {r.pays.map(([p, n]) => `${p} ${n}`).join(', ')}.</li>)}
+      <li><strong>Enquête 2025</strong> : {ENQUETE_2025.genre.map(([k, v]) => `${k} ${pc(v)} %`).join(', ')} ; {ENQUETE_2025.regions.map(([k, v]) => `${k} ${pc(v)} %`).join(', ')} ; {ENQUETE_2025.secteurs.map(([k, v]) => `${k} ${pc(v)} %`).join(', ')}.</li>
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="choix-vue">Afficher
+        <select data-vue>
+          {REUNIONS.map((r) => <option value={r.id}>Inscriptions : {r.nom}</option>)}
+          <option value="genre">Enquête 2025 : genre</option>
+          <option value="regions">Enquête 2025 : régions</option>
+          <option value="secteurs">Enquête 2025 : secteurs</option>
+        </select>
+      </label>
+      <ul class="barres" data-barres></ul>
+      <p class="anim-note" data-note></p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { REUNIONS, ENQUETE_2025 } from '../../../data/gouvernance';
+
+  const pc = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+
+  document.querySelectorAll<HTMLElement>('[data-salle]').forEach((racine) => {
+    activerScene(racine);
+    const vue = racine.querySelector<HTMLSelectElement>('[data-vue]')!;
+    const barres = racine.querySelector<HTMLUListElement>('[data-barres]')!;
+    const note = racine.querySelector<HTMLElement>('[data-note]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+
+    function rendre() {
+      const v = vue.value;
+      const reunion = REUNIONS.find((r) => r.id === v);
+      let lignes: [string, number, string][];
+      if (reunion) {
+        lignes = reunion.pays.map(([p, n]) => [p, (n / reunion.total) * 100, `${n} (${pc((n / reunion.total) * 100)} %)`]);
+        const autres = reunion.total - reunion.pays.reduce((s, [, n]) => s + n, 0);
+        lignes.push(['Autres pays', (autres / reunion.total) * 100, `${autres}`]);
+        note.textContent = `${reunion.total} inscriptions (sur place et à distance), selon le Datatracker de l’IETF.`;
+        const [p1, n1] = reunion.pays[0];
+        legende.textContent = `${reunion.nom} : le premier pays est ${p1}, avec ${pc((n1 / reunion.total) * 100)} % des inscriptions. Le lieu de la réunion change beaucoup qui vient.`;
+      } else {
+        const donnees = ENQUETE_2025[v as keyof typeof ENQUETE_2025];
+        lignes = donnees.map(([k, p]) => [k, p, `${pc(p)} %`]);
+        note.textContent = 'Enquête communautaire de l’IETF 2025 : réponses déclaratives des participant·es, pas un recensement.';
+        legende.textContent = v === 'genre'
+          ? 'Environ 9 % de femmes parmi les personnes qui ont répondu : « bien moins que la part des femmes dans l’informatique », reconnaissait l’IETF en 2023.'
+          : v === 'regions'
+            ? 'L’Europe et l’Amérique du Nord font plus des trois quarts des réponses ; l’Afrique et l’Amérique latine, environ 3 % chacune.'
+            : 'Plus de la moitié des participant·es viennent d’entreprises, même si chacun·e est censé·e parler en son nom propre.';
+      }
+      barres.replaceChildren(...lignes.map(([nom, part, texte]) => {
+        const li = document.createElement('li');
+        const etiquette = Object.assign(document.createElement('span'), { className: 'nom', textContent: nom });
+        const barre = document.createElement('span');
+        barre.className = 'barre';
+        const plein = document.createElement('span');
+        plein.style.width = `${Math.max(0.5, part)}%`;
+        barre.append(plein);
+        const val = Object.assign(document.createElement('span'), { className: 'val', textContent: texte });
+        li.append(etiquette, barre, val);
+        return li;
+      }));
+    }
+    vue.addEventListener('change', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .choix-vue { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 24rem; }
+  .choix-vue select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); max-width: 100%; }
+  .barres { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.35rem; }
+  .barres :global(li) { display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr auto; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
+  .barres :global(.barre) { height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.2rem; overflow: hidden; }
+  .barres :global(.barre span) { display: block; height: 100%; background: var(--ill-reseau); }
+  .barres :global(.val) { font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); }
+</style>

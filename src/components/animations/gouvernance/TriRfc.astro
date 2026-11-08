@@ -1,0 +1,91 @@
+---
+// Animation « Une RFC, c'est une norme ? » (module « Gouvernance technique »,
+// étape 1) : sept vraies RFC à classer par statut ; la correction donne le
+// vrai statut (index du RFC Editor). Données : src/data/gouvernance.ts.
+import { RFC_ECHANTILLON, STATUTS } from '../../../data/gouvernance';
+const nom = (id: string) => STATUTS.find((s) => s.id === id)!.nom;
+---
+<div class="anim tri-rfc" data-tri-rfc>
+  <div class="anim-repli">
+    <ul>
+      {RFC_ECHANTILLON.map((r) => <li><strong>RFC {r.num}</strong>, {r.titre} ({r.annee}) : {nom(r.statut)}. {r.note}</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="carte-rfc" data-carte></p>
+      <p class="consigne">Quel est son statut ?</p>
+      <div class="choix" role="group" aria-label="Statuts possibles">
+        {STATUTS.map((s) => <button type="button" class="anim-bouton" data-statut={s.id} title={s.aide}>{s.nom}</button>)}
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="suivante" class="principal" disabled>RFC suivante ▶</button>
+        <span class="score" data-score></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { RFC_ECHANTILLON, STATUTS } from '../../../data/gouvernance';
+
+  document.querySelectorAll<HTMLElement>('[data-tri-rfc]').forEach((racine) => {
+    activerScene(racine);
+    const carte = racine.querySelector<HTMLElement>('[data-carte]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const score = racine.querySelector<HTMLElement>('[data-score]')!;
+    const suivante = racine.querySelector<HTMLButtonElement>('[data-action="suivante"]')!;
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-statut]')];
+    let i = 0;
+    let bons = 0;
+    let repondu = false;
+
+    function montrer() {
+      const r = RFC_ECHANTILLON[i];
+      carte.textContent = `RFC ${r.num} (${r.annee}) : « ${r.titre} »`;
+      boutons.forEach((b) => { b.disabled = false; b.classList.remove('juste', 'faux'); });
+      repondu = false;
+      suivante.disabled = true;
+      suivante.textContent = i === RFC_ECHANTILLON.length - 1 ? 'Recommencer ↺' : 'RFC suivante ▶';
+      score.textContent = `${i + 1} / ${RFC_ECHANTILLON.length}`;
+    }
+
+    boutons.forEach((b) => b.addEventListener('click', () => {
+      if (repondu) return;
+      repondu = true;
+      const r = RFC_ECHANTILLON[i];
+      const juste = b.dataset.statut === r.statut;
+      if (juste) bons++;
+      boutons.forEach((x) => {
+        x.disabled = true;
+        if (x.dataset.statut === r.statut) x.classList.add('juste');
+        else if (x === b) x.classList.add('faux');
+      });
+      const vrai = STATUTS.find((s) => s.id === r.statut)!.nom;
+      legende.textContent = `${juste ? 'Oui' : `Non : c’est « ${vrai} »`}. ${r.note}`;
+      if (i === RFC_ECHANTILLON.length - 1) {
+        legende.textContent += ` Bilan : ${bons} sur ${RFC_ECHANTILLON.length}. Sur environ 8 900 RFC publiées, seules 101 sont des « normes d’internet » au sens strict.`;
+      }
+      suivante.disabled = false;
+    }));
+
+    suivante.addEventListener('click', () => {
+      if (i === RFC_ECHANTILLON.length - 1) { i = 0; bons = 0; } else i++;
+      legende.textContent = '';
+      montrer();
+    });
+    montrer();
+  });
+</script>
+
+<style>
+  .carte-rfc { font-family: var(--police-mono); font-weight: 700; padding: 0.6rem 0.8rem; border-left: 4px solid var(--accent); background: var(--bg); margin: 0 0 0.6rem; overflow-wrap: anywhere; }
+  .consigne { margin: 0 0 0.4rem; font-weight: 600; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+  .choix .juste { border-color: var(--ill-secret-b); box-shadow: inset 0 -3px 0 var(--ill-secret-b); opacity: 1; }
+  .choix .faux { text-decoration: line-through; opacity: 1; }
+  .score { color: var(--muted); font-size: 0.9rem; }
+</style>

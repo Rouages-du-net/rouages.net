@@ -1,0 +1,73 @@
+---
+// Animation « Qui écrit quelles règles ? » (module « Gouvernance technique »,
+// étape 0) : les couches d'internet empilées, de la fibre à l'accessibilité ;
+// on choisit une couche pour voir qui en écrit les règles et comment.
+// Données : src/data/gouvernance.ts.
+import { COUCHES } from '../../../data/gouvernance';
+---
+<div class="anim couches" data-couches>
+  <div class="anim-repli">
+    <dl>
+      {COUCHES.map((c) => <><dt>{c.nom} ({c.exemple})</dt><dd>{c.qui} {c.comment}</dd></>)}
+    </dl>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre pile-et-fiche">
+      <div class="pile" role="group" aria-label="Couches d’internet, du haut vers le bas">
+        {COUCHES.map((c, i) => (
+          <button type="button" class={`couche c${i}`} data-i={i} aria-pressed={i === 4 ? 'true' : 'false'}>
+            <span class="nom">{c.nom}</span>
+            <span class="ex">{c.exemple}</span>
+          </button>
+        ))}
+      </div>
+      <div class="fiche-couche">
+        <h4 data-titre></h4>
+        <p><strong>Qui ?</strong> <span data-qui></span></p>
+        <p><strong>Comment ?</strong> <span data-comment></span></p>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { COUCHES } from '../../../data/gouvernance';
+
+  document.querySelectorAll<HTMLElement>('[data-couches]').forEach((racine) => {
+    activerScene(racine);
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('.couche')];
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const legende = q('.anim-legende');
+    const montrer = (i: number, annoncer: boolean) => {
+      const c = COUCHES[i];
+      boutons.forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+      q('[data-titre]').textContent = `${c.nom} : ${c.exemple}`;
+      q('[data-qui]').textContent = c.qui;
+      q('[data-comment]').textContent = c.comment;
+      if (annoncer) legende.textContent = `${c.nom}. ${c.qui}`;
+    };
+    boutons.forEach((b) => b.addEventListener('click', () => montrer(Number(b.dataset.i), true)));
+    montrer(4, false);
+    legende.textContent = 'Personne ne dirige tout internet : chaque couche a ses propres règles, écrites par des organisations différentes. Choisis une couche.';
+  });
+</script>
+
+<style>
+  .pile-et-fiche { display: grid; grid-template-columns: minmax(11rem, 15rem) 1fr; gap: 1rem; align-items: start; }
+  @media (max-width: 36rem) { .pile-et-fiche { grid-template-columns: 1fr; } }
+  .pile { display: grid; gap: 0.3rem; }
+  .couche { font: inherit; text-align: left; display: grid; padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--card); color: var(--fg); cursor: pointer; }
+  .couche .nom { font-weight: 700; font-size: 0.92rem; }
+  .couche .ex { font-size: 0.8rem; color: var(--muted); font-family: var(--police-mono); overflow-wrap: anywhere; }
+  .couche[aria-pressed='true'] { border-color: var(--accent); box-shadow: inset 0.35rem 0 0 var(--accent); }
+  .couche:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .c0, .c1 { background: color-mix(in srgb, var(--ill-client) 12%, var(--card)); }
+  .c2, .c3 { background: color-mix(in srgb, var(--ill-commun) 12%, var(--card)); }
+  .c4 { background: color-mix(in srgb, var(--ill-reseau) 12%, var(--card)); }
+  .c5 { background: color-mix(in srgb, var(--muted) 15%, var(--card)); }
+  .fiche-couche h4 { margin: 0 0 0.4rem; }
+  .fiche-couche p { margin: 0 0 0.5rem; max-width: var(--mesure); }
+</style>
