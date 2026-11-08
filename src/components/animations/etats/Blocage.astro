@@ -1,0 +1,85 @@
+---
+// Animation « Où bloquer une connexion ? » (module « États et régulation »,
+// étape 5) : les quatre étapes d'une connexion HTTPS vers site.example ; à
+// chaque étape, on peut bloquer pour voir ce que voit le censeur, ce que voit
+// l'internaute, et ce qui est bloqué par ricochet. Données : src/data/etats.ts.
+import { ETAPES_CONNEXION } from '../../../data/etats';
+---
+<div class="anim blocage" data-blocage>
+  <div class="anim-repli">
+    <table>
+      <caption>Où peut-on bloquer une connexion ?</caption>
+      <thead><tr><th scope="col">Étape</th><th scope="col">Blocage</th><th scope="col">Ce qui est visible</th><th scope="col">Effets de bord</th></tr></thead>
+      <tbody>{ETAPES_CONNEXION.map((e) => <tr><th scope="row">{e.etape}</th><td>{e.bloque}</td><td>{e.voit}</td><td>{e.collateral}</td></tr>)}</tbody>
+    </table>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="chemin" data-chemin>
+        {ETAPES_CONNEXION.map((e, i) => (
+          <li data-i={i}>
+            <span class="nom">{i + 1}. {e.etape}</span>
+            <button type="button" class="anim-bouton" data-bloquer={i} aria-pressed="false">Bloquer ici</button>
+          </li>
+        ))}
+      </ol>
+      <div class="detail" data-detail>
+        <p data-texte></p>
+        <p class="voit"><strong>Ce que voit le réseau :</strong> <span data-voit></span></p>
+        <p class="bord"><strong>Effets de bord :</strong> <span data-bord></span></p>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { ETAPES_CONNEXION } from '../../../data/etats';
+
+  document.querySelectorAll<HTMLElement>('[data-blocage]').forEach((racine) => {
+    activerScene(racine);
+    const lis = [...racine.querySelectorAll<HTMLElement>('[data-chemin] li')];
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-bloquer]')];
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const legende = q('.anim-legende');
+    let bloque: number | null = null;
+
+    function rendre() {
+      lis.forEach((li, i) => {
+        li.classList.toggle('coupe', bloque === i);
+        li.classList.toggle('jamais', bloque !== null && i > bloque);
+        boutons[i].setAttribute('aria-pressed', String(bloque === i));
+        boutons[i].textContent = bloque === i ? 'Débloquer' : 'Bloquer ici';
+      });
+      const detail = q('[data-detail]');
+      if (bloque === null) {
+        detail.hidden = false;
+        q('[data-texte]').textContent = 'Sans blocage, la connexion passe par les quatre étapes et la page s’affiche. Choisis une étape où bloquer.';
+        q('[data-voit]').textContent = 'le nom du site (DNS, SNI) et son adresse IP, mais pas le contenu, chiffré.';
+        q('[data-bord]').textContent = 'aucun.';
+        legende.textContent = '';
+        return;
+      }
+      const e = ETAPES_CONNEXION[bloque];
+      q('[data-texte]').textContent = e.bloque;
+      q('[data-voit]').textContent = e.voit;
+      q('[data-bord]').textContent = e.collateral;
+      legende.textContent = `Bloqué à l’étape ${bloque + 1}, ${e.etape} : la page ne s’affiche pas, les étapes suivantes n’ont jamais lieu.`;
+    }
+    boutons.forEach((b, i) => b.addEventListener('click', () => { bloque = bloque === i ? null : i; rendre(); }));
+    rendre();
+  });
+</script>
+
+<style>
+  .chemin { list-style: none; padding: 0; margin: 0 0 0.75rem; display: grid; gap: 0.35rem; }
+  .chemin li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.4rem; padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-left: 4px solid var(--ill-client); border-radius: 0.4rem; background: var(--bg); }
+  .chemin li.coupe { border-left-color: var(--ill-commun); border-color: var(--ill-commun); }
+  .chemin li.jamais { opacity: 0.45; }
+  .nom { font-weight: 600; }
+  .chemin [aria-pressed='true'] { background: var(--ill-commun); color: var(--bg); border-color: var(--ill-commun); }
+  .detail p { margin: 0 0 0.4rem; max-width: var(--mesure); }
+  .anim-repli table { border-collapse: collapse; font-size: 0.9rem; }
+  .anim-repli th, .anim-repli td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+</style>

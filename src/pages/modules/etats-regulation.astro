@@ -1,0 +1,451 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Monde from '../../components/animations/etats/Monde.astro';
+import DemandeRgpd from '../../components/animations/etats/DemandeRgpd.astro';
+import Guichet from '../../components/animations/etats/Guichet.astro';
+import Griefs from '../../components/animations/etats/Griefs.astro';
+import Calendrier from '../../components/animations/etats/Calendrier.astro';
+import Neutralite from '../../components/animations/etats/Neutralite.astro';
+import Blocage from '../../components/animations/etats/Blocage.astro';
+import QuiBloque from '../../components/animations/etats/QuiBloque.astro';
+import Coupures from '../../components/animations/etats/Coupures.astro';
+
+// Faits sourcés : voir docs/sources/etats-regulation.md.
+const etapes = [
+  { ancre: 'non-droit', court: 'Zone de non-droit ?' },
+  { ancre: 'donnees', court: 'Tes données' },
+  { ancre: 'plateformes', court: 'Les plateformes' },
+  { ancre: 'ia', court: 'L’IA' },
+  { ancre: 'neutralite', court: 'La neutralité' },
+  { ancre: 'bloquer', court: 'Bloquer' },
+  { ancre: 'couper', court: 'Couper' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="États et régulation : qui fait les lois du numérique ?"
+  description="RGPD, DSA, AI Act, neutralité du net, blocages et coupures d'internet : comment les États font la loi en ligne, en Europe et dans le monde, et où sont les limites."
+>
+  <p class="tag" data-pagefind-ignore>Qui décide · module en construction</p>
+  <h1>États et régulation : qui fait les lois du numérique ?</h1>
+  <MiseAJour date="2026-11-08" evolutif />
+  <p class="chapo seulement-debut">
+    Les règles techniques d'internet s'écrivent par consensus, dans des organisations ouvertes. Les lois, elles,
+    sont votées par les États : protéger tes données, obliger les plateformes à rendre des comptes, encadrer
+    l'IA… mais aussi bloquer des sites, et parfois couper internet. Ce module montre ce que font ces lois, ce
+    qu'on leur reproche, et ce que les juges en disent.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Internet, zone de non-droit ?" ancre="non-droit">
+    <Monde slot="animation" />
+    <p slot="decouverte">
+      Non : les lois s'appliquent en ligne comme ailleurs. Selon la CNUCED, l'agence de l'ONU pour le commerce et
+      le développement, 155 pays sur 195 ont une loi de protection des données personnelles. L'Europe n'est pas
+      seule : le Brésil, l'Inde, la Chine, le Kenya, le Nigeria, la Corée du Sud ont aussi les leurs.
+    </p>
+    <p slot="curieux">
+      Les modèles diffèrent. L'Europe part des droits fondamentaux, les États-Unis du marché et de lois par
+      secteur ou par État, la Chine combine protection contre les abus des entreprises et contrôle politique des
+      contenus. Le vrai débat n'est pas l'existence des lois, mais leur application : lente, inégale, et
+      difficile face à des entreprises installées à l'étranger.
+    </p>
+    <p slot="ingenieur">
+      Le module <a href="/modules/gouvernance-technique/">Gouvernance technique</a> montre qui écrit les règles
+      techniques (protocoles, adresses, noms). Ici, il s'agit des lois des États et de l'Union européenne, qui
+      s'imposent aux entreprises et aux internautes.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le 21 mars 1974, <em>Le Monde</em> titre « SAFARI ou la chasse aux Français » : le ministère de l'Intérieur
+        prépare l'interconnexion de 400 fichiers de l'administration grâce à un identifiant unique. Le scandale
+        mène à la loi Informatique et Libertés du 6 janvier 1978, qui crée la CNIL.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« L'Europe régule, les autres non. »</strong> La Chine oblige depuis 2022 les plateformes à proposer
+      de désactiver la recommandation personnalisée ; l'Inde a interdit dès 2016 les offres où certaines applis
+      sont gratuites ; l'Australie interdit les réseaux sociaux aux moins de 16 ans depuis décembre 2025.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Tes données : le RGPD" ancre="donnees">
+    <div slot="animation">
+      <DemandeRgpd />
+      <Guichet />
+    </div>
+    <p slot="decouverte">
+      Le <Terme id="rgpd">RGPD</Terme>, appliqué depuis le 25 mai 2018 dans toute l'Union européenne, te donne des
+      droits : savoir ce qu'une organisation sait de toi, faire effacer ou récupérer tes données, contester une
+      décision prise par une machine. L'organisation doit répondre en un mois.
+    </p>
+    <p slot="curieux">
+      Une organisation ne peut utiliser tes données que pour une raison prévue par la loi : il y en a six, et ton
+      consentement n'est que l'une d'elles. Elle doit n'en collecter que le nécessaire (« minimisation »). Les
+      amendes peuvent atteindre 4 % de son chiffre d'affaires mondial. En 2025, la CNIL a prononcé 83 sanctions,
+      pour 487 millions d'euros, dont l'essentiel contre Google et Shein.
+    </p>
+    <p slot="ingenieur">
+      Grâce au « guichet unique », une entreprise n'a affaire qu'à l'autorité du pays où elle a son siège
+      européen. Pour Meta, TikTok ou Google, c'est souvent l'Irlande, accusée de lenteur. Un règlement de 2025
+      encadre mieux ces procédures transfrontalières, à partir du 2 avril 2027.
+    </p>
+    <div slot="histoire">
+      <p>
+        Un utilisateur autrichien de Facebook, Max Schrems, porte plainte contre Facebook après les révélations d'Edward Snowden
+        sur la surveillance américaine. En 2015, puis en 2020, la Cour de justice de l'UE annule les accords qui
+        permettaient d'envoyer les données des Européen·nes aux États-Unis. Un troisième accord est adopté en 2023 ;
+        le député français Philippe Latombe l'a contesté, le Tribunal de l'UE l'a validé en septembre 2025, et un
+        pourvoi est en cours (état au 8 novembre 2026).
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        <strong>Le RGPD bientôt modifié ? (état au 8 novembre 2026)</strong> En novembre 2025, la Commission a
+        proposé un « omnibus numérique » pour simplifier les règles, avec jusqu'à 5 milliards d'euros
+        d'économies administratives. Les autorités de protection des données ont demandé de ne pas toucher à la
+        définition de la donnée personnelle ; l'association noyb y voit des changements « surtout utiles aux
+        grandes entreprises américaines » ; le lobby des plateformes juge qu'il faut aller plus loin. Le
+        21 octobre 2026, les gouvernements ont retiré la nouvelle définition, mais gardé le refus des cookies en
+        un clic. Le Parlement n'a pas encore voté.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le RGPD interdit les cookies. »</strong> Non : les cookies relèvent d'une autre directive
+      (ePrivacy), qui demande ton accord avant de déposer des traceurs non indispensables. Les bandeaux
+      compliqués sont un choix des sites : en 2025, 21 sanctions de la CNIL portaient sur des refus de cookies
+      non respectés.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Les plateformes : DSA et DMA" ancre="plateformes">
+    <Griefs slot="animation" />
+    <p slot="decouverte">
+      Depuis 2024, le <Terme id="dsa">DSA</Terme> oblige les plateformes à agir contre les contenus et produits
+      illégaux, à expliquer leurs règles, et à permettre de signaler. Les 29 plus grandes (plus de 45 millions
+      d'utilisateur·rices en Europe), de TikTok à Wikipédia et, depuis août 2026, ChatGPT, doivent évaluer les
+      risques qu'elles créent.
+    </p>
+    <p slot="curieux">
+      Les amendes peuvent atteindre 6 % du chiffre d'affaires mondial. Les premières : 120 millions d'euros pour
+      X (décembre 2025), 200 millions pour Temu, 550 millions pour AliExpress (2026). Le DMA, lui, vise les
+      « contrôleurs d'accès » (Alphabet, Amazon, Apple, ByteDance, Meta, Microsoft, Booking) : Apple et Meta ont
+      été condamnés en 2025, Google en 2026.
+    </p>
+    <p slot="ingenieur">
+      Le DSA ne dit pas ce qui est illégal : ce sont les autres lois, nationales ou européennes, qui le font. Il
+      donne aussi aux chercheur·ses un droit d'accès aux données des plateformes, et interdit les interfaces
+      conçues pour tromper.
+    </p>
+    <div slot="decide">
+      <p>
+        <strong>« Le DSA, c'est de la censure » : les deux points de vue.</strong> Pour les élus républicains de la
+        commission judiciaire de la Chambre des représentants (rapport de juillet 2025), c'est « un outil de
+        censure » ; en décembre 2025, le gouvernement américain a interdit de visa cinq Européen·nes, dont l'ancien
+        commissaire Thierry Breton, pour « censure extraterritoriale ». Des associations de défense des libertés
+        (EFF, ARTICLE 19) demandent aussi des garde-fous sur certains outils.
+      </p>
+      <p>
+        Pour la Commission et les élus démocrates de la même commission, le DSA impose de retirer des contenus
+        illégaux, comme les lois américaines le font pour la pédocriminalité ou le droit d'auteur. Les décisions
+        rendues portent sur la transparence, la sécurité des produits et la conception des services, pas sur des
+        opinions.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        <strong>Les moins de 15 ans (état au 8 novembre 2026).</strong> En France, une loi interdisant les réseaux
+        sociaux aux moins de 15 ans a été censurée le 14 août 2026 par le Conseil constitutionnel : une
+        interdiction générale, sans regarder les contenus ni les risques, et sans que les parents puissent la lever,
+        porte atteinte à la liberté d'expression. La Commission européenne a proposé en septembre 2026 un âge
+        minimum de 15 ans pour les services « à risque ».
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="L'IA : l'AI Act et les autres" ancre="ia">
+    <Calendrier slot="animation" />
+    <p slot="decouverte">
+      L'AI Act européen classe les IA selon leur risque. Certaines sont interdites depuis février 2025 : la
+      notation sociale, la manipulation qui cause un préjudice, la reconnaissance des émotions au travail et à
+      l'école, la reconnaissance faciale en temps réel par la police dans la rue (sauf exceptions).
+    </p>
+    <p slot="curieux">
+      Les IA « à haut risque » (recrutement, notation scolaire, crédit…) devaient être encadrées en août 2026.
+      En juillet 2026, l'Union a repoussé ces obligations à fin 2027 et 2028, et ajouté une interdiction : les IA
+      qui fabriquent des images intimes d'une personne sans son consentement, applicable le 2 décembre 2026.
+    </p>
+    <p slot="ingenieur">
+      Ailleurs : la Chine encadre les algorithmes de recommandation (2022), l'IA générative (2023), qui doit
+      respecter « les valeurs fondamentales socialistes », et impose l'étiquetage des contenus générés (2025). La
+      Corée du Sud a une loi-cadre depuis janvier 2026. Aux États-Unis, la Californie et le Colorado ont voté des
+      lois ; le gouvernement fédéral cherche, par décret, à les contester.
+    </p>
+    <div slot="decide">
+      <p>
+        Le report de 2026 divise : l'association européenne des consommateur·rices (BEUC) dénonce « une
+        dérégulation sans simplification », quand le lobby des grandes plateformes demande « une action plus
+        audacieuse ». La Commission met en avant la disponibilité des normes techniques et le coût pour les
+        entreprises.
+      </p>
+    </div>
+    <p slot="verifie">
+      Le texte de l'AI Act, comme toutes les lois européennes, est gratuit sur eur-lex.europa.eu : la liste des
+      pratiques interdites est à l'article 5, le calendrier à l'article 113.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="La neutralité du net" ancre="neutralite">
+    <Neutralite slot="animation" />
+    <p slot="decouverte">
+      Ton fournisseur d'accès n'a pas le droit de ralentir une appli concurrente ou d'en favoriser une autre :
+      c'est la <Terme id="neutralite-du-net">neutralité du net</Terme>, inscrite dans le droit européen depuis
+      2015. En France, l'Arcep la fait respecter.
+    </p>
+    <p slot="curieux">
+      En 2020, la Cour de justice de l'UE a jugé illégal un « tarif nul » qui rendait certaines applis gratuites
+      pendant que les autres étaient bloquées une fois le forfait épuisé. L'Inde avait interdit dès 2016 ce type
+      d'offres, ce qui a mis fin à Free Basics, l'internet gratuit mais limité proposé par Facebook.
+    </p>
+    <p slot="ingenieur">
+      Aux États-Unis, la neutralité fait du yo-yo : adoptée en 2015, abrogée en 2017, rétablie en 2024, annulée par
+      une cour d'appel le 2 janvier 2025, qui juge que l'administration n'avait pas ce pouvoir.
+    </p>
+    <div slot="decide">
+      <p>
+        Les opérateurs européens demandent que les grandes plateformes, qui génèrent l'essentiel du trafic,
+        participent au coût des réseaux (« fair share »). Le régulateur européen des télécoms n'a trouvé en 2022
+        « aucune preuve de parasitisme » ; les plateformes y voient une atteinte à la neutralité. Le débat continue
+        avec un projet de loi européen de 2026 sur les réseaux.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Bloquer" ancre="bloquer">
+    <div slot="animation">
+      <Blocage />
+      <QuiBloque />
+    </div>
+    <p slot="decouverte">
+      Pour bloquer un site, un État s'adresse aux fournisseurs d'accès. Ils peuvent agir à plusieurs étapes de la
+      connexion : l'annuaire (DNS), l'adresse IP, le nom du site visible au début d'une connexion chiffrée
+      (<Terme id="sni">SNI</Terme>), ou la forme du trafic. Plus le blocage est précis, plus il coûte cher.
+    </p>
+    <p slot="curieux">
+      En France aussi, on bloque : des contenus pédocriminels et terroristes par décision de la police, des sites
+      pirates (près de 15 200 noms de domaine à la demande de l'Arcom), des sites pornographiques qui ne vérifient
+      pas l'âge (loi de mai 2024), des sites de jeux illégaux. Le plus souvent par le DNS, qui se contourne
+      facilement.
+    </p>
+    <p slot="ingenieur">
+      Un <Terme id="vpn">VPN</Terme> cache ton trafic à ton fournisseur d'accès, mais pas à celui du VPN, qui peut
+      lui-même recevoir des demandes de la justice : « un VPN n'est pas un outil d'anonymat », rappelle l'EFF. Il
+      peut être détecté et bloqué (Chine, Russie), et ne sert à rien si internet est coupé. Le module
+      <a href="/modules/dark-net/">Le dark net</a> explique Tor.
+    </p>
+    <div slot="decide">
+      <p>
+        Ce qui distingue un blocage dans une démocratie : une loi publique, un juge qui peut l'annuler, et un débat.
+        En Nouvelle-Calédonie, en mai 2024, le gouvernement a coupé TikTok pendant des émeutes meurtrières, en
+        invoquant la diffusion d'appels à la violence. Le Conseil d'État a annulé la décision le 1er avril 2025 : une
+        coupure totale pour une durée indéterminée était disproportionnée, même s'il admet qu'une coupure provisoire
+        peut être justifiée en « circonstances exceptionnelles ».
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        La Chine a lancé en 1998 le projet « Bouclier d'or », qui sert à la police et à la surveillance ; ce qu'on
+        appelle la « Grande Muraille » en est la partie qui filtre. Recherche Google bloquée depuis 2012, Wikipédia
+        dans toutes les langues depuis 2019. Pour Xi Jinping, en 2015, il faut « respecter le droit de chaque pays à
+        gouverner son propre cyberespace ». En 2025, une fuite de documents a montré que ces outils sont exportés,
+        notamment vers le Myanmar, le Pakistan et l'Éthiopie.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Couper" ancre="couper">
+    <Coupures slot="animation" />
+    <p slot="decouverte">
+      Certains États coupent internet, dans une région ou dans tout le pays : pendant des manifestations, des
+      guerres, des élections… ou des examens, pour empêcher la triche. L'association Access Now en a compté au
+      moins 313 en 2025, dans 52 pays : un record.
+    </p>
+    <p slot="curieux">
+      Le 27 janvier 2011, l'Égypte disparaît d'internet en vingt minutes : ses opérateurs retirent presque toutes
+      leurs annonces de routes (<Terme id="bgp">BGP</Terme>). Aujourd'hui, l'Iran garde ses routes mais ne laisse
+      passer qu'une liste blanche de services. Depuis janvier 2026, il a imposé la plus longue coupure nationale
+      jamais documentée par Freedom House : environ 88 jours d'affilée (état au 8 novembre 2026).
+    </p>
+    <p slot="ingenieur">
+      Couper seulement le réseau mobile, ou ralentir un service au lieu de le bloquer, est plus discret et plus
+      difficile à prouver : en 2021, la Russie a limité Twitter à 130-150 kbit/s, en repérant son nom dans le SNI.
+      Des observatoires (OONI, IODA, Cloudflare Radar) mesurent ces coupures depuis le réseau et les rendent
+      publiques.
+    </p>
+    <div slot="decide">
+      <p>
+        Les États invoquent la sécurité, les rumeurs, les appels à la violence, les cyberattaques, la triche. Le
+        rapporteur spécial de l'ONU juge que les coupures ne sont « jamais » nécessaires et « généralement
+        disproportionnées » ; le Haut-Commissariat note que beaucoup ont été « suivies de pics de violence ». En
+        Inde, une étude associe les coupures à plus d'actions violentes, mais ces études mesurent des corrélations :
+        les coupures arrivent justement quand la situation se dégrade.
+      </p>
+      <p>
+        Des juges africains ont condamné des coupures : la Cour de la CEDEAO a jugé illégales celles du Togo (2017),
+        la suspension de Twitter au Nigeria (2021) et les coupures du Sénégal (2024).
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« La censure, c'est seulement les dictatures. »</strong> L'Inde, plus grande démocratie du monde, a
+      été le pays qui a le plus coupé internet six années de suite, jusqu'en 2023. Le Panama et le Sénégal ont
+      coupé pendant des manifestations. <strong>« On ne peut pas couper tout un pays. »</strong> L'Égypte (2011),
+      l'Iran, la Syrie, l'Afghanistan (2025) l'ont fait.
+    </p>
+    <p slot="verifie">
+      L'application libre OONI Probe mesure si des sites et des messageries sont bloqués là où tu es. En France,
+      c'est légal ; mais l'OONI prévient lui-même que, dans certains pays, l'utiliser peut valoir des poursuites.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Internet n'est pas une zone de non-droit</strong> : 155 pays sur 195 ont une loi sur les données ; le vrai débat est l'application.</li>
+      <li><strong>Tu as des droits sur tes données</strong> : accès, effacement, portabilité, contestation d'une décision automatique, réponse sous un mois.</li>
+      <li><strong>Les plateformes doivent rendre des comptes</strong> : les décisions du DSA portent sur la transparence, la sécurité et la conception, et font débat.</li>
+      <li><strong>Bloquer et couper, c'est aussi en démocratie</strong> : ce qui compte, c'est la loi, le juge et le débat public.</li>
+      <li><strong>Un blocage a toujours des effets de bord</strong>, et il se contourne ; une coupure touche toute une population.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/modules/gouvernance-technique/">Gouvernance technique</a> pour les règles
+      techniques, <a href="/modules/surveillance-vie-privee/">Surveillance et vie privée</a>, et
+      <a href="/modules/ia-decident/">Les IA qui décident pour nous</a> pour l'article 22 du RGPD.
+    </p>
+
+  <Sources
+    verifie="2026-11-08"
+    sources={[
+      { auteur: 'CNUCED', titre: 'Data protection and privacy legislation worldwide (données 2026)', url: 'https://unctad.org/page/data-protection-and-privacy-legislation-worldwide', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Acteurs publics', titre: '1978, année zéro de la protection des données', url: 'https://acteurspublics.fr/articles/1978-annee-zero-de-la-protection-des-donnees/', type: 'presse', annee: 2018 },
+      { auteur: 'CNIL', titre: 'La loi Informatique et Libertés', url: 'https://www.cnil.fr/fr/la-loi-informatique-et-libertes', type: 'primaire', annee: 2026 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2016/679 (RGPD)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32016R0679', type: 'primaire', annee: 2016 },
+      { auteur: 'Data Protection Commission (Irlande)', titre: 'Conclusion de l’enquête sur Meta Ireland (1,2 milliard d’euros)', url: 'https://www.dataprotection.ie/en/news-media/press-releases/Data-Protection-Commission-announces-conclusion-of-inquiry-into-Meta-Ireland', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'CNIL', titre: 'Bilan des sanctions 2025', url: 'https://cnil.fr/fr/bilan-sanctions-2025', type: 'primaire', annee: 2026 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2025/2518 (procédure du RGPD)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202502518', type: 'primaire', annee: 2025 },
+      { auteur: 'CNIL', titre: 'Cookies et traceurs : que dit la loi ?', url: 'https://www.cnil.fr/fr/cookies-et-autres-traceurs/regles/cookies/que-dit-la-loi', type: 'primaire', annee: 2026 },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué 117/15 (Schrems I)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2015-10/cp150117fr.pdf', type: 'primaire', annee: 2015 },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué 91/20 (Schrems II)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2020-07/cp200091fr.pdf', type: 'primaire', annee: 2020 },
+      { auteur: 'Tribunal de l’UE', titre: 'Communiqué 106/25 (Latombe c. Commission)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2025-09/cp250106fr.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Commission européenne', titre: 'Omnibus numérique (IP/25/2718)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_25_2718', type: 'primaire', annee: 2025 },
+      { auteur: 'EDPB et EDPS', titre: 'Avis conjoint 2/2026 sur l’omnibus numérique', url: 'https://www.edpb.europa.eu/system/files/2026-02/edpb_edps_jointopinion_202602_digitalomnibus_en.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'noyb', titre: 'Digital Omnibus: EU DPAs reject many proposed changes to the GDPR', url: 'https://noyb.eu/en/digital-omnibus-eu-dpas-reject-many-proposed-changes-gdpr', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'BEUC', titre: 'Digital Omnibus: keep protections under GDPR and uphold the AI Act', url: 'https://www.beuc.eu/sites/default/files/publications/BEUC-X-2025-116_Digital_Omnibus_proposals_keep_protections_under_GDPR_and_uphold_the_AI_Act.pdf', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'CCIA Europe', titre: 'Digital Omnibus: simplification requires bolder action', url: 'https://ccianet.org/news/2025/11/digital-omnibus-simplification-of-eu-tech-rules-requires-bolder-action/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Conseil de l’UE', titre: 'Mandat de négociation sur l’omnibus numérique (ST 14756/26)', url: 'https://data.consilium.europa.eu/doc/document/ST-14756-2026-INIT/en/pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2022/2065 (DSA)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32022R2065', type: 'primaire', annee: 2022 },
+      { auteur: 'Commission européenne', titre: 'Liste des très grandes plateformes et moteurs de recherche', url: 'https://digital-strategy.ec.europa.eu/en/policies/list-designated-vlops-and-vloses', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Amende de 120 millions d’euros contre X (IP/25/2934)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_25_2934', type: 'primaire', annee: 2025 },
+      { auteur: 'Commission européenne', titre: 'Commission fines Temu €200 million', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-fines-temu-eu200-million-breaching-digital-services-act', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Amende de 550 millions d’euros contre AliExpress (IP/26/1654)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_26_1654', type: 'primaire', annee: 2026 },
+      { auteur: 'Commission européenne', titre: 'TikTok : constatation préliminaire sur le fil « Pour toi »', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-preliminarily-finds-tiktoks-you-feed-breach-digital-services-act-harmful-rabbit-holes', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Meta : constatations préliminaires (IP/25/2503)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_25_2503', type: 'primaire', annee: 2025 },
+      { auteur: 'Chambre des représentants (républicains)', titre: 'The Foreign Censorship Threat (DSA)', url: 'https://judiciary.house.gov/media/press-releases/foreign-censorship-threat-how-european-unions-digital-services-act-compels', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Chambre des représentants (démocrates)', titre: 'Debunking Republicans’ misleading report on the DSA', url: 'https://democrats-judiciary.house.gov/sites/evo-subsites/democrats-judiciary.house.gov/files/evo-media-document/debunking-republicans-misleading-report-on-the-eu-s-digital-services-act-dsa.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Al Jazeera', titre: 'US bars five Europeans over efforts to censor American viewpoints', url: 'https://www.aljazeera.com/news/2025/12/24/us-bars-five-europeans-over-efforts-to-censor-american-viewpoints', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2022/1925 (DMA)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32022R1925', type: 'primaire', annee: 2022 },
+      { auteur: 'Commission européenne', titre: 'Contrôleurs d’accès du DMA', url: 'https://digital-markets-act.ec.europa.eu/gatekeepers_en', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Amendes DMA contre Apple et Meta (IP/25/1085)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_25_1085', type: 'primaire', annee: 2025 },
+      { auteur: 'Commission européenne', titre: 'Amende DMA contre Google (IP/26/1670)', url: 'https://ec.europa.eu/commission/presscorner/detail/fr/ip_26_1670', type: 'primaire', annee: 2026 },
+      { auteur: 'Conseil constitutionnel', titre: 'Décision n° 2026-911 DC du 14 août 2026', url: 'https://www.conseil-constitutionnel.fr/decision/2026/2026911DC.htm', type: 'primaire', annee: 2026 },
+      { auteur: 'Commission européenne', titre: 'Analyse d’impact de l’« EU KIDS Act » (SWD(2026) 681)', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX%3A52026SC0681', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'AP (PBS)', titre: 'Social media platforms removed 4.7 million accounts (Australie)', url: 'https://www.pbs.org/newshour/world/social-media-platforms-removed-4-7-million-accounts', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2024/1689 (AI Act)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202401689', type: 'primaire', annee: 2024 },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2026/1744 (omnibus IA)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=OJ:L_202601744', type: 'primaire', annee: 2026 },
+      { auteur: 'CAC (Chine)', titre: 'Règles sur les algorithmes de recommandation', url: 'https://www.cac.gov.cn/2022-01/04/c_1642894606364259.htm', type: 'primaire', annee: 2022, langue: 'zh' },
+      { auteur: 'CAC (Chine)', titre: 'Mesures provisoires sur l’IA générative', url: 'https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm', type: 'primaire', annee: 2023, langue: 'zh' },
+      { auteur: 'CAC (Chine)', titre: 'Mesures sur l’étiquetage des contenus générés par IA', url: 'https://www.cac.gov.cn/2025-03/14/c_1743654685896173.htm', type: 'primaire', annee: 2025, langue: 'zh' },
+      { auteur: 'CAC (Chine)', titre: 'Loi sur la protection des informations personnelles (PIPL)', url: 'https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm', type: 'primaire', annee: 2021, langue: 'zh' },
+      { auteur: 'Maison-Blanche', titre: 'Fact sheet : National Policy Framework for AI', url: 'https://www.whitehouse.gov/fact-sheets/2025/12/fact-sheet-president-donald-j-trump-ensures-a-national-policy-framework-for-artificial-intelligence/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Gouverneur de Californie', titre: 'Signature de la loi SB 53', url: 'https://www.gov.ca.gov/2025/09/29/governor-newsom-signs-sb-53-advancing-californias-world-leading-artificial-intelligence-industry/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Cooley', titre: 'South Korea’s AI Basic Act: overview', url: 'https://www.cooley.com/news/insight/2026/2026-01-27-south-koreas-ai-basic-act-overview-and-key-takeaways', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'PIB (Inde)', titre: 'Note sur les règles DPDP (novembre 2025)', url: 'https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/nov/doc20251117695301.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'ANPD (Brésil)', titre: 'Présentation institutionnelle', url: 'https://www.gov.br/anpd/pt-br/acesso-a-informacao/institucional', type: 'primaire', annee: 2026, langue: 'pt' },
+      { auteur: 'STF (Brésil)', titre: 'Recours contre la décision sur le Marco Civil da Internet', url: 'https://noticias.stf.jus.br/postsnoticias/stf-vai-analisar-recursos-contra-tese-fixada-no-julgamento-do-marco-civil-da-internet/', type: 'primaire', annee: 2026, langue: 'pt' },
+      { auteur: 'Union africaine', titre: 'Convention de Malabo : état des signatures et ratifications', url: 'https://au.int/sites/default/files/treaties/29560-sl-AFRICAN_UNION_CONVENTION_ON_CYBER_SECURITY_AND_PERSONAL_DATA_PROTECTION.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2015/2120 (internet ouvert)', url: 'https://eur-lex.europa.eu/legal-content/FR/TXT/HTML/?uri=CELEX:32015R2120', type: 'primaire', annee: 2015 },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué 106/20 (Telenor)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2020-09/cp200106fr.pdf', type: 'primaire', annee: 2020 },
+      { auteur: 'Cour d’appel du 6e circuit (États-Unis)', titre: 'Ohio Telecom Ass’n v. FCC', url: 'https://www.opn.ca6.uscourts.gov/opinions.pdf/25a0002p-06.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'TRAI (Inde)', titre: 'Prohibition of Discriminatory Tariffs for Data Services', url: 'https://www.trai.gov.in/sites/default/files/2024-08/Press_Release_No_13_28_08-02-2016.pdf', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'BEREC', titre: 'Preliminary assessment of payments from CAPs to ISPs', url: 'https://www.berec.europa.eu/system/files/2022-10/BEREC%20BoR%20%2822%29%20137%20BEREC_preliminary-assessment-payments-CAPs-to-ISPs_0.pdf', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Arcom', titre: 'L’Arcom prend acte de la décision du groupe Aylo', url: 'https://www.arcom.fr/presse/larcom-prend-acte-de-la-decision-du-groupe-aylo', type: 'primaire', annee: 2025 },
+      { auteur: 'Arcom (personnalité qualifiée)', titre: 'Rapport d’activité 2024 (blocage administratif)', url: 'https://www.vie-publique.fr/files/rapport/pdf/298764.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Arcom', titre: 'Lutte contre le piratage en 2025', url: 'https://www.arcom.fr/en/find-out-more/studies-and-data/studies-reviews-and-reports/fight-against-cultural-and-sports-related-contdnt-piracy-2025-intensification-and-expansion-new-players', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Conseil d’État', titre: 'TikTok en Nouvelle-Calédonie : décision du 1er avril 2025', url: 'https://conseil-etat.fr/Media/actualites/documents/2025/avril-2025/494511-494583-495174.pdf', type: 'primaire', annee: 2025 },
+      { auteur: 'Tribunal de l’UE', titre: 'Communiqué 132/22 (RT France c. Conseil)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2022-07/cp220132fr.pdf', type: 'primaire', annee: 2022 },
+      { auteur: 'Global Freedom of Expression (Columbia)', titre: 'SERAP c. Nigeria (Cour de la CEDEAO, 2022)', url: 'https://globalfreedomofexpression.columbia.edu/cases/serap-v-federal-republic-of-nigeria/', type: 'recherche', annee: 2022, langue: 'en' },
+      { auteur: 'Global Freedom of Expression (Columbia)', titre: 'Amnesty International Togo c. Togo (Cour de la CEDEAO, 2020)', url: 'https://globalfreedomofexpression.columbia.edu/cases/amnesty-international-togo-and-ors-v-the-togolese-republic/', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'Global Freedom of Expression (Columbia)', titre: 'Ahmet Yıldırım c. Turquie (CEDH, 2012)', url: 'https://globalfreedomofexpression.columbia.edu/cases/ahmed-yildirim-v-turkey', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'Global Freedom of Expression (Columbia)', titre: 'Vladimir Kharitonov c. Russie (CEDH, 2020)', url: 'https://globalfreedomofexpression.columbia.edu/cases/vladimir-kharitonov-v-russia/', type: 'recherche', annee: 2020, langue: 'en' },
+      { auteur: 'Human Rights Watch', titre: 'Russia: New law expands government control online', url: 'https://www.hrw.org/news/2019/10/31/russia-new-law-expands-government-control-online', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'RTÉ (Reuters)', titre: 'Kremlin confirms WhatsApp block', url: 'https://www.rte.ie/news/world/2026/0212/1558075-whatsapp-russia', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Z. Xue et al.', titre: 'Throttling Twitter: an emerging censorship technique in Russia (ACM IMC)', url: 'https://censorbib.nymity.ch/pdf/Xue2021a.pdf', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'OONI', titre: 'Russia blocks amid Russia-Ukraine conflict (SNI)', url: 'https://ooni.org/post/2022-russia-blocks-amid-ru-ua-conflict/', type: 'recherche', annee: 2022, langue: 'en' },
+      { auteur: 'Open Society Institute', titre: 'Breaking Through the « Golden Shield »', url: 'https://www.opensocietyfoundations.org/sites/default/files/china-internet-censorship-20041101.pdf', type: 'recherche', annee: 2004, langue: 'en' },
+      { auteur: 'Freedom House', titre: 'Freedom on the Net 2024 : Chine', url: 'https://freedomhouse.org/country/china/freedom-net/2024', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'OONI', titre: 'China is now blocking all language editions of Wikipedia', url: 'https://ooni.org/post/2019-china-wikipedia-blocking/', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'M. Wu et al. (GFW Report)', titre: 'How the Great Firewall of China detects and blocks fully encrypted traffic (USENIX Security)', url: 'https://gfw.report/publications/usenixsecurity23/en/', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'GFW Report', titre: 'Geedge & MESA leak', url: 'https://gfw.report/blog/geedge_and_mesa_leak/en/', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'AFP (Phys.org)', titre: 'Xi Jinping à Wuzhen : souveraineté du cyberespace', url: 'https://phys.org/news/2015-12-country-internet-china-xi.html', type: 'presse', annee: 2015, langue: 'en' },
+      { auteur: 'EFF', titre: 'Surveillance Self-Defense : choisir un VPN', url: 'https://ssd.eff.org/module/choosing-vpn-thats-right-you', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Access Now', titre: 'Shutdown Tracker Optimization Project (définition et méthode)', url: 'https://www.accessnow.org/guide/shutdown-tracker-optimization-project/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Access Now', titre: 'Rising and resisting in the darkness: internet shutdowns in 2025', url: 'https://www.accessnow.org/press-release/rising-and-resisting-in-the-darkness-internet-shutdowns-in-2025/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Access Now', titre: 'KeepItOn : rapport annuel 2025', url: 'https://www.accessnow.org/wp-content/uploads/2026/03/KeepItOn-Internet-Shutdowns-2025-Annual-Report.pdf', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Access Now', titre: 'Internet shutdowns in 2024', url: 'https://www.accessnow.org/internet-shutdowns-2024/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Internet Society', titre: 'Shutdown Trends from 2019 to 2025', url: 'https://www.internetsociety.org/wp-content/uploads/2026/08/Shutdown-Trends-2019-2025_EN.pdf', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'A. Dainotti et al.', titre: 'Analysis of country-wide internet outages caused by censorship (ACM IMC)', url: 'https://www.caida.org/catalog/papers/2011_outages_censorship/outages_censorship.pdf', type: 'recherche', annee: 2011, langue: 'en' },
+      { auteur: 'Cloudflare', titre: 'Iran protests and internet shutdown (janvier 2026)', url: 'https://blog.cloudflare.com/iran-protests-internet-shutdown/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Kentik', titre: 'From stealth blackout to whitelisting: inside the Iranian shutdown', url: 'https://www.kentik.com/blog/from-stealth-blackout-to-whitelisting-inside-the-iranian-shutdown/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Freedom House', titre: 'Freedom on the Net 2026 : Seismic shifts', url: 'https://freedomhouse.org/report/freedom-net/2026/seismic-shifts-global-internet', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'Cloudflare', titre: 'Afghanistan : coupure nationale (septembre 2025)', url: 'https://blog.cloudflare.com/nationwide-internet-shutdown-in-afghanistan/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Cloudflare', titre: 'Coupures pendant les examens en Syrie, en Irak et en Algérie', url: 'https://blog.cloudflare.com/syria-iraq-algeria-exam-internet-shutdown/', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'Cloudflare', titre: 'Résumé des perturbations du 1er trimestre 2024 (Pakistan, Sénégal)', url: 'https://blog.cloudflare.com/q1-2024-internet-disruption-summary/', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'Cloudflare', titre: 'Résumé des perturbations du 2e trimestre 2025 (Iran, Panama)', url: 'https://blog.cloudflare.com/q2-2025-internet-disruption-summary/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Nations unies (D. Kaye)', titre: 'Rapport du Rapporteur spécial, A/HRC/35/22', url: 'https://documents.un.org/api/symbol/access?s=A/HRC/35/22&l=fr&t=pdf', type: 'primaire', annee: 2017 },
+      { auteur: 'Haut-Commissariat aux droits de l’homme', titre: 'Coupures d’internet : rapport A/HRC/50/55', url: 'https://digitallibrary.un.org/record/3977326/files/A_HRC_50_55-FR.pdf', type: 'primaire', annee: 2022 },
+      { auteur: 'A. Gohdes', titre: 'Pulling the plug: network disruptions and violence in civil conflict (Journal of Peace Research, résumé)', url: 'https://ideas.repec.org/a/sae/joupea/v52y2015i3p352-367.html', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'J. Rydzak', titre: 'Of Blackouts and Bandhs (résumé)', url: 'https://papers.ssrn.com/abstract=3330413', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'OONI', titre: 'Risques liés à l’utilisation d’OONI Probe', url: 'https://ooni.org/about/risks/', type: 'site', annee: 2026, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

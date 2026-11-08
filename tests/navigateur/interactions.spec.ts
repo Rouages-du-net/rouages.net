@@ -132,3 +132,27 @@ test('gouvernance technique : tri des RFC, hum, racine, adresses', async ({ page
   await expect(adresse.locator('.anim-legende')).toContainText('Ton appareil');
   expect(err).toEqual([]);
 });
+
+test('états et régulation : demande RGPD, guichet, calendrier, blocage', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/etats-regulation/');
+  const demande = page.locator('[data-demande]');
+  await demande.locator('[data-droit="portabilite"]').click();
+  await demande.locator('[data-org]').fill('Exemple SA');
+  await expect(demande.locator('[data-lettre]')).toContainText('article 20');
+  await expect(demande.locator('[data-lettre]')).toContainText('À : Exemple SA');
+  const guichet = page.locator('[data-guichet]');
+  await jusquAuBout(guichet);
+  await expect(guichet.locator('.anim-legende')).toContainText('1,2 milliard');
+  expect(await guichet.locator('.a.objection').count()).toBe(4);
+  const cal = page.locator('[data-calendrier]');
+  await cal.locator('[data-curseur]').fill('2024');
+  await expect(cal.locator('.anim-legende')).toContainText('aucune obligation');
+  await cal.locator('[data-curseur]').fill('2029');
+  await expect(cal.locator('.jalons li.applique')).toHaveCount(6);
+  const blocage = page.locator('[data-blocage]');
+  await blocage.locator('[data-bloquer="1"]').click();
+  await expect(blocage.locator('[data-bord]')).toContainText('97 %');
+  await expect(blocage.locator('[data-chemin] li.jamais')).toHaveCount(2);
+  expect(err).toEqual([]);
+});

@@ -50,7 +50,7 @@ const CAS = [
     reps.forEach((b) => b.addEventListener('click', () => {
       const juste = (b.dataset.rep === '1') === cas[i].permis;
       reps.forEach((x) => { x.disabled = true; });
-      legende.textContent = `${juste ? 'Oui.' : 'Non.'} ${cas[i].texte}${i === cas.length - 1 ? ' Aux États-Unis, la neutralité a été adoptée en 2015, abrogée en 2017, rétablie en 2024, puis annulée par une cour d’appel le 2 janvier 2025.' : ''}`;
+      legende.textContent = `${juste ? 'Bonne réponse.' : 'Pas tout à fait.'} ${cas[i].texte}${i === cas.length - 1 ? ' Aux États-Unis, la neutralité a été adoptée en 2015, abrogée en 2017, rétablie en 2024, puis annulée par une cour d’appel le 2 janvier 2025.' : ''}`;
       suivant.disabled = false;
     }));
     suivant.addEventListener('click', () => { i = (i + 1) % cas.length; legende.textContent = ''; montrer(); });

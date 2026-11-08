@@ -200,6 +200,34 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Technique où la même adresse IP est annoncée depuis de nombreux endroits : ta requête arrive au serveur le plus proche. Les serveurs racine du DNS l'utilisent.",
     voirAussi: ['serveur-racine', 'bgp'],
   },
+  rgpd: {
+    terme: 'RGPD',
+    definition:
+      "Règlement général sur la protection des données : la loi européenne de 2016, appliquée depuis 2018, qui encadre l'usage des données personnelles et donne des droits à chacun·e (accès, effacement, portabilité…).",
+  },
+  dsa: {
+    terme: 'DSA',
+    definition:
+      "Règlement européen sur les services numériques (2022) : il oblige les plateformes à agir contre les contenus illégaux, à être transparentes, et les plus grandes à évaluer les risques qu'elles créent. Il ne définit pas lui-même ce qui est illégal.",
+  },
+  'neutralite-du-net': {
+    terme: 'Neutralité du net',
+    definition:
+      "Principe selon lequel un fournisseur d'accès doit traiter tout le trafic de la même façon, sans favoriser, ralentir ou bloquer une appli ou un site selon qui l'envoie. Il est inscrit dans le droit européen depuis 2015.",
+    voirAussi: ['fai'],
+  },
+  vpn: {
+    terme: 'VPN',
+    definition:
+      "Réseau privé virtuel : un tunnel chiffré entre ton appareil et un serveur, qui cache ton trafic à ton fournisseur d'accès et change l'adresse IP vue par les sites. Le fournisseur du VPN, lui, voit tout : ce n'est pas un outil d'anonymat.",
+    voirAussi: ['chiffrement'],
+  },
+  sni: {
+    terme: 'SNI',
+    definition:
+      "Server Name Indication : au début d'une connexion HTTPS, le navigateur indique en clair le nom du site visé, pour que le serveur présente le bon certificat. Ce nom visible permet aussi de filtrer.",
+    voirAussi: ['tls', 'https'],
+  },
   arcep: {
     terme: 'Arcep',
     definition:
