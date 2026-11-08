@@ -156,3 +156,30 @@ test('états et régulation : demande RGPD, guichet, calendrier, blocage', async
   await expect(blocage.locator('[data-chemin] li.jamais')).toHaveCount(2);
   expect(err).toEqual([]);
 });
+
+test('se protéger : phrase de passe, al-Kindi, faille, sauvegarde', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/se-proteger/');
+  const phrase = page.locator('[data-phrase]');
+  await phrase.locator('[data-curseur]').fill('9');
+  await expect(phrase.locator('[data-bits]')).toHaveText('81 bits d’entropie.');
+  expect((await phrase.locator('[data-mots]').textContent())!.split(' ')).toHaveLength(9);
+  const kano = page.locator('[data-kano]');
+  await kano.locator('[data-ex="soleil"]').click();
+  await expect(kano.locator('[data-envoi]')).toHaveText(/^GET \/range\/[0-9A-F]{5}$/);
+  const kindi = page.locator('[data-kindi]');
+  await kindi.locator('[data-curseur]').fill('7');
+  await expect(kindi.locator('.anim-legende')).toContainText('les pics coïncident');
+  await expect(kindi.locator('[data-texte]')).toContainText('UN MESSAGE CHIFFRE');
+  const faille = page.locator('[data-faille]');
+  await faille.locator('[data-maj]').uncheck();
+  await faille.locator('[data-action="suivant"]').click();
+  await faille.locator('[data-action="suivant"]').click();
+  await expect(faille.locator('[data-pc]')).toContainText('rançon');
+  const sauve = page.locator('[data-sauve]');
+  await sauve.locator('[data-coche="disque"]').check();
+  await sauve.locator('[data-coche="cloud"]').check();
+  await sauve.locator('[data-action="attaque"]').click();
+  await expect(sauve.locator('.anim-legende')).toContainText('règle 3-2-1 : 3 copies');
+  expect(err).toEqual([]);
+});

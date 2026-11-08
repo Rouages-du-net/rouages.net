@@ -1,0 +1,85 @@
+---
+// Animation « Sauvegarde 3-2-1 contre rançongiciel » (module « Se protéger »,
+// étape 6) : on choisit où ranger ses copies, puis un rançongiciel simulé
+// chiffre tout ce qui est branché. Règle 3-2-1 : 3 copies, 2 supports, 1 hors
+// site (US-CERT / CISA, « Data Backup Options », 2012). Simple effet visuel.
+const SUPPORTS = [
+  { id: 'pc', nom: 'L’ordinateur', branche: true, distant: false, fixe: true },
+  { id: 'usb', nom: 'Une clé USB laissée branchée', branche: true, distant: false, fixe: false },
+  { id: 'disque', nom: 'Un disque externe débranché', branche: false, distant: false, fixe: false },
+  { id: 'cloud', nom: 'Un stockage en ligne avec historique des versions', branche: false, distant: true, fixe: false },
+];
+---
+<div class="anim sauve" data-sauve data-supports={JSON.stringify(SUPPORTS)}>
+  <div class="anim-repli">
+    <p>
+      La règle 3-2-1 : garder 3 copies de ses fichiers importants (l'original et 2 sauvegardes), sur 2 types de
+      supports différents, dont 1 hors de chez soi. Un rançongiciel chiffre tout ce qui est branché à l'ordinateur,
+      y compris une clé USB ou un disque laissés connectés : seule une copie débranchée ou distante, avec historique,
+      survit.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="consigne">Où ranges-tu tes photos ? (l’ordinateur en a toujours une copie)</p>
+      <ul class="supports">
+        {SUPPORTS.map((s) => (
+          <li data-sup={s.id}>
+            <label><input type="checkbox" data-coche={s.id} checked={s.fixe} disabled={s.fixe} /> {s.nom}</label>
+            <span class="etat" data-etat></span>
+          </li>
+        ))}
+      </ul>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="attaque">Lancer le rançongiciel simulé</button>
+        <button type="button" data-action="reset">↺ Recommencer</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-sauve]').forEach((racine) => {
+    activerScene(racine);
+    const supports: { id: string; nom: string; branche: boolean; distant: boolean; fixe: boolean }[] = JSON.parse(racine.dataset.supports!);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const coche = (id: string) => racine.querySelector<HTMLInputElement>(`[data-coche="${id}"]`)!;
+    const li = (id: string) => racine.querySelector<HTMLElement>(`[data-sup="${id}"]`)!;
+    const reset = () => {
+      supports.forEach((s) => { li(s.id).classList.remove('chiffre', 'sauve'); li(s.id).querySelector('[data-etat]')!.textContent = ''; if (!s.fixe) coche(s.id).disabled = false; });
+      legende.textContent = '';
+    };
+    racine.querySelector('[data-action="attaque"]')!.addEventListener('click', () => {
+      reset();
+      const choisis = supports.filter((s) => coche(s.id).checked);
+      let survivants = 0;
+      choisis.forEach((s) => {
+        const touche = s.branche;
+        li(s.id).classList.add(touche ? 'chiffre' : 'sauve');
+        li(s.id).querySelector('[data-etat]')!.textContent = touche ? 'chiffré' : 'intact';
+        if (!touche) survivants++;
+        if (!s.fixe) coche(s.id).disabled = true;
+      });
+      // 3-2-1 : l'original + 2 sauvegardes qui survivent (donc débranchées), dont 1 hors de chez soi.
+      const sauvegardes = choisis.filter((s) => !s.fixe && !s.branche);
+      const regle = sauvegardes.length >= 2 && sauvegardes.some((s) => s.distant);
+      legende.textContent = survivants === 0
+        ? 'Tout ce qui était branché est chiffré : sans copie débranchée ou distante, tes photos sont perdues.'
+        : `${survivants} copie${survivants > 1 ? 's' : ''} intacte${survivants > 1 ? 's' : ''} : tu peux tout récupérer.${regle ? ' Tu respectes la règle 3-2-1 : 3 copies, 2 supports, 1 hors de chez toi.' : ' Pour la règle 3-2-1 complète, il faut 3 copies, sur 2 supports, dont 1 hors de chez toi.'}`;
+    });
+    racine.querySelector('[data-action="reset"]')!.addEventListener('click', reset);
+  });
+</script>
+
+<style>
+  .consigne { margin: 0 0 0.5rem; font-weight: 600; }
+  .supports { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.35rem; }
+  .supports li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem; padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 0.4rem; background: var(--bg); }
+  .supports li.chiffre { border-left-color: var(--ill-commun); text-decoration: line-through; }
+  .supports li.sauve { border-left-color: var(--ill-secret-b); }
+  .supports input { accent-color: var(--accent); }
+  .etat { font-weight: 700; font-size: 0.85rem; }
+</style>

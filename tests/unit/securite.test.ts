@@ -47,3 +47,20 @@ describe('César et al-Kindi', () => {
     expect(cleProbable(cesar(clair, 11))).toBe(11);
   });
 });
+
+describe('fréquences et Diffie-Hellman', () => {
+  it('les fréquences françaises totalisent environ 100 % et E domine', async () => {
+    const { FREQ_FR, ecartAuFrancais, puissanceModulo } = await import('../../src/lib/securite');
+    expect(FREQ_FR.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 0);
+    expect(FREQ_FR.indexOf(Math.max(...FREQ_FR))).toBe(4);
+    const clair = 'Le message est chiffre avec une cle secrete que seule la personne qui le recoit devrait connaitre';
+    expect(ecartAuFrancais(clair)).toBeLessThan(ecartAuFrancais(cesar(clair, 5)));
+    // Exemple classique : p = 23, g = 5, secrets 6 et 15 → même secret partagé.
+    const A = puissanceModulo(5, 6, 23);
+    const B = puissanceModulo(5, 15, 23);
+    expect(A).toBe(8);
+    expect(B).toBe(19);
+    expect(puissanceModulo(B, 6, 23)).toBe(puissanceModulo(A, 15, 23));
+    expect(puissanceModulo(B, 6, 23)).toBe(2);
+  });
+});

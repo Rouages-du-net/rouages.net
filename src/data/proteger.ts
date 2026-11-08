@@ -24,7 +24,7 @@ export const SEUILS = [
 /** Messages pour le jeu « Hameçonnage ou pas ? » (domaines fictifs .example). */
 export const MESSAGES: { canal: string; de: string; texte: string; piege: boolean; explication: string }[] = [
   {
-    canal: 'SMS', de: '+33 6 00 00 00 00',
+    canal: 'SMS', de: 'Numéro inconnu',
     texte: 'Votre colis n’a pas pu être livré. Frais de réacheminement : 1,99 €. Réglez ici : https://suivi-colis-relais.example/paiement',
     piege: true,
     explication: 'Hameçonnage : une petite somme à payer, un lien vers un domaine qui imite un transporteur. Le faux colis est l’une des arnaques les plus vues en 2025 selon Cybermalveillance.gouv.fr.',

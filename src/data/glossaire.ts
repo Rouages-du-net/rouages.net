@@ -228,6 +228,33 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Server Name Indication : au début d'une connexion HTTPS, le navigateur indique en clair le nom du site visé, pour que le serveur présente le bon certificat. Ce nom visible permet aussi de filtrer.",
     voirAussi: ['tls', 'https'],
   },
+  'double-authentification': {
+    terme: 'Double authentification',
+    definition:
+      "Se connecter avec deux preuves de types différents : quelque chose qu'on sait (un mot de passe), qu'on a (un téléphone, une clé) ou qu'on est (une empreinte). Un mot de passe volé ne suffit plus.",
+    voirAussi: ['passkey'],
+  },
+  passkey: {
+    terme: 'Passkey (clé d’accès)',
+    definition:
+      "Une paire de clés créée par ton appareil pour un site précis : le site ne garde que la clé publique, la clé privée ne quitte pas l'appareil. Comme elle est liée au vrai domaine, un faux site ne peut pas s'en servir.",
+  },
+  hachage: {
+    terme: 'Hachage',
+    definition:
+      "Calcul qui transforme un texte en une empreinte de taille fixe, sans retour possible. Les sites devraient stocker l'empreinte des mots de passe, jamais les mots de passe eux-mêmes.",
+  },
+  'chiffrement-bout-en-bout': {
+    terme: 'Chiffrement de bout en bout',
+    definition:
+      "Seuls l'expéditeur et le destinataire ont les clés : le service qui transporte les messages ne peut pas les lire. Il voit en revanche des métadonnées (qui, quand).",
+    voirAussi: ['chiffrement'],
+  },
+  rancongiciel: {
+    terme: 'Rançongiciel',
+    definition:
+      "Logiciel malveillant qui chiffre les fichiers d'un ordinateur ou d'un réseau et réclame une rançon pour les rendre. La meilleure parade : des mises à jour et des sauvegardes débranchées.",
+  },
   arcep: {
     terme: 'Arcep',
     definition:

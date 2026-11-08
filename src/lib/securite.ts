@@ -90,3 +90,33 @@ export function cleProbable(chiffre: string): number {
   const max = f.indexOf(Math.max(...f));
   return (max - 4 + 26) % 26;
 }
+
+/**
+ * Fréquences des lettres A-Z en français, en %, calculées sur Victor Hugo,
+ * Les Misérables, tome I (Projet Gutenberg n° 17489, 512 877 lettres, accents
+ * ramenés à la lettre de base). Calcul fait pour rouages.net le 8 novembre 2026.
+ */
+export const FREQ_FR = [8.79, 0.97, 3.1, 3.46, 17.32, 1.14, 0.88, 1.0, 7.73, 0.56, 0.0, 5.89, 3.01, 6.76, 5.12, 2.6, 1.29, 6.2, 7.34, 7.56, 6.37, 1.98, 0.0, 0.4, 0.34, 0.19];
+
+/** Écart (khi-deux simplifié) entre les fréquences d'un texte et celles du français. */
+export function ecartAuFrancais(texte: string): number {
+  const f = frequences(texte);
+  const n = f.reduce((a, b) => a + b, 0) || 1;
+  return f.reduce((s, x, i) => {
+    const attendu = (FREQ_FR[i] / 100) * n;
+    return s + ((x - attendu) ** 2) / Math.max(attendu, 0.5);
+  }, 0);
+}
+
+/** Petite exponentiation modulaire (nombres de démonstration, sans BigInt). */
+export function puissanceModulo(base: number, exp: number, mod: number): number {
+  let r = 1;
+  let b = base % mod;
+  let e = exp;
+  while (e > 0) {
+    if (e & 1) r = (r * b) % mod;
+    b = (b * b) % mod;
+    e >>= 1;
+  }
+  return r;
+}
