@@ -1,0 +1,80 @@
+---
+// Animation « Le hum » (module « Gouvernance technique », étape 2) : un
+// groupe de travail fictif choisit entre deux propositions. Illustration de
+// la RFC 7282 (P. Resnick, 2014) : le volume ne décide pas ; ce qui compte,
+// c'est qu'aucune objection ne reste sans réponse.
+---
+<div class="anim hum" data-hum>
+  <div class="anim-repli">
+    <ol>
+      <li>La présidence demande de fredonner (« hum ») pour la proposition A, puis pour la B : A l'emporte nettement.</li>
+      <li>Ce n'est pas un vote. La présidence demande : reste-t-il des objections ?</li>
+      <li>Une personne objecte : A envoie les mots de passe en clair. Tant que l'objection n'a pas de réponse, il n'y a pas de consensus, même si la majorité préfère A.</li>
+      <li>Le groupe corrige A : les mots de passe seront chiffrés. L'objection a reçu une réponse.</li>
+      <li>Une personne préfère toujours B, par goût, sans nouvel argument. La présidence constate un consensus approximatif : pas l'unanimité, mais plus d'objection sans réponse.</li>
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="question">Groupe de travail fictif : « Adopter la proposition A ou la B ? »</p>
+      <div class="jauges" aria-hidden="true">
+        <div class="jauge"><span class="lettre">A</span><span class="barre"><span data-niveau="a"></span></span></div>
+        <div class="jauge"><span class="lettre">B</span><span class="barre"><span data-niveau="b"></span></span></div>
+      </div>
+      <p class="bulle" data-bulle aria-hidden="true"></p>
+      <p class="etat" data-etat></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  const ETAPES = [
+    { a: 80, b: 25, bulle: '« Hmmmmmm… » (pour A)   « hm… » (pour B)', etat: 'Pas encore de décision', texte: 'La présidence demande à la salle de fredonner (« hum ») pour A, puis pour B. A est nettement plus fort. On fredonne plutôt que lever la main : on entend la tendance sans compter les voix.' },
+    { a: 80, b: 25, bulle: '« Reste-t-il des objections ? »', etat: 'Pas encore de décision', texte: 'Ce n’est pas un vote : « Les hums ne devraient pas servir de votes », dit la RFC 7282. La présidence cherche autre chose : une objection qui n’aurait pas reçu de réponse.' },
+    { a: 80, b: 25, bulle: '« A envoie les mots de passe en clair ! »', etat: 'Pas de consensus : une objection sans réponse', texte: 'Une seule personne objecte, avec un argument technique. Même si la majorité préfère A, il n’y a pas de consensus tant que cette objection n’a pas de réponse. « L’absence de désaccord compte plus que l’accord. »' },
+    { a: 85, b: 20, bulle: '« A chiffrera les mots de passe. »', etat: 'Objection traitée', texte: 'Le groupe modifie A pour chiffrer les mots de passe. L’objection a été vraiment examinée, et elle a reçu une réponse : ici, une correction.' },
+    { a: 85, b: 10, bulle: '« Je préfère quand même B. »', etat: 'Consensus approximatif : A est adoptée', texte: 'Une personne préfère toujours B, par goût, sans nouvel argument. La présidence constate un « consensus approximatif » (rough consensus) : pas l’unanimité, qui donnerait un droit de veto à chacun, mais plus d’objection restée sans réponse.' },
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-hum]').forEach((racine) => {
+    activerScene(racine);
+    const a = racine.querySelector<HTMLElement>('[data-niveau="a"]')!;
+    const b = racine.querySelector<HTMLElement>('[data-niveau="b"]')!;
+    const bulle = racine.querySelector<HTMLElement>('[data-bulle]')!;
+    const etat = racine.querySelector<HTMLElement>('[data-etat]')!;
+    pasAPas(racine, () => ETAPES.length, (n) => {
+      const e = ETAPES[n - 1];
+      a.style.width = `${e.a}%`;
+      b.style.width = `${e.b}%`;
+      bulle.textContent = e.bulle;
+      etat.textContent = e.etat;
+      racine.classList.toggle('bloque', n === 3);
+      racine.classList.toggle('adopte', n === 5);
+      return e.texte;
+    });
+  });
+</script>
+
+<style>
+  .question { font-weight: 700; margin: 0 0 0.6rem; }
+  .jauges { display: grid; gap: 0.4rem; max-width: 26rem; }
+  .jauge { display: grid; grid-template-columns: 1.5rem 1fr; align-items: center; gap: 0.5rem; }
+  .lettre { font-weight: 700; font-family: var(--police-mono); }
+  .barre { height: 1rem; border-radius: 0.5rem; background: var(--bg); border: 1px solid var(--border); overflow: hidden; }
+  .barre span { display: block; height: 100%; width: 0; background: var(--ill-client); transition: width 0.4s; }
+  @media (prefers-reduced-motion: reduce) { .barre span { transition: none; } }
+  .bulle { font-style: italic; margin: 0.8rem 0 0.3rem; min-height: 1.5em; }
+  .etat { display: inline-block; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 0.3rem; border: 2px solid var(--border); margin: 0 0 0.3rem; }
+  :global(.hum.bloque) .etat { border-color: var(--ill-commun); }
+  :global(.hum.adopte) .etat { border-color: var(--ill-secret-b); }
+</style>

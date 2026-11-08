@@ -1,0 +1,86 @@
+---
+// Animation « De l'idée à la norme » (module « Gouvernance technique »,
+// étape 1) : un brouillon avance pas à pas jusqu'à la RFC (RFC 2026,
+// RFC 6410). À chaque étape : qui décide. Données : src/data/gouvernance.ts.
+import { PARCOURS_RFC } from '../../../data/gouvernance';
+---
+<div class="anim parcours-rfc" data-parcours-rfc>
+  <div class="anim-repli">
+    <ol>
+      {PARCOURS_RFC.map((p) => <li><strong>{p.etape}</strong> ({p.qui}) : {p.texte}</li>)}
+    </ol>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="etapes" data-etapes aria-hidden="true">
+        {PARCOURS_RFC.map((p) => <li><span class="point"></span><span class="nom">{p.etape}</span></li>)}
+      </ol>
+      <div class="document" data-doc aria-hidden="true">
+        <span class="entete" data-entete>draft-dupont-idee-00</span>
+        <span class="lignes"></span>
+      </div>
+      <p class="qui" data-qui></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { PARCOURS_RFC } from '../../../data/gouvernance';
+
+  // Nom du document à chaque étape (nom fictif, format réel des brouillons).
+  const ENTETES = [
+    'draft-dupont-idee-00',
+    'draft-ietf-groupe-idee-00',
+    'draft-ietf-groupe-idee-07',
+    'draft-ietf-groupe-idee-07',
+    'draft-ietf-groupe-idee-08',
+    'draft-ietf-groupe-idee-09',
+    'RFC 10123',
+    'RFC 10123 · Proposed Standard',
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-parcours-rfc]').forEach((racine) => {
+    activerScene(racine);
+    const etapes = [...racine.querySelectorAll<HTMLElement>('[data-etapes] li')];
+    const doc = racine.querySelector<HTMLElement>('[data-doc]')!;
+    const entete = racine.querySelector<HTMLElement>('[data-entete]')!;
+    const qui = racine.querySelector<HTMLElement>('[data-qui]')!;
+    pasAPas(racine, () => PARCOURS_RFC.length, (n) => {
+      const p = PARCOURS_RFC[n - 1];
+      etapes.forEach((li, i) => {
+        li.classList.toggle('passe', i < n);
+        li.classList.toggle('ici', i === n - 1);
+      });
+      entete.textContent = ENTETES[n - 1];
+      doc.classList.toggle('publie', n >= 7);
+      qui.textContent = `Qui décide : ${p.qui}.`;
+      return `${p.etape}. ${p.texte}`;
+    });
+  });
+</script>
+
+<style>
+  .etapes { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem 0; }
+  .etapes li { flex: 1 1 4.8rem; display: grid; justify-items: center; gap: 0.3rem; text-align: center; font-size: 0.75rem; color: var(--muted); position: relative; }
+  .etapes li::before { content: ''; position: absolute; top: 0.5rem; left: -50%; width: 100%; height: 3px; background: var(--border); }
+  .etapes li:first-child::before { display: none; }
+  .etapes li.passe::before { background: var(--accent); }
+  .point { width: 1rem; height: 1rem; border-radius: 50%; background: var(--card); border: 3px solid var(--border); position: relative; z-index: 1; }
+  .passe .point { border-color: var(--accent); }
+  .ici .point { background: var(--accent); }
+  .passe .nom { color: var(--fg); }
+  .document { display: grid; gap: 0.4rem; width: min(100%, 16rem); padding: 0.7rem 0.8rem; border: 2px dashed var(--border); border-radius: 0.3rem; background: var(--bg); }
+  .document.publie { border-style: solid; border-color: var(--accent); }
+  .entete { font-family: var(--police-mono); font-size: 0.82rem; font-weight: 700; overflow-wrap: anywhere; }
+  .lignes { height: 2.4rem; background: repeating-linear-gradient(var(--border) 0 2px, transparent 2px 0.6rem); }
+  .qui { font-weight: 600; margin: 0.75rem 0 0.25rem; }
+</style>

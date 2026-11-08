@@ -1,0 +1,76 @@
+---
+// Animation « Treize lettres, deux mille serveurs » (module « Gouvernance
+// technique », étape 5) : les 13 identités de la racine du DNS, leurs
+// opérateurs et leurs instances (root-servers.org, état au 8 novembre 2026).
+// Démonte le mythe des « 13 serveurs ». Données : src/data/gouvernance.ts.
+import { RACINE, RACINE_TOTAL } from '../../../data/gouvernance';
+---
+<div class="anim racine" data-racine>
+  <div class="anim-repli">
+    <p>La racine du DNS a 13 identités (lettres A à M), exploitées par 12 organisations, et servies par {RACINE_TOTAL.toLocaleString('fr-FR')} instances dans le monde (état au 8 novembre 2026) :</p>
+    <ul>
+      {RACINE.map((r) => <li><strong>{r.lettre}</strong> : {r.operateur} ({r.pays}), environ {r.instances} instances.</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="compteurs" aria-hidden="true"><span><strong>13</strong> lettres</span><span><strong>12</strong> opérateurs</span><span><strong>{RACINE_TOTAL.toLocaleString('fr-FR')}</strong> instances</span></p>
+      <div class="lettres" role="group" aria-label="Lettres de la racine">
+        {RACINE.map((r, i) => (
+          <button type="button" class={`lettre${r.pays !== 'États-Unis' ? ' hors-us' : ''}`} data-i={i} aria-pressed="false" aria-label={`Lettre ${r.lettre}`}>{r.lettre}</button>
+        ))}
+      </div>
+      <div class="nuage" data-nuage aria-hidden="true"></div>
+      <p class="anim-note">Chaque point représente environ 10 instances. Une instance est une copie de la racine, annoncée à la même adresse depuis des centaines d’endroits (anycast) : ta requête va à la plus proche. Encadrées : les lettres exploitées hors des États-Unis.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { RACINE } from '../../../data/gouvernance';
+
+  document.querySelectorAll<HTMLElement>('[data-racine]').forEach((racine) => {
+    activerScene(racine);
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('.lettre')];
+    const nuage = racine.querySelector<HTMLElement>('[data-nuage]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    // Un point pour environ 10 instances, au moins un par lettre.
+    const points = RACINE.flatMap((r, i) => Array.from({ length: Math.max(1, Math.round(r.instances / 10)) }, () => i));
+    const pts = points.map((i) => {
+      const pt = document.createElement('span');
+      pt.className = 'pt';
+      pt.dataset.i = String(i);
+      return pt;
+    });
+    nuage.replaceChildren(...pts);
+
+    function choisir(i: number | null) {
+      boutons.forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+      pts.forEach((p) => p.classList.toggle('choisi', i !== null && Number(p.dataset.i) === i));
+      if (i === null) {
+        legende.textContent = 'On dit souvent qu’internet a « 13 serveurs racine ». En fait : 13 identités, exploitées par 12 organisations (Verisign en tient deux), et environ 2 000 copies réparties dans le monde. Choisis une lettre.';
+        return;
+      }
+      const r = RACINE[i];
+      legende.textContent = `Lettre ${r.lettre} : exploitée par ${r.operateur} (${r.pays}), environ ${r.instances} instance${r.instances > 1 ? 's' : ''}.`;
+    }
+    boutons.forEach((b, i) => b.addEventListener('click', () => choisir(b.getAttribute('aria-pressed') === 'true' ? null : i)));
+    choisir(null);
+  });
+</script>
+
+<style>
+  .compteurs { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin: 0 0 0.6rem; }
+  .compteurs strong { font-size: 1.4rem; font-family: var(--police-mono); }
+  .lettres { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.7rem; }
+  .lettre { font: inherit; font-family: var(--police-mono); font-weight: 700; width: 2.3rem; height: 2.3rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--card); color: var(--fg); cursor: pointer; }
+  .lettre.hors-us { border: 2px solid var(--ill-commun); }
+  .lettre[aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .lettre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .nuage { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.6rem; }
+  .nuage :global(.pt) { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .nuage :global(.pt.choisi) { background: var(--accent); }
+</style>

@@ -39,7 +39,8 @@ export const GLOSSAIRE: Record<string, Entree> = {
   'serveur-racine': {
     terme: 'Serveur racine',
     definition:
-      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il en existe 13 (nommés de a à m), copiés en plus de 2 000 exemplaires (instances) dans le monde.",
+      "Point de départ du DNS : il sait quels serveurs gèrent chaque extension (.net, .fr…). Il y a 13 identités (nommées de a à m), tenues par 12 organisations et copiées en plus de 2 000 exemplaires (instances) dans le monde.",
+    voirAussi: ['anycast'],
   },
   ttl: {
     terme: 'TTL',
@@ -170,6 +171,34 @@ export const GLOSSAIRE: Record<string, Entree> = {
     terme: 'ICANN',
     definition:
       "Organisation à but non lucratif qui coordonne les noms de domaine et les adresses IP au niveau mondial ; sa filiale PTI assure la fonction IANA.",
+  },
+  iana: {
+    terme: 'IANA',
+    definition:
+      "Internet Assigned Numbers Authority : la fonction qui tient les listes mondiales d'internet (racine du DNS, grands blocs d'adresses IP, numéros des protocoles). Née du carnet de Jon Postel dans les années 1970, elle est assurée aujourd'hui par PTI, filiale de l'ICANN.",
+    voirAussi: ['icann', 'rir'],
+  },
+  rir: {
+    terme: 'Registre régional (RIR)',
+    definition:
+      "Organisation qui attribue les adresses IP dans une région du monde : RIPE NCC (Europe, Moyen-Orient), APNIC (Asie-Pacifique), ARIN (Amérique du Nord), LACNIC (Amérique latine et Caraïbes), AFRINIC (Afrique). Les règles y sont écrites par la communauté, par consensus.",
+    voirAussi: ['adresse-ip', 'iana'],
+  },
+  w3c: {
+    terme: 'W3C',
+    definition:
+      "World Wide Web Consortium : organisation fondée en 1994 par Tim Berners-Lee, qui publie des normes du web (CSS, accessibilité WCAG…). Contrairement à l'IETF, elle a des membres, surtout des entreprises et des universités.",
+  },
+  multipartite: {
+    terme: 'Modèle multipartite',
+    definition:
+      "Façon de gouverner internet où entreprises, techniciens, société civile et États discutent ensemble, au lieu que les États décident seuls entre eux (modèle intergouvernemental, comme à l'ONU).",
+  },
+  anycast: {
+    terme: 'Anycast',
+    definition:
+      "Technique où la même adresse IP est annoncée depuis de nombreux endroits : ta requête arrive au serveur le plus proche. Les serveurs racine du DNS l'utilisent.",
+    voirAussi: ['serveur-racine', 'bgp'],
   },
   arcep: {
     terme: 'Arcep',

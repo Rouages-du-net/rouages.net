@@ -1,0 +1,27 @@
+---
+// Animation « Qui peut faire quoi ? » (module « Gouvernance technique »,
+// étape 6) : des actions, on devine qui en a le pouvoir, la réponse cite
+// les faits (lettres de l'ICANN et du RIPE NCC en 2022, statuts de l'ICANN,
+// procédure du RIPE, « New IP » à l'UIT). Données : src/data/gouvernance.ts.
+import { COUPER } from '../../../data/gouvernance';
+---
+<div class="anim couper" data-couper>
+  <ul class="cartes">
+    {COUPER.map((c) => (
+      <li>
+        <details>
+          <summary>{c.action} : qui peut le faire ?</summary>
+          <p><strong>{c.reponse}.</strong> {c.texte}</p>
+        </details>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .cartes { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .cartes details { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--card); padding: 0.6rem 0.8rem; }
+  .cartes summary { cursor: pointer; font-weight: 600; }
+  .cartes details[open] { border-color: var(--accent); }
+  .cartes p { margin: 0.5rem 0 0; max-width: var(--mesure); }
+</style>

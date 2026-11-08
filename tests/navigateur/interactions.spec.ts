@@ -80,3 +80,55 @@ test('index des notions : notions, personnes, modules', async ({ page }) => {
   expect(await page.locator('.personnes li').count()).toBeGreaterThan(100);
   await expect(page.locator('.entree', { hasText: 'Masque de sous-réseau' }).locator('.usages')).toContainText('Adresses IP et masques');
 });
+
+test('portes logiques : bon nombre d’entrées et sortie juste', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/ordinateur/');
+  const anim = page.locator('[data-portes]');
+  const fils = anim.locator('[data-schema] [data-fil]');
+  const lampe = anim.locator('[data-lampe]');
+  // Portes à deux entrées : fils A, B et sortie.
+  for (const porte of ['et', 'ou', 'oux', 'nonet']) {
+    await anim.locator(`[data-porte="${porte}"]`).click();
+    await expect(fils).toHaveCount(3);
+    await expect(anim.locator('.verite tbody tr')).toHaveCount(4);
+  }
+  // NON : une seule entrée, B débranché, table de deux lignes.
+  await anim.locator('[data-porte="non"]').click();
+  await expect(fils).toHaveCount(2);
+  await expect(anim.locator('[data-entree="b"]')).toBeDisabled();
+  await expect(anim.locator('.verite tbody tr')).toHaveCount(2);
+  await expect(lampe).toHaveClass(/allumee/);
+  await anim.locator('[data-entree="a"]').click();
+  await expect(lampe).not.toHaveClass(/allumee/);
+  await expect(anim.locator('[data-fil="a"]')).toHaveClass(/allume/);
+  // ET avec A = 1, B = 1 : lampe allumée.
+  await anim.locator('[data-porte="et"]').click();
+  await anim.locator('[data-entree="b"]').click();
+  await expect(lampe).toHaveClass(/allumee/);
+  expect(err).toEqual([]);
+});
+
+test('gouvernance technique : tri des RFC, hum, racine, adresses', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/gouvernance-technique/');
+  const tri = page.locator('[data-tri-rfc]');
+  await expect(tri.locator('[data-carte]')).toContainText('RFC 791');
+  await tri.locator('[data-statut="Internet Standard"]').click();
+  await expect(tri.locator('.anim-legende')).toContainText('Oui');
+  await tri.locator('[data-action="suivante"]').click();
+  await expect(tri.locator('[data-carte]')).toContainText('RFC 1149');
+  await tri.locator('[data-statut="Proposed Standard"]').click();
+  await expect(tri.locator('.anim-legende')).toContainText('Expérimentale');
+  const hum = page.locator('[data-hum]');
+  await jusquAuBout(hum);
+  await expect(hum.locator('[data-etat]')).toContainText('Consensus approximatif');
+  const racine = page.locator('[data-racine]');
+  await racine.locator('.lettre', { hasText: 'M' }).click();
+  await expect(racine.locator('.anim-legende')).toContainText('WIDE Project');
+  expect(await racine.locator('.pt.choisi').count()).toBe(3);
+  const adresse = page.locator('[data-adresse]');
+  await jusquAuBout(adresse);
+  await expect(adresse.locator('.anim-legende')).toContainText('Ton appareil');
+  expect(err).toEqual([]);
+});

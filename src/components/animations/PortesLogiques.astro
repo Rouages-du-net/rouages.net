@@ -2,13 +2,16 @@
 // Animation « Portes logiques » (étape 2 du module « Comment marche un
 // ordinateur ») : deux interrupteurs A et B, une porte au choix, une lampe,
 // et la table de vérité où la ligne en cours est surlignée. Mode défi :
-// retrouver la porte qui produit une table donnée.
+// retrouver la porte qui produit une table donnée (portes à deux entrées).
+// Le schéma reprend les symboles usuels (IEEE 91, « formes distinctives ») :
+// deux entrées pour ET, OU, OU exclusif et NON-ET, une seule pour NON ; un
+// rond en sortie signale l'inversion (NON, NON-ET).
 const portes = [
-  { id: 'et', nom: 'ET', aide: 'allumée si A et B sont tous les deux allumés' },
-  { id: 'ou', nom: 'OU', aide: 'allumée si au moins un des deux est allumé' },
-  { id: 'non', nom: 'NON (de A)', aide: "le contraire de A (B n'est pas utilisé)" },
-  { id: 'oux', nom: 'OU exclusif', aide: "allumée si un seul des deux est allumé, pas les deux" },
-  { id: 'nonet', nom: 'NON-ET', aide: "le contraire de ET : avec elle seule, on peut construire toutes les autres" },
+  { id: 'et', nom: 'ET', entrees: 2, aide: 'allumée si A et B sont tous les deux allumés' },
+  { id: 'ou', nom: 'OU', entrees: 2, aide: 'allumée si au moins un des deux est allumé' },
+  { id: 'non', nom: 'NON', entrees: 1, aide: "le contraire de son unique entrée, A (B n'est pas branché)" },
+  { id: 'oux', nom: 'OU exclusif', entrees: 2, aide: "allumée si un seul des deux est allumé, pas les deux" },
+  { id: 'nonet', nom: 'NON-ET', entrees: 2, aide: "le contraire de ET : avec elle seule, on peut construire toutes les autres" },
 ];
 ---
 <div class="anim portes" data-portes data-liste={JSON.stringify(portes)}>
@@ -23,6 +26,7 @@ const portes = [
         <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
       </tbody>
     </table>
+    <p>La porte NON n'a qu'une entrée : elle donne 1 quand A vaut 0, et 0 quand A vaut 1.</p>
   </div>
 
   <div class="anim-scene" hidden>
@@ -37,19 +41,22 @@ const portes = [
         <button type="button" class="inter" data-entree="a" aria-pressed="false">A <span>0</span></button>
         <button type="button" class="inter" data-entree="b" aria-pressed="false">B <span>0</span></button>
       </div>
-      <div class="porte" aria-hidden="true"><span data-nom-porte>ET</span></div>
+      <div class="porte">
+        <svg viewBox="0 0 140 100" aria-hidden="true" data-schema></svg>
+        <span data-nom-porte>ET</span>
+      </div>
       <div class="lampe" data-lampe role="img" aria-label="Lampe éteinte">💡</div>
     </div>
     <p class="anim-legende" aria-live="polite"></p>
 
     <table class="verite">
       <caption>Table de vérité de la porte choisie</caption>
-      <thead><tr><th scope="col">A</th><th scope="col">B</th><th scope="col">Sortie</th></tr></thead>
+      <thead></thead>
       <tbody></tbody>
     </table>
 
     <details class="defi anim-cadre">
-      <summary>Défi : quelle porte donne cette table ?</summary>
+      <summary>Défi : quelle porte à deux entrées donne cette table ?</summary>
       <p>Sortie attendue pour A B = 00, 01, 10, 11 : <strong data-cible></strong></p>
       <div class="reponses"></div>
       <p class="anim-note" data-resultat aria-live="polite"></p>
@@ -70,9 +77,24 @@ const portes = [
   };
   const LIGNES: [number, number][] = [[0, 0], [0, 1], [1, 0], [1, 1]];
 
+  // Schémas (viewBox 140 × 100) : les entrées arrivent à gauche en y = 25
+  // (A) et y = 75 (B), au niveau des interrupteurs ; la sortie part à droite
+  // en y = 50. Chaque fil porte data-fil pour s'allumer selon sa valeur.
+  const CORPS_ET = 'M40,15 H70 A35,35 0 0 1 70,85 H40 Z';
+  const CORPS_OU = 'M36,15 Q78,15 104,50 Q78,85 36,85 Q54,50 36,15 Z';
+  const SCHEMAS: Record<string, string> = {
+    et: `<path data-fil="a" d="M0,25 H40"/><path data-fil="b" d="M0,75 H40"/><path class="corps" d="${CORPS_ET}"/><path data-fil="s" d="M105,50 H140"/>`,
+    nonet: `<path data-fil="a" d="M0,25 H40"/><path data-fil="b" d="M0,75 H40"/><path class="corps" d="${CORPS_ET}"/><circle class="corps" cx="110" cy="50" r="5"/><path data-fil="s" d="M115,50 H140"/>`,
+    ou: `<path data-fil="a" d="M0,25 H45"/><path data-fil="b" d="M0,75 H45"/><path class="corps" d="${CORPS_OU}"/><path data-fil="s" d="M104,50 H140"/>`,
+    oux: `<path data-fil="a" d="M0,25 H39"/><path data-fil="b" d="M0,75 H39"/><path class="corps arc" d="M28,15 Q46,50 28,85"/><path class="corps" d="${CORPS_OU}"/><path data-fil="s" d="M104,50 H140"/>`,
+    non: `<path data-fil="a" d="M0,25 H22 V50 H45"/><path class="corps" d="M45,22 L95,50 L45,78 Z"/><circle class="corps" cx="100" cy="50" r="5"/><path data-fil="s" d="M105,50 H140"/>`,
+  };
+
   document.querySelectorAll<HTMLElement>('[data-portes]').forEach((racine) => {
     activerScene(racine);
-    const portes: { id: string; nom: string; aide: string }[] = JSON.parse(racine.dataset.liste!);
+    const portes: { id: string; nom: string; entrees: number; aide: string }[] = JSON.parse(racine.dataset.liste!);
+    const schema = racine.querySelector<SVGSVGElement>('[data-schema]')!;
+    const thead = racine.querySelector<HTMLTableSectionElement>('.verite thead')!;
     let porte = 'et';
     const entree = { a: 0, b: 0 };
     const lampe = racine.querySelector<HTMLElement>('[data-lampe]')!;
@@ -83,22 +105,35 @@ const portes = [
       const f = FONCTIONS[porte];
       const s = f(entree.a, entree.b);
       const p = portes.find((x) => x.id === porte)!;
+      const une = p.entrees === 1;
       racine.querySelector('[data-nom-porte]')!.textContent = p.nom;
+      schema.innerHTML = SCHEMAS[porte];
+      const valeurs: Record<string, number> = { a: entree.a, b: entree.b, s };
+      schema.querySelectorAll<SVGPathElement>('[data-fil]').forEach((fil) => fil.classList.toggle('allume', valeurs[fil.dataset.fil!] === 1));
       lampe.classList.toggle('allumee', s === 1);
       lampe.setAttribute('aria-label', s ? 'Lampe allumée' : 'Lampe éteinte');
       racine.querySelectorAll<HTMLButtonElement>('[data-entree]').forEach((b) => {
         const v = entree[b.dataset.entree as 'a' | 'b'];
         b.setAttribute('aria-pressed', String(v === 1));
         b.querySelector('span')!.textContent = String(v);
-        b.classList.toggle('inutile', porte === 'non' && b.dataset.entree === 'b');
+        const debranche = une && b.dataset.entree === 'b';
+        b.classList.toggle('inutile', debranche);
+        b.disabled = debranche;
+        b.title = debranche ? 'La porte NON n’a qu’une entrée : B n’est pas branché.' : '';
       });
       racine.querySelectorAll<HTMLButtonElement>('[data-porte]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.porte === porte)));
-      legende.textContent = `Porte ${p.nom} : ${p.aide}. Avec A = ${entree.a} et B = ${entree.b}, la lampe est ${s ? 'allumée' : 'éteinte'}.`;
+      legende.textContent = une
+        ? `Porte ${p.nom}, une seule entrée : ${p.aide}. Avec A = ${entree.a}, la lampe est ${s ? 'allumée' : 'éteinte'}.`
+        : `Porte ${p.nom}, deux entrées : ${p.aide}. Avec A = ${entree.a} et B = ${entree.b}, la lampe est ${s ? 'allumée' : 'éteinte'}.`;
+      thead.innerHTML = une
+        ? '<tr><th scope="col">A</th><th scope="col">Sortie</th></tr>'
+        : '<tr><th scope="col">A</th><th scope="col">B</th><th scope="col">Sortie</th></tr>';
+      const lignes = une ? LIGNES.filter(([, b]) => b === 0) : LIGNES;
       tbody.replaceChildren(
-        ...LIGNES.map(([a, b]) => {
+        ...lignes.map(([a, b]) => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${a}</td><td>${b}</td><td>${f(a, b)}</td>`;
-          if (a === entree.a && b === entree.b) tr.className = 'courante';
+          tr.innerHTML = une ? `<td>${a}</td><td>${f(a, b)}</td>` : `<td>${a}</td><td>${b}</td><td>${f(a, b)}</td>`;
+          if (a === entree.a && (une || b === entree.b)) tr.className = 'courante';
           return tr;
         }),
       );
@@ -123,13 +158,14 @@ const portes = [
     const reponses = racine.querySelector<HTMLElement>('.reponses')!;
     const resultat = racine.querySelector<HTMLElement>('[data-resultat]')!;
     let secret = '';
+    const aDeux = portes.filter((p) => p.entrees === 2);
     function nouveauDefi() {
-      const autres = portes.filter((p) => p.id !== secret);
+      const autres = aDeux.filter((p) => p.id !== secret);
       secret = autres[Math.floor(Math.random() * autres.length)].id;
       cible.textContent = LIGNES.map(([a, b]) => FONCTIONS[secret](a, b)).join(' ');
       resultat.textContent = '';
       reponses.replaceChildren(
-        ...portes.map((p) => {
+        ...aDeux.map((p) => {
           const b = document.createElement('button');
           b.type = 'button';
           b.className = 'anim-bouton';
@@ -154,8 +190,8 @@ const portes = [
 <style>
   .choix-portes, .reponses { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
   .choix-portes [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-  .circuit { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; }
-  .entrees { display: grid; gap: 0.5rem; }
+  .circuit { display: grid; grid-template-columns: auto minmax(0, auto) auto; justify-content: center; align-items: start; gap: 0; }
+  .entrees { display: grid; grid-template-rows: 1fr 1fr; height: 6.5rem; align-items: center; align-self: start; }
   .inter {
     font: inherit;
     font-weight: 700;
@@ -168,27 +204,18 @@ const portes = [
   }
   .inter span { font-family: var(--police-mono); margin-left: 0.3rem; }
   .inter[aria-pressed='true'] { background: var(--ill-client); border-color: var(--ill-client); color: var(--bg); }
-  .inter.inutile { opacity: 0.4; }
-  .porte {
-    position: relative;
-    justify-self: center;
-    min-width: 8rem;
-    padding: 1rem;
-    text-align: center;
-    font-weight: 700;
-    border: 3px solid var(--ill-reseau);
-    border-radius: 0.5rem 2rem 2rem 0.5rem;
-  }
-  .porte::before, .porte::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 1rem;
-    border-top: 3px solid var(--ill-reseau);
-  }
-  .porte::before { right: 100%; }
-  .porte::after { left: 100%; }
-  .lampe { font-size: 2.2rem; filter: grayscale(1); opacity: 0.4; transition: opacity 0.2s, filter 0.2s; }
+  .inter.inutile { opacity: 0.4; cursor: not-allowed; }
+  .porte { display: grid; justify-items: center; gap: 0.2rem; font-weight: 700; }
+  /* Hauteur des interrupteurs = hauteur du schéma : les fils A (25 %) et B
+     (75 %) arrivent face aux boutons. */
+  .porte svg { height: 6.5rem; width: auto; aspect-ratio: 140 / 100; max-width: 100%; overflow: visible; }
+  .porte :global(path), .porte :global(circle) { fill: none; stroke-width: 3; stroke-linejoin: round; }
+  .porte :global(.corps) { stroke: var(--ill-reseau); fill: var(--bg); }
+  .porte :global(.corps.arc) { fill: none; }
+  .porte :global([data-fil]) { stroke: color-mix(in srgb, var(--muted) 55%, transparent); transition: stroke 0.2s; }
+  .porte :global([data-fil].allume) { stroke: var(--ill-client); }
+  @media (prefers-reduced-motion: reduce) { .porte :global([data-fil]) { transition: none; } }
+  .lampe { align-self: start; margin: 1.75rem 0 0 0.4rem; line-height: 3rem; font-size: 2.2rem; filter: grayscale(1); opacity: 0.4; transition: opacity 0.2s, filter 0.2s; }
   .lampe.allumee { filter: none; opacity: 1; text-shadow: 0 0 1rem var(--ill-commun); }
   .verite { border-collapse: collapse; margin-top: 0.5rem; font-family: var(--police-mono); }
   .verite caption { text-align: left; font-family: var(--police); font-size: 0.85rem; color: var(--muted); }

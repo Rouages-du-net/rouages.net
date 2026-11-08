@@ -257,8 +257,8 @@ Pour recommander, les plateformes utilisent surtout ce qu'on **fait** : ce qu'on
 - Article 38 du DSA (§ 7) : option sans profilage obligatoire pour les très grandes plateformes.
 
 ### Sources
-1. TikTok Newsroom, « How TikTok recommends videos #ForYou », 18 juin 2020 — https://newsroom.tiktok.com/en-us/how-tiktok-recommends-videos-for-you — P, EN, résumé seulement (résumé d'outil avec citations).
-2. TikTok Newsroom, « Fulfilling our commitments under the Digital Services Act », 4 août 2023 — https://newsroom.tiktok.com/en-eu/fulfilling-commitments-dsa-update — P, EN, résumé seulement.
+1. TikTok Newsroom, « How TikTok recommends videos #ForYou », 18 juin 2020 — https://newsroom.tiktok.com/how-tiktok-recommends-videos-for-you?lang=en — P, EN, résumé seulement (résumé d'outil avec citations).
+2. TikTok Newsroom, « Fulfilling our commitments under the Digital Services Act », 4 août 2023 — https://newsroom.tiktok.com/fulfilling-commitments-dsa-update?lang=en-150 — P, EN, résumé seulement.
 
 ### Points d'attention
 - Les pages de transparence sont écrites **par les plateformes** : elles disent ce qu'elles veulent bien dire. Le présenter ainsi (« selon TikTok »).
