@@ -42,6 +42,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 ## Phase 3 — Qui décide (cartographie des acteurs)
 
 - [x] **Gouvernance technique** *(`/modules/gouvernance-technique/`, relecture humaine à faire ; AFRINIC, roulement de clé 2026, FGI à suivre)* — couches et organisations, RFC (parcours, statuts), consensus approximatif et hum, qui participe, chaîne des adresses IP et registres régionaux, racine du DNS (13 identités, ~2 000 instances), modèles multipartite et intergouvernemental. Sources : [`sources/gouvernance-technique.md`](sources/gouvernance-technique.md)
+- [x] **États et régulation** *(`/modules/etats-regulation/`, relecture humaine à faire ; omnibus RGPD, recours DPF, Iran et Russie à suivre)* — lois des données dans le monde, RGPD (droits, guichet unique, modèle de demande), DSA et DMA, AI Act et omnibus, neutralité du net, blocages (DNS, IP, SNI, DPI ; qui décide), coupures. Sources : [`sources/etats-regulation.md`](sources/etats-regulation.md)
 - [ ] Carte interactive des acteurs et des rapports de force
 - [ ] Fiches institutions (IETF, ICANN, W3C, RIR, CNIL, Arcom…)
 

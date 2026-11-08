@@ -1,0 +1,69 @@
+---
+// Animation « Le calendrier de l'AI Act » (module « États et régulation »,
+// étape 3) : un curseur de date ; les obligations déjà applicables
+// s'allument ; les dates repoussées par l'omnibus (règlement 2026/1744)
+// apparaissent barrées. Données : src/data/etats.ts.
+import { CALENDRIER_IA } from '../../../data/etats';
+---
+<div class="anim calendrier" data-calendrier>
+  <div class="anim-repli">
+    <ol>{CALENDRIER_IA.map((c) => <li><strong>{c.date}</strong>{c.avant && <> (au lieu du {c.avant})</>} : {c.quoi}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="curseur">Nous sommes en <output data-annee>2026</output>
+        <input type="range" min="2024" max="2029" step="1" value="2026" data-curseur />
+      </label>
+      <ol class="jalons" data-jalons>
+        {CALENDRIER_IA.map((c, i) => (
+          <li data-i={i}>
+            <span class="date">{c.date}{c.avant && <del> {c.avant}</del>}</span>
+            <span class="quoi">{c.quoi}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { CALENDRIER_IA } from '../../../data/etats';
+
+  // Année de chaque jalon (fin d'année : tout ce qui tombe dans l'année choisie est appliqué).
+  const ANNEES = CALENDRIER_IA.map((c) => Number(c.date.slice(-4)));
+
+  document.querySelectorAll<HTMLElement>('[data-calendrier]').forEach((racine) => {
+    activerScene(racine);
+    const curseur = racine.querySelector<HTMLInputElement>('[data-curseur]')!;
+    const annee = racine.querySelector<HTMLOutputElement>('[data-annee]')!;
+    const jalons = [...racine.querySelectorAll<HTMLElement>('[data-jalons] li')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const rendre = () => {
+      const a = Number(curseur.value);
+      annee.textContent = `fin ${a}`;
+      let n = 0;
+      jalons.forEach((li, i) => { const ok = ANNEES[i] <= a; li.classList.toggle('applique', ok); if (ok) n++; });
+      legende.textContent = n <= 1
+        ? `Fin ${a} : le règlement existe, mais aucune obligation ne s’applique encore.`
+        : n === jalons.length
+          ? `Fin ${a} : tout le règlement s’applique, y compris aux IA à haut risque intégrées à des produits.`
+          : `Fin ${a} : ${n - 1} étape${n > 2 ? 's' : ''} sur ${jalons.length - 1} en application. Prochaine : ${CALENDRIER_IA[n].date}.`;
+    };
+    curseur.addEventListener('input', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .curseur { display: grid; gap: 0.25rem; font-weight: 600; max-width: 22rem; margin-bottom: 0.75rem; }
+  .curseur input { accent-color: var(--accent); }
+  .jalons { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; }
+  .jalons li { display: grid; grid-template-columns: minmax(7.5rem, 10rem) 1fr; gap: 0.6rem; padding: 0.4rem 0.6rem; border-left: 4px solid var(--border); background: var(--bg); opacity: 0.55; }
+  .jalons li.applique { border-left-color: var(--accent); opacity: 1; }
+  .date { font-weight: 700; font-size: 0.88rem; }
+  .date del { display: block; font-weight: 400; color: var(--muted); }
+  .quoi { font-size: 0.9rem; }
+  @media (max-width: 30rem) { .jalons li { grid-template-columns: 1fr; gap: 0.15rem; } }
+</style>

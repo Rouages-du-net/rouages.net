@@ -1,0 +1,35 @@
+---
+// Animation « Les coupures dans le monde » (module « États et régulation »,
+// étape 6) : nombre de coupures par an et pays en tête en 2025 (Access Now,
+// #KeepItOn, chiffres au 31 mars 2026). Données : src/data/etats.ts.
+import { COUPURES, COUPURES_2025_PAYS } from '../../../data/etats';
+const max = Math.max(...COUPURES.map((c) => c.nombre));
+const maxP = COUPURES_2025_PAYS[0][1];
+---
+<div class="anim coupures" data-coupures>
+  <div class="anim-cadre">
+    <p class="titre">Coupures d’internet recensées par Access Now</p>
+    <ul class="barres">
+      {COUPURES.map((c) => (
+        <li><span class="nom">{c.annee}</span><span class="barre" aria-hidden="true"><span style={`width: ${(c.nombre / max) * 100}%`}></span></span><span class="val">{c.nombre} dans {c.pays} pays</span></li>
+      ))}
+    </ul>
+    <p class="titre">En 2025, les pays qui ont le plus coupé</p>
+    <ul class="barres">
+      {COUPURES_2025_PAYS.map(([p, n]) => (
+        <li><span class="nom">{p}</span><span class="barre pays" aria-hidden="true"><span style={`width: ${(n / maxP) * 100}%`}></span></span><span class="val">{n}</span></li>
+      ))}
+    </ul>
+    <p class="anim-note">Comment on compte : une décision égale une coupure, qu’elle dure deux heures ou deux ans ; une session d’examens compte pour une seule coupure. L’Inde fait beaucoup de coupures locales et courtes, l’Iran des coupures nationales et longues. La Chine n’apparaît presque pas : sa censure est permanente. Les chiffres sont révisés après coup (2023 : 283 puis 289).</p>
+  </div>
+</div>
+
+<style>
+  .titre { font-weight: 700; margin: 0 0 0.4rem; }
+  .barres { list-style: none; padding: 0; margin: 0 0 0.9rem; display: grid; gap: 0.3rem; }
+  .barres li { display: grid; grid-template-columns: minmax(5rem, 7rem) 1fr auto; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .barre { height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.2rem; overflow: hidden; }
+  .barre span { display: block; height: 100%; background: var(--ill-commun); }
+  .barre.pays span { background: var(--ill-reseau); }
+  .val { font-family: var(--police-mono); font-size: 0.8rem; color: var(--muted); }
+</style>

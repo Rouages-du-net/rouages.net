@@ -1,0 +1,73 @@
+---
+// Animation « Partout, des lois » (module « États et régulation », étape 0) :
+// part des pays dotés d'une loi de protection des données par région
+// (CNUCED, 2026), et exemples de lois dans le monde. Données : src/data/etats.ts.
+import { LOIS_DONNEES, LOIS_DONNEES_MONDE, LOIS_EXEMPLES } from '../../../data/etats';
+const pc = (a: number, b: number) => Math.round((a / b) * 100);
+---
+<div class="anim monde" data-monde>
+  <div class="anim-cadre">
+    <p class="titre-barres">Pays dotés d’une loi de protection des données (CNUCED, 2026) : {LOIS_DONNEES_MONDE.avec} sur {LOIS_DONNEES_MONDE.total}</p>
+    <ul class="barres">
+      {LOIS_DONNEES.map((r) => (
+        <li>
+          <span class="nom">{r.region}</span>
+          <span class="barre" aria-hidden="true"><span style={`width: ${pc(r.avec, r.total)}%`}></span></span>
+          <span class="val">{r.avec} / {r.total}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="anim-note">Avoir une loi ne veut pas dire qu’elle est appliquée. Et la CNUCED compte les États-Unis parmi les pays « avec loi », alors qu’ils n’ont pas de loi fédérale générale, seulement des lois par secteur et par État.</p>
+  </div>
+
+  <div class="anim-repli">
+    <ul>
+      {LOIS_EXEMPLES.map((l) => <li><strong>{l.pays}, {l.loi} ({l.annee})</strong> : {l.texte}</li>)}
+    </ul>
+  </div>
+
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="pays" role="group" aria-label="Exemples de lois">
+        {LOIS_EXEMPLES.map((l, i) => <button type="button" class="anim-bouton" data-i={i} aria-pressed={i === 0 ? 'true' : 'false'}>{l.pays}</button>)}
+      </div>
+      <p class="fiche"><strong data-titre></strong> <span data-texte></span></p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { LOIS_EXEMPLES } from '../../../data/etats';
+
+  document.querySelectorAll<HTMLElement>('[data-monde]').forEach((racine) => {
+    activerScene(racine);
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-i]')];
+    const titre = racine.querySelector<HTMLElement>('[data-titre]')!;
+    const texte = racine.querySelector<HTMLElement>('[data-texte]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const montrer = (i: number, annoncer: boolean) => {
+      const l = LOIS_EXEMPLES[i];
+      boutons.forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+      titre.textContent = `${l.loi} (${l.annee}).`;
+      texte.textContent = l.texte;
+      if (annoncer) legende.textContent = `${l.pays} : ${l.loi}, ${l.annee}.`;
+    };
+    boutons.forEach((b) => b.addEventListener('click', () => montrer(Number(b.dataset.i), true)));
+    montrer(0, false);
+  });
+</script>
+
+<style>
+  .titre-barres { font-weight: 700; margin: 0 0 0.5rem; }
+  .barres { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; }
+  .barres li { display: grid; grid-template-columns: minmax(7rem, 13rem) 1fr auto; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .barre { height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.2rem; overflow: hidden; }
+  .barre span { display: block; height: 100%; background: var(--ill-reseau); }
+  .val { font-family: var(--police-mono); font-size: 0.82rem; color: var(--muted); }
+  .anim-scene { margin-top: 0.75rem; }
+  .pays { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; }
+  .pays [aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .fiche { margin: 0; max-width: var(--mesure); min-height: 4.5em; }
+</style>

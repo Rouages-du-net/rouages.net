@@ -1,0 +1,36 @@
+---
+// Animation « Qui a ordonné ce blocage ? » (module « États et régulation »,
+// étape 5) : six cas réels ; pour chacun, l'autorité, la base, le contrôle et
+// l'issue (décisions de justice citées dans les sources). Données : src/data/etats.ts.
+import { QUI_BLOQUE } from '../../../data/etats';
+---
+<div class="anim qui-bloque">
+  <p class="consigne">Pour chaque blocage, devine qui l’a ordonné et s’il a tenu devant un juge, puis ouvre la carte.</p>
+  <ul class="cartes">
+    {QUI_BLOQUE.map((c) => (
+      <li>
+        <details>
+          <summary>{c.cas}</summary>
+          <dl>
+            <dt>Qui ?</dt><dd>{c.qui}</dd>
+            <dt>Sur quelle base ?</dt><dd>{c.base}</dd>
+            <dt>Quel contrôle ?</dt><dd>{c.controle}</dd>
+            <dt>Issue</dt><dd>{c.issue}</dd>
+          </dl>
+        </details>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .consigne { margin: 1rem 0 0.6rem; max-width: var(--mesure); font-weight: 600; }
+  .cartes { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+  .cartes details { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--card); padding: 0.6rem 0.8rem; }
+  .cartes summary { cursor: pointer; font-weight: 600; }
+  .cartes details[open] { border-color: var(--accent); }
+  dl { margin: 0.5rem 0 0; display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr; gap: 0.3rem 0.6rem; font-size: 0.92rem; }
+  dt { font-weight: 700; }
+  dd { margin: 0; }
+  @media (max-width: 30rem) { dl { grid-template-columns: 1fr; } dd { margin-bottom: 0.3rem; } }
+</style>
