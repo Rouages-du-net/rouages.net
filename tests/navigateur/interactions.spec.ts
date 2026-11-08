@@ -80,3 +80,31 @@ test('index des notions : notions, personnes, modules', async ({ page }) => {
   expect(await page.locator('.personnes li').count()).toBeGreaterThan(100);
   await expect(page.locator('.entree', { hasText: 'Masque de sous-réseau' }).locator('.usages')).toContainText('Adresses IP et masques');
 });
+
+test('portes logiques : bon nombre d’entrées et sortie juste', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/ordinateur/');
+  const anim = page.locator('[data-portes]');
+  const fils = anim.locator('[data-schema] [data-fil]');
+  const lampe = anim.locator('[data-lampe]');
+  // Portes à deux entrées : fils A, B et sortie.
+  for (const porte of ['et', 'ou', 'oux', 'nonet']) {
+    await anim.locator(`[data-porte="${porte}"]`).click();
+    await expect(fils).toHaveCount(3);
+    await expect(anim.locator('.verite tbody tr')).toHaveCount(4);
+  }
+  // NON : une seule entrée, B débranché, table de deux lignes.
+  await anim.locator('[data-porte="non"]').click();
+  await expect(fils).toHaveCount(2);
+  await expect(anim.locator('[data-entree="b"]')).toBeDisabled();
+  await expect(anim.locator('.verite tbody tr')).toHaveCount(2);
+  await expect(lampe).toHaveClass(/allumee/);
+  await anim.locator('[data-entree="a"]').click();
+  await expect(lampe).not.toHaveClass(/allumee/);
+  await expect(anim.locator('[data-fil="a"]')).toHaveClass(/allume/);
+  // ET avec A = 1, B = 1 : lampe allumée.
+  await anim.locator('[data-porte="et"]').click();
+  await anim.locator('[data-entree="b"]').click();
+  await expect(lampe).toHaveClass(/allumee/);
+  expect(err).toEqual([]);
+});
