@@ -1,0 +1,97 @@
+---
+// Animation « Ce que voit chacun » (module « Se protéger », étape 5) : trois
+// situations (HTTP, HTTPS, messagerie chiffrée de bout en bout) et quatre
+// observateurs. Synthèse des sources du module (RFC 9849 pour ECH, page
+// Signal sur les réquisitions, FAQ de Telegram).
+const SITUATIONS = [
+  { id: 'http', nom: 'Site en HTTP (sans cadenas)' },
+  { id: 'https', nom: 'Site en HTTPS' },
+  { id: 'e2e', nom: 'Messagerie chiffrée de bout en bout' },
+];
+const OBS = [
+  { id: 'wifi', nom: 'Le Wi-Fi du café' },
+  { id: 'fai', nom: 'Ton fournisseur d’accès' },
+  { id: 'service', nom: 'Le site ou la messagerie' },
+  { id: 'etat', nom: 'Un État' },
+];
+const VUE: Record<string, Record<string, { contenu: boolean; texte: string }>> = {
+  http: {
+    wifi: { contenu: true, texte: 'Tout : le site, les pages, ce que tu tapes dans les formulaires, mots de passe compris.' },
+    fai: { contenu: true, texte: 'Tout, comme le Wi-Fi.' },
+    service: { contenu: true, texte: 'Tout ce que tu lui envoies, évidemment.' },
+    etat: { contenu: true, texte: 'Tout ce qui passe sur le réseau qu’il peut écouter, et ce qu’il obtient du site.' },
+  },
+  https: {
+    wifi: { contenu: false, texte: 'Le nom du site (sauf avec le DNS chiffré et ECH, normalisé en 2026), l’heure, la quantité de données. Pas le contenu.' },
+    fai: { contenu: false, texte: 'Pareil : le nom du site, l’heure, le volume. Pas les pages ni ce que tu tapes.' },
+    service: { contenu: true, texte: 'Tout : HTTPS chiffre le trajet, pas ce que le site reçoit. Un site d’hameçonnage peut avoir un cadenas.' },
+    etat: { contenu: false, texte: 'Sur le réseau : comme le fournisseur d’accès. Sinon, ce qu’il obtient du site par une réquisition.' },
+  },
+  e2e: {
+    wifi: { contenu: false, texte: 'Que tu utilises la messagerie, quand, et combien de données. Pas les messages ni à qui tu écris.' },
+    fai: { contenu: false, texte: 'Pareil que le Wi-Fi.' },
+    service: { contenu: false, texte: 'Pas le contenu : seuls les téléphones ont les clés. Mais des métadonnées, plus ou moins selon le service : Signal dit ne pouvoir livrer que la date d’inscription et la dernière connexion.' },
+    etat: { contenu: false, texte: 'Les métadonnées gardées par le service, ou le téléphone lui-même s’il le saisit ou y installe un logiciel espion. C’est ainsi que la police a lu EncroChat en 2020.' },
+  },
+};
+---
+<div class="anim voit" data-voit data-vue={JSON.stringify(VUE)}>
+  <div class="anim-repli">
+    <table>
+      <caption>Ce que voit chacun</caption>
+      <thead><tr><th scope="col">Qui</th>{SITUATIONS.map((s) => <th scope="col">{s.nom}</th>)}</tr></thead>
+      <tbody>{OBS.map((o) => <tr><th scope="row">{o.nom}</th>{SITUATIONS.map((s) => <td>{VUE[s.id][o.id].texte}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="choix" role="radiogroup" aria-label="Situation">
+        {SITUATIONS.map((s, i) => <button type="button" role="radio" class="anim-bouton" data-sit={s.id} aria-checked={i === 1 ? 'true' : 'false'}>{s.nom}</button>)}
+      </div>
+      <ul class="obs">
+        {OBS.map((o) => <li data-obs={o.id}><span class="nom">{o.nom}</span><span class="etat" data-etat></span><span class="texte" data-texte></span></li>)}
+      </ul>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-voit]').forEach((racine) => {
+    activerScene(racine);
+    const vue: Record<string, Record<string, { contenu: boolean; texte: string }>> = JSON.parse(racine.dataset.vue!);
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-sit]')];
+    const lis = [...racine.querySelectorAll<HTMLElement>('[data-obs]')];
+    const montrer = (sit: string, annoncer: boolean) => {
+      boutons.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.sit === sit)));
+      lis.forEach((li) => {
+        const v = vue[sit][li.dataset.obs!];
+        li.classList.toggle('voit-tout', v.contenu);
+        li.querySelector('[data-etat]')!.textContent = v.contenu ? 'voit le contenu' : 'ne voit pas le contenu';
+        li.querySelector('[data-texte]')!.textContent = v.texte;
+      });
+      if (annoncer) {
+        const n = lis.filter((li) => vue[sit][li.dataset.obs!].contenu).length;
+        racine.querySelector('.anim-legende')!.textContent = `${boutons.find((b) => b.dataset.sit === sit)!.textContent} : ${n} observateur${n > 1 ? 's' : ''} sur 4 voi${n > 1 ? 'ent' : 't'} le contenu.`;
+      }
+    };
+    boutons.forEach((b) => b.addEventListener('click', () => montrer(b.dataset.sit!, true)));
+    montrer('https', false);
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.7rem; }
+  .choix [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .obs { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; gap: 0.35rem; }
+  .obs li { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr; gap: 0.1rem 0.6rem; padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-left: 4px solid var(--ill-secret-b); border-radius: 0.4rem; background: var(--bg); }
+  .obs li.voit-tout { border-left-color: var(--ill-commun); }
+  .nom { font-weight: 700; grid-row: span 2; }
+  .etat { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+  .texte { font-size: 0.9rem; }
+  @media (max-width: 32rem) { .obs li { grid-template-columns: 1fr; } .nom { grid-row: auto; } }
+  .anim-repli table { border-collapse: collapse; font-size: 0.88rem; }
+  .anim-repli th, .anim-repli td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+</style>

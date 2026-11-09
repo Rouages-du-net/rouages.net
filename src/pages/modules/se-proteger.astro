@@ -1,0 +1,450 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import PhraseDePasse from '../../components/animations/proteger/PhraseDePasse.astro';
+import Kanonymat from '../../components/animations/proteger/Kanonymat.astro';
+import Passkey from '../../components/animations/proteger/Passkey.astro';
+import Hameconnage from '../../components/animations/proteger/Hameconnage.astro';
+import AlKindi from '../../components/animations/proteger/AlKindi.astro';
+import DiffieHellman from '../../components/animations/proteger/DiffieHellman.astro';
+import CeQueVoit from '../../components/animations/proteger/CeQueVoit.astro';
+import VieFaille from '../../components/animations/proteger/VieFaille.astro';
+import Sauvegarde from '../../components/animations/proteger/Sauvegarde.astro';
+
+// Faits sourcés : voir docs/sources/se-proteger.md.
+const etapes = [
+  { ancre: 'mot-de-passe', court: 'Ton mot de passe' },
+  { ancre: 'comptes', court: 'Tes comptes' },
+  { ancre: 'arnaques', court: 'Les arnaques' },
+  { ancre: 'chiffrer', court: 'Chiffrer' },
+  { ancre: 'cle-publique', court: 'La clé publique' },
+  { ancre: 'qui-voit', court: 'Qui voit quoi ?' },
+  { ancre: 'mises-a-jour', court: 'Mettre à jour' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Se protéger : mots de passe, hameçonnage, chiffrement, mises à jour"
+  description="Phrases de passe, gestionnaires, double authentification et passkeys, arnaques, histoire du chiffrement d'al-Kindi à Signal, mises à jour et sauvegardes : comprendre pour se protéger."
+>
+  <p class="tag" data-pagefind-ignore>Comment ça marche · module en construction</p>
+  <h1>Se protéger : mots de passe, hameçonnage, chiffrement, mises à jour</h1>
+  <MiseAJour date="2026-11-08" evolutif />
+  <p class="chapo seulement-debut">
+    La plupart des attaques ne visent personne en particulier : des robots essaient des mots de passe volés, des
+    messages piégés partent par millions, des failles connues attendent qu'on oublie de mettre à jour. Ce module
+    explique comment ça marche, et les quelques gestes qui protègent vraiment, sans jargon ni peur.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Ton mot de passe" ancre="mot-de-passe">
+    <PhraseDePasse slot="animation" />
+    <p slot="decouverte">
+      Un bon mot de passe est long et imprévisible, pas compliqué. Une phrase de passe, faite de mots tirés au
+      hasard, est plus facile à retenir et plus difficile à deviner que « P@ssw0rd! ». Et il en faut un différent
+      pour chaque site : un gestionnaire de mots de passe s'en souvient pour toi.
+    </p>
+    <p slot="curieux">
+      On mesure la force d'un mot de passe en bits d'<em>entropie</em> : chaque bit double le nombre d'essais
+      nécessaires. La CNIL demande au moins 80 bits pour un mot de passe seul (12 caractères variés, 14 sans
+      caractère spécial, ou 7 mots) ; l'ANSSI, de 65 à plus de 100 bits selon l'importance du compte. Le NIST
+      américain demande au moins 15 caractères, sans règle de composition ni changement périodique.
+    </p>
+    <p slot="ingenieur">
+      Un site sérieux ne stocke jamais ton mot de passe : il en garde une empreinte (<Terme id="hachage">hachage</Terme>)
+      salée et lente à calculer (Argon2, bcrypt). Le calcul d'entropie ne vaut que pour un secret vraiment tiré au
+      hasard : un mot du dictionnaire, une date ou une citation se devinent bien plus vite. Le gestionnaire libre
+      KeePassXC a reçu en 2025 une certification de premier niveau de l'ANSSI, pour une version précise.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1999, Anne Adams et <strong>Angela Sasse</strong> publient « Users Are Not The Enemy » : les règles qui
+        forcent à changer souvent de mot de passe poussent à en choisir de plus faibles et à les noter. En 2016,
+        <strong>Lorrie Cranor</strong>, alors à la FTC, rappelle qu'avec l'ancien mot de passe, on devine le nouveau
+        en moins de 5 essais pour 17 % des comptes. Leurs travaux ont fini par changer les recommandations
+        officielles.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Il faut changer son mot de passe tous les 3 mois. »</strong> Plus maintenant : la CNIL, l'ANSSI et le
+      NIST le déconseillent pour les comptes ordinaires. Il faut le changer quand il a fuité, et pour les comptes
+      d'administration. <strong>« P@ssw0rd! est sûr. »</strong> Ces substitutions sont les premières que testent
+      les attaquants : selon le NIST, les gens répondent aux règles de composition « de façon très prévisible ».
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Tes comptes : fuites, double authentification, passkeys" ancre="comptes">
+    <div slot="animation">
+      <Kanonymat />
+      <Passkey />
+    </div>
+    <p slot="decouverte">
+      Des bases de données fuient régulièrement. Des robots essaient alors les mêmes identifiants sur d'autres
+      sites : c'est pour ça qu'un mot de passe réutilisé est dangereux. La <Terme id="double-authentification">double
+      authentification</Terme> ajoute une deuxième preuve : un mot de passe volé ne suffit plus.
+    </p>
+    <p slot="curieux">
+      Le service Have I Been Pwned recense 17,8 milliards de comptes fuités dans 1 049 fuites (état au 8 novembre
+      2026), dont France Travail, Free, Bouygues Telecom. La CNIL a sanctionné en janvier 2026 France Travail
+      (5 millions d'euros) et Free (42 millions) pour des protections insuffisantes. Le code par SMS vaut mieux que
+      rien, mais l'ANSSI le déconseille : un escroc peut se faire attribuer ton numéro (« SIM swap »).
+    </p>
+    <p slot="ingenieur">
+      Une <Terme id="passkey">passkey</Terme> est une paire de clés liée au domaine du site : elle ne fonctionne pas
+      sur un faux site. Le NIST le résume : « l'authentification par code à usage unique ne résiste pas au
+      hameçonnage », les passkeys si. Selon l'alliance FIDO, qui les promeut, 36 % des connexions chez quinze grands
+      services passaient par une passkey en 2026.
+    </p>
+    <div slot="histoire">
+      <p>
+        En septembre 2022, un attaquant qui avait le mot de passe d'un prestataire d'Uber l'a bombardé de demandes
+        de validation, jusqu'à ce qu'il en accepte une : c'est la « fatigue des notifications ». En 2019, une étude
+        de Google n'a trouvé aucune victime d'hameçonnage ciblé parmi les comptes protégés uniquement par une clé
+        physique.
+      </p>
+    </div>
+    <p slot="verifie">
+      Pour savoir si ton adresse figure dans une fuite connue, le service haveibeenpwned.com la vérifie (c'est ton
+      choix : cela revient à lui donner ton adresse). Pour un mot de passe, il utilise le principe montré dans
+      l'animation : seuls 5 caractères de l'empreinte partent.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Hameçonnage et arnaques" ancre="arnaques">
+    <Hameconnage slot="animation" />
+    <p slot="decouverte">
+      L'<Terme id="hameconnage">hameçonnage</Terme> imite un service connu pour te faire cliquer, payer ou donner un
+      code. Les signes qui ne trompent pas : l'urgence, une petite somme à payer, un lien vers un domaine qui
+      ressemble au vrai, une demande de code. Le bon réflexe : passer par l'appli ou l'adresse que tu tapes toi-même.
+    </p>
+    <p slot="curieux">
+      En 2025, Cybermalveillance.gouv.fr a reçu 504 000 demandes d'aide ; l'hameçonnage en représente un tiers
+      (+71 %). Faux colis, fausses amendes, faux péages, et surtout le faux conseiller bancaire (+159 %) :
+      l'escroc appelle « de la part de ta banque », parfois après t'avoir fait appeler un faux numéro d'opposition.
+      Aucune banque ne demande tes codes.
+    </p>
+    <p slot="ingenieur">
+      Les fautes d'orthographe ne sont plus un indice fiable : dans une étude de 2024, des courriels d'hameçonnage
+      écrits entièrement par une IA ont fait cliquer 54 % des participant·es, autant que ceux d'expert·es humain·es.
+      Cybermalveillance note que l'IA sert déjà à traduire les arnaques en dizaines de langues.
+    </p>
+    <div slot="histoire">
+      <p>
+        <strong>Ailleurs dans le monde.</strong> Aux États-Unis, le FBI a recensé 20,9 milliards de dollars de pertes
+        déclarées en 2025, surtout de faux placements en cryptomonnaies, menés depuis l'Asie du Sud-Est par des réseaux
+        qui exploitent des victimes de traite. L'ONU estimait en 2023 qu'au moins 120 000 personnes au Myanmar et
+        100 000 au Cambodge pouvaient être retenues dans ces centres d'arnaques : « Ce sont des victimes, pas des
+        criminels », dit le Haut-Commissaire Volker Türk. En Afrique, Interpol signale la fraude au mobile money et
+        au SIM swap ; en Inde, plus d'un million de fraudes au paiement UPI par an selon le ministère des Finances. À
+        Hong Kong, en 2024, un·e employé·e a viré 200 millions de dollars de Hong Kong après une visioconférence où
+        tous les « collègues » étaient des deepfakes.
+      </p>
+    </div>
+    <p slot="verifie">
+      En France, en cas d'arnaque : 17cyber.gouv.fr (diagnostic et contact avec la police ou la gendarmerie, jour et
+      nuit), opposition auprès de ta banque, changement des mots de passe en commençant par ta messagerie, puis
+      plainte.
+    </p>
+    <p slot="mythes">
+      <strong>« Le cadenas veut dire que le site est fiable. »</strong> Le cadenas dit seulement que la connexion est
+      chiffrée avec le détenteur du nom de domaine : dès 2018, 35 % des sites d'hameçonnage avaient un cadenas,
+      selon le groupe de travail anti-hameçonnage APWG. <strong>« Je n'intéresse pas les pirates. »</strong> La
+      plupart des attaques sont automatiques, et 93 % des demandes d'aide à Cybermalveillance viennent de
+      particuliers.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Chiffrer : plus de deux mille ans d'histoire" ancre="chiffrer">
+    <AlKindi slot="animation" />
+    <p slot="decouverte">
+      Chiffrer, c'est rendre un message illisible pour qui n'a pas la clé. Jules César décalait chaque lettre de
+      trois rangs dans l'alphabet. Facile à casser : dans toutes les langues, certaines lettres reviennent plus
+      souvent que d'autres.
+    </p>
+    <p slot="curieux">
+      Vers 850, le savant arabe <strong>al-Kindi</strong> écrit le plus ancien traité connu sur l'analyse des
+      fréquences : comparer les lettres les plus fréquentes du message à celles de la langue. Son manuscrit n'a été
+      retrouvé qu'à la fin du XXe siècle dans les archives ottomanes d'Istanbul. En Inde, le <em>Kamasutra</em>
+      compte déjà l'écriture secrète parmi ses 64 arts.
+    </p>
+    <p slot="ingenieur">
+      En 1883, Auguste Kerckhoffs, un Néerlandais naturalisé français, pose un principe toujours valable : la
+      méthode doit pouvoir « tomber entre les mains de l'ennemi » sans danger. Tout le secret doit tenir dans la
+      clé. Le seul chiffre parfait, le masque jetable, exige une clé aléatoire aussi longue que le message et jamais
+      réutilisée.
+    </p>
+    <div slot="histoire">
+      <p>
+        <strong>Enigma.</strong> Le 31 décembre 1932, des mathématiciens polonais, Marian Rejewski, Jerzy Różycki et
+        Henryk Zygalski, lisent pour la première fois des messages de la machine allemande. Les 25 et 26 juillet 1939,
+        près de Varsovie, ils transmettent tout aux Français et aux Britanniques. À Bletchley Park, Alan Turing et
+        Gordon Welchman conçoivent des machines pour industrialiser le déchiffrement ; en 1945, 75 % du personnel
+        sont des femmes. <strong>Joan Clarke</strong>, payée moins que ses collègues masculins, devient cheffe
+        adjointe de la Hut 8 ; <strong>Mavis Batey</strong> joue un rôle clé contre l'Enigma des services secrets
+        allemands.
+      </p>
+      <p>
+        Aux États-Unis, <strong>Elizebeth Friedman</strong> déchiffre plus de 12 000 messages de contrebandiers
+        pendant la Prohibition, et <strong>Agnes Meyer Driscoll</strong> s'attaque aux codes de la marine japonaise.
+        Dans le Pacifique, les code talkers navajos transmettent en langue diné un code que les Japonais n'ont
+        jamais cassé ; les Choctaw l'avaient fait dès 1918, les Comanches débarquent à Utah Beach.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Turing a cassé Enigma tout seul. »</strong> Les Polonais lisaient Enigma sept ans avant la guerre,
+      et des milliers de personnes, surtout des femmes, ont fait tourner Bletchley Park. <strong>« Le chiffre de
+      Vigenère »</strong> a été publié en 1553 par l'Italien Giovan Battista Bellaso. Et les « code talkers basques »
+      de 1942 sont un mythe : les historiens n'en ont trouvé aucune trace.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="La clé publique : un secret partagé en public" ancre="cle-publique">
+    <DiffieHellman slot="animation" />
+    <p slot="decouverte">
+      Pendant des siècles, il fallait se retrouver pour échanger une clé secrète. Depuis les années 1970, deux
+      inconnus peuvent se mettre d'accord sur un secret en se parlant en public : c'est ce que fait ton navigateur
+      au début de chaque connexion HTTPS.
+    </p>
+    <p slot="curieux">
+      En chiffrement « symétrique » (comme AES, conçu par les Belges Joan Daemen et Vincent Rijmen, norme
+      américaine depuis 2001), la même clé chiffre et déchiffre. En chiffrement « à clé publique », une clé publique
+      chiffre, et seule la clé privée déchiffre. En pratique, on combine les deux : la clé publique sert à convenir
+      d'une clé symétrique, plus rapide.
+    </p>
+    <p slot="ingenieur">
+      La taille des clés compte : en 1998, une machine à moins de 250 000 dollars a cassé une clé DES de 56 bits en
+      56 heures. Un futur ordinateur quantique pourrait casser RSA et les courbes elliptiques. Le NIST a publié en
+      2024 des algorithmes « post-quantiques », et prévoit d'interdire les anciens après 2035 ; Signal et iMessage
+      les utilisent déjà. Le danger actuel : collecter aujourd'hui des messages chiffrés pour les lire demain.
+    </p>
+    <div slot="histoire">
+      <p>
+        Whitfield Diffie et Martin Hellman publient l'échange de clés en 1976, Rivest, Shamir et Adleman le
+        chiffrement RSA en 1977. Mais au GCHQ britannique,
+        en secret, James Ellis avait eu l'idée vers 1970, Clifford Cocks trouvé l'équivalent de RSA en 1973, et
+        Malcolm Williamson l'échange de clés peu après. Leur travail n'est rendu public qu'en décembre 1997, un mois
+        après la mort d'Ellis.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Les ordinateurs quantiques cassent déjà tout. »</strong> Non : selon une estimation de 2025, il
+      faudrait environ un million de qubits pour casser une clé RSA de 2048 bits, loin des machines actuelles. Et le
+      chiffrement symétrique résiste en doublant la taille des clés.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Qui voit quoi ?" ancre="qui-voit">
+    <CeQueVoit slot="animation" />
+    <p slot="decouverte">
+      HTTPS chiffre le trajet entre toi et un site : le Wi-Fi du café ne voit pas ce que tu tapes, mais le site, lui,
+      voit tout. Le <Terme id="chiffrement-bout-en-bout">chiffrement de bout en bout</Terme> va plus loin : même la
+      messagerie qui transporte tes messages ne peut pas les lire.
+    </p>
+    <p slot="curieux">
+      WhatsApp chiffre de bout en bout depuis avril 2016 avec le protocole Signal, Messenger par défaut depuis
+      décembre 2023. Telegram, non : ses conversations ordinaires sont chiffrées entre toi et ses serveurs, et
+      seules les « conversations secrètes » le sont de bout en bout. Les <em>métadonnées</em> (qui, quand, combien)
+      restent visibles : un ancien directeur de la NSA disait « nous tuons des gens sur la base de métadonnées ».
+    </p>
+    <p slot="ingenieur">
+      En 2020, la police française et néerlandaise a lu les messages du réseau EncroChat, utilisé par des
+      criminels, en piégeant directement les téléphones, sans casser le chiffrement. En 2024, la Cour de justice de
+      l'UE a jugé que cette infiltration était une interception, soumise aux règles qui vont avec.
+    </p>
+    <div slot="decide">
+      <p>
+        <strong>Faut-il permettre aux polices de lire les messageries ?</strong> Pour les chefs de police européens
+        (2024), le chiffrement de bout en bout empêchera de voir les abus sexuels sur enfants et d'obtenir des
+        preuves. Pour les cryptographes, une porte d'accès « réservée aux gentils » affaiblit la sécurité de tout le
+        monde, et analyser les messages sur les téléphones crée de « graves risques » pour toute la société. Signal a
+        annoncé qu'il quitterait le marché plutôt que de s'y plier.
+      </p>
+      <p>
+        <strong>État au 8 novembre 2026</strong> : le projet de règlement européen contre les abus sexuels sur
+        enfants (dit « Chat Control ») n'a pas abouti : selon les comptes rendus des négociations, le désaccord porte sur la détection
+        dans les messages privés. Le régime provisoire, prolongé jusqu'en avril 2028, ne permet que des
+        détections volontaires et exclut les communications chiffrées de bout en bout.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Le chiffrement, c'est pour les criminels. »</strong> Il protège chaque paiement en ligne, chaque
+      connexion HTTPS, et les messages de milliards de personnes. En France, depuis 2004, « l'utilisation des moyens
+      de cryptologie est libre ».
+    </p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Mettre à jour et sauvegarder" ancre="mises-a-jour">
+    <div slot="animation">
+      <VieFaille />
+      <Sauvegarde />
+    </div>
+    <p slot="decouverte">
+      Une mise à jour corrige souvent une faille de sécurité. Le plus souvent, on n'est pas attaqué avant que le
+      correctif existe, mais après, parce qu'on ne l'a pas installé. Et une sauvegarde débranchée sauve tes fichiers
+      si tout le reste échoue.
+    </p>
+    <p slot="curieux">
+      Un <Terme id="rancongiciel">rançongiciel</Terme> chiffre les fichiers et réclame une rançon. En France, l'ANSSI
+      a traité 128 attaques par rançongiciel en 2025, près de la moitié contre des TPE, PME et entreprises de taille intermédiaire.
+      Des hôpitaux ont été touchés : Corbeil-Essonnes en 2022, Armentières en 2024, avec des données de patients
+      publiées.
+    </p>
+    <p slot="ingenieur">
+      En mars 2024, l'ingénieur Andres Freund remarque qu'une connexion SSH prend une demi-seconde de trop : il
+      découvre une porte dérobée cachée dans xz, une petite bibliothèque présente sur presque tous les Linux, que son
+      unique mainteneur, épuisé, avait confiée à un inconnu. Fin 2021, la faille Log4Shell, dans une autre brique
+      libre utilisée partout, avait été notée 10 sur 10.
+    </p>
+    <div slot="histoire">
+      <p>
+        Windows 10 n'est plus mis à jour depuis le 14 octobre 2025, sauf inscription à un programme de mises à jour
+        étendues, prolongé jusqu'en octobre 2027. Beaucoup d'ordinateurs ne peuvent pas passer à Windows 11 : le
+        cabinet Canalys estimait en 2023 que 240 millions de PC risquaient de devenir des déchets. Le module
+        <a href="/modules/materialite/">La matérialité du numérique</a> parle de ce qu'ils deviennent.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Mettre à jour, c'est risqué. »</strong> WannaCry exploitait une faille corrigée deux mois plus tôt.
+      Les mises à jour défectueuses existent, d'où le conseil de faire une sauvegarde avant ; mais ne pas mettre à
+      jour est bien plus risqué.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Long plutôt que compliqué</strong>, et un mot de passe différent par site, grâce à un gestionnaire.</li>
+      <li><strong>Active la double authentification</strong>, et les passkeys quand le site les propose : elles déjouent l'hameçonnage.</li>
+      <li><strong>Méfie-toi de l'urgence</strong> : passe par l'appli ou l'adresse que tu tapes toi-même ; aucune banque ne demande tes codes.</li>
+      <li><strong>Le chiffrement protège tout le monde</strong> ; une porte dérobée « pour les gentils » affaiblit la sécurité de tous.</li>
+      <li><strong>Mets à jour vite et sauvegarde</strong>, avec une copie débranchée ou hors de chez toi.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : la fiche <a href="/vrai-ou-faux/">Vrai ou faux ?</a> sur la navigation privée,
+      <a href="/modules/surveillance-vie-privee/">Surveillance et vie privée</a>, et le jeu
+      <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>, où l'on protège un serveur.
+    </p>
+
+  <Sources
+    verifie="2026-11-08"
+    sources={[
+      { auteur: 'ANSSI', titre: 'Recommandations relatives à l’authentification multifacteur et aux mots de passe (v2.0)', url: 'https://messervices.cyber.gouv.fr/documents-guides/anssi-guide-authentification_multifacteur_et_mots_de_passe.pdf', type: 'primaire', annee: 2021 },
+      { auteur: 'CNIL', titre: 'Délibération n° 2022-100 (recommandation sur les mots de passe)', url: 'https://cnil.fr/sites/cnil/files/atoms/files/deliberation-2022-100-du-21-juillet-2022_recommandation-aux-mots-de-passe.pdf', type: 'primaire', annee: 2022 },
+      { auteur: 'CNIL', titre: 'Mots de passe : des recommandations de sécurité', url: 'https://cnil.fr/fr/mot-de-passe', type: 'primaire', annee: 2022 },
+      { auteur: 'NIST', titre: 'SP 800-63B-4 : Authentication and Authenticator Management', url: 'https://pages.nist.gov/800-63-4/sp800-63b.html', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'EFF (J. Bonneau)', titre: 'New wordlists for random passphrases', url: 'https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases', type: 'site', annee: 2016, langue: 'en' },
+      { auteur: 'R. Munroe (xkcd)', titre: 'Password Strength (936)', url: 'https://xkcd.com/936/', type: 'site', annee: 2011, langue: 'en' },
+      { auteur: 'Hive Systems', titre: 'Are your passwords in the green? (2025)', url: 'https://www.hivesystems.com/blog/are-your-passwords-in-the-green-2025', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'OWASP', titre: 'Password Storage Cheat Sheet', url: 'https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'NCSC (Royaume-Uni)', titre: 'Most hacked passwords revealed', url: 'https://www.ncsc.gov.uk/news/most-hacked-passwords-revealed-as-uk-cyber-survey-exposes-gaps-in-online-security', type: 'primaire', annee: 2019, langue: 'en' },
+      { auteur: 'KeePassXC', titre: 'Audits et certification ANSSI-CSPN-2025/16', url: 'https://keepassxc.org/audits/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'A. Adams, M. A. Sasse', titre: 'Users Are Not The Enemy (Communications of the ACM)', url: 'https://tlseminar.github.io/docs/usersnotenemy.pdf', type: 'recherche', annee: 1999, langue: 'en' },
+      { auteur: 'L. F. Cranor (FTC)', titre: 'Time to rethink mandatory password changes', url: 'https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2016/03/time-rethink-mandatory-password-changes', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'L. F. Cranor et al.', titre: 'Helping Users Create Better Passwords (;login:)', url: 'https://www.usenix.net/system/files/login/articles/login1212_ur.pdf', type: 'recherche', annee: 2012, langue: 'en' },
+      { auteur: 'Have I Been Pwned', titre: 'Liste publique des fuites (API v3, état au 8 novembre 2026)', url: 'https://haveibeenpwned.com/api/v3/breaches', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Have I Been Pwned', titre: 'API v3 : Pwned Passwords et k-anonymat', url: 'https://haveibeenpwned.com/API/v3', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'T. Hunt', titre: 'Understanding Have I Been Pwned’s use of SHA-1 and k-anonymity', url: 'https://www.troyhunt.com/understanding-have-i-been-pwneds-use-of-sha-1-and-k-anonymity/', type: 'site', annee: 2022, langue: 'en' },
+      { auteur: 'CNIL', titre: 'France Travail : la CNIL enquête sur la fuite de données', url: 'https://www.cnil.fr/fr/france-travail-la-cnil-enquete-sur-la-fuite-de-donnees-et-donne-des-conseils-pour-se-proteger', type: 'primaire', annee: 2024 },
+      { auteur: 'CNIL', titre: 'Violation de données : sanction de 5 millions d’euros contre France Travail', url: 'https://www.cnil.fr/fr/violation-de-donnees-sanction-5millions-france-travail', type: 'primaire', annee: 2026 },
+      { auteur: 'CNIL', titre: 'Sanction de Free et Free Mobile (2026)', url: 'https://www.cnil.fr/fr/sanction-free-2026', type: 'primaire', annee: 2026 },
+      { auteur: 'Google (K. Thomas, A. Moscicki)', titre: 'New research: how effective is basic account hygiene at preventing hijacking', url: 'https://security.googleblog.com/2019/05/new-research-how-effective-is-basic.html', type: 'recherche', annee: 2019, langue: 'en' },
+      { auteur: 'W3C', titre: 'Web Authentication Level 3 (Recommandation)', url: 'https://www.w3.org/TR/webauthn-3/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'FIDO Alliance', titre: 'Passkey Index (octobre 2026)', url: 'https://fidoalliance.org/wp-content/uploads/2026/10/Passkey-Index-October-2026.pdf', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Uber', titre: 'Security update (septembre 2022)', url: 'https://www.uber.com/newsroom/security-update/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Cybermalveillance.gouv.fr', titre: 'Rapport d’activité 2025', url: 'https://www.cybermalveillance.gouv.fr/medias/2026/03/RA_2025_Cybermalveillance_gouv_fr.pdf', type: 'primaire', annee: 2026 },
+      { auteur: 'F. Heiding, B. Schneier et al.', titre: 'Evaluating large language models’ capability to launch fully automated spear phishing', url: 'https://arxiv.org/abs/2412.00586', type: 'recherche', annee: 2024, langue: 'en' },
+      { auteur: 'X. Zheng', titre: 'Phishing with Unicode domains', url: 'https://www.xudongz.com/blog/2017/idn-phishing/', type: 'site', annee: 2017, langue: 'en' },
+      { auteur: 'FBI IC3', titre: 'Internet Crime Report 2025', url: 'https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'ONU Info (HCDH)', titre: 'Hundreds of thousands trafficked to work as online scammers in SE Asia', url: 'https://news.un.org/en/story/2023/08/1140187', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'ONUDC', titre: 'Cyberfraud in the Mekong reaches inflection point', url: 'https://www.unodc.org/unodc/frontpage/2025/April/cyberfraud-in-the-mekong-reaches-inflection-point--unodc-reveals.html', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'INTERPOL', titre: 'Africa Cyberthreat Assessment Report 2025', url: 'https://www.interpol.int/content/download/23094/file/INTERPOL_Africa_Cyberthreat_Assessment_Report_2025.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'IANS', titre: 'UPI frauds worth Rs 805 crore this fiscal so far (réponse au Parlement)', url: 'https://ianslive.in/upi-frauds-worth-rs-805-crore-witnessed-this-fiscal-so-far-minister--20251215175703', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'The Standard (police de Hong Kong)', titre: 'HK’s first deepfake video conference scam involving HK$200 million', url: 'https://www.thestandard.com.hk/news/article/213122/HKs-first-deepfake-video-conference-scam-involving-HK200-million', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'APWG', titre: 'Phishing Activity Trends Report, Q2 2018', url: 'https://docs.apwg.org/reports/apwg_trends_report_q2_2018.pdf', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'Suétone (Loeb, LacusCurtius)', titre: 'Vie de César, 56', url: 'https://penelope.uchicago.edu/Thayer/E/Roman/Texts/Suetonius/12Caesars/Julius*.html', type: 'primaire', langue: 'en' },
+      { auteur: 'Vatsyayana', titre: 'Kama Sutra (trad. anglaise de 1883, Projet Gutenberg)', url: 'https://www.gutenberg.org/cache/epub/27827/pg27827.txt', type: 'primaire', langue: 'en' },
+      { auteur: 'M. I. Al-Suwaiyel (Muslim Heritage)', titre: 'Arab Origins of Cryptology', url: 'https://muslimheritage.com/arab-origins-of-cryptology/', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'V. Hugo', titre: 'Les Misérables, tome I (Projet Gutenberg n° 17489, corpus des fréquences)', url: 'https://www.gutenberg.org/cache/epub/17489/pg17489.txt', type: 'primaire' },
+      { auteur: 'Ph. Guillot (BibNum)', titre: 'Auguste Kerckhoffs et la cryptographie militaire', url: 'https://journals.openedition.org/bibnum/555', type: 'recherche', annee: 2013 },
+      { auteur: 'Agencja Wywiadu (Pologne)', titre: 'Enigma decryption', url: 'https://aw.gov.pl/en/history/enigma-decryption/183,Enigma-decryption.html', type: 'primaire', langue: 'en' },
+      { auteur: 'GCHQ', titre: 'The Pyry Forest meeting', url: 'https://www.gchq.gov.uk/information/the-pyry-forest-meeting', type: 'primaire', langue: 'en' },
+      { auteur: 'Bletchley Park Trust', titre: 'Who were the codebreakers?', url: 'https://www.bletchleypark.org.uk/our-story/who-were-the-codebreakers/', type: 'site', langue: 'en' },
+      { auteur: 'GCHQ', titre: 'Joan Clarke', url: 'https://www.gchq.gov.uk/information/joan-clarke', type: 'primaire', langue: 'en' },
+      { auteur: 'GCHQ', titre: 'Mavis Batey', url: 'https://www.gchq.gov.uk/person/mavis-batey', type: 'primaire', langue: 'en' },
+      { auteur: 'George C. Marshall Foundation', titre: 'Elizebeth Smith Friedman and Prohibition', url: 'https://www.marshallfoundation.org/articles-and-features/elizebeth-smith-friedman-and-prohibition/', type: 'site', langue: 'en' },
+      { auteur: 'National Cryptologic Foundation', titre: 'Agnes Meyer Driscoll', url: 'https://cryptologicfoundation.org/ncf-history/agnes-meyer-driscoll/', type: 'site', langue: 'en' },
+      { auteur: 'National Archives (Prologue)', titre: 'Navajo Code Talkers', url: 'https://www.archives.gov/publications/prologue/2001/winter/navajo-code-talkers.html', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'National WWII Museum', titre: 'American Indian Code Talkers', url: 'https://www.nationalww2museum.org/war/articles/american-indian-code-talkers', type: 'site', langue: 'en' },
+      { auteur: 'Euskal Kultura', titre: 'Les Basques de Guadalcanal : histoire contre mythe', url: 'https://www.euskalkultura.eus/english/news/sancho-de-beurko-elkartea-defends-the-role-of-the-other-basques-at-guadalcanal-1942-history-vs-myth', type: 'presse', langue: 'en' },
+      { auteur: 'R. Rivest, A. Shamir, L. Adleman', titre: 'A Method for Obtaining Digital Signatures and Public-Key Cryptosystems', url: 'https://people.csail.mit.edu/rivest/Rsapaper.pdf', type: 'primaire', annee: 1978, langue: 'en' },
+      { auteur: 'GCHQ', titre: 'James Ellis', url: 'https://www.gchq.gov.uk/person/james-ellis', type: 'primaire', langue: 'en' },
+      { auteur: 'GCHQ', titre: 'Malcolm Williamson', url: 'https://www.gchq.gov.uk/person/malcolm-williamson', type: 'primaire', langue: 'en' },
+      { auteur: 'NCSC (Royaume-Uni)', titre: 'Our history', url: 'https://www.ncsc.gov.uk/information/our-history', type: 'primaire', langue: 'en' },
+      { auteur: 'NIST', titre: 'Commerce Secretary announces new standard for global information security (AES)', url: 'https://www.nist.gov/news-events/news/2001/12/commerce-secretary-announces-new-standard-global-information-security', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'EFF', titre: 'DES Cracker FAQ', url: 'https://w2.eff.org/Privacy/Crypto/Crypto_misc/DESCracker/HTML/19980716_eff_des_faq.html', type: 'primaire', annee: 1998, langue: 'en' },
+      { auteur: 'NIST', titre: 'NIST releases first 3 finalized post-quantum encryption standards', url: 'https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'NIST', titre: 'IR 8547 : Transition to Post-Quantum Cryptography Standards', url: 'https://csrc.nist.gov/pubs/ir/8547/final', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'C. Gidney', titre: 'How to factor 2048 bit RSA integers with less than a million noisy qubits', url: 'https://arxiv.org/abs/2505.15917', type: 'recherche', annee: 2025, langue: 'en' },
+      { auteur: 'Signal', titre: 'Quantum resistance and the Signal protocol (PQXDH)', url: 'https://signal.org/blog/pqxdh/', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'IETF', titre: 'RFC 9849 : TLS Encrypted Client Hello', url: 'https://www.rfc-editor.org/rfc/rfc9849.txt', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Signal', titre: 'WhatsApp’s Signal Protocol integration is now complete', url: 'https://signal.org/blog/whatsapp-complete/', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'Meta', titre: 'Default end-to-end encryption on Messenger', url: 'https://about.fb.com/news/2023/12/default-end-to-end-encryption-on-messenger/', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'Telegram', titre: 'FAQ (chiffrement des conversations)', url: 'https://telegram.org/faq', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Signal', titre: 'Government communication (réquisitions)', url: 'https://signal.org/bigbrother/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'D. Cole (New York Review of Books)', titre: '« We kill people based on metadata »', url: 'https://www.nybooks.com/online/2014/05/10/we-kill-people-based-metadata/', type: 'presse', annee: 2014, langue: 'en' },
+      { auteur: 'Europol', titre: 'Dismantling of an encrypted network (EncroChat)', url: 'https://www.europol.europa.eu/media-press/newsroom/news/dismantling-of-encrypted-network-sends-shockwaves-through-organised-crime-groups-across-europe', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué 77/24 (M.N., EncroChat)', url: 'https://curia.europa.eu/site/upload/docs/application/pdf/2024-04/cp240077en.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Parlement européen (OEIL)', titre: 'Fiche de procédure 2022/0155(COD) : règlement sur les abus sexuels sur enfants', url: 'https://oeil.europarl.europa.eu/oeil/en/procedure-file/pdf?reference=2022%2F0155%28COD%29', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Parlement européen (OEIL)', titre: 'Fiche de procédure 2025/0429(COD) : régime provisoire', url: 'https://oeil.europarl.europa.eu/oeil/en/procedure-file/pdf?reference=2025%2F0429%28COD%29', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Europol', titre: 'European police chiefs call for action against end-to-end encryption roll-out', url: 'https://www.europol.europa.eu/media-press/newsroom/news/european-police-chiefs-call-for-industry-and-governments-to-take-action-against-end-to-end-encryption-roll-out', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'H. Abelson et al.', titre: 'Keys Under Doormats (MIT-CSAIL-TR-2015-026)', url: 'https://dspace.mit.edu/handle/1721.1/97690', type: 'recherche', annee: 2015, langue: 'en' },
+      { auteur: 'H. Abelson et al.', titre: 'Bugs in our Pockets: The Risks of Client-Side Scanning', url: 'https://arxiv.org/abs/2110.07450', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'netzpolitik.org', titre: 'Signal würde den Markt verlassen (M. Whittaker)', url: 'https://netzpolitik.org/?p=498941', type: 'presse', annee: 2025, langue: 'de' },
+      { auteur: 'Légifrance', titre: 'LCEN, article 30 : « L’utilisation des moyens de cryptologie est libre »', url: 'https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000006421577', type: 'primaire', annee: 2004 },
+      { auteur: 'Microsoft', titre: 'Bulletin de sécurité MS17-010', url: 'https://learn.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Microsoft (B. Smith)', titre: 'The need for urgent collective action to keep people safe online', url: 'https://blogs.microsoft.com/on-the-issues/2017/05/14/need-urgent-collective-action-keep-people-safe-online-lessons-last-weeks-cyberattack/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'National Audit Office', titre: 'Investigation: WannaCry cyber attack and the NHS', url: 'https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Gouvernement britannique', titre: 'Foreign Office Minister condemns North Korean actor for WannaCry attacks', url: 'https://www.gov.uk/government/news/foreign-office-minister-condemns-north-korean-actor-for-wannacry-attacks', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Le Monde Informatique', titre: 'Un niveau de menaces toujours très élevé en 2025 selon l’ANSSI', url: 'https://www.lemondeinformatique.fr/actualites/lireamp-un-niveau-de-menaces-toujours-tres-eleve-en-2025-selon-l-anssi-99602.html', type: 'presse', annee: 2026 },
+      { auteur: 'Le Monde Informatique', titre: 'Piratage du CH Sud Francilien : des données sensibles divulguées', url: 'https://www.lemondeinformatique.fr/actualites/lire-piratage-du-ch-sud-francilien-de-corbeil-essonnes-des-donnees-sensibles-divulguees-88114.html', type: 'presse', annee: 2022 },
+      { auteur: 'Le Monde Informatique', titre: 'Piratage de l’hôpital d’Armentières', url: 'https://www.lemondeinformatique.fr/actualites/lire-piratage-de-l-hopital-d-armentieres-pres-d-1-million-de-donnees-patients-publiees-93082.html', type: 'presse', annee: 2024 },
+      { auteur: 'Apache', titre: 'Log4j : vulnérabilités de sécurité', url: 'https://logging.apache.org/security.html', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'A. Freund (oss-security)', titre: 'backdoor in upstream xz/liblzma', url: 'https://www.openwall.com/lists/oss-security/2024/03/29/4', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'L. Collin (xz-devel)', titre: 'Message du 8 juin 2022', url: 'https://www.mail-archive.com/xz-devel@tukaani.org/msg00567.html', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'Windows 10 support has ended on October 14, 2025', url: 'https://support.microsoft.com/en-us/windows/windows-10-support-has-ended-on-october-14-2025-2ca8b313-1946-43d3-b55c-2b95b107f281', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'Windows 10 Extended Security Updates', url: 'https://www.microsoft.com/en-us/windows/extended-security-updates', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Silicon UK (Canalys)', titre: 'Report warns of landfill risk when Microsoft ends Windows 10 support', url: 'https://www.silicon.co.uk/e-innovation/green-it/report-warns-of-landfill-risk-when-microsoft-ends-windows-10-support-544026', type: 'presse', annee: 2023, langue: 'en' },
+      { auteur: 'US-CERT (P. Ruggiero)', titre: 'Data Backup Options (règle 3-2-1)', url: 'https://www.cisa.gov/sites/default/files/publications/data_backup_options.pdf', type: 'primaire', annee: 2012, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

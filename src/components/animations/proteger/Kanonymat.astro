@@ -1,0 +1,65 @@
+---
+// Animation « Vérifier sans dévoiler » (module « Se protéger », étape 1) : le
+// principe du k-anonymat de Pwned Passwords (Have I Been Pwned) sur un mot
+// d'exemple. L'empreinte SHA-1 est calculée dans le navigateur ; seuls les
+// 5 premiers caractères seraient envoyés. Ici, rien n'est envoyé du tout.
+const EXEMPLES = ['soleil', 'motdepasse', 'azerty123', 'tortue lavande oasis piano'];
+---
+<div class="anim kano" data-kano data-exemples={JSON.stringify(EXEMPLES)}>
+  <div class="anim-repli">
+    <ol>
+      <li>Ton appareil calcule l’empreinte SHA-1 du mot de passe : 40 caractères hexadécimaux.</li>
+      <li>Il n’envoie au service que les 5 premiers caractères.</li>
+      <li>Le service renvoie les quelque 800 empreintes de fuites qui commencent par ces 5 caractères.</li>
+      <li>La comparaison se fait chez toi : le service ne sait jamais quel mot de passe tu vérifiais.</li>
+    </ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="exemples" role="radiogroup" aria-label="Mot d’exemple">
+        {EXEMPLES.map((e, i) => <button type="button" role="radio" class="anim-bouton" data-ex={e} aria-checked={i === 0 ? 'true' : 'false'}>{e}</button>)}
+      </div>
+      <p class="ligne"><span class="etiq">Empreinte SHA-1, calculée chez toi :</span> <code><span class="envoye" data-prefixe></span><span class="garde" data-suffixe></span></code></p>
+      <p class="ligne"><span class="etiq">Envoyé au service :</span> <code data-envoi></code></p>
+      <p class="ligne"><span class="etiq">Gardé chez toi :</span> <code data-garde></code></p>
+      <p class="anim-note">Il existe 16⁵ = 1 048 576 débuts possibles : chaque début correspond à des centaines d’empreintes différentes. Exemples seulement : ne tape jamais ton vrai mot de passe dans une page qui n’est pas faite pour ça. Ici, rien n’est envoyé.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  async function sha1(texte: string): Promise<string> {
+    const h = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(texte));
+    return [...new Uint8Array(h)].map((o) => o.toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-kano]').forEach((racine) => {
+    activerScene(racine);
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const boutons = [...racine.querySelectorAll<HTMLButtonElement>('[data-ex]')];
+    async function montrer(mot: string, annoncer: boolean) {
+      boutons.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.ex === mot)));
+      const h = await sha1(mot);
+      q('[data-prefixe]').textContent = h.slice(0, 5);
+      q('[data-suffixe]').textContent = h.slice(5);
+      q('[data-envoi]').textContent = `GET /range/${h.slice(0, 5)}`;
+      q('[data-garde]').textContent = h.slice(5);
+      if (annoncer) q('.anim-legende').textContent = `« ${mot} » : seuls les 5 caractères ${h.slice(0, 5)} partiraient ; les 35 autres restent chez toi pour la comparaison.`;
+    }
+    boutons.forEach((b) => b.addEventListener('click', () => montrer(b.dataset.ex!, true)));
+    montrer(boutons[0].dataset.ex!, false);
+  });
+</script>
+
+<style>
+  .exemples { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.7rem; }
+  .exemples [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .ligne { margin: 0 0 0.4rem; display: grid; gap: 0.15rem; }
+  .etiq { font-weight: 600; font-size: 0.9rem; }
+  code { font-family: var(--police-mono); overflow-wrap: anywhere; word-break: break-all; }
+  .envoye { background: color-mix(in srgb, var(--ill-commun) 35%, transparent); font-weight: 700; }
+  .garde { color: var(--muted); }
+</style>

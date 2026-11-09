@@ -1,0 +1,92 @@
+---
+// Animation « Casser César comme al-Kindi » (module « Se protéger »,
+// étape 3) : un message chiffré par décalage ; on fait glisser la clé jusqu'à
+// ce que l'histogramme des lettres colle à celui du français (méthode décrite
+// par al-Kindi vers 850, pour l'arabe). Fréquences du français : src/lib/securite.ts.
+import { cesar } from '../../../lib/securite';
+const CLAIR = 'Un message chiffre par decalage garde la forme de la langue : la lettre la plus frequente du message chiffre remplace souvent le E, qui est la plus frequente en francais.';
+const CLE = 7;
+const CHIFFRE = cesar(CLAIR, CLE);
+---
+<div class="anim kindi" data-kindi data-chiffre={CHIFFRE}>
+  <div class="anim-repli">
+    <p>Message chiffré : <code>{CHIFFRE}</code></p>
+    <p>
+      Dans ce message, la lettre la plus fréquente est L. En français, c'est E. De E à L, il y a 7 rangs : la clé est
+      donc probablement 7. En décalant chaque lettre de 7 rangs en arrière, on lit : « {cesar(CLAIR, 0)} »
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="msg"><span class="etiq">Message :</span> <code data-texte></code></p>
+      <label class="cle">Décalage essayé : <output data-cle>0</output>
+        <input type="range" min="0" max="25" value="0" data-curseur />
+      </label>
+      <div class="histos" aria-hidden="true">
+        <div class="histo" data-histo-msg></div>
+        <div class="histo ref" data-histo-ref></div>
+      </div>
+      <p class="anim-note">En haut : les lettres du message déchiffré avec ce décalage. En bas : les lettres du français, comptées sur <em>Les Misérables</em> de Victor Hugo (512 877 lettres). Quand les pics coïncident, on a trouvé la clé.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { cesar, ecartAuFrancais, FREQ_FR, frequences } from '../../../lib/securite';
+
+  document.querySelectorAll<HTMLElement>('[data-kindi]').forEach((racine) => {
+    activerScene(racine);
+    const chiffre = racine.dataset.chiffre!;
+    const curseur = racine.querySelector<HTMLInputElement>('[data-curseur]')!;
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const barres = (zone: HTMLElement, vals: number[]) => {
+      const max = Math.max(...vals) || 1;
+      zone.replaceChildren(...vals.map((v, i) => {
+        const col = document.createElement('span');
+        col.className = 'col';
+        const b = document.createElement('span');
+        b.className = 'b';
+        b.style.height = `${(v / max) * 100}%`;
+        const l = document.createElement('span');
+        l.className = 'l';
+        l.textContent = String.fromCharCode(65 + i);
+        col.append(b, l);
+        return col;
+      }));
+    };
+    barres(q('[data-histo-ref]'), FREQ_FR);
+    // La meilleure clé, pour savoir quand féliciter.
+    const scores = Array.from({ length: 26 }, (_, k) => ecartAuFrancais(cesar(chiffre, -k)));
+    const meilleure = scores.indexOf(Math.min(...scores));
+    const rendre = () => {
+      const k = Number(curseur.value);
+      const essai = cesar(chiffre, -k);
+      q('[data-cle]').textContent = String(k);
+      q('[data-texte]').textContent = essai;
+      const f = frequences(essai);
+      barres(q('[data-histo-msg]'), f);
+      const top = String.fromCharCode(65 + f.indexOf(Math.max(...f)));
+      q('.anim-legende').textContent = k === meilleure
+        ? `Décalage ${k} : les pics coïncident, le message devient lisible. C’est la méthode d’al-Kindi : comparer les fréquences.`
+        : `Décalage ${k} : la lettre la plus fréquente est ${top}, alors qu’en français c’est E. Continue.`;
+    };
+    curseur.addEventListener('input', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .msg { margin: 0 0 0.6rem; display: grid; gap: 0.2rem; }
+  .etiq { font-weight: 600; }
+  .msg code, .anim-repli code { font-family: var(--police-mono); overflow-wrap: anywhere; }
+  .cle { display: grid; gap: 0.25rem; font-weight: 600; max-width: 22rem; margin-bottom: 0.6rem; }
+  .cle input { accent-color: var(--accent); }
+  .histos { display: grid; gap: 0.4rem; }
+  .histo { display: grid; grid-template-columns: repeat(26, minmax(0, 1fr)); gap: 1px; height: 5rem; align-items: end; }
+  .histo :global(.col) { display: grid; grid-template-rows: 1fr auto; height: 100%; }
+  .histo :global(.b) { align-self: end; background: var(--ill-client); border-radius: 2px 2px 0 0; }
+  .ref :global(.b) { background: var(--ill-reseau); }
+  .histo :global(.l) { font-size: 0.6rem; text-align: center; font-family: var(--police-mono); color: var(--muted); }
+</style>

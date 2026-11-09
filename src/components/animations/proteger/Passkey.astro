@@ -1,0 +1,63 @@
+---
+// Animation « Mot de passe ou passkey face à un faux site » (module « Se
+// protéger », étape 1) : deux colonnes, pas à pas. Chaque passkey est liée
+// au domaine du site (W3C WebAuthn) ; un code à usage unique peut être relayé
+// (NIST SP 800-63B-4 : « OTP authentication is not phishing-resistant »).
+import { PASSKEY } from '../../../data/proteger';
+---
+<div class="anim passkey" data-passkey>
+  <div class="anim-repli">
+    <table>
+      <caption>Face à un faux site</caption>
+      <thead><tr><th scope="col">Étape</th><th scope="col">Mot de passe et code</th><th scope="col">Passkey</th></tr></thead>
+      <tbody>{PASSKEY.map((p) => <tr><th scope="row">{p.etape}</th><td>{p.mdp}</td><td>{p.passkey}</td></tr>)}</tbody>
+    </table>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="etape" data-etape></p>
+      <div class="colonnes">
+        <div class="col mdp"><h4>Mot de passe + code</h4><p data-mdp></p></div>
+        <div class="col pk"><h4>Passkey</h4><p data-pk></p></div>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { PASSKEY } from '../../../data/proteger';
+
+  document.querySelectorAll<HTMLElement>('[data-passkey]').forEach((racine) => {
+    activerScene(racine);
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    pasAPas(racine, () => PASSKEY.length, (n) => {
+      const p = PASSKEY[n - 1];
+      q('[data-etape]').textContent = p.etape;
+      q('[data-mdp]').textContent = p.mdp;
+      q('[data-pk]').textContent = p.passkey;
+      racine.classList.toggle('fin', n === PASSKEY.length);
+      return `${p.etape}. Mot de passe : ${p.mdp} Passkey : ${p.passkey}`;
+    });
+  });
+</script>
+
+<style>
+  .etape { font-weight: 700; margin: 0 0 0.5rem; }
+  .colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  @media (max-width: 32rem) { .colonnes { grid-template-columns: 1fr; } }
+  .col { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.7rem; background: var(--bg); }
+  .col h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+  .col p { margin: 0; font-size: 0.92rem; min-height: 4.5em; }
+  :global(.passkey.fin) .mdp { border-color: var(--ill-commun); }
+  :global(.passkey.fin) .pk { border-color: var(--ill-secret-b); }
+  .anim-repli table { border-collapse: collapse; font-size: 0.9rem; }
+  .anim-repli th, .anim-repli td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+</style>

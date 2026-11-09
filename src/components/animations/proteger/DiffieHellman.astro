@@ -1,0 +1,85 @@
+---
+// Animation « Se mettre d'accord sur un secret en public » (module « Se
+// protéger », étape 4) : l'échange de clés de Diffie et Hellman (1976),
+// inventé en secret un peu avant au GCHQ par Malcolm Williamson. Version en
+// couleurs, puis vrais calculs avec de petits nombres (p = 23, g = 5).
+---
+<div class="anim dh" data-dh>
+  <div class="anim-repli">
+    <ol>
+      <li>Alice et Bob choisissent en public un nombre premier p = 23 et une base g = 5.</li>
+      <li>Alice choisit en secret a = 6 et envoie A = 5⁶ mod 23 = 8. Bob choisit en secret b = 15 et envoie B = 5¹⁵ mod 23 = 19.</li>
+      <li>Alice calcule 19⁶ mod 23 = 2 ; Bob calcule 8¹⁵ mod 23 = 2. Ils ont le même secret, 2, sans jamais l'avoir envoyé.</li>
+      <li>Ève, qui écoute, connaît 23, 5, 8 et 19, mais pour retrouver 6 ou 15 il faudrait résoudre un « logarithme discret » : avec des nombres de plusieurs centaines de chiffres, c'est hors de portée.</li>
+    </ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="trio">
+        <div class="perso"><h4>Alice</h4><p data-alice></p></div>
+        <div class="perso eve"><h4>Ève écoute</h4><p data-eve></p></div>
+        <div class="perso"><h4>Bob</h4><p data-bob></p></div>
+      </div>
+      <div class="pots" aria-hidden="true">
+        <span class="pot" data-pot="alice"></span><span class="pot" data-pot="public"></span><span class="pot" data-pot="bob"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+  import { puissanceModulo } from '../../../lib/securite';
+
+  const p = 23, g = 5, a = 6, b = 15;
+  const A = puissanceModulo(g, a, p), B = puissanceModulo(g, b, p), S = puissanceModulo(B, a, p);
+  // Couleurs de la version imagée (mélanges de peinture), tirées des variables du site.
+  const C = {
+    jaune: 'var(--ill-commun)',
+    violet: 'var(--ill-secret-a)',
+    vert: 'var(--ill-secret-b)',
+    melA: 'color-mix(in srgb, var(--ill-commun) 50%, var(--ill-secret-a))',
+    melB: 'color-mix(in srgb, var(--ill-commun) 50%, var(--ill-secret-b))',
+    final: 'color-mix(in srgb, color-mix(in srgb, var(--ill-commun) 50%, var(--ill-secret-a)) 67%, var(--ill-secret-b))',
+  };
+  const ETAPES = [
+    { alice: 'Couleur publique : jaune. Nombres publics : p = 23, g = 5.', eve: 'jaune ; p = 23, g = 5', bob: 'Couleur publique : jaune. p = 23, g = 5.', pots: [C.jaune, C.jaune, C.jaune], texte: 'Alice et Bob se mettent d’accord, en public, sur une couleur de départ (et, dans la vraie version, sur deux nombres). Ève voit tout.' },
+    { alice: `Secret : violet. En vrai : a = ${a}, gardé pour soi.`, eve: 'rien de nouveau', bob: `Secret : vert. En vrai : b = ${b}, gardé pour soi.`, pots: [C.violet, C.jaune, C.vert], texte: 'Chacun choisit une couleur secrète, qu’il ne montrera jamais.' },
+    { alice: `Envoie le mélange jaune + violet. En vrai : A = 5⁶ mod 23 = ${A}.`, eve: `les deux mélanges ; A = ${A}, B = ${B}`, bob: `Envoie le mélange jaune + vert. En vrai : B = 5¹⁵ mod 23 = ${B}.`, pots: [C.melA, C.jaune, C.melB], texte: 'Chacun mélange sa couleur secrète à la couleur publique, et envoie le mélange. Ève voit les mélanges, mais on ne sait pas « démélanger » une peinture.' },
+    { alice: `Reçoit le mélange de Bob, ajoute son violet. En vrai : ${B}⁶ mod 23 = ${S}.`, eve: 'Pour obtenir la couleur finale, il lui faudrait une couleur secrète.', bob: `Reçoit le mélange d’Alice, ajoute son vert. En vrai : ${A}¹⁵ mod 23 = ${S}.`, pots: [C.final, C.jaune, C.final], texte: `Chacun ajoute sa couleur secrète au mélange reçu : les deux obtiennent la même couleur finale (jaune + violet + vert), et le même nombre, ${S}. Ils ont un secret commun sans l’avoir jamais envoyé.` },
+    { alice: `Secret commun : ${S}, qui sert de clé de chiffrement.`, eve: 'Avec des nombres de centaines de chiffres, retrouver 6 ou 15 est hors de portée.', bob: `Secret commun : ${S}.`, pots: [C.final, C.jaune, C.final], texte: 'Avec de très grands nombres, retrouver les secrets à partir de ce qu’Ève a vu (un « logarithme discret ») est hors de portée des ordinateurs actuels. C’est ce qui se passe, en un clin d’œil, au début de chaque connexion HTTPS.' },
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-dh]').forEach((racine) => {
+    activerScene(racine);
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const pots = [...racine.querySelectorAll<HTMLElement>('[data-pot]')];
+    pasAPas(racine, () => ETAPES.length, (n) => {
+      const e = ETAPES[n - 1];
+      q('[data-alice]').textContent = e.alice;
+      q('[data-eve]').textContent = e.eve;
+      q('[data-bob]').textContent = e.bob;
+      pots.forEach((pt, i) => { pt.style.background = e.pots[i]; });
+      return e.texte;
+    });
+  });
+</script>
+
+<style>
+  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+  @media (max-width: 34rem) { .trio { grid-template-columns: 1fr; } }
+  .perso { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.6rem; background: var(--bg); }
+  .perso h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+  .perso p { margin: 0; font-size: 0.88rem; min-height: 3.5em; }
+  .eve { border-style: dashed; }
+  .pots { display: flex; justify-content: space-around; margin: 0.7rem 0; }
+  .pot { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 2px solid var(--fg); transition: background 0.3s; }
+  @media (prefers-reduced-motion: reduce) { .pot { transition: none; } }
+</style>

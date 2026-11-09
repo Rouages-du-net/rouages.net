@@ -1,0 +1,69 @@
+---
+// Animation « La vie d'une faille, jusqu'à WannaCry » (module « Se protéger »,
+// étape 6) : frise pas à pas de 2017 (bulletin MS17-010, fuite des Shadow
+// Brokers, attaque du 12 mai, rapport du National Audit Office) ; un
+// interrupteur « j'ai installé le correctif » change le sort d'un ordinateur.
+const ETAPES = [
+  { date: '14 mars 2017', texte: 'Microsoft publie le correctif MS17-010, « critique », pour une faille du partage de fichiers de Windows. Personne ne l’exploite encore.' },
+  { date: 'Mi-avril 2017', texte: 'Un groupe appelé les Shadow Brokers publie des outils d’attaque volés à la NSA, dont EternalBlue, qui exploite cette faille. Le correctif existe depuis un mois.' },
+  { date: '12 mai 2017', texte: 'Le rançongiciel WannaCry se répand tout seul d’ordinateur en ordinateur grâce à EternalBlue : environ 300 000 machines dans 150 pays.' },
+  { date: '13 mai 2017', texte: 'Microsoft publie, à titre exceptionnel, un correctif pour Windows XP et d’autres versions qu’il ne maintenait plus.' },
+  { date: '27 octobre 2017', texte: 'Selon le National Audit Office britannique, au moins 81 des 236 établissements du service de santé anglais ont été touchés, et des milliers de rendez-vous annulés. L’attaque « aurait pu être évitée » avec les bonnes pratiques de base.' },
+];
+---
+<div class="anim faille" data-faille data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li><strong>{e.date}</strong> : {e.texte}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="inter"><input type="checkbox" data-maj checked /> Mon ordinateur a installé le correctif en mars</label>
+      <ol class="frise" data-frise aria-hidden="true">{ETAPES.map((e) => <li>{e.date}</li>)}</ol>
+      <p class="pc" data-pc></p>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-faille]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { date: string; texte: string }[] = JSON.parse(racine.dataset.etapes!);
+    const maj = racine.querySelector<HTMLInputElement>('[data-maj]')!;
+    const lis = [...racine.querySelectorAll<HTMLElement>('[data-frise] li')];
+    const pc = racine.querySelector<HTMLElement>('[data-pc]')!;
+    let n = 1;
+    const etatPc = () => {
+      if (maj.checked) return 'Ton ordinateur : protégé depuis mars, WannaCry ne peut pas l’atteindre.';
+      return n >= 3 ? 'Ton ordinateur : fichiers chiffrés, une rançon est demandée en bitcoins.' : n === 2 ? 'Ton ordinateur : vulnérable, et l’outil d’attaque est maintenant public.' : 'Ton ordinateur : vulnérable, mais personne n’exploite encore la faille.';
+    };
+    const ctrl = pasAPas(racine, () => etapes.length, (k) => {
+      n = k;
+      lis.forEach((li, i) => { li.classList.toggle('passe', i < k); li.classList.toggle('ici', i === k - 1); });
+      pc.textContent = etatPc();
+      racine.classList.toggle('touche', !maj.checked && k >= 3);
+      return `${etapes[k - 1].date}. ${etapes[k - 1].texte}`;
+    });
+    maj.addEventListener('change', () => { pc.textContent = etatPc(); racine.classList.toggle('touche', !maj.checked && n >= 3); });
+    void ctrl;
+  });
+</script>
+
+<style>
+  .inter { display: flex; gap: 0.5rem; align-items: center; font-weight: 600; margin-bottom: 0.6rem; }
+  .inter input { accent-color: var(--accent); width: 1.1rem; height: 1.1rem; }
+  .frise { list-style: none; padding: 0; margin: 0 0 0.6rem; display: flex; flex-wrap: wrap; gap: 0.3rem; font-size: 0.8rem; }
+  .frise li { padding: 0.15rem 0.5rem; border: 1px solid var(--border); border-radius: 1rem; color: var(--muted); }
+  .frise li.passe { color: var(--fg); }
+  .frise li.ici { border-color: var(--accent); font-weight: 700; }
+  .pc { font-weight: 700; padding: 0.5rem 0.7rem; border-left: 4px solid var(--ill-secret-b); background: var(--bg); margin: 0 0 0.4rem; }
+  :global(.faille.touche) .pc { border-left-color: var(--ill-commun); }
+</style>
