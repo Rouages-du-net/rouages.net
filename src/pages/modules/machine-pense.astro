@@ -205,6 +205,7 @@ const etapes = [
   <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
     <h2 id="titre-final">Ce que la question demande vraiment</h2>
     <p>« Une machine peut-elle penser ? » cache plusieurs questions, qui n'ont pas la même réponse :</p>
+    <div class="tableau-defile">
     <table>
       <thead><tr><th scope="col">Question</th><th scope="col">Qui l'a posée</th><th scope="col">Ce qu'on sait</th></tr></thead>
       <tbody>
@@ -215,6 +216,7 @@ const etapes = [
         <tr><td>Les grands modèles de langage comprennent-ils ?</td><td>Bender, Gebru et al., 2021 ; Microsoft Research, 2023</td><td>Les spécialistes sont divisé·es.</td></tr>
       </tbody>
     </table>
+    </div>
     <p>
       La suite de la section <a href="/penser-la-technique/">Penser la technique</a> passe aux choix
       moraux et à la neutralité de la technique.
@@ -242,5 +244,6 @@ const etapes = [
   .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
   .final > p { max-width: var(--mesure); }
   table { border-collapse: collapse; width: 100%; font-size: 0.95rem; hyphens: auto; }
-  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tableau-defile { overflow-x: auto; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; overflow-wrap: anywhere; }
 </style>
