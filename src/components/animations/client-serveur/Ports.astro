@@ -1,0 +1,73 @@
+---
+// Animation « Une adresse, plusieurs portes » (module « Client et serveur »,
+// étape 1) : un serveur, plusieurs programmes qui écoutent chacun sur un
+// port ; le client choisit un protocole et frappe à la porte correspondante.
+// Ports : registre de l'IANA. Données : src/data/client-serveur.ts.
+import { PORTS, SERVEUR_ECOUTE } from '../../../data/client-serveur';
+---
+<div class="anim ports" data-ports data-ecoute={JSON.stringify(SERVEUR_ECOUTE)} data-liste={JSON.stringify(PORTS)}>
+  <div class="anim-repli">
+    <table>
+      <caption>Quelques ports bien connus (registre de l'IANA)</caption>
+      <thead><tr><th scope="col">Port</th><th scope="col">Protocole</th><th scope="col">Usage</th></tr></thead>
+      <tbody>{PORTS.map((p) => <tr><td>{p.port}</td><td>{p.protocole}</td><td>{p.usage}</td></tr>)}</tbody>
+    </table>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="adresse">Serveur <code>cours.example</code> — adresse IP <code>203.0.113.10</code></p>
+      <ul class="portes" data-portes>
+        {PORTS.map((p) => (
+          <li data-port={p.port}><span class="num">{p.port}</span><span class="nom">{p.protocole}</span><span class="etat" data-etat></span></li>
+        ))}
+      </ul>
+      <div class="choix" role="group" aria-label="Le client veut parler">
+        {PORTS.map((p) => <button type="button" class="anim-bouton" data-choix={p.port}>{p.protocole}</button>)}
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-ports]').forEach((racine) => {
+    activerScene(racine);
+    const ecoute: number[] = JSON.parse(racine.dataset.ecoute!);
+    const ports: { port: number; protocole: string; usage: string; chiffre: boolean }[] = JSON.parse(racine.dataset.liste!);
+    const lis = [...racine.querySelectorAll<HTMLElement>('[data-port]')];
+    lis.forEach((li) => {
+      const ouvert = ecoute.includes(Number(li.dataset.port));
+      li.classList.toggle('ouvert', ouvert);
+      li.querySelector('[data-etat]')!.textContent = ouvert ? 'un programme écoute' : 'personne';
+    });
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    racine.querySelectorAll<HTMLButtonElement>('[data-choix]').forEach((b) => b.addEventListener('click', () => {
+      const n = Number(b.dataset.choix);
+      const p = ports.find((x) => x.port === n)!;
+      lis.forEach((li) => li.classList.toggle('vise', Number(li.dataset.port) === n));
+      racine.querySelectorAll('[data-choix]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      legende.textContent = ecoute.includes(n)
+        ? `${p.protocole} : le client se connecte à 203.0.113.10, port ${n}. Un programme y écoute et répond (${p.usage}).${p.chiffre ? ' La conversation est chiffrée.' : ''}`
+        : `${p.protocole} : le client frappe au port ${n}, mais aucun programme n’y écoute sur ce serveur : « connexion refusée ». Même machine, même adresse : c’est le port qui désigne le service.`;
+    }));
+    legende.textContent = 'Une adresse IP désigne une machine ; le port désigne le programme à qui l’on parle. Choisis ce que le client veut faire.';
+  });
+</script>
+
+<style>
+  .adresse { margin: 0 0 0.6rem; font-weight: 600; overflow-wrap: anywhere; }
+  .adresse code { font-family: var(--police-mono); }
+  .portes { list-style: none; padding: 0; margin: 0 0 0.7rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: 0.35rem; }
+  .portes li { display: grid; gap: 0.1rem; padding: 0.35rem 0.5rem; border: 2px dashed var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--muted); }
+  .portes li.ouvert { border-style: solid; border-color: var(--ill-serveur); color: var(--fg); }
+  .portes li.vise { box-shadow: 0 0 0 3px var(--accent); }
+  .num { font-family: var(--police-mono); font-weight: 700; font-size: 1.05rem; }
+  .nom { font-size: 0.85rem; font-weight: 600; }
+  .etat { font-size: 0.75rem; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .choix [aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .anim-repli table { border-collapse: collapse; font-size: 0.9rem; }
+  .anim-repli th, .anim-repli td { padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+</style>

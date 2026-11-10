@@ -48,6 +48,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 ## Phase 3 bis — Outils pour les cours
 
+- [x] **Client et serveur** *(`/modules/client-serveur/`, relecture humaine à faire)* — qui demande et qui répond (schéma animé), ports (registre de l'IANA), lire une URL (RFC 3986), de l'URL au fichier (index, 301, 404, « .. »), FTP, FTPS et SFTP (ce que voit l'espion), conversation HTTP (codes, en-tête Host). Sources : [`sources/client-serveur.md`](sources/client-serveur.md)
 - [x] **Se protéger** *(`/modules/se-proteger/`, relecture humaine à faire ; Chat Control et post-quantique à suivre)* — phrases de passe (entropie, force brute), fuites et k-anonymat, passkeys, hameçonnage (jeu), histoire du chiffrement (al-Kindi, Enigma, femmes de Bletchley, code talkers), Diffie-Hellman, ce que voit chacun (HTTPS, bout en bout), WannaCry et sauvegarde 3-2-1. Sources : [`sources/se-proteger.md`](sources/se-proteger.md)
 - [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
 - [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines

@@ -1,0 +1,115 @@
+---
+// Animation « De l'URL au fichier » (module « Client et serveur », étape 3) :
+// un serveur web statique fait correspondre le chemin de l'URL à un fichier
+// sous sa racine (/var/www/cours.example). Index, redirection, 404, et refus
+// de remonter avec « .. ». Calculs : src/lib/url.ts.
+import { FICHIERS, RACINE, URL_EXEMPLES } from '../../../data/client-serveur';
+---
+<div class="anim arbo" data-arbo data-fichiers={JSON.stringify(FICHIERS)} data-racine={RACINE} data-exemples={JSON.stringify(URL_EXEMPLES)}>
+  <div class="anim-repli">
+    <p>Sur le serveur, le site est un dossier, {RACINE}, qui contient :</p>
+    <ul>{FICHIERS.map((f) => <li><code>{f}</code></li>)}</ul>
+    <p>
+      L'URL https://cours.example/reseau/ports.html donne le fichier {RACINE}/reseau/ports.html. L'URL
+      https://cours.example/reseau/ désigne un dossier : le serveur envoie son fichier index.html. Sans la barre
+      finale, il redirige (code 301) vers /reseau/. Un fichier absent donne le code 404, et un chemin qui essaie de
+      remonter au-dessus de la racine avec « .. » est refusé.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre deux">
+      <div>
+        <label class="choix-url">URL demandée
+          <select data-url-choix>
+            {URL_EXEMPLES.map((u) => <option value={u}>{u.replace('https://', '')}</option>)}
+          </select>
+        </label>
+        <p class="calcul" data-calcul></p>
+        <p class="code" data-code></p>
+      </div>
+      <div class="disque">
+        <p class="racine"><span aria-hidden="true">🗄️</span> <code>{RACINE}/</code></p>
+        <ul class="arbre" data-arbre></ul>
+      </div>
+    </div>
+    <p class="anim-legende" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { cheminVersFichier, decouperUrl } from '../../../lib/url';
+
+  document.querySelectorAll<HTMLElement>('[data-arbo]').forEach((racineEl) => {
+    activerScene(racineEl);
+    const fichiers: string[] = JSON.parse(racineEl.dataset.fichiers!);
+    const racine = racineEl.dataset.racine!;
+    const choix = racineEl.querySelector<HTMLSelectElement>('[data-url-choix]')!;
+    const arbre = racineEl.querySelector<HTMLUListElement>('[data-arbre]')!;
+    const q = (s: string) => racineEl.querySelector<HTMLElement>(s)!;
+
+    // Arbre : dossiers puis fichiers, un élément par ligne avec son chemin complet.
+    const lignes: { chemin: string; nom: string; profondeur: number; dossier: boolean }[] = [];
+    const vus = new Set<string>();
+    for (const f of [...fichiers].sort()) {
+      const parties = f.split('/');
+      parties.forEach((nom, i) => {
+        const chemin = parties.slice(0, i + 1).join('/');
+        if (vus.has(chemin)) return;
+        vus.add(chemin);
+        lignes.push({ chemin, nom, profondeur: i, dossier: i < parties.length - 1 });
+      });
+    }
+    arbre.replaceChildren(...lignes.map((l) => {
+      const li = document.createElement('li');
+      li.dataset.chemin = l.chemin;
+      li.style.paddingLeft = `${l.profondeur * 1.1}rem`;
+      li.textContent = `${l.dossier ? '📁' : '📄'} ${l.nom}${l.dossier ? '/' : ''}`;
+      return li;
+    }));
+
+    function rendre() {
+      const u = decouperUrl(choix.value);
+      // Le chemin brut, avant normalisation par le navigateur (pour montrer le refus de « .. »).
+      const brut = choix.value.replace(/^https?:\/\/[^/]+/, '').split('#')[0] || '/';
+      const r = brut.includes('..') ? cheminVersFichier(racine, brut, fichiers) : cheminVersFichier(racine, u?.chemin ?? '/', fichiers);
+      arbre.querySelectorAll('li').forEach((li) => li.classList.remove('trouve'));
+      const fragment = u?.fragment ? ` Le fragment #${u.fragment} n’est pas envoyé : le navigateur s’en sert pour aller au bon endroit de la page.` : '';
+      if (r.statut === 200) {
+        const rel = r.fichier.slice(racine.length + 1);
+        arbre.querySelector(`[data-chemin="${rel}"]`)?.classList.add('trouve');
+        q('[data-calcul]').textContent = `${racine} + ${u!.chemin} → ${r.fichier}`;
+        q('[data-code]').textContent = '200 OK';
+        q('.anim-legende').textContent = (r.via === 'index' ? 'Le chemin désigne un dossier : le serveur envoie son fichier index.html.' : 'Le serveur colle le chemin de l’URL à la racine du site et envoie ce fichier.') + fragment;
+      } else if (r.statut === 301) {
+        q('[data-calcul]').textContent = `${u!.chemin} est un dossier, pas un fichier`;
+        q('[data-code]').textContent = `301 Moved Permanently → ${r.vers}`;
+        q('.anim-legende').textContent = `C’est un dossier demandé sans barre finale : le serveur répond « c’est ailleurs » et le navigateur redemande ${r.vers}.`;
+      } else if (r.statut === 404) {
+        q('[data-calcul]').textContent = `${r.fichier} : introuvable`;
+        q('[data-code]').textContent = '404 Not Found';
+        q('.anim-legende').textContent = 'Aucun fichier ne correspond : le serveur répond 404. Le serveur marche, c’est la page qui n’existe pas.';
+      } else {
+        q('[data-calcul]').textContent = `« .. » : ${r.raison}`;
+        q('[data-code]').textContent = '403 Forbidden';
+        q('.anim-legende').textContent = 'Le chemin essaie de sortir du dossier du site, par exemple vers les fichiers du système : un serveur sérieux refuse. (Les navigateurs simplifient d’ailleurs « .. » avant d’envoyer la requête.)';
+      }
+    }
+    choix.addEventListener('change', rendre);
+    rendre();
+  });
+</script>
+
+<style>
+  .deux { display: grid; grid-template-columns: 1fr minmax(12rem, 16rem); gap: 1rem; align-items: start; }
+  @media (max-width: 36rem) { .deux { grid-template-columns: 1fr; } }
+  .choix-url { display: grid; gap: 0.25rem; font-weight: 600; }
+  .choix-url select { font: inherit; font-family: var(--police-mono); font-size: 0.85rem; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); width: 100%; min-width: 0; }
+  .calcul { font-family: var(--police-mono); font-size: 0.82rem; overflow-wrap: anywhere; margin: 0.6rem 0 0.3rem; }
+  .code { font-family: var(--police-mono); font-weight: 700; margin: 0; }
+  .disque { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); padding: 0.5rem 0.7rem; }
+  .racine { margin: 0 0 0.3rem; font-weight: 700; overflow-wrap: anywhere; }
+  .racine code, .anim-repli code { font-family: var(--police-mono); }
+  .arbre { list-style: none; padding: 0; margin: 0; font-family: var(--police-mono); font-size: 0.85rem; display: grid; gap: 0.1rem; }
+  .arbre :global(li.trouve) { background: color-mix(in srgb, var(--ill-secret-b) 25%, transparent); font-weight: 700; border-radius: 0.2rem; }
+</style>

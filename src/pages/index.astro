@@ -1,22 +1,46 @@
 ---
 import Base from '../layouts/Base.astro';
+import Cartes from '../components/Cartes.astro';
 
-const sections = [
+type Module = [string, string, string?];
+interface Groupe { titre: string; intro?: string; modules: Module[] }
+interface Section { titre: string; modules?: Module[]; groupes?: Groupe[] }
+
+const ancre = (t: string) => 'g-' + t.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+const sections: Section[] = [
   {
     titre: 'Comment ça marche',
-    modules: [
-      ["De l'Entrée à la page", 'Ce qui se passe quand on tape une adresse : DNS, TLS, BGP, câbles, serveurs.', '/modules/entree-a-la-page/'],
-      ["L'ordinateur", "Du transistor au programme, pas à pas.", '/modules/ordinateur/'],
-      ['Binaire, octal, hexadécimal', "Compter par paquets, faire tourner des roues, passer d'une base à l'autre.", '/modules/bases/'],
-      ['Adresses IP et masques', "IPv4 en binaire, IPv6 en hexadécimal, et les masques sous leurs trois formes : /24, 255.255.255.0, 11111111…", '/modules/adresses-ip/'],
-      ['Découper en sous-réseaux', "Parts égales, plan d'adressage à la bonne taille (VLSM), exercices corrigés, et IPv6.", '/modules/sous-reseaux/'],
-      ["L'IA", "Ce qu'on appelle intelligence artificielle, comment une machine apprend, et ce que font vraiment les IA qui écrivent, voient, classent ou cherchent.", '/ia/'],
-      ['Recommander', "Des bibliothécaires aux IA : qui choisit ce qu'on te conseille, et comment. Notes, PageRank, filtrage collaboratif.", '/recommandation/'],
-      ["L'intelligence collective", "Quand un groupe en sait plus que chacun de ses membres, et quand il se trompe ensemble. Avec ou sans IA.", '/intelligence-collective/'],
-      ['Penser la technique', "Expériences de pensée sur l'IA et la technique : des objectifs mal posés aux machines qui pensent. À manipuler, objections comprises.", '/penser-la-technique/'],
-      ['Se protéger', "Mots de passe et phrases de passe, double authentification, arnaques, chiffrement d'al-Kindi à Signal, mises à jour et sauvegardes.", '/modules/se-proteger/'],
-      ['La matérialité', 'Câbles sous-marins, centres de données, électricité, eau, métaux, déchets : ce que pèse vraiment le numérique.', '/modules/materialite/'],
-      ['Le dark net', "Ce que c'est vraiment, comment Tor fonctionne, qui l'utilise et pourquoi.", '/modules/dark-net/'],
+    groupes: [
+      {
+        titre: 'Les bases techniques',
+        intro: 'Les notions à maîtriser avant le reste, avec des exercices pour les cours.',
+        modules: [
+          ["L'ordinateur", "Du transistor au programme, pas à pas.", '/modules/ordinateur/'],
+          ['Binaire, octal, hexadécimal', "Compter par paquets, faire tourner des roues, passer d'une base à l'autre.", '/modules/bases/'],
+          ['Adresses IP et masques', "IPv4 en binaire, IPv6 en hexadécimal, et les masques sous leurs trois formes : /24, 255.255.255.0, 11111111…", '/modules/adresses-ip/'],
+          ['Découper en sous-réseaux', "Parts égales, plan d'adressage à la bonne taille (VLSM), exercices corrigés, et IPv6.", '/modules/sous-reseaux/'],
+          ['Client et serveur', "Qui demande, qui répond : ports, URL et fichiers, HTTP et HTTPS, FTP, FTPS et SFTP.", '/modules/client-serveur/'],
+        ],
+      },
+      {
+        titre: 'Internet au quotidien',
+        modules: [
+          ["De l'Entrée à la page", 'Ce qui se passe quand on tape une adresse : DNS, TLS, BGP, câbles, serveurs.', '/modules/entree-a-la-page/'],
+          ['Se protéger', "Mots de passe et phrases de passe, double authentification, arnaques, chiffrement d'al-Kindi à Signal, mises à jour et sauvegardes.", '/modules/se-proteger/'],
+          ['La matérialité', 'Câbles sous-marins, centres de données, électricité, eau, métaux, déchets : ce que pèse vraiment le numérique.', '/modules/materialite/'],
+          ['Le dark net', "Ce que c'est vraiment, comment Tor fonctionne, qui l'utilise et pourquoi.", '/modules/dark-net/'],
+        ],
+      },
+      {
+        titre: 'Intelligence artificielle',
+        modules: [
+          ["L'IA", "Ce qu'on appelle intelligence artificielle, comment une machine apprend, et ce que font vraiment les IA qui écrivent, voient, classent ou cherchent.", '/ia/'],
+          ['Recommander', "Des bibliothécaires aux IA : qui choisit ce qu'on te conseille, et comment. Notes, PageRank, filtrage collaboratif.", '/recommandation/'],
+          ["L'intelligence collective", "Quand un groupe en sait plus que chacun de ses membres, et quand il se trompe ensemble. Avec ou sans IA.", '/intelligence-collective/'],
+          ['Penser la technique', "Expériences de pensée sur l'IA et la technique : des objectifs mal posés aux machines qui pensent. À manipuler, objections comprises.", '/penser-la-technique/'],
+        ],
+      },
     ],
   },
   {
@@ -62,15 +86,20 @@ const sections = [
   {sections.map((s) => (
     <section>
       <h2>{s.titre}</h2>
-      <div class="grid">
-        {s.modules.map(([nom, desc, lien]) => (
-          <article class="card">
-            <h3>{lien ? <a href={lien}>{nom}</a> : nom}</h3>
-            <p>{desc}</p>
-            <span class="tag">{lien ? 'Disponible' : 'Bientôt'}</span>
-          </article>
-        ))}
-      </div>
+      {s.modules && <Cartes modules={s.modules} niveau={3} />}
+      {s.groupes?.map((g) => (
+        <section class="groupe" aria-labelledby={ancre(g.titre)}>
+          <h3 id={ancre(g.titre)}>{g.titre}</h3>
+          {g.intro && <p class="intro-groupe">{g.intro}</p>}
+          <Cartes modules={g.modules} niveau={4} />
+        </section>
+      ))}
     </section>
   ))}
 </Base>
+
+<style>
+  .groupe { margin-top: 1.5rem; }
+  .groupe h3 { margin-bottom: 0.4rem; }
+  .intro-groupe { margin: 0 0 0.8rem; color: var(--muted); max-width: var(--mesure); }
+</style>

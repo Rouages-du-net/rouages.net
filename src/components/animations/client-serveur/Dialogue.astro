@@ -1,0 +1,115 @@
+---
+// Animation « Qui demande, qui répond » (module « Client et serveur »,
+// étape 0) : un serveur qui écoute, trois clients qui demandent, pas à pas.
+// Schéma SVG : les messages se déplacent le long des liens (sauf si
+// prefers-reduced-motion : ils apparaissent directement).
+const ETAPES = [
+  { actif: [], msg: [], texte: 'Le serveur est un programme qui attend : il « écoute » sur un port (ici 443, celui de HTTPS). Tant que personne ne demande rien, il ne fait rien.' },
+  { actif: ['a'], msg: [['a', 'aller', 'GET /reseau/']], texte: 'Le téléphone, un client, envoie une demande (une requête) : « donne-moi la page /reseau/ ». C’est toujours le client qui commence.' },
+  { actif: ['a'], msg: [['a', 'retour', '200 OK + page']], texte: 'Le serveur cherche la page et renvoie une réponse : un code (200, « OK ») et le contenu. Puis il se remet à attendre.' },
+  { actif: ['b', 'c'], msg: [['b', 'aller', 'GET /docs/tp.pdf'], ['c', 'aller', 'GET /']], texte: 'Deux autres clients demandent en même temps, chacun sa page. Le serveur ne sait rien d’eux à l’avance : il répond à qui le demande.' },
+  { actif: ['b', 'c'], msg: [['b', 'retour', '200 OK + PDF'], ['c', 'retour', '200 OK + page']], texte: 'Il répond à chacun séparément, des milliers de fois par seconde pour un gros site. Chaque client ne voit que ses propres réponses.' },
+  { actif: ['b'], msg: [['b', 'refus', 'connexion refusée']], texte: 'Si le programme serveur est arrêté, plus rien n’écoute sur le port : le client reçoit « connexion refusée ». La machine peut être allumée, c’est le programme qui compte.' },
+];
+---
+<div class="anim dialogue" data-dialogue data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li>{e.texte}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <svg viewBox="0 0 360 230" class="schema" aria-hidden="true">
+        <g class="liens">
+          <line x1="70" y1="40" x2="270" y2="115" data-lien="a" />
+          <line x1="70" y1="115" x2="270" y2="115" data-lien="b" />
+          <line x1="70" y1="190" x2="270" y2="115" data-lien="c" />
+        </g>
+        <g class="client" data-client="a"><rect x="20" y="20" width="56" height="40" rx="8" /><text x="48" y="45">📱</text></g>
+        <g class="client" data-client="b"><rect x="20" y="95" width="56" height="40" rx="8" /><text x="48" y="120">💻</text></g>
+        <g class="client" data-client="c"><rect x="20" y="170" width="56" height="40" rx="8" /><text x="48" y="195">🖥️</text></g>
+        <g class="serveur" data-serveur><rect x="270" y="70" width="70" height="90" rx="8" /><text x="305" y="105" class="t-serveur">serveur</text><text x="305" y="125" class="t-port">:443</text><text x="305" y="145" class="t-etat" data-etat-serveur>écoute</text></g>
+        <g data-messages></g>
+      </svg>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  const POS: Record<string, [number, number]> = { a: [70, 40], b: [70, 115], c: [70, 190] };
+  const SERVEUR: [number, number] = [270, 115];
+  const NS = 'http://www.w3.org/2000/svg';
+  const reduit = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-dialogue]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { actif: string[]; msg: [string, string, string][]; texte: string }[] = JSON.parse(racine.dataset.etapes!);
+    const zone = racine.querySelector<SVGGElement>('[data-messages]')!;
+    const etatServeur = racine.querySelector<SVGTextElement>('[data-etat-serveur]')!;
+    pasAPas(racine, () => etapes.length, async (n) => {
+      const e = etapes[n - 1];
+      const arret = n === etapes.length;
+      racine.classList.toggle('arrete', arret);
+      etatServeur.textContent = arret ? 'arrêté' : 'écoute';
+      racine.querySelectorAll('[data-client]').forEach((c) => c.classList.toggle('actif', e.actif.includes((c as SVGGElement).dataset.client!)));
+      racine.querySelectorAll('[data-lien]').forEach((l) => l.classList.toggle('actif', e.actif.includes((l as SVGLineElement).dataset.lien!)));
+      zone.replaceChildren();
+      for (const [qui, sens, etiquette] of e.msg) {
+        const [cx, cy] = POS[qui];
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', `msg ${sens}`);
+        const t = document.createElementNS(NS, 'text');
+        t.textContent = etiquette;
+        g.append(t);
+        zone.append(g);
+        const depart = sens === 'retour' ? SERVEUR : [cx, cy];
+        const arrivee = sens === 'retour' ? [cx, cy] : sens === 'refus' ? [cx + 60, cy - 14] : SERVEUR;
+        const place = (f: number) => {
+          const x = depart[0] + (arrivee[0] - depart[0]) * f;
+          const y = depart[1] + (arrivee[1] - depart[1]) * f - 8;
+          // L'étiquette reste entre les clients (x = 76) et le serveur (x = 270).
+          const demi = (t.getComputedTextLength?.() || 80) / 2;
+          t.setAttribute('x', String(Math.max(80 + demi, Math.min(264 - demi, x))));
+          t.setAttribute('y', String(y));
+        };
+        if (reduit() || sens === 'refus') { place(sens === 'refus' ? 1 : 0.5); continue; }
+        await new Promise<void>((fin) => {
+          const t0 = performance.now();
+          const pas = (t: number) => {
+            // L'étiquette part de l'expéditeur et s'arrête au milieu du lien, lisible.
+            const f = Math.min(1, (t - t0) / 700);
+            place(f * 0.5);
+            if (f < 1) requestAnimationFrame(pas); else fin();
+          };
+          requestAnimationFrame(pas);
+        });
+      }
+      return e.texte;
+    });
+  });
+</script>
+
+<style>
+  .schema { width: 100%; max-width: 32rem; display: block; margin: 0 auto 0.5rem; }
+  .schema text { text-anchor: middle; dominant-baseline: middle; font-size: 15px; fill: var(--fg); }
+  .liens line { stroke: var(--border); stroke-width: 3; }
+  .liens line.actif { stroke: var(--ill-client); }
+  .client rect { fill: var(--card); stroke: var(--border); stroke-width: 2; }
+  .client.actif rect { stroke: var(--ill-client); }
+  .serveur rect { fill: var(--card); stroke: var(--ill-serveur); stroke-width: 3; }
+  .t-serveur { font-weight: 700; font-size: 13px !important; }
+  .t-port, .t-etat { font-family: var(--police-mono); font-size: 12px !important; }
+  :global(.dialogue.arrete) .serveur rect { stroke-dasharray: 6 4; stroke: var(--muted); }
+  .schema :global(.msg text) { text-anchor: middle; dominant-baseline: middle; font-family: var(--police-mono); font-size: 11px; font-weight: 700; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
+  .schema :global(.msg.aller text) { fill: var(--ill-client); }
+  .schema :global(.msg.retour text) { fill: var(--ill-serveur); }
+  .schema :global(.msg.refus text) { fill: var(--accent); }
+</style>

@@ -126,7 +126,8 @@ export const GLOSSAIRE: Record<string, Entree> = {
   serveur: {
     terme: 'Serveur',
     definition:
-      "Ordinateur allumé en permanence, généralement dans un datacenter, qui répond aux demandes d'autres machines.",
+      "Programme qui attend des demandes et y répond (serveur web, serveur de courriel…), et par extension l'ordinateur qui le fait tourner, souvent dans un centre de données. N'importe quel ordinateur peut être serveur.",
+    voirAussi: ['client', 'port'],
   },
   hebergeur: {
     terme: 'Hébergeur',
@@ -254,6 +255,23 @@ export const GLOSSAIRE: Record<string, Entree> = {
     terme: 'Rançongiciel',
     definition:
       "Logiciel malveillant qui chiffre les fichiers d'un ordinateur ou d'un réseau et réclame une rançon pour les rendre. La meilleure parade : des mises à jour et des sauvegardes débranchées.",
+  },
+  client: {
+    terme: 'Client',
+    definition:
+      "Le programme qui demande : un navigateur, une appli, un logiciel de transfert de fichiers. Il ouvre la connexion et envoie une requête ; le serveur répond.",
+    voirAussi: ['serveur', 'port'],
+  },
+  url: {
+    terme: 'URL',
+    definition:
+      "Adresse d'une ressource, comme https://cours.example/reseau/ports.html : le protocole (https), le serveur (cours.example), éventuellement le port, puis le chemin de la ressource sur ce serveur.",
+    voirAussi: ['nom-de-domaine', 'port'],
+  },
+  sftp: {
+    terme: 'SFTP',
+    definition:
+      "Protocole de transfert de fichiers qui fonctionne à l'intérieur d'une connexion SSH chiffrée (port 22). Malgré son nom, ce n'est pas une version de FTP ; FTP chiffré par TLS s'appelle FTPS.",
   },
   arcep: {
     terme: 'Arcep',

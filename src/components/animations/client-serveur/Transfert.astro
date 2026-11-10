@@ -1,0 +1,90 @@
+---
+// Animation « FTP, FTPS, SFTP : ce que voit l'espion » (module « Client et
+// serveur », étape 4) : on choisit un protocole, on avance pas à pas, et on
+// voit ce qu'une personne qui écoute le réseau peut lire. Sources : RFC 959
+// (FTP), RFC 4217 (FTPS), brouillon IETF draft-ietf-secsh-filexfer (SFTP),
+// RFC 4253 (SSH). Données : src/data/client-serveur.ts.
+import { TRANSFERTS } from '../../../data/client-serveur';
+---
+<div class="anim transfert" data-transfert data-protocoles={JSON.stringify(TRANSFERTS)}>
+  <div class="anim-repli">
+    {TRANSFERTS.map((t) => (
+      <div>
+        <h4>{t.nom} (port {t.ports})</h4>
+        <ol>{t.etapes.map((e) => <li>{e.quoi} Ce que voit l'espion : <code>{e.espion}</code></li>)}</ol>
+        <p>{t.bilan}</p>
+      </div>
+    ))}
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="protos" role="radiogroup" aria-label="Protocole">
+        {TRANSFERTS.map((t, i) => <button type="button" role="radio" class="anim-bouton" data-proto={t.id} aria-checked={i === 0 ? 'true' : 'false'}>{t.nom}</button>)}
+      </div>
+      <p class="ports-info" data-ports-info></p>
+      <div class="ligne-reseau">
+        <span class="bout">💻 client</span>
+        <span class="cable" data-cable aria-hidden="true"></span>
+        <span class="bout">🗄️ serveur</span>
+      </div>
+      <div class="espion">
+        <p class="titre-espion"><span aria-hidden="true">🕵️</span> Ce que lit une personne qui écoute le réseau :</p>
+        <pre data-espion></pre>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">◀ Précédent</button>
+        <span class="anim-compteur"></span>
+        <button type="button" data-action="suivant">Suivant ▶</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-transfert]').forEach((racine) => {
+    activerScene(racine);
+    const protocoles: { id: string; nom: string; ports: string; etapes: { quoi: string; espion: string }[]; bilan: string }[] = JSON.parse(racine.dataset.protocoles!);
+    let p = protocoles[0];
+    const espion = racine.querySelector<HTMLElement>('[data-espion]')!;
+    const cable = racine.querySelector<HTMLElement>('[data-cable]')!;
+    const info = racine.querySelector<HTMLElement>('[data-ports-info]')!;
+    const ctrl = pasAPas(racine, () => p.etapes.length + 1, (n) => {
+      racine.classList.toggle('clair', p.id === 'ftp');
+      info.textContent = `${p.nom} — ports : ${p.ports}`;
+      if (n > p.etapes.length) {
+        cable.dataset.etat = p.id === 'ftp' ? 'clair' : 'chiffre';
+        return p.bilan;
+      }
+      const e = p.etapes[n - 1];
+      espion.textContent = p.etapes.slice(0, n).map((x) => x.espion).join('\n');
+      cable.dataset.etat = p.id === 'ftp' ? 'clair' : 'chiffre';
+      return e.quoi;
+    });
+    racine.querySelectorAll<HTMLButtonElement>('[data-proto]').forEach((b) => b.addEventListener('click', () => {
+      p = protocoles.find((x) => x.id === b.dataset.proto)!;
+      racine.querySelectorAll('[data-proto]').forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+      espion.textContent = '';
+      ctrl.aller(1);
+    }));
+  });
+</script>
+
+<style>
+  .protos { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.4rem; }
+  .protos [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .ports-info { font-size: 0.88rem; color: var(--muted); margin: 0 0 0.6rem; }
+  .ligne-reseau { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-weight: 600; font-size: 0.9rem; }
+  .cable { height: 0.6rem; border-radius: 0.3rem; background: var(--border); }
+  .cable[data-etat='clair'] { background: repeating-linear-gradient(90deg, var(--ill-commun) 0 10px, transparent 10px 16px); }
+  .cable[data-etat='chiffre'] { background: var(--ill-secret-b); }
+  .espion { border: 1px dashed var(--border); border-radius: 0.5rem; padding: 0.5rem 0.7rem; background: var(--bg); }
+  .titre-espion { margin: 0 0 0.3rem; font-weight: 600; font-size: 0.9rem; }
+  .espion pre { margin: 0; min-height: 4.5em; font-family: var(--police-mono); font-size: 0.85rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  :global(.transfert.clair) .espion pre { color: var(--accent); font-weight: 700; }
+  .anim-repli h4 { margin: 0.6rem 0 0.2rem; }
+  .anim-repli code { font-family: var(--police-mono); white-space: pre-wrap; }
+</style>
