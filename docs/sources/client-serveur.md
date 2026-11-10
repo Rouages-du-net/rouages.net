@@ -46,3 +46,20 @@ Fichier CSV : https://www.iana.org/assignments/service-names-port-numbers/servic
   `PASS`, `RETR`).
 - Code 403 pour un chemin contenant « .. » : comportement du serveur simulé ; la RFC 3986 demande seulement des
   précautions.
+
+## Racine du site (ajout du 10 novembre 2026)
+
+- Apache, directive `DocumentRoot` : « Directory that forms the main document tree visible from the web » ;
+  « the server appends the path from the requested URL to the document root to make the path to the
+  document » ; exemple `DocumentRoot "/usr/web"` → `http://my.example.com/index.html` = `/usr/web/index.html`.
+  **[lu]** https://httpd.apache.org/docs/2.4/mod/core.html#documentroot
+- cPanel, File Manager : « Web Root (public_html or www) — The most direct route to your files » ; racine des
+  documents « /home/user/public_html ». **[lu]** https://docs.cpanel.net/cpanel/files/file-manager/
+- cPanel, FTP Accounts : un compte FTP « can access the /home/$user/example/ directory and all of its
+  subdirectories » (dossier choisi à la création). **[lu]** https://docs.cpanel.net/cpanel/files/ftp-accounts/
+- Ubuntu Server : la `DocumentRoot` par défaut d'Apache2 est `/var/www/html`, fixée dans
+  `/etc/apache2/sites-available/000-default.conf`. **[lu]**
+  https://documentation.ubuntu.com/server/how-to/web-services/configure-apache2-settings/
+- L'animation « Un fichier, trois chemins » suit le modèle cPanel (compte `/home/eleve`, racine `public_html`,
+  compte FTP limité à `public_html`) ; l'animation « De l'URL au fichier » garde `/var/www/cours.example`, comme un
+  serveur Apache configuré à la main. La page signale que le nom du dossier varie.

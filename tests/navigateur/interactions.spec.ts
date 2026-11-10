@@ -214,3 +214,19 @@ test('client et serveur : ports, URL, fichiers, transferts, HTTP', async ({ page
   await expect(req.locator('[data-code]')).toHaveText('404');
   expect(err).toEqual([]);
 });
+
+test('client et serveur : un fichier, trois chemins', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/client-serveur/');
+  const acces = page.locator('[data-acces]');
+  await acces.locator('.fichier', { hasText: 'ports.html' }).click();
+  await expect(acces.locator('[data-voie="web"] [data-adresse]')).toHaveText('https://cours.example/reseau/ports.html');
+  await expect(acces.locator('[data-voie="sftp"] [data-adresse]')).toHaveText('sftp://eleve@cours.example/home/eleve/public_html/reseau/ports.html');
+  await acces.locator('[data-action="modifier"]').click();
+  await expect(acces.locator('[data-voie="web"] [data-vu]')).toContainText('(corrigé)');
+  await expect(acces.locator('[data-voie="ftps"] [data-vu]')).toContainText('(corrigé)');
+  await acces.locator('.fichier', { hasText: 'notes-perso.txt' }).click();
+  await expect(acces.locator('[data-voie="web"]')).toHaveClass(/ferme/);
+  await expect(acces.locator('[data-voie="sftp"]')).not.toHaveClass(/ferme/);
+  expect(err).toEqual([]);
+});
