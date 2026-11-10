@@ -183,3 +183,34 @@ test('se protéger : phrase de passe, al-Kindi, faille, sauvegarde', async ({ pa
   await expect(sauve.locator('.anim-legende')).toContainText('règle 3-2-1 : 3 copies');
   expect(err).toEqual([]);
 });
+
+test('client et serveur : ports, URL, fichiers, transferts, HTTP', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/client-serveur/');
+  const ports = page.locator('[data-ports]');
+  await ports.locator('[data-choix="443"]').click();
+  await expect(ports.locator('.anim-legende')).toContainText('Un programme y écoute');
+  await ports.locator('[data-choix="21"]').click();
+  await expect(ports.locator('.anim-legende')).toContainText('connexion refusée');
+  const url = page.locator('[data-lire-url]');
+  await url.locator('[data-saisie]').fill('http://cours.example:8080/test/?a=1#bas');
+  await expect(url.locator('.anim-legende')).toContainText('port 8080');
+  await expect(url.locator('.anim-legende')).toContainText('« bas » reste dans le navigateur');
+  const arbo = page.locator('[data-arbo]');
+  await arbo.locator('select').selectOption('https://cours.example/reseau');
+  await expect(arbo.locator('[data-code]')).toContainText('301');
+  await arbo.locator('select').selectOption('https://cours.example/../etc/passwd');
+  await expect(arbo.locator('[data-code]')).toContainText('403');
+  await arbo.locator('select').selectOption('https://cours.example/reseau/');
+  await expect(arbo.locator('li.trouve')).toHaveText(/index\.html/);
+  const tr = page.locator('[data-transfert]');
+  await tr.locator('[data-action="suivant"]').click();
+  await expect(tr.locator('[data-espion]')).toContainText('PASS');
+  await tr.locator('[data-proto="sftp"]').click();
+  await tr.locator('[data-action="suivant"]').click();
+  await expect(tr.locator('[data-espion]')).not.toContainText('PASS');
+  const req = page.locator('[data-requete]');
+  await req.locator('[data-ech="introuvable"]').click();
+  await expect(req.locator('[data-code]')).toHaveText('404');
+  expect(err).toEqual([]);
+});

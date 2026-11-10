@@ -1,0 +1,118 @@
+---
+// Animation « Lire une URL » (module « Client et serveur », étape 2) : on
+// choisit ou on tape une URL ; ses parties (RFC 3986) se colorent, et le port
+// implicite apparaît. Le découpage se fait dans le navigateur : rien n'est
+// envoyé. Calculs : src/lib/url.ts.
+const EXEMPLES = [
+  'https://info.cern.ch/hypertext/WWW/TheProject.html',
+  'https://cours.example/reseau/ports.html#ftp',
+  'https://cours.example/recherche?q=port+443&page=2',
+  'http://cours.example:8080/test/',
+  'sftp://eleve@cours.example/depot/tp.pdf',
+];
+---
+<div class="anim lire-url" data-lire-url data-exemples={JSON.stringify(EXEMPLES)}>
+  <div class="anim-repli">
+    <p>
+      Dans <code>https://cours.example:443/reseau/ports.html?vue=liste#ftp</code> : <strong>https</strong> est le
+      schéma (le protocole), <strong>cours.example</strong> l'hôte (le serveur), <strong>443</strong> le port (souvent
+      sous-entendu), <strong>/reseau/ports.html</strong> le chemin, <strong>vue=liste</strong> la requête (des
+      paramètres), et <strong>ftp</strong> le fragment, un endroit dans la page, que le navigateur n'envoie pas au
+      serveur.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <label class="saisie">URL à découper
+        <input type="url" data-saisie spellcheck="false" autocomplete="off" />
+      </label>
+      <div class="exemples">
+        {EXEMPLES.map((e) => <button type="button" class="anim-bouton" data-ex={e}>{e.replace(/^\w+:\/\//, '').slice(0, 26)}…</button>)}
+      </div>
+      <p class="url" data-url aria-hidden="true"></p>
+      <dl class="parties" data-parties></dl>
+      <p class="anim-note">Le découpage se fait dans ton navigateur : rien n’est envoyé.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { decouperUrl } from '../../../lib/url';
+
+  const ROLES: [string, string, string][] = [
+    ['schema', 'Schéma', 'le protocole à utiliser'],
+    ['utilisateur', 'Utilisateur', 'le compte, pour certains protocoles'],
+    ['hote', 'Hôte', 'le nom du serveur, traduit en adresse IP par le DNS'],
+    ['port', 'Port', 'la porte du serveur'],
+    ['chemin', 'Chemin', 'la ressource demandée sur ce serveur'],
+    ['requete', 'Requête', 'des paramètres, souvent pour un programme'],
+    ['fragment', 'Fragment', 'un endroit dans la page, jamais envoyé au serveur'],
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-lire-url]').forEach((racine) => {
+    activerScene(racine);
+    const exemples: string[] = JSON.parse(racine.dataset.exemples!);
+    const saisie = racine.querySelector<HTMLInputElement>('[data-saisie]')!;
+    const ligne = racine.querySelector<HTMLElement>('[data-url]')!;
+    const dl = racine.querySelector<HTMLElement>('[data-parties]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const morceau = (texte: string, role: string) => Object.assign(document.createElement('span'), { className: `p-${role}`, textContent: texte });
+    function rendre() {
+      const u = decouperUrl(saisie.value);
+      if (!u) {
+        ligne.replaceChildren();
+        dl.replaceChildren();
+        legende.textContent = 'Ce n’est pas une URL complète : il faut au moins un schéma et un hôte, comme https://exemple.example/.';
+        return;
+      }
+      const port = u.port ? `:${u.port}` : u.portParDefaut ? `:${u.portEffectif}` : '';
+      ligne.replaceChildren(
+        morceau(u.schema, 'schema'), document.createTextNode('://'),
+        ...(u.utilisateur ? [morceau(u.utilisateur, 'utilisateur'), document.createTextNode('@')] : []),
+        morceau(u.hote, 'hote'),
+        ...(port ? [morceau(port, `port${u.port ? '' : ' implicite'}`)] : []),
+        morceau(u.chemin, 'chemin'),
+        ...(u.requete ? [document.createTextNode('?'), morceau(u.requete, 'requete')] : []),
+        ...(u.fragment ? [document.createTextNode('#'), morceau(u.fragment, 'fragment')] : []),
+      );
+      const valeurs: Record<string, string> = {
+        schema: u.schema, utilisateur: u.utilisateur, hote: u.hote,
+        port: u.port || (u.portParDefaut ? `${u.portEffectif} (sous-entendu)` : ''),
+        chemin: u.chemin, requete: u.requete, fragment: u.fragment,
+      };
+      dl.replaceChildren(...ROLES.filter(([k]) => valeurs[k]).flatMap(([k, nom, aide]) => {
+        const dt = Object.assign(document.createElement('dt'), { className: `p-${k}`, textContent: nom });
+        const dd = document.createElement('dd');
+        dd.append(Object.assign(document.createElement('code'), { textContent: valeurs[k] }), document.createTextNode(` : ${aide}`));
+        return [dt, dd];
+      }));
+      legende.textContent = `Le client contacte ${u.hote} sur le port ${u.portEffectif ?? '(inconnu)'} en ${u.schema.toUpperCase()}, et demande ${u.chemin}${u.requete ? ` avec les paramètres ${u.requete}` : ''}.${u.fragment ? ` Le fragment « ${u.fragment} » reste dans le navigateur.` : ''}`;
+    }
+    saisie.addEventListener('input', rendre);
+    racine.querySelectorAll<HTMLButtonElement>('[data-ex]').forEach((b) => b.addEventListener('click', () => { saisie.value = b.dataset.ex!; rendre(); }));
+    saisie.value = exemples[0];
+    rendre();
+  });
+</script>
+
+<style>
+  .saisie { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .saisie input { font: inherit; font-family: var(--police-mono); font-size: 0.9rem; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); min-width: 0; }
+  .exemples { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+  .exemples button { font-family: var(--police-mono); font-size: 0.78rem; }
+  .url { font-family: var(--police-mono); font-size: 1rem; padding: 0.6rem 0.7rem; background: var(--bg); border: 1px solid var(--border); border-radius: 0.4rem; overflow-wrap: anywhere; margin: 0 0 0.6rem; }
+  .parties { display: grid; grid-template-columns: minmax(6rem, 8rem) 1fr; gap: 0.3rem 0.6rem; margin: 0 0 0.5rem; font-size: 0.92rem; }
+  .parties :global(dd) { margin: 0; overflow-wrap: anywhere; }
+  .parties :global(code) { font-family: var(--police-mono); }
+  @media (max-width: 30rem) { .parties { grid-template-columns: 1fr; } }
+  .lire-url :global(.p-schema) { color: var(--ill-secret-a); font-weight: 700; }
+  .lire-url :global(.p-utilisateur) { color: var(--accent); font-weight: 700; }
+  .lire-url :global(.p-hote) { color: var(--ill-client); font-weight: 700; }
+  .lire-url :global(.p-port) { color: var(--ill-serveur); font-weight: 700; }
+  .lire-url :global(.p-port.implicite) { opacity: 0.6; font-style: italic; }
+  .lire-url :global(.p-chemin) { color: var(--ill-secret-b); font-weight: 700; }
+  .lire-url :global(.p-requete) { color: var(--ill-reseau); font-weight: 700; }
+  .lire-url :global(.p-fragment) { color: var(--muted); font-weight: 700; text-decoration: underline dotted; }
+</style>

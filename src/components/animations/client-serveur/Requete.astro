@@ -1,0 +1,71 @@
+---
+// Animation « Une conversation HTTP » (module « Client et serveur »,
+// étape 5) : cinq échanges réels dans leur forme texte (HTTP/1.1, RFC 9110) :
+// 200, 404, 301, 500, et la ligne « Host » qui permet à un serveur
+// d'héberger plusieurs sites. Données : src/data/client-serveur.ts.
+import { ECHANGES } from '../../../data/client-serveur';
+---
+<div class="anim requete" data-requete data-echanges={JSON.stringify(ECHANGES)}>
+  <div class="anim-repli">
+    {ECHANGES.map((e) => (
+      <div>
+        <h4>{e.titre}</h4>
+        <pre>{e.requete}</pre>
+        <pre>{e.reponse}</pre>
+        <p>{e.explication}</p>
+      </div>
+    ))}
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="choix" role="radiogroup" aria-label="Échange">
+        {ECHANGES.map((e, i) => <button type="button" role="radio" class="anim-bouton" data-ech={e.id} aria-checked={i === 0 ? 'true' : 'false'}>{e.titre}</button>)}
+      </div>
+      <div class="bulles">
+        <div class="bulle req"><p class="qui">💻 Le client envoie</p><pre data-req></pre></div>
+        <div class="bulle rep"><p class="qui">🗄️ Le serveur répond <span class="code" data-code></span></p><pre data-rep></pre></div>
+      </div>
+      <p class="anim-note">En HTTPS, c’est exactement la même conversation, mais à l’intérieur d’un canal chiffré (TLS), sur le port 443 : sur le réseau, on ne lit plus ces lignes. HTTP/2 et HTTP/3 transportent les mêmes informations sous une forme binaire.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-requete]').forEach((racine) => {
+    activerScene(racine);
+    const echanges: { id: string; titre: string; requete: string; reponse: string; explication: string }[] = JSON.parse(racine.dataset.echanges!);
+    const q = (s: string) => racine.querySelector<HTMLElement>(s)!;
+    const montrer = (id: string) => {
+      const e = echanges.find((x) => x.id === id)!;
+      racine.querySelectorAll('[data-ech]').forEach((b) => b.setAttribute('aria-checked', String((b as HTMLElement).dataset.ech === id)));
+      q('[data-req]').textContent = e.requete;
+      q('[data-rep]').textContent = e.reponse;
+      const code = e.reponse.split('\n')[0].split(' ')[1];
+      const c = q('[data-code]');
+      c.textContent = code;
+      c.dataset.famille = code[0];
+      q('.anim-legende').textContent = e.explication;
+    };
+    racine.querySelectorAll<HTMLButtonElement>('[data-ech]').forEach((b) => b.addEventListener('click', () => montrer(b.dataset.ech!)));
+    montrer(echanges[0].id);
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.7rem; }
+  .choix [aria-checked='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .bulles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.6rem; }
+  @media (max-width: 36rem) { .bulles { grid-template-columns: 1fr; } }
+  .bulle { border: 1px solid var(--border); border-radius: 0.6rem; padding: 0.5rem 0.7rem; background: var(--bg); }
+  .req { border-left: 4px solid var(--ill-client); }
+  .rep { border-left: 4px solid var(--ill-serveur); }
+  .qui { margin: 0 0 0.3rem; font-weight: 700; font-size: 0.9rem; display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+  .bulle pre, .anim-repli pre { margin: 0; font-family: var(--police-mono); font-size: 0.82rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .code { font-family: var(--police-mono); padding: 0.05rem 0.4rem; border-radius: 0.3rem; border: 2px solid var(--border); }
+  .code[data-famille='2'] { border-color: var(--ill-secret-b); }
+  .code[data-famille='3'] { border-color: var(--ill-client); }
+  .code[data-famille='4'], .code[data-famille='5'] { border-color: var(--accent); }
+</style>

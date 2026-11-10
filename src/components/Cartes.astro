@@ -1,0 +1,21 @@
+---
+// Grille de cartes de modules (page d'accueil). `niveau` : niveau de titre
+// des cartes (3 sous une section, 4 sous un groupe), pour une hiérarchie de
+// titres correcte.
+interface Props { modules: [string, string, string?][]; niveau: 3 | 4 }
+const { modules, niveau } = Astro.props;
+const H = niveau === 3 ? 'h3' : 'h4';
+---
+<div class="grid">
+  {modules.map(([nom, desc, lien]) => (
+    <article class="card">
+      <H class="titre-carte">{lien ? <a href={lien}>{nom}</a> : nom}</H>
+      <p>{desc}</p>
+      <span class="tag">{lien ? 'Disponible' : 'Bientôt'}</span>
+    </article>
+  ))}
+</div>
+
+<style>
+  .titre-carte { margin-top: 0; font-size: 1.17rem; }
+</style>
