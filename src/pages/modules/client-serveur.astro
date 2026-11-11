@@ -11,6 +11,7 @@ import Dialogue from '../../components/animations/client-serveur/Dialogue.astro'
 import Ports from '../../components/animations/client-serveur/Ports.astro';
 import LireUrl from '../../components/animations/client-serveur/LireUrl.astro';
 import Arborescence from '../../components/animations/client-serveur/Arborescence.astro';
+import Acces from '../../components/animations/client-serveur/Acces.astro';
 import Transfert from '../../components/animations/client-serveur/Transfert.astro';
 import Requete from '../../components/animations/client-serveur/Requete.astro';
 
@@ -20,6 +21,7 @@ const etapes = [
   { ancre: 'ports', court: 'Les ports' },
   { ancre: 'url', court: 'Lire une URL' },
   { ancre: 'fichiers', court: 'De l’URL au fichier' },
+  { ancre: 'trois-chemins', court: 'Un fichier, trois chemins' },
   { ancre: 'transferts', court: 'FTP, FTPS, SFTP' },
   { ancre: 'http', court: 'HTTP et HTTPS' },
   { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
@@ -165,7 +167,35 @@ const etapes = [
   </Etape>
 
   <!-- Étape 4 -->
-  <Etape numero={4} titre="Transférer des fichiers : FTP, FTPS, SFTP" ancre="transferts">
+  <Etape numero={4} titre="Un fichier, trois chemins" ancre="trois-chemins">
+    <Acces slot="animation" />
+    <p slot="decouverte">
+      Sur le serveur, le site est un dossier : sur un hébergement comme celui de ce site, il s'appelle
+      <code>public_html</code> (ou <code>www</code>). C'est la <strong>racine du site</strong> : tout fichier rangé
+      dedans a une adresse web, et tout fichier rangé ailleurs n'en a pas.
+    </p>
+    <p slot="curieux">
+      HTTPS, FTPS et SFTP ne sont que trois façons d'atteindre <strong>les mêmes fichiers</strong> sur le même disque.
+      Le navigateur passe par le serveur web (port 443) et ne voit que la racine du site ; FTPS et SFTP servent à
+      déposer et modifier ces fichiers. Quand on corrige une page par SFTP, il suffit de recharger le navigateur pour
+      voir la nouvelle version : il n'y a qu'un fichier.
+    </p>
+    <p slot="ingenieur">
+      Le serveur web Apache appelle ce dossier la <code>DocumentRoot</code> : il « ajoute le chemin de l'URL demandée
+      à la racine des documents » pour trouver le fichier. Son nom change d'un serveur à l'autre :
+      <code>public_html</code> ou <code>www</code> chez cPanel, <code>/var/www/html</code> par défaut avec Apache sous
+      Ubuntu. Un compte FTP peut être limité à un dossier ; un accès SSH ou SFTP voit, lui, tout ce que le compte a le
+      droit de lire.
+    </p>
+    <p slot="mythes">
+      <strong>« Ce qui n'a pas de lien n'est pas en ligne. »</strong> Un fichier rangé dans la racine du site est
+      accessible à quiconque devine son adresse, même si aucune page n'y mène. Ce qui doit rester privé (sauvegardes,
+      notes, mots de passe) se range hors de <code>public_html</code>.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Transférer des fichiers : FTP, FTPS, SFTP" ancre="transferts">
     <Transfert slot="animation" />
     <p slot="decouverte">
       Pour déposer les fichiers d'un site sur un serveur, on utilise un protocole de transfert. FTP, le plus ancien,
@@ -197,8 +227,8 @@ const etapes = [
     </p>
   </Etape>
 
-  <!-- Étape 5 -->
-  <Etape numero={5} titre="Une conversation HTTP" ancre="http">
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Une conversation HTTP" ancre="http">
     <Requete slot="animation" />
     <p slot="decouverte">
       Le web parle <Terme id="http">HTTP</Terme>. Le client envoie une requête de quelques lignes de texte
@@ -230,6 +260,7 @@ const etapes = [
       <li><strong>L'adresse IP désigne la machine, le port le programme</strong> : 443 pour HTTPS, 22 pour SSH et SFTP, 21 pour FTP.</li>
       <li><strong>Une URL dit comment, à qui et quoi</strong> : schéma, serveur (et port), chemin ; le fragment reste dans le navigateur.</li>
       <li><strong>Sur un serveur simple, le chemin de l'URL est un chemin de fichier</strong>, sous la racine du site ; un dossier sert son index.html.</li>
+      <li><strong>La racine du site (public_html, www) est un dossier</strong> : web, FTPS et SFTP ne sont que trois chemins vers les mêmes fichiers.</li>
       <li><strong>Pour transférer des fichiers, jamais FTP en clair</strong> : FTPS (FTP dans TLS) ou SFTP (dans SSH).</li>
     </ol>
     <p>
@@ -251,6 +282,10 @@ const etapes = [
       { auteur: 'R. Fielding, M. Nottingham, J. Reschke', titre: 'RFC 9110 : HTTP Semantics (codes de réponse, en-tête Host)', url: 'https://www.rfc-editor.org/rfc/rfc9110', type: 'primaire', annee: 2022, langue: 'en' },
       { auteur: 'M. Cotton et al.', titre: 'RFC 6335 : procédures de l’IANA pour les ports (plages 0-1023, 1024-49151, 49152-65535)', url: 'https://www.rfc-editor.org/rfc/rfc6335', type: 'primaire', annee: 2011, langue: 'en' },
       { auteur: 'IANA', titre: 'Service Name and Transport Protocol Port Number Registry', url: 'https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Apache', titre: 'Directive DocumentRoot (module core)', url: 'https://httpd.apache.org/docs/2.4/mod/core.html#documentroot', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'cPanel', titre: 'File Manager (« Web Root (public_html or www) »)', url: 'https://docs.cpanel.net/cpanel/files/file-manager/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'cPanel', titre: 'FTP Accounts (dossier accessible par un compte FTP)', url: 'https://docs.cpanel.net/cpanel/files/ftp-accounts/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Ubuntu', titre: 'Configure Apache2 settings (DocumentRoot par défaut : /var/www/html)', url: 'https://documentation.ubuntu.com/server/how-to/web-services/configure-apache2-settings/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'CERN', titre: 'info.cern.ch : le premier site web', url: 'https://info.cern.ch/', type: 'primaire', langue: 'en' },
       { auteur: 'CERN', titre: 'The World Wide Web project (une des premières pages du web)', url: 'https://info.cern.ch/hypertext/WWW/TheProject.html', type: 'primaire', langue: 'en' },
       { auteur: 'W. Eddy (dir.)', titre: 'RFC 9293 : Transmission Control Protocol (une connexion = une paire de sockets)', url: 'https://www.rfc-editor.org/rfc/rfc9293', type: 'primaire', annee: 2022, langue: 'en' },

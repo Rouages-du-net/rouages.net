@@ -1,0 +1,181 @@
+---
+// Animation « Un fichier, trois chemins » (module « Client et serveur »,
+// étape 4) : sur un hébergement de type cPanel, le dossier public_html (ou
+// www) est la racine du site. Un même fichier se lit par le web (HTTPS), par
+// SFTP ou SSH, et par FTPS ; on le modifie par SFTP et le navigateur voit le
+// changement. Sources : Apache, directive DocumentRoot ; cPanel, gestionnaire
+// de fichiers (« Web Root (public_html or www) ») et comptes FTP.
+const COMPTE = '/home/eleve';
+const RACINE = `${COMPTE}/public_html`;
+// Chemins relatifs au dossier du compte.
+const FICHIERS = [
+  { chemin: 'public_html/index.html', titre: 'Accueil du cours' },
+  { chemin: 'public_html/reseau/ports.html', titre: 'Les ports' },
+  { chemin: 'public_html/images/logo.png', titre: '(image PNG)' },
+  { chemin: 'notes-perso.txt', titre: 'Mes notes : penser à corriger la page des ports' },
+  { chemin: 'sauvegardes/site-2026-11.zip', titre: '(archive ZIP)' },
+];
+---
+<div class="anim acces" data-acces data-fichiers={JSON.stringify(FICHIERS)} data-compte={COMPTE} data-racine={RACINE}>
+  <div class="anim-repli">
+    <p>Sur le serveur, le compte <code>eleve</code> contient :</p>
+    <ul>{FICHIERS.map((f) => <li><code>{COMPTE}/{f.chemin}</code></li>)}</ul>
+    <p>
+      Le dossier <code>public_html</code> (aussi appelé <code>www</code>) est la racine du site
+      <code>cours.example</code>. Le même fichier <code>{RACINE}/reseau/ports.html</code> s'atteint de trois
+      façons :
+    </p>
+    <ul>
+      <li>par le web : <code>https://cours.example/reseau/ports.html</code> (port 443) ;</li>
+      <li>par SFTP ou SSH : <code>sftp://eleve@cours.example{RACINE}/reseau/ports.html</code> (port 22) ;</li>
+      <li>par FTPS, avec un compte FTP limité au dossier du site : <code>ftps://eleve@cours.example/reseau/ports.html</code>.</li>
+    </ul>
+    <p>
+      Si on le modifie par SFTP, la page web change aussitôt : c'est le même fichier. Un fichier rangé hors de
+      <code>public_html</code>, comme <code>notes-perso.txt</code>, n'a pas d'adresse web ; on ne l'atteint que par
+      SFTP ou SSH.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="disposition">
+        <div class="disque">
+          <p class="titre-disque"><span aria-hidden="true">🗄️</span> Disque du serveur</p>
+          <ul class="arbre" role="group" aria-label="Fichiers du serveur" data-arbre></ul>
+        </div>
+        <div class="chemins">
+          <div class="chemin web" data-voie="web">
+            <p class="voie">🌐 Par le web <span class="det">HTTPS, port 443, navigateur</span></p>
+            <p class="adresse" data-adresse></p>
+            <p class="vu" data-vu></p>
+          </div>
+          <div class="chemin sftp" data-voie="sftp">
+            <p class="voie">🔐 Par SFTP ou SSH <span class="det">port 22, tout le compte</span></p>
+            <p class="adresse" data-adresse></p>
+            <p class="vu" data-vu></p>
+          </div>
+          <div class="chemin ftps" data-voie="ftps">
+            <p class="voie">📂 Par FTPS <span class="det">compte FTP limité à public_html</span></p>
+            <p class="adresse" data-adresse></p>
+            <p class="vu" data-vu></p>
+          </div>
+        </div>
+      </div>
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-action="modifier">✏️ Modifier ce fichier par SFTP</button>
+        <button type="button" data-action="annuler">↺ Version d’origine</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-acces]').forEach((racineEl) => {
+    activerScene(racineEl);
+    const fichiers: { chemin: string; titre: string }[] = JSON.parse(racineEl.dataset.fichiers!);
+    const compte = racineEl.dataset.compte!;
+    const web = 'public_html/';
+    const arbre = racineEl.querySelector<HTMLUListElement>('[data-arbre]')!;
+    const legende = racineEl.querySelector<HTMLElement>('.anim-legende')!;
+    const modifs = new Set<string>();
+    let choisi = fichiers[1].chemin;
+
+    // L'arbre du compte, avec la racine du site mise en évidence.
+    const lignes: { chemin: string; nom: string; prof: number; dossier: boolean }[] = [];
+    const vus = new Set<string>();
+    for (const f of fichiers) {
+      const parts = f.chemin.split('/');
+      parts.forEach((nom, i) => {
+        const c = parts.slice(0, i + 1).join('/');
+        if (vus.has(c)) return;
+        vus.add(c);
+        lignes.push({ chemin: c, nom, prof: i + 1, dossier: i < parts.length - 1 });
+      });
+    }
+    const tete = document.createElement('li');
+    tete.className = 'dossier';
+    tete.textContent = `📁 ${compte}/`;
+    arbre.append(tete, ...lignes.map((l) => {
+      const li = document.createElement('li');
+      li.style.paddingLeft = `${l.prof * 1}rem`;
+      if (l.dossier) {
+        li.className = 'dossier';
+        li.textContent = `📁 ${l.nom}/`;
+        if (l.chemin === 'public_html') {
+          li.classList.add('racine-web');
+          const badge = Object.assign(document.createElement('span'), { className: 'badge', textContent: 'racine du site (www)' });
+          li.append(' ', badge);
+        }
+        if (l.chemin.startsWith('public_html')) li.classList.add('dans-web');
+        return li;
+      }
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fichier';
+      b.dataset.chemin = l.chemin;
+      b.textContent = `📄 ${l.nom}`;
+      b.addEventListener('click', () => { choisi = l.chemin; rendre(true); });
+      li.append(b);
+      if (l.chemin.startsWith(web)) li.classList.add('dans-web');
+      return li;
+    }));
+
+    function rendre(annoncer: boolean) {
+      const f = fichiers.find((x) => x.chemin === choisi)!;
+      const dansWeb = choisi.startsWith(web);
+      const relatif = choisi.slice(web.length);
+      const contenu = f.titre.startsWith('(') ? f.titre : `« ${f.titre}${modifs.has(choisi) ? ' (corrigé)' : ''} »`;
+      racineEl.querySelectorAll<HTMLButtonElement>('.fichier').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.chemin === choisi)));
+      const voie = (id: string, adresse: string, vu: string, ok: boolean) => {
+        const el = racineEl.querySelector<HTMLElement>(`[data-voie="${id}"]`)!;
+        el.classList.toggle('ferme', !ok);
+        el.querySelector('[data-adresse]')!.textContent = adresse;
+        el.querySelector('[data-vu]')!.textContent = vu;
+      };
+      voie('web', dansWeb ? `https://cours.example/${relatif}` : 'Pas d’adresse web', dansWeb ? `Le navigateur affiche ${contenu}` : 'Ce fichier est hors de public_html : le serveur web ne le montre pas.', dansWeb);
+      voie('sftp', `sftp://eleve@cours.example${compte}/${choisi}`, `Lisible et modifiable : ${contenu}`, true);
+      voie('ftps', dansWeb ? `ftps://eleve@cours.example/${relatif}` : 'Hors du dossier du compte FTP', dansWeb ? `Lisible et modifiable : ${contenu}` : 'Ce compte FTP ne voit que public_html et ses sous-dossiers.', dansWeb);
+      racineEl.querySelector<HTMLButtonElement>('[data-action="modifier"]')!.disabled = f.titre.startsWith('(') || modifs.has(choisi);
+      if (annoncer) {
+        legende.textContent = dansWeb
+          ? `${compte}/${choisi} est dans la racine du site : on l’atteint par le web, par SFTP ou SSH et par FTPS. Trois chemins, un seul fichier.`
+          : `${compte}/${choisi} est hors de la racine du site : il n’a pas d’adresse web. Seul l’accès SFTP ou SSH au compte le voit.`;
+      }
+    }
+    racineEl.querySelector('[data-action="modifier"]')!.addEventListener('click', () => {
+      modifs.add(choisi);
+      rendre(false);
+      legende.textContent = choisi.startsWith(web)
+        ? 'Fichier modifié par SFTP. Recharge la page web : le navigateur affiche aussitôt la nouvelle version, et FTPS voit la même. Il n’y a qu’un fichier sur le disque.'
+        : 'Fichier modifié par SFTP. Il n’a toujours pas d’adresse web : il est hors de la racine du site.';
+    });
+    racineEl.querySelector('[data-action="annuler"]')!.addEventListener('click', () => { modifs.clear(); rendre(true); });
+    rendre(false);
+    legende.textContent = 'Choisis un fichier sur le disque du serveur : à droite, les chemins pour l’atteindre.';
+  });
+</script>
+
+<style>
+  .disposition { display: grid; grid-template-columns: minmax(13rem, 17rem) 1fr; gap: 1rem; align-items: start; margin-bottom: 0.6rem; }
+  @media (max-width: 40rem) { .disposition { grid-template-columns: 1fr; } }
+  .disque { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); padding: 0.5rem 0.6rem; }
+  .titre-disque { margin: 0 0 0.3rem; font-weight: 700; }
+  .arbre { list-style: none; padding: 0; margin: 0; font-family: var(--police-mono); font-size: 0.82rem; display: grid; gap: 0.1rem; }
+  .arbre :global(li.dans-web) { background: color-mix(in srgb, var(--ill-secret-b) 12%, transparent); }
+  .arbre :global(li.racine-web) { font-weight: 700; border-top: 2px solid var(--ill-secret-b); }
+  .arbre :global(.badge) { font-family: var(--police); font-size: 0.7rem; font-weight: 700; padding: 0.05rem 0.35rem; border-radius: 0.3rem; background: var(--ill-secret-b); color: var(--bg); white-space: nowrap; }
+  .arbre :global(.fichier) { font: inherit; background: none; border: 1px solid transparent; border-radius: 0.25rem; color: var(--fg); cursor: pointer; padding: 0.05rem 0.25rem; text-align: left; }
+  .arbre :global(.fichier[aria-pressed='true']) { border-color: var(--accent); font-weight: 700; }
+  .arbre :global(.fichier:focus-visible) { outline: 2px solid var(--accent); }
+  .chemins { display: grid; gap: 0.45rem; }
+  .chemin { border: 1px solid var(--border); border-left: 4px solid var(--ill-secret-b); border-radius: 0.4rem; padding: 0.4rem 0.6rem; background: var(--bg); }
+  .chemin.ferme { border-left-color: var(--border); opacity: 0.7; }
+  .voie { margin: 0; font-weight: 700; font-size: 0.92rem; }
+  .det { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+  .adresse { margin: 0.15rem 0; font-family: var(--police-mono); font-size: 0.8rem; overflow-wrap: anywhere; color: var(--ill-client); }
+  .vu { margin: 0; font-size: 0.85rem; }
+  .anim-repli code { font-family: var(--police-mono); overflow-wrap: anywhere; }
+</style>

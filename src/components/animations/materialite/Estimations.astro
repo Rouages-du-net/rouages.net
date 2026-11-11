@@ -74,8 +74,8 @@ const actions = [...new Set(ESTIMATIONS.map((e) => e.action))];
 </script>
 
 <style>
-  .choix-action { display: grid; gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 22rem; }
-  .choix-action select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .choix-action { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.25rem; font-weight: 600; margin-bottom: 0.75rem; max-width: 22rem; }
+  .choix-action select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); width: 100%; min-width: 0; }
   .liste-est { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.8rem; }
   :global(.estimations .tete) { margin: 0; }
   :global(.estimations .barre-est) { display: block; height: 0.7rem; margin: 0.25rem 0; border-radius: 0.2rem; background: var(--ill-paquet); }

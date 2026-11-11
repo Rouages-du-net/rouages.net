@@ -160,3 +160,8 @@ html[data-lecture='ecrans'][data-ecran-courant]:not([data-ecran-courant='0']) .s
   html[data-lecture='ecrans'] .ecran { display: block !important; }
   .ecran-nav, .frise { display: none !important; }
 }
+
+/* Petits écrans : une cellule de tableau ou un menu déroulant ne doit jamais
+   élargir la page (les polices varient d'un système à l'autre). */
+main th, main td { overflow-wrap: anywhere; }
+main select { max-width: 100%; }
