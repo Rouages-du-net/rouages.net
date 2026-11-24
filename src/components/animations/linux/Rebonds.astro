@@ -1,0 +1,164 @@
+---
+// Animation « Rebondir de machine en machine » (module Linux, étape 7) : pour
+// atteindre un serveur interne, on passe par un bastion. Deux façons, pas à
+// pas : rebondir à la main (deux connexions SSH distinctes, le bastion voit
+// tout en clair) ou avec ProxyJump (ssh -J, OpenSSH 7.3 et suivants : une
+// connexion SSH de bout en bout, transportée dans la première). Sources :
+// ssh(1), ssh_config(5), docs/sources/linux.md.
+interface Etape {
+  lignes: [string, string][];
+  lien1: string; // texte du lien portable — bastion
+  lien2: string; // texte du lien bastion — web1
+  voit: string; // ce que voit le bastion
+  cle: string; // où doit se trouver la clé privée
+  texte: string;
+}
+const MAIN: Etape[] = [
+  {
+    lignes: [['alice@portable:~$ ssh alice@bastion.example', 'tapee'], ['alice@bastion:~$ ', 'tapee']],
+    lien1: '🔒 SSH n° 1', lien2: '', voit: 'Ses propres commandes : alice est connectée chez lui.', cle: 'Sur le portable.',
+    texte: 'web1 n’est pas joignable depuis internet : seul le bastion l’est. alice se connecte d’abord au bastion. Elle obtient un terminal sur le bastion.',
+  },
+  {
+    lignes: [['alice@bastion:~$ ssh alice@web1', 'tapee']],
+    lien1: '🔒 SSH n° 1', lien2: '🔒 SSH n° 2', voit: 'Tout : c’est son propre programme ssh qui parle à web1.', cle: 'Sur le bastion (copie de la clé privée), ou prêtée par « transfert d’agent » (ssh -A).',
+    texte: 'Depuis le terminal du bastion, elle lance ssh vers web1. Cette deuxième connexion part du bastion : c’est le client ssh du bastion qui doit prouver qui elle est. Il lui faut une clé sur le bastion, ou le transfert d’agent, que le manuel d’OpenSSH demande d’activer « avec prudence ».',
+  },
+  {
+    lignes: [['alice@web1:~$ ', 'tapee']],
+    lien1: '🔒 SSH n° 1', lien2: '🔒 SSH n° 2', voit: 'Tout ce qu’alice tape et lit, en clair, entre les deux connexions.', cle: 'Exposée sur le bastion.',
+    texte: 'Ça marche, mais ce sont deux connexions séparées : le bastion déchiffre la première et rechiffre dans la seconde. Quelqu’un qui contrôle le bastion lit tout, et peut se servir de l’agent prêté pour aller ailleurs au nom d’alice.',
+  },
+];
+const SAUT: Etape[] = [
+  {
+    lignes: [['alice@portable:~$ ssh -J alice@bastion.example alice@web1', 'tapee']],
+    lien1: '🔒 SSH n° 1', lien2: '', voit: 'Une connexion d’alice, authentifiée par sa clé.', cle: 'Sur le portable, et nulle part ailleurs.',
+    texte: 'Avec l’option -J (ProxyJump), alice donne d’un coup la machine de rebond et la cible. Le client du portable se connecte d’abord au bastion, comme avant.',
+  },
+  {
+    lignes: [],
+    lien1: '🔒 SSH n° 1', lien2: '⇄ relais TCP vers web1:22', voit: 'Une demande : « relaie-moi vers web1, port 22 ».', cle: 'Sur le portable.',
+    texte: 'Mais il n’ouvre pas de terminal sur le bastion : il lui demande seulement de relayer une connexion vers le port 22 de web1. Le bastion devient un simple tuyau.',
+  },
+  {
+    lignes: [["Warning: Permanently added 'web1' (ED25519) to the list of known hosts.", ''], ['alice@web1:~$ ', 'tapee']],
+    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés qu’il ne peut pas lire.', cle: 'Sur le portable : la signature est faite par le portable.',
+    texte: 'Dans ce tuyau, le portable ouvre une deuxième connexion SSH directement avec web1 : il vérifie lui-même la clé de web1 (son known_hosts) et signe avec sa propre clé. Le bastion ne transporte que du chiffré : c’est une connexion dans une connexion.',
+  },
+  {
+    lignes: [['alice@portable:~$ cat ~/.ssh/config', 'tapee'], ['Host web1', ''], ['    HostName 10.0.0.12', ''], ['    User alice', ''], ['    ProxyJump alice@bastion.example', ''], ['alice@portable:~$ ssh web1', 'tapee']],
+    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés.', cle: 'Sur le portable.',
+    texte: 'Pour ne pas tout retaper, on l’écrit une fois dans ~/.ssh/config. Désormais, « ssh web1 » suffit, et scp ou sftp passent aussi par le bastion. On peut enchaîner plusieurs rebonds : ProxyJump a,b.',
+  },
+];
+---
+<div class="anim rebonds" data-rebonds data-main={JSON.stringify(MAIN)} data-saut={JSON.stringify(SAUT)}>
+  <div class="anim-repli">
+    <p>
+      Le serveur <code>web1</code> (10.0.0.12) est dans un réseau interne : on n'y accède qu'en passant par la
+      machine <code>bastion.example</code>.
+    </p>
+    <h4>Rebondir à la main</h4>
+    <ol>{MAIN.map((e) => <li>{e.lignes.length > 0 && <code>{e.lignes[0][0]}</code>} {e.texte}</li>)}</ol>
+    <h4>Avec ProxyJump (<code>ssh -J</code>)</h4>
+    <ol>{SAUT.map((e) => <li>{e.texte}</li>)}</ol>
+    <pre>{SAUT[3].lignes.slice(1, 5).map((l) => l[0]).join('\n')}</pre>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="modes" role="group" aria-label="Façon de rebondir">
+        <button type="button" class="anim-bouton" data-mode="main" aria-pressed="true">À la main</button>
+        <button type="button" class="anim-bouton" data-mode="saut" aria-pressed="false">Avec <code>ssh -J</code></button>
+      </div>
+      <div class="chaine">
+        <div class="machine"><p>💻 portable</p><small>chez alice</small></div>
+        <div class="lien" data-lien="1"><small>internet</small><span></span></div>
+        <div class="machine bastion"><p>🛡️ bastion.example</p><small>seule machine joignable</small></div>
+        <div class="lien" data-lien="2"><small>réseau interne</small><span></span></div>
+        <div class="machine"><p>🗄️ web1</p><small>10.0.0.12</small></div>
+      </div>
+      <dl class="constats">
+        <div><dt>Ce que voit le bastion</dt><dd data-voit></dd></div>
+        <div><dt>Où est la clé privée</dt><dd data-cle></dd></div>
+      </dl>
+      <div class="ecran" data-ecran role="log" aria-label="Terminal d’alice"></div>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">← Précédent</button>
+        <button type="button" data-action="suivant">Suivant →</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+        <span class="anim-compteur"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  interface Etape { lignes: [string, string][]; lien1: string; lien2: string; voit: string; cle: string; texte: string }
+
+  document.querySelectorAll<HTMLElement>('[data-rebonds]').forEach((racine) => {
+    activerScene(racine);
+    const scenarios: Record<string, Etape[]> = { main: JSON.parse(racine.dataset.main!), saut: JSON.parse(racine.dataset.saut!) };
+    let mode = 'main';
+    const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
+    const lien = (n: string, t: string) => {
+      const el = racine.querySelector<HTMLElement>(`[data-lien="${n}"]`)!;
+      el.querySelector('span')!.textContent = t || '—';
+      el.dataset.etat = t.startsWith('🔒') ? 'chiffre' : t ? 'relais' : '';
+    };
+    const pas = pasAPas(racine, () => scenarios[mode].length, (n) => {
+      const etapes = scenarios[mode];
+      const e = etapes[n - 1];
+      ecran.replaceChildren();
+      etapes.slice(0, n).forEach((x, i) => x.lignes.forEach(([t, c]) => {
+        const p = Object.assign(document.createElement('p'), { textContent: t });
+        if (c) p.classList.add(c);
+        if (i === n - 1) p.classList.add('nouveau');
+        ecran.append(p);
+      }));
+      ecran.scrollTop = ecran.scrollHeight;
+      lien('1', e.lien1);
+      lien('2', e.lien2);
+      racine.querySelector('[data-voit]')!.textContent = e.voit;
+      racine.querySelector('[data-cle]')!.textContent = e.cle;
+      racine.querySelector('.bastion')!.classList.toggle('alerte', mode === 'main' && n >= 2);
+      return e.texte;
+    });
+    racine.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) => b.addEventListener('click', () => {
+      mode = b.dataset.mode!;
+      racine.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      pas.aller(1);
+    }));
+    pas.aller(1);
+  });
+</script>
+
+<style>
+  .modes { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+  .modes [aria-pressed='true'] { background: var(--accent-2); color: var(--bg); border-color: var(--accent-2); }
+  .chaine { display: grid; grid-template-columns: 1fr minmax(5rem, 1.3fr) 1fr minmax(5rem, 1.3fr) 1fr; align-items: center; gap: 0.3rem; margin-bottom: 0.7rem; }
+  @media (max-width: 40rem) { .chaine { grid-template-columns: 1fr; } }
+  .machine { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); padding: 0.35rem 0.5rem; text-align: center; min-width: 0; }
+  .machine p { margin: 0; font-weight: 700; font-size: 0.85rem; overflow-wrap: anywhere; }
+  .machine small { color: var(--muted); font-size: 0.72rem; }
+  .machine.alerte { border: 2px solid var(--accent); }
+  .lien { text-align: center; font-size: 0.75rem; border-top: 3px dashed var(--border); padding-top: 0.2rem; min-width: 0; }
+  .lien small { display: block; color: var(--muted); }
+  .lien span { font-weight: 700; overflow-wrap: anywhere; }
+  .lien[data-etat='chiffre'] { border-top: 3px solid var(--ill-secret-b); }
+  .lien[data-etat='chiffre'] span { color: var(--ill-secret-b); }
+  .lien[data-etat='relais'] { border-top: 3px dashed var(--ill-client); }
+  .constats { display: grid; gap: 0.3rem; margin: 0 0 0.6rem; }
+  .constats div { display: grid; grid-template-columns: 11rem 1fr; gap: 0.5rem; }
+  @media (max-width: 40rem) { .constats div { grid-template-columns: 1fr; gap: 0; } }
+  .constats dt { font-weight: 600; font-size: 0.9rem; }
+  .constats dd { margin: 0; }
+  .ecran { background: var(--terminal-bg); color: var(--terminal-fg); font-family: var(--police-mono); font-size: 0.8rem; border-radius: 0.5rem; padding: 0.6rem 0.8rem; min-height: 5rem; max-height: 13rem; overflow-y: auto; }
+  .ecran :global(p) { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; opacity: 0.7; }
+  .ecran :global(p.nouveau) { opacity: 1; }
+  .ecran :global(.tapee) { color: var(--terminal-invite); }
+  .anim-repli pre { overflow-x: auto; font-size: 0.8rem; }
+</style>

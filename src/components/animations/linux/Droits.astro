@@ -1,0 +1,152 @@
+---
+// Animation « Les droits et leurs écritures » (module Linux, étape 3) : neuf
+// cases (lecture, écriture, exécution pour le propriétaire, le groupe et les
+// autres) et toutes les façons de les écrire : ls -l, octal (chmod 750),
+// binaire, chmod symbolique, et les menus d'un gestionnaire de fichiers. On
+// peut aussi taper une commande chmod (octale ou symbolique, chmod(1)).
+const CLASSES = [
+  { id: 'u', nom: 'Propriétaire' },
+  { id: 'g', nom: 'Groupe' },
+  { id: 'o', nom: 'Autres' },
+];
+const DROITS = [
+  { id: 'r', nom: 'Lire', valeur: 4 },
+  { id: 'w', nom: 'Écrire', valeur: 2 },
+  { id: 'x', nom: 'Exécuter', valeur: 1 },
+];
+const MODELES = [
+  { mode: '644', sens: 'fichier ordinaire' },
+  { mode: '600', sens: 'fichier privé' },
+  { mode: '755', sens: 'programme, dossier' },
+  { mode: '700', sens: 'dossier privé' },
+  { mode: '777', sens: 'tout pour tous : à éviter' },
+];
+---
+<div class="anim droits" data-droits>
+  <div class="anim-repli">
+    <p>Les mêmes droits s'écrivent de plusieurs façons. Exemple : le propriétaire peut tout faire, le groupe lire et exécuter, les autres rien.</p>
+    <table>
+      <tbody>
+        <tr><th scope="row">Avec <code>ls -l</code></th><td><code>-rwxr-x---</code></td></tr>
+        <tr><th scope="row">En octal</th><td><code>750</code> (7 = 4+2+1, 5 = 4+1, 0)</td></tr>
+        <tr><th scope="row">En binaire</th><td><code>111 101 000</code></td></tr>
+        <tr><th scope="row">chmod symbolique</th><td><code>u=rwx,g=rx,o=</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="grille" role="group" aria-label="Droits du fichier rapport.txt">
+        <span></span>
+        {DROITS.map((d) => <span class="tete">{d.nom} <code>{d.id}</code> <small>({d.valeur})</small></span>)}
+        {CLASSES.map((c) => (
+          <>
+            <span class="classe">{c.nom} <code>{c.id}</code></span>
+            {DROITS.map((d) => (
+              <label class="case">
+                <input type="checkbox" data-bit={`${c.id}${d.id}`} />
+                <span class="visuellement-cache">{c.nom} : {d.nom}</span>
+              </label>
+            ))}
+          </>
+        ))}
+      </div>
+      <dl class="ecritures">
+        <div><dt><code>ls -l</code></dt><dd><code data-ls></code></dd></div>
+        <div><dt>Octal</dt><dd><code data-octal></code> <span class="calcul" data-calcul></span></dd></div>
+        <div><dt>Binaire</dt><dd><code data-binaire></code></dd></div>
+        <div><dt>chmod symbolique</dt><dd><code data-symbolique></code></dd></div>
+        <div><dt>Gestionnaire de fichiers</dt><dd data-gui></dd></div>
+      </dl>
+      <form class="chmod" data-chmod>
+        <label for="chmod-saisie"><code>chmod</code></label>
+        <input id="chmod-saisie" type="text" autocomplete="off" spellcheck="false" placeholder="ex. g+w ou 640" data-saisie />
+        <code>rapport.txt</code>
+        <button type="submit" class="anim-bouton principal">Appliquer</button>
+      </form>
+      <div class="anim-commandes" aria-label="Droits courants">
+        {MODELES.map((m) => <button type="button" data-modele={m.mode}><code>{m.mode}</code> {m.sens}</button>)}
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { appliquerChmod, enBinaire, enLettres, enOctal, enSymbolique } from '../../../lib/linux';
+
+  document.querySelectorAll<HTMLElement>('[data-droits]').forEach((racine) => {
+    activerScene(racine);
+    const cases = [...racine.querySelectorAll<HTMLInputElement>('[data-bit]')];
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    const saisie = racine.querySelector<HTMLInputElement>('[data-saisie]')!;
+    const ecrire = (sel: string, t: string) => { racine.querySelector(sel)!.textContent = t; };
+    let mode = 0o640;
+
+    const gui = (trio: number) => {
+      const l = trio & 4, w = trio & 2;
+      return l && w ? 'Lecture et écriture' : l ? 'Lecture seule' : w ? 'Écriture seule' : 'Aucun';
+    };
+
+    function rendre() {
+      cases.forEach((c, i) => { c.checked = ((mode >> (8 - i)) & 1) === 1; });
+      ecrire('[data-ls]', `-${enLettres(mode)} 1 alice profs 2048 nov. 24 10:00 rapport.txt`);
+      ecrire('[data-octal]', enOctal(mode));
+      ecrire('[data-calcul]', '= ' + [6, 3, 0].map((d) => {
+        const t = (mode >> d) & 7;
+        const parts = [4, 2, 1].filter((v) => t & v);
+        return parts.length ? parts.join('+') : '0';
+      }).map((p) => `(${p})`).join(' '));
+      ecrire('[data-binaire]', enBinaire(mode));
+      ecrire('[data-symbolique]', enSymbolique(mode));
+      const trios = [6, 3, 0].map((d) => (mode >> d) & 7);
+      ecrire('[data-gui]', `Propriétaire : ${gui(trios[0])} · Groupe : ${gui(trios[1])} · Autres : ${gui(trios[2])}${mode & 0o100 ? ' · « Autoriser l’exécution » coché' : ''}`);
+    }
+    cases.forEach((c, i) => c.addEventListener('change', () => {
+      mode ^= 1 << (8 - i);
+      rendre();
+      legende.textContent = `Case ${c.parentElement!.textContent!.trim()} ${c.checked ? 'cochée' : 'décochée'} : le chiffre octal change de ${[4, 2, 1][i % 3]}. Nouvelle valeur : ${enOctal(mode)}.`;
+    }));
+    racine.querySelector('[data-chmod]')!.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const avant = mode;
+      const apres = appliquerChmod(mode, saisie.value);
+      if (apres === null) {
+        legende.textContent = `chmod ne comprend pas « ${saisie.value} ». Essaie un nombre octal (640) ou une forme comme u+x, g-w, o=r, a+r.`;
+        return;
+      }
+      mode = apres;
+      rendre();
+      legende.textContent = `chmod ${saisie.value.trim()} : ${enLettres(avant)} (${enOctal(avant)}) devient ${enLettres(mode)} (${enOctal(mode)}).`
+        + (/^\s*[+\-=]/.test(saisie.value) ? ' Sans u, g, o ou a, chmod agit sur tous mais respecte le masque (umask, souvent 022) : il n’ajoute pas l’écriture pour le groupe et les autres.' : '');
+    });
+    racine.querySelectorAll<HTMLButtonElement>('[data-modele]').forEach((b) => b.addEventListener('click', () => {
+      mode = parseInt(b.dataset.modele!, 8);
+      rendre();
+      legende.textContent = `chmod ${b.dataset.modele} : ${enLettres(mode)}, soit ${enSymbolique(mode)}.`;
+    }));
+    rendre();
+    legende.textContent = 'Coche ou décoche les cases, ou tape une commande chmod : toutes les écritures se mettent à jour ensemble.';
+  });
+</script>
+
+<style>
+  .grille { display: grid; grid-template-columns: auto repeat(3, minmax(3.2rem, 5.5rem)); gap: 0.3rem 0.5rem; align-items: center; justify-content: start; margin-bottom: 0.8rem; }
+  .tete { font-size: 0.8rem; font-weight: 700; text-align: center; }
+  .tete small { font-weight: 400; color: var(--muted); }
+  .classe { font-weight: 600; font-size: 0.9rem; }
+  .case { display: grid; place-items: center; border: 1px solid var(--border); border-radius: 0.3rem; padding: 0.3rem; background: var(--bg); cursor: pointer; }
+  .case input { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); cursor: pointer; }
+  .ecritures { display: grid; gap: 0.3rem; margin: 0 0 0.6rem; }
+  .ecritures div { display: grid; grid-template-columns: 11rem 1fr; gap: 0.5rem; align-items: baseline; }
+  @media (max-width: 40rem) { .ecritures div { grid-template-columns: 1fr; gap: 0; } }
+  .ecritures dt { font-weight: 600; font-size: 0.9rem; }
+  .ecritures dd { margin: 0; overflow-wrap: anywhere; }
+  .ecritures dd code { font-weight: 700; color: var(--ill-client); }
+  .calcul { color: var(--muted); font-size: 0.85rem; }
+  .chmod { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+  .chmod input { width: 9rem; font: 0.9rem var(--police-mono); padding: 0.25rem 0.4rem; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg); color: var(--fg); }
+  table { border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.2rem 0.6rem 0.2rem 0; vertical-align: top; }
+</style>

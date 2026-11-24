@@ -53,6 +53,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
 - [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines
 - [x] **Découper un réseau en sous-réseaux** *(`/modules/sous-reseaux/`, relecture humaine à faire)* — parts égales (bits empruntés, alignement), plan VLSM pas à pas, exercices corrigés reproductibles (six types), IPv6 : /48, /56 et /64
+- [x] **Linux : fichiers, droits, comptes et SSH** *(`/modules/linux/`, relecture humaine à faire)* — arborescence (FHS, hier(7)), chemins absolus et relatifs (terminal simulé), /etc/passwd et groupes, droits rwx sous toutes leurs écritures (ls -l, octal, binaire, chmod symbolique), qui peut faire quoi (une seule classe appliquée, root), sudo pas à pas, SSH (clés, known_hosts, authorized_keys), rebonds par un bastion (à la main ou ProxyJump). Sources : [`sources/linux.md`](sources/linux.md)
 - Sources : [`sources/bases-ip.md`](sources/bases-ip.md)
 
 ## Phase 4 — Les histoires

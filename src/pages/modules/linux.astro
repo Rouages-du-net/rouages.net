@@ -1,0 +1,389 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Arborescence from '../../components/animations/linux/Arborescence.astro';
+import Terminal from '../../components/animations/linux/Terminal.astro';
+import Passwd from '../../components/animations/linux/Passwd.astro';
+import Droits from '../../components/animations/linux/Droits.astro';
+import QuiPeut from '../../components/animations/linux/QuiPeut.astro';
+import Sudo from '../../components/animations/linux/Sudo.astro';
+import Ssh from '../../components/animations/linux/Ssh.astro';
+import Rebonds from '../../components/animations/linux/Rebonds.astro';
+
+// Faits sourcés : voir docs/sources/linux.md.
+const etapes = [
+  { ancre: 'racine', court: 'Tout part de la racine' },
+  { ancre: 'chemins', court: 'Chemins absolus et relatifs' },
+  { ancre: 'comptes', court: 'Comptes et groupes' },
+  { ancre: 'droits', court: 'Les droits et leurs écritures' },
+  { ancre: 'qui-peut', court: 'Qui peut faire quoi ?' },
+  { ancre: 'root-sudo', court: 'root et sudo' },
+  { ancre: 'ssh', court: 'Se connecter avec SSH' },
+  { ancre: 'rebonds', court: 'Rebondir de machine en machine' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Linux : fichiers, droits, comptes et SSH"
+  description="Linux animé : l'arborescence et ses dossiers de base, chemins absolus et relatifs, comptes et groupes, droits rwx et leurs écritures (ls -l, octal, chmod), root et sudo, SSH et rebonds par un bastion."
+>
+  <p class="tag" data-pagefind-ignore>Les bases techniques · module en construction</p>
+  <h1>Linux : fichiers, droits, comptes et SSH</h1>
+  <MiseAJour date="2026-11-24" />
+  <p class="chapo seulement-debut">
+    La plupart des serveurs du web, tous les plus gros supercalculateurs et chaque téléphone Android tournent sous
+    <Terme id="linux">Linux</Terme>. Pour y travailler, il faut savoir où sont les choses, qui a le droit d'y
+    toucher, comment devenir administrateur·rice le temps d'une commande, et comment se connecter à distance, de
+    machine en machine. Ce module montre tout cela avec les vraies commandes.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Tout part de la racine" ancre="racine">
+    <Arborescence slot="animation" />
+    <p slot="decouverte">
+      Sous Linux, tous les fichiers sont rangés dans un seul grand arbre de dossiers. Il part de la
+      <strong>racine</strong>, qu'on écrit <code>/</code>. Chaque dossier a un rôle : <code>/home</code> pour les
+      dossiers personnels, <code>/etc</code> pour la configuration, <code>/tmp</code> pour les fichiers temporaires,
+      <code>/var/log</code> pour les journaux.
+    </p>
+    <p slot="curieux">
+      Pas de lettre de lecteur comme <code>C:</code> sous Windows : un deuxième disque ou une clé USB apparaît comme
+      un dossier de l'arbre (sous <code>/media</code>, par exemple). On dit qu'on le « monte ». Et les chemins
+      s'écrivent avec des barres obliques <code>/</code>, pas des barres inversées <code>\</code>. macOS, qui
+      descend aussi d'Unix, suit la même logique, avec <code>/Users</code> à la place de <code>/home</code>.
+    </p>
+    <p slot="ingenieur">
+      Cette organisation est décrite par le <em>Filesystem Hierarchy Standard</em> (FHS 3.0, 2015), publié par la
+      Linux Foundation, et résumée dans la page de manuel <code>hier(7)</code>. Les distributions récentes ont
+      regroupé les programmes dans <code>/usr</code> : <code>/bin</code>, <code>/sbin</code> et <code>/lib</code> n'y
+      sont plus que des liens symboliques vers <code>/usr/bin</code>, <code>/usr/sbin</code> et
+      <code>/usr/lib</code>. Certains dossiers ne sont même pas sur le disque : <code>/proc</code> est fabriqué à la
+      volée par le <Terme id="noyau">noyau</Terme>, et dans <code>/dev</code>, les disques et le clavier
+      apparaissent comme des fichiers.
+    </p>
+    <div slot="histoire">
+      <p>
+        Cet arbre unique vient d'Unix, écrit en 1969 aux Bell Labs (États-Unis) par Ken Thompson et Dennis Ritchie,
+        qui reprenaient l'idée d'un système de fichiers hiérarchique au projet Multics. En 1991, à Helsinki, l'étudiant
+        Linus Torvalds annonce un noyau « juste un passe-temps » : Linux. Associé aux outils du projet GNU, lancé en
+        1983 par Richard Stallman, il donne les systèmes libres qu'on appelle aujourd'hui « Linux ».
+      </p>
+      <p>
+        Les distributions se sont multipliées dans le monde entier : Debian (1993), Ubuntu (2004), du nom d'une
+        philosophie d'Afrique australe et lancée par le Sud-Africain Mark Shuttleworth, Pardus en Turquie, ou
+        des distributions d'État en Chine et en Russie.
+      </p>
+    </div>
+    <p slot="verifie">
+      Dans un terminal Linux ou macOS : <code>ls /</code> liste les dossiers de la racine, <code>ls -l /bin</code>
+      montre si <code>/bin</code> est un lien. Sous Windows, le sous-système WSL donne un vrai Linux. Le jeu
+      <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> fait explorer une arborescence dans le navigateur.
+    </p>
+    <p slot="mythes">
+      <strong>« Linux, c'est un système complet. »</strong> Au sens strict, Linux est le noyau. Ce qu'on installe
+      (Debian, Ubuntu, Fedora…) est une <em>distribution</em> : le noyau, les outils GNU et des milliers de
+      logiciels. Et <strong>« root » a deux sens</strong> : la racine <code>/</code>, et le compte administrateur
+      root, dont le dossier personnel est <code>/root</code>.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Se déplacer : chemins absolus et relatifs" ancre="chemins">
+    <Terminal slot="animation" />
+    <p slot="decouverte">
+      Dans un terminal, on est toujours « quelque part » : le dossier courant. Un chemin qui commence par
+      <code>/</code> est <strong>absolu</strong> : il part de la racine, et marche de n'importe où. Un chemin sans
+      <code>/</code> au début est <strong>relatif</strong> : il part du dossier courant.
+    </p>
+    <p slot="curieux">
+      Trois raccourcis : <code>.</code> veut dire « ici », <code>..</code> « le dossier au-dessus », et
+      <code>~</code> « mon dossier personnel ». Ainsi, depuis <code>/home/alice</code>, <code>cd ../bob</code> mène à
+      <code>/home/bob</code>. L'invite du <Terme id="shell">shell</Terme> rappelle où l'on est :
+      <code>alice@machine:~/cours$</code> se lit « alice, sur la machine nommée machine, dans
+      <code>/home/alice/cours</code> ».
+    </p>
+    <p slot="ingenieur">
+      Chaque dossier contient réellement deux entrées spéciales, <code>.</code> et <code>..</code>, que
+      <code>ls -a</code> affiche ; <code>..</code> de la racine est la racine elle-même. Le <code>~</code>, lui,
+      n'existe pas sur le disque : c'est le shell qui le remplace par le dossier personnel avant de lancer la
+      commande (POSIX appelle cela le « développement du tilde »). Les fichiers dont le nom commence par un point
+      sont seulement masqués par <code>ls</code> : une convention, pas une protection.
+    </p>
+    <p slot="verifie">
+      <code>pwd</code> affiche le dossier courant ; <code>cd -</code> ramène au précédent ; <code>echo ~</code>
+      montre ce que le shell met à la place du tilde.
+    </p>
+    <p slot="mythes">
+      <strong>« Un chemin relatif est moins précis. »</strong> Il est tout aussi exact, mais son sens dépend du
+      dossier courant. Dans un script, qu'on peut lancer depuis n'importe où, on préfère les chemins absolus.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Comptes et groupes" ancre="comptes">
+    <Passwd slot="animation" />
+    <p slot="decouverte">
+      Linux est multi-utilisateur·rices : chaque personne a son compte, son mot de passe, son dossier personnel. Des
+      comptes servent aussi à des programmes : le serveur web tourne par exemple sous le compte
+      <code>www-data</code>, pour ne pas avoir plus de droits que nécessaire. Les comptes se rangent dans des
+      <strong>groupes</strong> (les profs, les élèves…).
+    </p>
+    <p slot="curieux">
+      La liste des comptes est un simple fichier texte, <code>/etc/passwd</code> : une ligne par compte, sept
+      champs séparés par « : ». Malgré son nom, il ne contient plus de mot de passe : ils sont rangés, hachés, dans
+      <code>/etc/shadow</code>, que seul root peut lire. Les groupes sont dans <code>/etc/group</code>.
+    </p>
+    <p slot="ingenieur">
+      Le noyau ne connaît pas les noms : il ne manipule que des numéros, l'UID (identifiant d'utilisateur) et le GID
+      (identifiant de groupe). L'UID 0 est root. Sous Debian, Ubuntu ou Fedora, les comptes de personnes commencent
+      à 1000 (réglage <code>UID_MIN</code> de <code>/etc/login.defs</code>), les numéros plus bas étant réservés
+      aux comptes du système. La commande <code>id</code> affiche l'UID, le groupe principal et tous les groupes
+      d'un compte.
+    </p>
+    <p slot="verifie">
+      <code>id</code> pour toi-même ; <code>getent passwd $USER</code> pour ta ligne de <code>/etc/passwd</code> ;
+      <code>ls -l /etc/passwd /etc/shadow</code> pour voir que l'un est lisible par tous, l'autre non.
+    </p>
+    <p slot="mythes">
+      <strong>« Un nom de compte, c'est une identité. »</strong> Pour le noyau, seul le numéro compte : deux noms
+      avec le même UID sont le même compte, et un fichier garde son UID même si le compte est supprimé
+      (<code>ls -l</code> affiche alors un nombre au lieu d'un nom).
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Les droits et leurs écritures" ancre="droits">
+    <Droits slot="animation" />
+    <p slot="decouverte">
+      Chaque fichier a un <strong>propriétaire</strong>, un <strong>groupe</strong>, et trois droits pour trois
+      catégories de personnes : <strong>r</strong> (lire), <strong>w</strong> (écrire), <strong>x</strong>
+      (exécuter), pour le propriétaire, pour le groupe, et pour tous les autres. <code>ls -l</code> les affiche en
+      neuf lettres : <code>rwxr-x---</code>.
+    </p>
+    <p slot="curieux">
+      Les mêmes droits s'écrivent aussi en chiffres : r vaut 4, w vaut 2, x vaut 1, et on additionne. rwx = 7,
+      r-x = 5, --- = 0 : <code>rwxr-x---</code> s'écrit donc <code>750</code>. La commande <code>chmod</code>
+      accepte les deux écritures : <code>chmod 750 fichier</code>, ou <code>chmod g-w,o-rwx fichier</code> pour
+      retirer ou ajouter un droit précis (u = propriétaire, g = groupe, o = autres, a = tous).
+    </p>
+    <p slot="ingenieur">
+      Chaque chiffre octal correspond à trois bits : 750 = 111 101 000 (voir le module
+      <a href="/modules/bases/">Binaire, octal, hexadécimal</a>). Sur un <strong>dossier</strong>, r permet de
+      lister son contenu, w d'y créer ou supprimer des fichiers, x d'y entrer et de le traverser. Un quatrième
+      chiffre, devant, code trois droits spéciaux : le bit <em>setuid</em> (4000) fait tourner un programme avec les
+      droits de son propriétaire, comme <code>passwd</code> (<code>-rwsr-xr-x</code>) ; le <em>sticky bit</em> (1000)
+      empêche, dans <code>/tmp</code> (<code>drwxrwxrwt</code>), d'effacer les fichiers des autres. Enfin, le masque
+      <code>umask</code> (souvent 022) retire des droits aux fichiers qu'on crée.
+    </p>
+    <div slot="histoire">
+      <p>
+        Le bit setuid a été inventé par Dennis Ritchie aux Bell Labs. Il a fait l'objet d'un brevet, accordé en 1979,
+        qu'AT&amp;T a ensuite versé au domaine public pour qu'on puisse l'utiliser librement.
+      </p>
+    </div>
+    <p slot="verifie">
+      <code>ls -l</code> dans ton dossier ; <code>stat -c '%a %A %n' *</code> affiche les droits en octal et en
+      lettres côte à côte ; <code>ls -ld /tmp</code> montre le sticky bit ; <code>umask</code> affiche ton masque.
+    </p>
+    <p slot="mythes">
+      <strong>« Un problème de droits ? chmod 777 ! »</strong> C'est donner à tout le monde le droit de lire, de
+      modifier et de lancer le fichier. Sur un serveur web, n'importe quel programme compromis pourrait le
+      réécrire. On cherche plutôt le droit qui manque, et à qui.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Qui peut faire quoi ?" ancre="qui-peut">
+    <QuiPeut slot="animation" />
+    <p slot="decouverte">
+      Quand un programme veut ouvrir un fichier, le noyau regarde qui le demande. Propriétaire ? Il applique les
+      droits du propriétaire. Sinon, membre du groupe ? Les droits du groupe. Sinon, ceux des autres. Si la lettre
+      voulue n'y est pas : « Permission non accordée ».
+    </p>
+    <p slot="curieux">
+      Le noyau s'arrête à la <strong>première</strong> catégorie qui correspond : il ne cumule pas. Un propriétaire
+      qui n'a que <code>r--</code> ne peut pas modifier son fichier, même si son groupe a <code>rw-</code>. Mais
+      comme propriétaire, il peut changer les droits avec <code>chmod</code>. Seul root peut changer le
+      propriétaire (<code>chown</code>).
+    </p>
+    <p slot="ingenieur">
+      root (UID 0) passe outre les droits de lecture et d'écriture. Pour exécuter un fichier, il lui faut quand même
+      qu'au moins une des trois catégories ait le droit x. Pour ouvrir <code>/srv/cours/corrige.md</code>, il faut
+      aussi le droit x sur chaque dossier du chemin (<code>/</code>, <code>/srv</code>, <code>/srv/cours</code>) :
+      un dossier en <code>700</code> protège tout ce qu'il contient.
+    </p>
+    <p slot="mythes">
+      <strong>« Ce fichier est à moi, donc je peux toujours le lire. »</strong> Pas si ses droits l'interdisent. En
+      revanche, tu peux toujours les modifier : la propriété donne le pouvoir de changer les règles, pas de les
+      ignorer.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="root et sudo : administrer sans tout risquer" ancre="root-sudo">
+    <Sudo slot="animation" />
+    <p slot="decouverte">
+      <Terme id="root">root</Terme> est le compte administrateur : il peut tout faire, y compris tout casser. On ne
+      travaille donc pas en root. Quand une commande en a besoin (installer un logiciel, modifier la
+      configuration), on la préfixe de <code><Terme id="sudo">sudo</Terme></code> : elle s'exécute en root, et
+      seulement elle.
+    </p>
+    <p slot="curieux">
+      sudo demande <strong>ton</strong> mot de passe, pas celui de root : il vérifie que c'est bien toi. Il consulte
+      ensuite <code>/etc/sudoers</code> pour savoir si tu y as droit (sous Debian et Ubuntu : être dans le groupe
+      <code>sudo</code> ; sous Fedora : le groupe <code>wheel</code>), et note chaque commande dans un journal.
+      L'invite change aussi : <code>$</code> pour un compte ordinaire, <code>#</code> pour root.
+    </p>
+    <p slot="ingenieur">
+      L'autre outil, <code>su</code>, ouvre un shell sous un autre compte en demandant le mot de passe de ce compte.
+      Ubuntu verrouille par défaut le mot de passe de root : on ne peut administrer qu'avec sudo. On modifie
+      <code>/etc/sudoers</code> avec <code>visudo</code>, qui vérifie la syntaxe avant d'enregistrer : une faute de
+      frappe pourrait sinon bloquer tout accès administrateur. Une règle peut aussi n'autoriser qu'une commande
+      précise, comme redémarrer le serveur web.
+    </p>
+    <div slot="histoire">
+      <p>
+        sudo est né vers 1980 à l'université d'État de New York à Buffalo, écrit par Bob Coggeshall et Cliff Spencer.
+        Il a été repris et réécrit par d'autres, et Todd C. Miller le maintient depuis les années 1990.
+      </p>
+    </div>
+    <p slot="verifie">
+      <code>sudo -l</code> liste ce que tu as le droit de lancer ; <code>sudo whoami</code> répond
+      <code>root</code> ; sous Debian ou Ubuntu, <code>sudo grep sudo /var/log/auth.log</code> (ou
+      <code>journalctl _COMM=sudo</code>) montre le journal.
+    </p>
+    <p slot="mythes">
+      <strong>« Se connecter directement en root, c'est plus simple. »</strong> Une erreur de frappe
+      (<code>rm -rf / tmp</code> au lieu de <code>rm -rf /tmp</code>) n'a alors aucun garde-fou, et le journal ne
+      dit pas qui a fait quoi si plusieurs personnes partagent le mot de passe root.
+    </p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Se connecter à distance : SSH" ancre="ssh">
+    <Ssh slot="animation" />
+    <p slot="decouverte">
+      <Terme id="ssh">SSH</Terme> permet d'ouvrir un terminal sur une autre machine, à travers le réseau, de façon
+      chiffrée : <code>ssh alice@serveur.example</code>. Tout ce qu'on tape s'exécute sur le serveur. C'est ainsi
+      qu'on administre presque tous les serveurs du monde, sur le port 22.
+    </p>
+    <p slot="curieux">
+      Deux vérifications se croisent. Le serveur prouve son identité par sa <strong>clé d'hôte</strong> : à la
+      première connexion, ssh affiche son empreinte et la retient dans <code>~/.ssh/known_hosts</code>. Puis tu
+      prouves la tienne, par mot de passe ou, mieux, par une <strong>paire de clés</strong> : la clé publique est
+      déposée sur le serveur, la clé privée ne quitte jamais ton ordinateur.
+    </p>
+    <p slot="ingenieur">
+      Avec une clé, le serveur ne reçoit jamais de secret : le client signe des données propres à la session, et le
+      serveur vérifie la signature avec la clé publique de <code>authorized_keys</code>. Le serveur SSH refuse une
+      clé si <code>~/.ssh</code> ou <code>authorized_keys</code> peut être modifié par d'autres (droits
+      <code>700</code> et <code>600</code>) : les droits de l'étape 3 servent aussi à ça. Le protocole est décrit
+      par les RFC 4251 à 4254 (2006) ; SFTP et <code>scp</code> passent par la même connexion (voir
+      <a href="/modules/client-serveur/#transferts">Client et serveur</a>).
+    </p>
+    <div slot="histoire">
+      <p>
+        En 1995, après une attaque où des mots de passe avaient été captés sur le réseau de son université, à
+        Helsinki, le chercheur finlandais Tatu Ylönen écrit SSH pour remplacer <code>telnet</code> et
+        <code>rlogin</code>, qui faisaient tout passer en clair. En 1999, le projet OpenBSD crée OpenSSH, la version
+        libre aujourd'hui installée presque partout, y compris dans Windows.
+      </p>
+    </div>
+    <p slot="verifie">
+      <code>ssh -v serveur</code> raconte toute la négociation ; <code>ssh-keygen -lf
+      /etc/ssh/ssh_host_ed25519_key.pub</code>, sur le serveur, affiche l'empreinte à comparer avec celle que montre
+      ssh à la première connexion.
+    </p>
+    <p slot="mythes">
+      <strong>« SSH, c'est chiffré, donc c'est sûr. »</strong> Le chiffrement ne sert à rien si l'on répond « yes »
+      sans vérifier l'empreinte d'un serveur inconnu, ou si le mot de passe est faible : les serveurs SSH exposés
+      sur internet reçoivent en permanence des essais automatiques de mots de passe. D'où les clés, et l'interdiction
+      de la connexion directe en root (<code>PermitRootLogin</code>).
+    </p>
+  </Etape>
+
+  <!-- Étape 7 -->
+  <Etape numero={7} titre="Rebondir de machine en machine" ancre="rebonds">
+    <Rebonds slot="animation" />
+    <p slot="decouverte">
+      Les serveurs importants ne sont souvent pas joignables directement depuis internet. On passe par une seule
+      machine d'entrée, très surveillée : un <Terme id="bastion">bastion</Terme>. Pour atteindre le serveur interne,
+      on « rebondit » par lui.
+    </p>
+    <p slot="curieux">
+      On peut se connecter au bastion, puis, de là, au serveur : c'est simple, mais le bastion voit tout passer en
+      clair, et il faut lui confier sa clé. Avec <code>ssh -J bastion serveur</code> (<em>ProxyJump</em>), le
+      bastion ne fait que relayer : la connexion SSH va directement du portable au serveur, à l'intérieur de la
+      première, et la clé privée reste sur le portable.
+    </p>
+    <p slot="ingenieur">
+      ProxyJump existe depuis OpenSSH 7.3 (2016). Il s'écrit une fois pour toutes dans <code>~/.ssh/config</code> ;
+      <code>scp</code>, <code>sftp</code> et <code>rsync</code> en profitent aussi. Plusieurs rebonds s'enchaînent
+      en les séparant par des virgules. Le transfert d'agent (<code>ssh -A</code>), lui, laisse le bastion utiliser
+      les clés chargées dans l'agent pendant la connexion : quiconque est root sur le bastion peut s'en servir. Le
+      manuel d'OpenSSH demande de l'activer avec prudence.
+    </p>
+    <div slot="decide">
+      <p>
+        En France, l'ANSSI recommande pour l'administration des systèmes un accès par des machines et des
+        passerelles dédiées, l'authentification par clé et la traçabilité de chaque action. Dans une entreprise, ce
+        sont ces règles qui décident par où l'on passe pour administrer un serveur.
+      </p>
+    </div>
+    <p slot="verifie">
+      <code>ssh -G web1 | grep -i proxyjump</code> montre la configuration réellement appliquée ; avec
+      <code>ssh -v -J bastion web1</code>, on voit les deux négociations s'enchaîner.
+    </p>
+    <p slot="mythes">
+      <strong>« Plus il y a de rebonds, plus c'est sûr. »</strong> Chaque machine de la chaîne est un point de plus
+      à protéger. Ce qui protège, c'est de n'exposer qu'une entrée bien surveillée, de garder les clés sur son poste
+      et de journaliser les accès.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Un seul arbre, une seule racine <code>/</code></strong> : <code>/home</code> pour les personnes, <code>/etc</code> pour la configuration, <code>/var/log</code> pour les journaux, <code>/tmp</code> pour le temporaire.</li>
+      <li><strong>Absolu ou relatif</strong> : <code>/</code> au début part de la racine ; sinon, du dossier courant. <code>.</code> ici, <code>..</code> au-dessus, <code>~</code> chez soi.</li>
+      <li><strong>Le noyau ne connaît que des numéros</strong> : UID et GID ; l'UID 0 est root.</li>
+      <li><strong>rwx pour propriétaire, groupe, autres</strong> : <code>rwxr-x---</code> = <code>750</code> = <code>u=rwx,g=rx,o=</code>. Une seule catégorie s'applique, la première qui correspond.</li>
+      <li><strong>On ne travaille pas en root</strong> : <code>sudo</code> pour une commande, avec ton mot de passe, et une trace dans le journal.</li>
+      <li><strong>SSH se vérifie dans les deux sens</strong> : l'empreinte du serveur (known_hosts), ta clé (authorized_keys). La clé privée ne voyage pas.</li>
+      <li><strong>Pour rebondir, <code>ssh -J</code></strong> : le bastion relaie sans voir ni détenir tes clés.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/modules/client-serveur/">Client et serveur</a> (ports, SFTP),
+      <a href="/modules/se-proteger/">Se protéger</a> (chiffrement, clés), <a href="/modules/bases/">Binaire, octal,
+      hexadécimal</a>, et le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> pour pratiquer.
+    </p>
+
+  <Sources
+    verifie="2026-11-24"
+    sources={[]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

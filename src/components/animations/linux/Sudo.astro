@@ -1,0 +1,100 @@
+---
+// Animation « root et sudo » (module Linux, étape 5) : pas à pas, alice
+// lit un fichier réservé à root grâce à sudo, bob essaie et échoue. Les
+// messages sont ceux de sudo en français (traductions du projet sudo :
+// « [sudo] Mot de passe de %p : », « %s n'est pas dans le fichier
+// sudoers. ») ; la règle %sudo ALL=(ALL:ALL) ALL est celle de Debian et
+// Ubuntu. Sources : docs/sources/linux.md.
+const ETAPES = [
+  {
+    lignes: [['alice@machine:~$ cat /etc/shadow', 'tapee'], ['cat: /etc/shadow: Permission non accordée', 'erreur']],
+    qui: 'alice', uid: 1000,
+    texte: 'alice veut lire /etc/shadow (-rw-r----- root shadow). Elle n’est ni root ni dans le groupe shadow : le noyau refuse.',
+  },
+  {
+    lignes: [['alice@machine:~$ sudo cat /etc/shadow', 'tapee'], ['[sudo] Mot de passe de alice : ', '']],
+    qui: 'alice', uid: 1000,
+    texte: 'Elle recommence en ajoutant sudo devant. sudo demande le mot de passe d’alice, pas celui de root : il vérifie que c’est bien elle devant le clavier.',
+  },
+  {
+    lignes: [['# /etc/sudoers : %sudo   ALL=(ALL:ALL) ALL', 'info']],
+    qui: 'sudo', uid: 0,
+    texte: 'sudo lit /etc/sudoers. La règle « %sudo ALL=(ALL:ALL) ALL » dit : les membres du groupe sudo peuvent tout lancer, en tant que n’importe qui. alice est dans ce groupe : accordé.',
+  },
+  {
+    lignes: [['root:*:20000:0:99999:7:::', ''], ['alice:$y$j9T$Lr…(empreinte du mot de passe)…:20000:0:99999:7:::', ''], ['…', '']],
+    qui: 'root', uid: 0,
+    texte: 'La commande cat tourne maintenant en tant que root (UID 0) : le fichier s’affiche. On y voit les mots de passe hachés, jamais en clair.',
+  },
+  {
+    lignes: [['# /var/log/auth.log : sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow', 'info']],
+    qui: 'alice', uid: 1000,
+    texte: 'sudo a tout noté dans le journal : qui, depuis où, en tant que qui, quelle commande. C’est un avantage sur un mot de passe root partagé : on sait qui a fait quoi.',
+  },
+  {
+    lignes: [['alice@machine:~$ sudo apt update', 'tapee'], ['Atteint :1 http://deb.debian.org/debian trixie InRelease', '']],
+    qui: 'root', uid: 0,
+    texte: 'Pendant quelques minutes (5 par défaut, réglable), sudo ne redemande pas le mot de passe : la commande suivante passe directement en root.',
+  },
+  {
+    lignes: [['bob@machine:~$ sudo cat /etc/shadow', 'tapee'], ['[sudo] Mot de passe de bob : ', ''], ['bob n’est pas dans le fichier sudoers.', 'erreur']],
+    qui: 'bob', uid: 1001,
+    texte: 'bob essaie à son tour. Son mot de passe est juste, mais il n’est pas dans le groupe sudo : refusé, et la tentative est notée dans le journal.',
+  },
+];
+---
+<div class="anim sudo" data-sudo data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li><pre>{e.lignes.map((l) => l[0]).join('\n')}</pre><p>{e.texte}</p></li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="identite" data-identite></p>
+      <div class="ecran" data-ecran role="log" aria-label="Terminal simulé"></div>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">← Précédent</button>
+        <button type="button" data-action="suivant">Suivant →</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+        <span class="anim-compteur"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-sudo]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { lignes: [string, string][]; qui: string; uid: number; texte: string }[] = JSON.parse(racine.dataset.etapes!);
+    const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
+    const identite = racine.querySelector<HTMLElement>('[data-identite]')!;
+    pasAPas(racine, () => etapes.length, (n) => {
+      ecran.replaceChildren();
+      etapes.slice(0, n).forEach((e, i) => e.lignes.forEach(([t, c]) => {
+        const p = Object.assign(document.createElement('p'), { textContent: t });
+        if (c) p.classList.add(c);
+        if (i === n - 1) p.classList.add('nouveau');
+        ecran.append(p);
+      }));
+      ecran.scrollTop = ecran.scrollHeight;
+      const e = etapes[n - 1];
+      identite.textContent = e.uid === 0 ? `Le programme tourne en tant que root (UID 0)` : `Le programme tourne en tant que ${e.qui} (UID ${e.uid})`;
+      identite.classList.toggle('root', e.uid === 0);
+      return e.texte;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .identite { display: inline-block; margin: 0 0 0.5rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; border: 2px solid var(--accent-2); }
+  .identite.root { border-color: var(--accent); color: var(--accent); }
+  .ecran { background: var(--terminal-bg); color: var(--terminal-fg); font-family: var(--police-mono); font-size: 0.82rem; border-radius: 0.5rem; padding: 0.6rem 0.8rem; min-height: 9rem; max-height: 16rem; overflow-y: auto; }
+  .ecran :global(p) { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; opacity: 0.7; }
+  .ecran :global(p.nouveau) { opacity: 1; }
+  .ecran :global(.tapee) { color: var(--terminal-invite); }
+  .ecran :global(.erreur) { color: var(--terminal-erreur); }
+  .ecran :global(.info) { font-style: italic; }
+  .anim-repli pre { overflow-x: auto; font-size: 0.8rem; white-space: pre-wrap; }
+</style>
