@@ -27,7 +27,7 @@ const MAIN: Etape[] = [
   {
     lignes: [['alice@web1:~$ ', 'tapee']],
     lien1: '🔒 SSH n° 1', lien2: '🔒 SSH n° 2', voit: 'Tout ce qu’alice tape et lit, en clair, entre les deux connexions.', cle: 'Exposée sur le bastion.',
-    texte: 'Ça marche, mais ce sont deux connexions séparées : le bastion déchiffre la première et rechiffre dans la seconde. Quelqu’un qui contrôle le bastion lit tout, et peut se servir de l’agent prêté pour aller ailleurs au nom d’alice.',
+    texte: 'Ça marche, mais ce sont deux connexions séparées : le bastion déchiffre la première et rechiffre dans la seconde. Quelqu’un qui contrôle le bastion lit tout, et peut se servir de l’agent prêté pour s’authentifier ailleurs au nom d’alice, sans même copier sa clé.',
   },
 ];
 const SAUT: Etape[] = [
@@ -43,12 +43,12 @@ const SAUT: Etape[] = [
   },
   {
     lignes: [["Warning: Permanently added 'web1' (ED25519) to the list of known hosts.", ''], ['alice@web1:~$ ', 'tapee']],
-    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés qu’il ne peut pas lire.', cle: 'Sur le portable : la signature est faite par le portable.',
+    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés : il sait qui se connecte, vers où, quand et combien, mais pas ce qui passe.', cle: 'Sur le portable : la signature est faite par le portable.',
     texte: 'Dans ce tuyau, le portable ouvre une deuxième connexion SSH directement avec web1 : il vérifie lui-même la clé de web1 (son known_hosts) et signe avec sa propre clé. Le bastion ne transporte que du chiffré : c’est une connexion dans une connexion.',
   },
   {
     lignes: [['alice@portable:~$ cat ~/.ssh/config', 'tapee'], ['Host web1', ''], ['    HostName 10.0.0.12', ''], ['    User alice', ''], ['    ProxyJump alice@bastion.example', ''], ['alice@portable:~$ ssh web1', 'tapee']],
-    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés.', cle: 'Sur le portable.',
+    lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés, et les métadonnées (qui, vers où, quand).', cle: 'Sur le portable.',
     texte: 'Pour ne pas tout retaper, on l’écrit une fois dans ~/.ssh/config. Désormais, « ssh web1 » suffit, et scp ou sftp passent aussi par le bastion. On peut enchaîner plusieurs rebonds : ProxyJump a,b.',
   },
 ];

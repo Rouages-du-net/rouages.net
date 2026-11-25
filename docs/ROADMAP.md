@@ -26,7 +26,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
 - [x] Glossaire : 34 premiers termes, page `/glossaire/`
 - [ ] Relecture humaine finale (technique et grand public), une fois le site en ligne sur rouages.net
-- [ ] Relever les exemples réels (`dig`, certificat, `curl -I`, protocole HTTP/2 ou HTTP/3, `traceroute`) sur le site en ligne
+- [ ] Relever les exemples réels (`dig`, certificat, `curl -I`, protocole HTTP/2 ou HTTP/3, `traceroute`) sur le site en ligne *(premier relevé le 24/11/2026 dans [`sources/entree-a-la-page.md`](sources/entree-a-la-page.md) : site derrière Cloudflare, temporairement ; à refaire après son retrait, avec `traceroute` et le certificat vu d'un navigateur)*
 - [ ] **Lancement public**
 
 ## Phase 2 — Comment marche un ordinateur

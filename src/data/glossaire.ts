@@ -640,7 +640,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   linux: {
     terme: 'Linux',
     definition:
-      "Noyau de système d'exploitation libre, lancé en 1991 par Linus Torvalds. Par extension, les systèmes complets bâtis autour (Debian, Ubuntu, Fedora…), appelés distributions. Il fait tourner la plupart des serveurs et Android.",
+      "Noyau de système d'exploitation libre, lancé en 1991 par Linus Torvalds. Par extension, les systèmes complets bâtis autour (Debian, Ubuntu, Fedora…), appelés distributions. Les 500 plus puissants supercalculateurs du monde l'utilisent.",
     voirAussi: ['noyau', 'logiciel-libre'],
   },
   shell: {
