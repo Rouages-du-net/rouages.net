@@ -1,0 +1,61 @@
+---
+// Qui décide : la carte des rapports de force et la liste des fiches
+// institutions (données dans src/data/institutions.ts).
+import Base from '../../layouts/Base.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Carte from '../../components/animations/institutions/Carte.astro';
+import { FAMILLES, FICHES, VERIFIE, type Famille } from '../../data/institutions';
+
+const familles = Object.keys(FAMILLES) as Famille[];
+---
+<Base title="Qui décide : les institutions d'internet" description="Fiches des institutions qui font les règles d'internet (IETF, ICANN, W3C, registres, UIT, CNIL, Arcom…) et carte de qui finance, nomme ou contrôle qui.">
+  <p class="tag" data-pagefind-ignore>Qui décide</p>
+  <h1>Les institutions d'internet</h1>
+  <MiseAJour date={VERIFIE} evolutif="nominations, procédures et budgets" />
+  <p class="chapo">
+    Personne ne dirige internet, mais beaucoup y décident quelque chose : des communautés d'ingénieur·es, des
+    associations, des agences de l'ONU, des autorités européennes et françaises. Qui paie qui ? Qui nomme qui ? Qui
+    contrôle qui ? La carte montre ces liens, chaque fiche détaille une institution, sources à l'appui.
+  </p>
+
+  <h2>La carte des rapports de force</h2>
+  <p class="intro">
+    Une flèche va de l'acteur qui agit vers celui qui reçoit. Choisis un acteur pour ne voir que ses liens ; les
+    cases filtrent par type de lien. Les cadres en pointillés n'ont pas encore de fiche.
+  </p>
+  <Carte />
+
+  <h2>Les fiches</h2>
+  {familles.map((f) => {
+    const fiches = FICHES.filter((x) => x.famille === f);
+    return fiches.length > 0 && (
+      <section class="famille" aria-labelledby={`f-${f}`}>
+        <h3 id={`f-${f}`}>{FAMILLES[f].nom}</h3>
+        <ul class="grid">
+          {fiches.map((x) => (
+            <li class="card">
+              <h4><a href={`/institutions/${x.slug}/`}>{x.sigle}</a></h4>
+              <p class="nom">{x.nom}</p>
+              <p>{x.resume}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+  <p class="intro">
+    Pour comprendre comment ces institutions travaillent ensemble : les modules
+    <a href="/modules/gouvernance-technique/">Gouvernance technique</a> et
+    <a href="/modules/etats-regulation/">États et régulation</a>.
+  </p>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .intro { max-width: var(--mesure); }
+  .famille { margin-top: 1.5rem; }
+  .grid { list-style: none; padding: 0; }
+  .card h4 { margin: 0 0 0.1rem; font-size: 1.2rem; }
+  .card .nom { margin: 0 0 0.4rem; font-size: 0.85rem; color: var(--muted); }
+  .card p { margin-bottom: 0; }
+</style>

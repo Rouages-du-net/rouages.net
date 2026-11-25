@@ -268,3 +268,20 @@ test('linux : arborescence, terminal, droits, accès et rebonds', async ({ page 
   await expect(rebonds.locator('[data-ecran]')).toContainText('ProxyJump');
   expect(err).toEqual([]);
 });
+
+test('institutions : la carte met en évidence les liens d’un acteur', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/institutions/');
+  const carte = page.locator('[data-carte-acteurs]');
+  await carte.locator('[data-acteur="isoc"]').click();
+  await expect(carte.locator('[data-titre]')).toContainText('ISOC');
+  await expect(carte.locator('[data-liste]')).toContainText('IETF');
+  await carte.locator('input[data-type="finance"]').uncheck();
+  await expect(carte.locator('[data-liste]')).not.toContainText('47,1');
+  await carte.locator('[data-acteur="isoc"]').press('Enter');
+  await expect(carte.locator('[data-titre]')).toContainText('Choisis un acteur');
+  await page.goto('/institutions/icann/');
+  await expect(page.locator('h1')).toContainText('ICANN');
+  await expect(page.locator('.liens')).toContainText('PTI');
+  expect(err).toEqual([]);
+});

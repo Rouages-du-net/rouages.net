@@ -1,0 +1,195 @@
+---
+// Carte des rapports de force entre institutions d'internet (page
+// /institutions/). Le schéma SVG est calculé à la construction du site ; le
+// JavaScript ne fait que mettre en évidence les liens d'un acteur et filtrer
+// par type. Sans JavaScript, la liste complète des liens s'affiche.
+// Données et sources : src/data/institutions.ts.
+import { AUTRES, FAMILLES, FICHES, LIENS, TYPES_LIENS, nomActeur, type Famille, type TypeLien } from '../../../data/institutions';
+
+const POS: Record<string, [number, number]> = {
+  isoc: [90, 50], pir: [300, 50], registres: [560, 50], navigateurs: [880, 50],
+  ietf: [90, 190], icann: [430, 180], whatwg: [880, 190],
+  iana: [260, 310], rir: [600, 310], w3c: [880, 320],
+  'ag-onu': [90, 430], gac: [430, 430], commission: [600, 450], 'etat-fr': [880, 450],
+  fgi: [90, 560], uit: [260, 560], cepd: [600, 570], cnil: [740, 570], arcom: [880, 570],
+  afnic: [600, 680], arcep: [740, 680], anssi: [880, 680],
+};
+const COURT: Record<string, string> = {
+  registres: 'Registres (.com…)', navigateurs: 'Navigateurs', 'ag-onu': 'Assemblée de l’ONU',
+  gac: 'Gouvernements (GAC)', commission: 'Commission europ.', 'etat-fr': 'État français', pir: 'PIR (.org)',
+};
+const L = 136, H = 40;
+const acteurs = [
+  ...FICHES.map((f) => ({ id: f.slug, famille: f.famille, fiche: true })),
+  ...AUTRES.map((a) => ({ id: a.id, famille: a.famille, fiche: false })),
+];
+const COULEUR_FAMILLE: Record<Famille, string> = {
+  technique: 'var(--ill-client)', noms: 'var(--ill-serveur)', web: 'var(--ill-secret-a)',
+  onu: 'var(--ill-reseau)', europe: 'var(--ill-secret-b)', france: 'var(--accent)',
+};
+const COULEUR_LIEN: Record<TypeLien, string> = {
+  finance: 'var(--ill-serveur)', nomme: 'var(--ill-secret-a)', controle: 'var(--accent)',
+  delegue: 'var(--ill-client)', conseille: 'var(--ill-reseau)', membre: 'var(--ill-secret-b)',
+};
+
+// Point d'arrivée au bord du rectangle, vers l'autre extrémité.
+function bord([cx, cy]: [number, number], [tx, ty]: [number, number]): [number, number] {
+  const dx = tx - cx, dy = ty - cy;
+  const k = Math.min((L / 2 + 4) / Math.abs(dx || 1e-9), (H / 2 + 4) / Math.abs(dy || 1e-9));
+  return [cx + dx * k, cy + dy * k];
+}
+// Plusieurs liens entre les deux mêmes acteurs : on les courbe différemment.
+const vus = new Map<string, number>();
+const traces = LIENS.map((l, i) => {
+  const cle = [l.de, l.vers].sort().join('|');
+  const rang = vus.get(cle) ?? 0;
+  vus.set(cle, rang + 1);
+  const a = POS[l.de], b = POS[l.vers];
+  const [x1, y1] = bord(a, b), [x2, y2] = bord(b, a);
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  const len = Math.hypot(x2 - x1, y2 - y1) || 1;
+  const courbe = (rang === 0 ? 18 : -26 * rang) * (l.de < l.vers ? 1 : -1);
+  const cx = mx - ((y2 - y1) / len) * courbe, cy = my + ((x2 - x1) / len) * courbe;
+  return { ...l, i, d: `M${x1.toFixed(1)},${y1.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}` };
+});
+const types = Object.keys(TYPES_LIENS) as TypeLien[];
+---
+<div class="anim carte-acteurs" data-carte-acteurs id="carte">
+  <div class="anim-repli">
+    <p>Les liens entre les acteurs, par type :</p>
+    {types.map((t) => (
+      <>
+        <h3 class="type-titre">{TYPES_LIENS[t].nom}</h3>
+        <ul>{LIENS.filter((l) => l.type === t).map((l) => <li><strong>{nomActeur(l.de)}</strong> → <strong>{nomActeur(l.vers)}</strong> : {l.texte}</li>)}</ul>
+      </>
+    ))}
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <fieldset class="filtres">
+        <legend>Types de liens affichés</legend>
+        {types.map((t) => (
+          <label style={`--c: ${COULEUR_LIEN[t]}`}><input type="checkbox" checked data-type={t} /> <span class="pastille" aria-hidden="true"></span>{TYPES_LIENS[t].nom}</label>
+        ))}
+      </fieldset>
+      <div class="defile">
+        <svg viewBox="0 0 980 720" role="group" aria-label="Carte des liens entre institutions. Choisis un acteur pour voir ses liens, détaillés sous la carte.">
+          <defs>
+            {types.map((t) => (
+              <marker id={`fleche-${t}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill={COULEUR_LIEN[t]} />
+              </marker>
+            ))}
+          </defs>
+          <g class="liens">
+            {traces.map((t) => (
+              <path d={t.d} data-lien={t.i} data-de={t.de} data-vers={t.vers} data-type={t.type} stroke={COULEUR_LIEN[t.type]} marker-end={`url(#fleche-${t.type})`} />
+            ))}
+          </g>
+          <g class="noeuds">
+            {acteurs.map((a) => {
+              const [x, y] = POS[a.id];
+              return (
+                <g class="noeud" data-acteur={a.id} transform={`translate(${x - L / 2} ${y - H / 2})`} tabindex="0" role="button" aria-pressed="false" aria-label={`${nomActeur(a.id)} (${FAMILLES[a.famille].nom})`}>
+                  <rect width={L} height={H} rx="8" style={`stroke: ${COULEUR_FAMILLE[a.famille]}`} class={a.fiche ? 'fiche' : 'autre'} />
+                  <text x={L / 2} y={H / 2 + 5} text-anchor="middle">{COURT[a.id] ?? nomActeur(a.id)}</text>
+                </g>
+              );
+            })}
+          </g>
+        </svg>
+      </div>
+      <ul class="legende-familles" aria-label="Familles d'acteurs">
+        {(Object.keys(FAMILLES) as Famille[]).map((f) => <li style={`--c: ${COULEUR_FAMILLE[f]}`}><span class="carre" aria-hidden="true"></span>{FAMILLES[f].nom}</li>)}
+      </ul>
+      <div class="detail" aria-live="polite">
+        <p class="anim-legende" data-titre></p>
+        <ul data-liste></ul>
+        <p data-fiche></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { FICHES, LIENS, TYPES_LIENS, nomActeur, type TypeLien } from '../../../data/institutions';
+
+  document.querySelectorAll<HTMLElement>('[data-carte-acteurs]').forEach((racine) => {
+    activerScene(racine);
+    const titre = racine.querySelector<HTMLElement>('[data-titre]')!;
+    const liste = racine.querySelector<HTMLUListElement>('[data-liste]')!;
+    const lienFiche = racine.querySelector<HTMLElement>('[data-fiche]')!;
+    const actifs = new Set<TypeLien>(Object.keys(TYPES_LIENS) as TypeLien[]);
+    let choisi: string | null = null;
+
+    function rendre() {
+      racine.querySelectorAll<SVGPathElement>('[data-lien]').forEach((p) => {
+        const t = p.dataset.type as TypeLien;
+        const touche = !choisi || p.dataset.de === choisi || p.dataset.vers === choisi;
+        p.classList.toggle('cache', !actifs.has(t));
+        p.classList.toggle('pale', !touche);
+      });
+      racine.querySelectorAll<SVGGElement>('[data-acteur]').forEach((g) => {
+        const id = g.dataset.acteur!;
+        const voisin = !choisi || id === choisi || LIENS.some((l) => actifs.has(l.type) && ((l.de === choisi && l.vers === id) || (l.vers === choisi && l.de === id)));
+        g.classList.toggle('pale', !voisin);
+        g.setAttribute('aria-pressed', String(id === choisi));
+      });
+      if (!choisi) {
+        titre.textContent = `Choisis un acteur sur la carte : ${LIENS.filter((l) => actifs.has(l.type)).length} liens affichés.`;
+        liste.replaceChildren();
+        lienFiche.replaceChildren();
+        return;
+      }
+      const liens = LIENS.filter((l) => actifs.has(l.type) && (l.de === choisi || l.vers === choisi));
+      titre.textContent = `${nomActeur(choisi)} : ${liens.length} lien${liens.length > 1 ? 's' : ''}.`;
+      liste.replaceChildren(...liens.map((l) => {
+        const li = document.createElement('li');
+        li.append(Object.assign(document.createElement('strong'), { textContent: nomActeur(l.de) }), ` ${TYPES_LIENS[l.type].verbe} `, Object.assign(document.createElement('strong'), { textContent: nomActeur(l.vers) }), ` : ${l.texte} `);
+        const a = Object.assign(document.createElement('a'), { href: l.url, textContent: '(source)' });
+        li.append(a);
+        return li;
+      }));
+      lienFiche.replaceChildren();
+      if (FICHES.some((f) => f.slug === choisi)) {
+        lienFiche.append(Object.assign(document.createElement('a'), { href: `/institutions/${choisi}/`, textContent: `Lire la fiche ${nomActeur(choisi)} →` }));
+      }
+    }
+    racine.querySelectorAll<SVGGElement>('[data-acteur]').forEach((g) => {
+      const choisir = () => { choisi = choisi === g.dataset.acteur ? null : g.dataset.acteur!; rendre(); };
+      g.addEventListener('click', choisir);
+      g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choisir(); } });
+    });
+    racine.querySelectorAll<HTMLInputElement>('input[data-type]').forEach((c) => c.addEventListener('change', () => {
+      if (c.checked) actifs.add(c.dataset.type as TypeLien); else actifs.delete(c.dataset.type as TypeLien);
+      rendre();
+    }));
+    rendre();
+  });
+</script>
+
+<style>
+  .filtres { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; border: none; padding: 0; margin: 0 0 0.6rem; }
+  .filtres legend { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .filtres label { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; cursor: pointer; }
+  .pastille { display: inline-block; width: 1.1rem; height: 0.25rem; border-radius: 2px; background: var(--c); }
+  .defile { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; }
+  .liens path { fill: none; stroke-width: 2; transition: opacity 0.2s; }
+  .liens path.pale { opacity: 0.12; }
+  .liens path.cache { display: none; }
+  .noeud { cursor: pointer; }
+  .noeud rect { fill: var(--bg); stroke-width: 2.5; }
+  .noeud rect.autre { stroke-dasharray: 5 3; }
+  .noeud text { fill: var(--fg); font: 600 13px var(--police); pointer-events: none; }
+  .noeud.pale { opacity: 0.3; }
+  .noeud[aria-pressed='true'] rect { fill: var(--card); stroke-width: 4; }
+  .noeud:focus-visible { outline: none; }
+  .noeud:focus-visible rect { stroke-width: 4; stroke-dasharray: none; }
+  .legende-familles { list-style: none; display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; padding: 0; margin: 0.5rem 0; font-size: 0.82rem; color: var(--muted); }
+  .carre { display: inline-block; width: 0.8rem; height: 0.8rem; border: 2.5px solid var(--c); border-radius: 0.2rem; margin-right: 0.3rem; vertical-align: -0.1rem; }
+  .detail ul { margin: 0; padding-left: 1.2rem; max-width: var(--mesure); }
+  .detail li { margin-bottom: 0.3rem; }
+  .type-titre { font-size: 1rem; margin: 1rem 0 0.3rem; }
+</style>
