@@ -1,0 +1,80 @@
+---
+// Animation « Lire /etc/passwd » (module Linux, étape 2) : une ligne par
+// compte, sept champs séparés par « : » (passwd(5)). On clique un champ pour
+// savoir ce qu'il veut dire. Sources : docs/sources/linux.md.
+import { CHAMPS_PASSWD, PASSWD } from '../../../data/linux';
+---
+<div class="anim passwd" data-passwd data-lignes={JSON.stringify(PASSWD)} data-champs={JSON.stringify(CHAMPS_PASSWD)}>
+  <div class="anim-repli">
+    <p>Extrait de <code>/etc/passwd</code> :</p>
+    <pre>{PASSWD.join('\n')}</pre>
+    <p>Chaque ligne a sept champs séparés par « : » :</p>
+    <ol>{CHAMPS_PASSWD.map((c) => <li><strong>{c.nom}</strong> : {c.detail}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <p class="anim-note"><code>cat /etc/passwd</code> (extrait) : choisis une ligne, puis un champ.</p>
+      <div class="lignes" data-liste-lignes></div>
+      <div class="champs" data-liste-champs></div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { lignePasswd } from '../../../lib/linux';
+
+  document.querySelectorAll<HTMLElement>('[data-passwd]').forEach((racine) => {
+    activerScene(racine);
+    const lignes: string[] = JSON.parse(racine.dataset.lignes!);
+    const champs: { nom: string; detail: string }[] = JSON.parse(racine.dataset.champs!);
+    const boiteLignes = racine.querySelector<HTMLElement>('[data-liste-lignes]')!;
+    const boiteChamps = racine.querySelector<HTMLElement>('[data-liste-champs]')!;
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    let ligne = 2;
+    let champ = 2;
+
+    function rendre(annoncer: boolean) {
+      boiteLignes.replaceChildren(...lignes.map((l, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ligne';
+        b.textContent = l;
+        b.setAttribute('aria-pressed', String(i === ligne));
+        b.addEventListener('click', () => { ligne = i; rendre(true); });
+        return b;
+      }));
+      const valeurs = lignePasswd(lignes[ligne])!;
+      boiteChamps.replaceChildren(...valeurs.flatMap((v, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'champ';
+        b.dataset.champ = String(i);
+        b.setAttribute('aria-pressed', String(i === champ));
+        b.innerHTML = '';
+        const val = Object.assign(document.createElement('span'), { className: 'valeur', textContent: v || '(vide)' });
+        const nom = Object.assign(document.createElement('span'), { className: 'nom', textContent: `${i + 1}. ${champs[i].nom}` });
+        b.append(val, nom);
+        b.addEventListener('click', () => { champ = i; rendre(true); });
+        const sep = Object.assign(document.createElement('span'), { className: 'sep', textContent: ':', ariaHidden: 'true' });
+        return i < valeurs.length - 1 ? [b, sep] : [b];
+      }));
+      if (annoncer) legende.textContent = `${champs[champ].nom} = « ${valeurs[champ]} ». ${champs[champ].detail}`;
+    }
+    rendre(true);
+  });
+</script>
+
+<style>
+  .lignes { display: grid; gap: 0.15rem; margin: 0.5rem 0 0.8rem; }
+  .lignes :global(.ligne) { font: 0.82rem var(--police-mono); text-align: left; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 0.3rem; padding: 0.2rem 0.45rem; cursor: pointer; overflow-wrap: anywhere; }
+  .lignes :global(.ligne[aria-pressed='true']) { border-color: var(--accent); font-weight: 700; }
+  .champs { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.2rem; }
+  .champs :global(.champ) { display: grid; gap: 0.1rem; font: inherit; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-top: 4px solid var(--accent-2); border-radius: 0.3rem; padding: 0.25rem 0.45rem; cursor: pointer; text-align: left; max-width: 100%; }
+  .champs :global(.champ[aria-pressed='true']) { border-color: var(--accent); border-top-color: var(--accent); }
+  .champs :global(.valeur) { font-family: var(--police-mono); font-size: 0.85rem; font-weight: 700; overflow-wrap: anywhere; }
+  .champs :global(.nom) { font-size: 0.72rem; color: var(--muted); }
+  .champs :global(.sep) { font-family: var(--police-mono); font-weight: 700; align-self: center; color: var(--muted); }
+  pre { overflow-x: auto; font-size: 0.8rem; }
+</style>

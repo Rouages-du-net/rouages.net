@@ -26,7 +26,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] Encarts « Histoire » à chaque étape (CYCLADES, Feinler, Perlman…)
 - [x] Glossaire : 34 premiers termes, page `/glossaire/`
 - [ ] Relecture humaine finale (technique et grand public), une fois le site en ligne sur rouages.net
-- [ ] Relever les exemples réels (`dig`, certificat, `curl -I`, protocole HTTP/2 ou HTTP/3, `traceroute`) sur le site en ligne
+- [ ] Relever les exemples réels (`dig`, certificat, `curl -I`, protocole HTTP/2 ou HTTP/3, `traceroute`) sur le site en ligne *(premier relevé le 24/11/2026 dans [`sources/entree-a-la-page.md`](sources/entree-a-la-page.md) : site derrière Cloudflare, temporairement ; à refaire après son retrait, avec `traceroute` et le certificat vu d'un navigateur)*
 - [ ] **Lancement public**
 
 ## Phase 2 — Comment marche un ordinateur
@@ -43,8 +43,8 @@ Principe : **sortir un module phare complet avant d'élargir.**
 
 - [x] **Gouvernance technique** *(`/modules/gouvernance-technique/`, relecture humaine à faire ; AFRINIC, roulement de clé 2026, FGI à suivre)* — couches et organisations, RFC (parcours, statuts), consensus approximatif et hum, qui participe, chaîne des adresses IP et registres régionaux, racine du DNS (13 identités, ~2 000 instances), modèles multipartite et intergouvernemental. Sources : [`sources/gouvernance-technique.md`](sources/gouvernance-technique.md)
 - [x] **États et régulation** *(`/modules/etats-regulation/`, relecture humaine à faire ; omnibus RGPD, recours DPF, Iran et Russie à suivre)* — lois des données dans le monde, RGPD (droits, guichet unique, modèle de demande), DSA et DMA, AI Act et omnibus, neutralité du net, blocages (DNS, IP, SNI, DPI ; qui décide), coupures. Sources : [`sources/etats-regulation.md`](sources/etats-regulation.md)
-- [ ] Carte interactive des acteurs et des rapports de force
-- [ ] Fiches institutions (IETF, ICANN, W3C, RIR, CNIL, Arcom…)
+- [x] Carte interactive des acteurs et des rapports de force *(`/institutions/#carte` : 22 acteurs, 32 liens sourcés — finance, nomme, contrôle, délègue, conseille, membre)*
+- [x] Fiches institutions *(`/institutions/` : IETF, ISOC, IANA/PTI, ICANN, RIR, W3C, WHATWG, UIT, FGI, CEPD, CNIL, Arcom, Arcep, ANSSI, Afnic ; relecture humaine à faire). Sources : [`sources/institutions.md`](sources/institutions.md)*
 
 ## Phase 3 bis — Outils pour les cours
 
@@ -53,6 +53,7 @@ Principe : **sortir un module phare complet avant d'élargir.**
 - [x] **Compter en binaire, octal et hexadécimal** *(`/modules/bases/`, relecture humaine à faire)* — paquets de jetons, compteur à rouages dans quatre bases, conversions pas à pas, groupes de 3 et 4 bits (droits Unix, couleurs CSS)
 - [x] **Adresses IP et masques** *(`/modules/adresses-ip/`, relecture humaine à faire)* — IPv4 en binaire, abréviation IPv6 (RFC 5952), masques en CIDR, décimal et binaire, réseau, diffusion, nombre de machines
 - [x] **Découper un réseau en sous-réseaux** *(`/modules/sous-reseaux/`, relecture humaine à faire)* — parts égales (bits empruntés, alignement), plan VLSM pas à pas, exercices corrigés reproductibles (six types), IPv6 : /48, /56 et /64
+- [x] **Linux : fichiers, droits, comptes et SSH** *(`/modules/linux/`, relecture humaine à faire)* — arborescence (FHS, hier(7)), chemins absolus et relatifs (terminal simulé), /etc/passwd et groupes, droits rwx sous toutes leurs écritures (ls -l, octal, binaire, chmod symbolique), qui peut faire quoi (une seule classe appliquée, root), sudo pas à pas, SSH (clés, known_hosts, authorized_keys), rebonds par un bastion (à la main ou ProxyJump). Sources : [`sources/linux.md`](sources/linux.md)
 - Sources : [`sources/bases-ip.md`](sources/bases-ip.md)
 
 ## Phase 4 — Les histoires

@@ -1,0 +1,139 @@
+---
+// Animation « Une connexion SSH » (module Linux, étape 6) : pas à pas, de la
+// création des clés (ssh-keygen) à la session, avec la vérification de la clé
+// du serveur (known_hosts) et l'authentification par clé (authorized_keys).
+// Les messages d'OpenSSH (en anglais : il n'est pas traduit) suivent ssh(1).
+// Protocole : RFC 4251 à 4254. Sources : docs/sources/linux.md.
+const ETAPES = [
+  {
+    lignes: [['alice@portable:~$ ssh-keygen -t ed25519', 'tapee'], ['Your identification has been saved in /home/alice/.ssh/id_ed25519', ''], ['Your public key has been saved in /home/alice/.ssh/id_ed25519.pub', '']],
+    canal: '', actifs: ['cle-privee', 'cle-publique'],
+    texte: 'Une fois pour toutes, alice crée une paire de clés sur son portable : une clé privée, qui ne quittera jamais la machine, et une clé publique, qu’on peut donner à tout le monde.',
+  },
+  {
+    lignes: [['alice@portable:~$ ssh-copy-id alice@serveur.example', 'tapee'], ['Number of key(s) added: 1', '']],
+    canal: '', actifs: ['cle-publique', 'authorized-keys'],
+    texte: 'Elle dépose sa clé publique sur le serveur, dans ~/.ssh/authorized_keys (la liste des clés autorisées à entrer dans son compte). Cette fois, avec son mot de passe.',
+  },
+  {
+    lignes: [['alice@portable:~$ ssh alice@serveur.example', 'tapee']],
+    canal: 'clair', actifs: [],
+    texte: 'Un autre jour, elle se connecte. Le client ouvre une connexion vers le port 22 du serveur. Les deux programmes s’annoncent en clair (« SSH-2.0-OpenSSH… »), puis fabriquent ensemble une clé secrète par un échange de type Diffie-Hellman.',
+  },
+  {
+    lignes: [["The authenticity of host 'serveur.example (203.0.113.10)' can't be established.", 'info'], ['ED25519 key fingerprint is SHA256:Xq3…(43 caractères)…', 'info'], ['Are you sure you want to continue connecting (yes/no/[fingerprint])? yes', 'tapee'], ["Warning: Permanently added 'serveur.example' (ED25519) to the list of known hosts.", '']],
+    canal: 'chiffre', actifs: ['cle-hote', 'known-hosts'],
+    texte: 'Tout est désormais chiffré. Le serveur prouve son identité avec sa clé d’hôte. C’est la première rencontre : ssh montre son empreinte et demande confirmation. Il faudrait la comparer à celle donnée par l’administrateur. Elle est ensuite notée dans ~/.ssh/known_hosts.',
+  },
+  {
+    lignes: [],
+    canal: 'chiffre', actifs: ['cle-privee', 'authorized-keys'],
+    texte: 'Au tour d’alice de prouver qui elle est. Le serveur trouve sa clé publique dans authorized_keys ; le portable signe un message propre à cette connexion avec la clé privée ; le serveur vérifie la signature. La clé privée n’a jamais voyagé.',
+  },
+  {
+    lignes: [['alice@serveur:~$ ', 'tapee']],
+    canal: 'chiffre', actifs: [],
+    texte: 'La session est ouverte : alice tape des commandes qui s’exécutent sur le serveur. Chaque frappe et chaque réponse passent chiffrées. Sur le réseau, on ne voit que des octets illisibles.',
+  },
+  {
+    lignes: [['alice@portable:~$ ssh alice@serveur.example', 'tapee'], ['@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', 'erreur'], ['@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @', 'erreur'], ['@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', 'erreur'], ['IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!', 'erreur'], ['Host key verification failed.', 'erreur']],
+    canal: 'coupe', actifs: ['known-hosts'],
+    texte: 'Des semaines plus tard, la clé présentée ne correspond plus à celle de known_hosts. Serveur réinstallé ? Ou imposteur au milieu ? ssh refuse de continuer : il faut vérifier auprès de l’administrateur avant d’effacer l’ancienne empreinte.',
+  },
+];
+const PORTABLE = [
+  { id: 'cle-privee', nom: '~/.ssh/id_ed25519', role: 'clé privée (secrète)' },
+  { id: 'cle-publique', nom: '~/.ssh/id_ed25519.pub', role: 'clé publique' },
+  { id: 'known-hosts', nom: '~/.ssh/known_hosts', role: 'serveurs connus' },
+];
+const SERVEUR = [
+  { id: 'cle-hote', nom: '/etc/ssh/ssh_host_ed25519_key', role: 'clé d’hôte du serveur' },
+  { id: 'authorized-keys', nom: '~alice/.ssh/authorized_keys', role: 'clés autorisées pour alice' },
+];
+---
+<div class="anim ssh" data-ssh data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li><p>{e.texte}</p>{e.lignes.length > 0 && <pre>{e.lignes.map((l) => l[0]).join('\n')}</pre>}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="machines">
+        <div class="machine">
+          <p class="nom">💻 Portable d’alice <span>client ssh</span></p>
+          <ul>{PORTABLE.map((f) => <li data-fichier={f.id}><code>{f.nom}</code><small>{f.role}</small></li>)}</ul>
+        </div>
+        <div class="canal" data-canal><span data-etat-canal>pas de connexion</span></div>
+        <div class="machine">
+          <p class="nom">🗄️ serveur.example <span>sshd, port 22</span></p>
+          <ul>{SERVEUR.map((f) => <li data-fichier={f.id}><code>{f.nom}</code><small>{f.role}</small></li>)}</ul>
+        </div>
+      </div>
+      <div class="ecran" data-ecran role="log" aria-label="Terminal d’alice"></div>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">← Précédent</button>
+        <button type="button" data-action="suivant">Suivant →</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+        <span class="anim-compteur"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  const ETATS: Record<string, string> = {
+    '': 'pas de connexion',
+    clair: '⇄ port 22 : présentations en clair',
+    chiffre: '🔒 canal chiffré',
+    coupe: '✖ connexion refusée par le client',
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-ssh]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { lignes: [string, string][]; canal: string; actifs: string[]; texte: string }[] = JSON.parse(racine.dataset.etapes!);
+    const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
+    const canal = racine.querySelector<HTMLElement>('[data-canal]')!;
+    pasAPas(racine, () => etapes.length, (n) => {
+      const e = etapes[n - 1];
+      // Le terminal repart à zéro à chaque nouvelle commande ssh.
+      const debut = [0, 2, 6].filter((d) => d < n).at(-1)!;
+      ecran.replaceChildren();
+      etapes.slice(debut, n).forEach((x, i) => x.lignes.forEach(([t, c]) => {
+        const p = Object.assign(document.createElement('p'), { textContent: t });
+        if (c) p.classList.add(c);
+        if (debut + i === n - 1) p.classList.add('nouveau');
+        ecran.append(p);
+      }));
+      ecran.scrollTop = ecran.scrollHeight;
+      canal.dataset.etat = e.canal;
+      racine.querySelector('[data-etat-canal]')!.textContent = ETATS[e.canal];
+      racine.querySelectorAll<HTMLElement>('[data-fichier]').forEach((li) => li.classList.toggle('actif', e.actifs.includes(li.dataset.fichier!)));
+      return e.texte;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .machines { display: grid; grid-template-columns: 1fr minmax(6rem, 10rem) 1fr; gap: 0.5rem; align-items: center; margin-bottom: 0.7rem; }
+  @media (max-width: 40rem) { .machines { grid-template-columns: 1fr; } }
+  .machine { border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); padding: 0.4rem 0.6rem; min-width: 0; }
+  .nom { margin: 0 0 0.3rem; font-weight: 700; }
+  .nom span { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); }
+  .machine ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
+  .machine li { border: 1px solid transparent; border-radius: 0.3rem; padding: 0.1rem 0.3rem; font-size: 0.8rem; display: grid; }
+  .machine li code { overflow-wrap: anywhere; }
+  .machine li small { color: var(--muted); }
+  .machine li.actif { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .canal { text-align: center; font-size: 0.8rem; font-weight: 700; padding: 0.4rem 0.2rem; border-top: 3px dashed var(--border); border-bottom: 3px dashed var(--border); color: var(--muted); }
+  .canal[data-etat='clair'] { border-color: var(--ill-paquet); color: var(--ill-paquet); border-style: dashed; }
+  .canal[data-etat='chiffre'] { border-color: var(--ill-secret-b); color: var(--ill-secret-b); border-style: solid; }
+  .canal[data-etat='coupe'] { border-color: var(--accent); color: var(--accent); }
+  .ecran { background: var(--terminal-bg); color: var(--terminal-fg); font-family: var(--police-mono); font-size: 0.78rem; border-radius: 0.5rem; padding: 0.6rem 0.8rem; min-height: 6rem; max-height: 14rem; overflow-y: auto; }
+  .ecran :global(p) { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; opacity: 0.7; }
+  .ecran :global(p.nouveau) { opacity: 1; }
+  .ecran :global(.tapee) { color: var(--terminal-invite); }
+  .ecran :global(.erreur) { color: var(--terminal-erreur); }
+  .anim-repli pre { overflow-x: auto; font-size: 0.75rem; white-space: pre-wrap; }
+</style>

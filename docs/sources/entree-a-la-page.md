@@ -688,3 +688,44 @@ dans une fibre standard, c / n_g. Vérifié le 13 octobre 2026 :
 Résultat : environ 204 000 km/s dans la fibre, soit au moins 29 ms à l'aller
 et 57 ms pour l'aller-retour. Les vrais câbles suivent des tracés plus longs
 que la ligne droite : le délai réel est supérieur.
+
+## Relevé sur le site en ligne (24 novembre 2026)
+
+Mesures faites le 24 novembre 2026 vers 23 h 20 (UTC) depuis un conteneur de
+développement situé aux États-Unis, à travers un proxy de sortie. Le domaine
+sert bien le site Astro (`<title>Les rouages du net</title>`).
+
+| Mesure | Commande ou source | Résultat |
+|---|---|---|
+| Serveurs DNS faisant autorité | `https://dns.google/resolve?name=rouages.net&type=NS` | `cass.ns.cloudflare.com`, `jason.ns.cloudflare.com` (TTL 21 600 s) |
+| Adresses IPv4 | idem, `type=A` | `172.67.137.176`, `104.21.56.234` (TTL 300 s) : des adresses de Cloudflare, pas celles de l'hébergement cPanel |
+| Adresses IPv6 | idem, `type=AAAA` | `2606:4700:3034::ac43:89b0`, `2606:4700:3032::6815:38ea` |
+| DNSSEC | idem, `type=DS` ; drapeau `AD: true` | un enregistrement DS dans la zone `.net` (algorithme 13, ECDSA P-256) : la zone est signée |
+| En-têtes HTTP | `curl -sI https://rouages.net/` | `server: cloudflare`, `cf-cache-status: DYNAMIC`, `cache-control: no-cache`, `x-content-type-options: nosniff`, `referrer-policy: strict-origin-when-cross-origin`, `alt-svc: h3=":443"; ma=86400`, plus `report-to` et `nel` vers `a.nel.cloudflare.com` |
+| HTTP/3 | en-tête `alt-svc` ci-dessus | proposé (QUIC sur le port 443) |
+| Certificats | journaux de transparence, `https://crt.sh/?q=rouages.net` | le plus récent pour `rouages.net` et `*.rouages.net` : émis par Google Trust Services (WE1), du 25 septembre au 24 décembre 2026 (90 jours) ; précédemment Let's Encrypt (YE1, YR1) |
+
+Limites :
+
+- **Certificat réellement présenté** : non observable d'ici, le proxy de sortie
+  du conteneur présente son propre certificat. Le certificat Google Trust
+  Services est le plus récent des journaux de transparence, compatible avec
+  un certificat d'« édition » Cloudflare : à confirmer dans un navigateur.
+- **Version HTTP** : `curl` négocie HTTP/2 avec le proxy, pas forcément avec
+  Cloudflare ; seule l'annonce `alt-svc` est un fait du serveur.
+- **`traceroute`** : impossible depuis le conteneur (pas d'ICMP ni de
+  datagrammes sortants). À relever depuis une connexion ordinaire.
+- Enregistrement MX volontairement non reproduit (il désigne un tiers).
+
+Conséquences pour le module (Cloudflare est **temporaire**, d'après l'équipe le
+25 novembre 2026 : le texte du module n'est pas modifié ; relevé à refaire une
+fois Cloudflare retiré) :
+
+- le DNS répond par des adresses **Cloudflare** (anycast) : le navigateur se
+  connecte au réseau de Cloudflare, qui relaie vers l'hébergement cPanel ;
+  les étapes 1, 4, 5 et 6 décrivent un lien direct navigateur → serveur cPanel
+  et un certificat AutoSSL Let's Encrypt, ce qui n'est plus le cas ;
+- l'en-tête `nel` demande au navigateur d'envoyer des rapports d'erreurs réseau
+  à `a.nel.cloudflare.com` : un envoi vers un tiers, à mettre en regard de la
+  règle « aucun pisteur, aucune ressource tierce » (décision à prendre par
+  l'équipe : désactiver NEL dans Cloudflare, ou le dire dans le module).

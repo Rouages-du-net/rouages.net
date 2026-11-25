@@ -637,6 +637,41 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Façon d'écrire un réseau avec une barre oblique et le nombre de bits du réseau : 192.0.2.0/24 veut dire « les 24 premiers bits désignent le réseau ». Adoptée en 1993 à la place des classes A, B et C.",
     voirAussi: ['masque-reseau', 'adresse-ip'],
   },
+  linux: {
+    terme: 'Linux',
+    definition:
+      "Noyau de système d'exploitation libre, lancé en 1991 par Linus Torvalds. Par extension, les systèmes complets bâtis autour (Debian, Ubuntu, Fedora…), appelés distributions. Les 500 plus puissants supercalculateurs du monde l'utilisent.",
+    voirAussi: ['noyau', 'logiciel-libre'],
+  },
+  shell: {
+    terme: 'Shell',
+    definition:
+      "Programme qui lit les commandes tapées dans un terminal et les fait exécuter (bash, zsh…). C'est lui qui affiche l'invite, comme alice@machine:~$, et qui remplace ~ par le dossier personnel.",
+  },
+  root: {
+    terme: 'root',
+    definition:
+      "Le compte administrateur d'un système Unix ou Linux, de numéro (UID) 0 : il passe outre les droits des fichiers. À ne pas confondre avec la racine « / » de l'arborescence.",
+    voirAussi: ['sudo'],
+  },
+  sudo: {
+    terme: 'sudo',
+    definition:
+      "Commande qui exécute une autre commande en tant que root (ou un autre compte), après avoir demandé le mot de passe de la personne et vérifié qu'elle y a droit. Chaque utilisation est journalisée.",
+    voirAussi: ['root'],
+  },
+  ssh: {
+    terme: 'SSH',
+    definition:
+      "Secure Shell : protocole pour ouvrir un terminal sur une machine distante, ou y transférer des fichiers, à travers une connexion chiffrée (port 22). Le serveur et la personne prouvent chacun leur identité, souvent par des clés.",
+    voirAussi: ['sftp', 'bastion'],
+  },
+  bastion: {
+    terme: 'Bastion',
+    definition:
+      "Machine d'entrée unique et surveillée d'un réseau : pour administrer les serveurs internes, on se connecte d'abord à elle, puis on « rebondit » vers eux (avec SSH : ssh -J).",
+    voirAussi: ['ssh'],
+  },
 };
 
 export function entree(id: string): Entree {

@@ -704,7 +704,7 @@ Module « Gouvernance technique : qui écrit les règles du réseau ? » : IANA,
 | Première présidente du conseil d'administration d'ICANN : **Esther Dyson** (1998). | https://www.icann.org/resources/press-material/release-2023-03-08-en | [lu] primaire |
 | **Tripti Sinha** préside le conseil depuis 2022, deuxième femme à ce poste. | idem | [lu] primaire |
 | **Sally Costerton** (PDG par intérim, décembre 2022) est la première femme PDG d'ICANN. | idem | [lu] primaire |
-| T. Sinha est réélue présidente en octobre 2025. | https://www.icann.org/resources/press-material/release-2025-10-30-en | [extrait] |
+| T. Sinha est réélue présidente en octobre 2025, puis le 22 octobre 2026 (résolution 2026.10.22.23). | https://www.icann.org/resources/press-material/release-2025-10-30-en ; https://www.icann.org/en/board-activities-and-meetings/materials/approved-resolutions-organizational-meeting-of-the-icann-board-22-10-2026-en | [lu] (2026) |
 | 30 septembre 2009 : « Affirmation of Commitments » entre le département du Commerce et ICANN. | CRS 97-868 | [lu] |
 | 2 juillet 2012 : nouveau contrat des fonctions IANA confié à ICANN par la NTIA. | CRS 97-868 | [lu] |
 | 7 octobre 2013 : **déclaration de Montevideo**. Dix organisations techniques (ICANN, les 5 RIR, IETF, IAB, ISOC, W3C) dénoncent les « recent revelations of pervasive monitoring » (affaire Snowden) et demandent d'« accelerating the globalization of ICANN and IANA functions ». | https://www.icann.org/en/announcements/details/montevideo-statement-on-the-future-of-internet-cooperation-7-10-2013-en | [lu] primaire |
@@ -1102,7 +1102,7 @@ Les seules sources sont des courtiers et des analystes du secteur, aucune source
 - **Chagos et .io** : le gel d'avril 2026 est confirmé par deux sources, mais rien n'a été trouvé après mi-mai 2026. Le Foreign Office nie une « pause ». À revérifier avant publication.
 - **Comptages de serveurs racine par pays** : calcul maison sur les fichiers JSON de root-servers.org (sites suspendus inclus). À recalculer au moment de publier.
 - **Second roulement de la KSK (octobre 2026)** : ICANN mentionne des incidents limités « being assessed ». Pas de bilan définitif.
-- **PP-26 (Doha)** : élection du ou de la secrétaire générale à partir du 12 novembre 2026. Ne pas annoncer de résultat.
+- **PP-26 (Doha)** : résultat connu depuis : Doreen Bogdan-Martin réélue le 12 novembre 2026 (164 voix sur 173). Voir [`mises-a-jour-2026-11-25.md`](mises-a-jour-2026-11-25.md).
 - **« New IP »** : le document de Huawei n'a pas été lu. Les arguments de Huawei ne sont connus que par ses critiques (ISOC, RIPE NCC) et par la presse.
 - **Pour aller plus loin (Wikipédia)** : pages non ouvertes pour ce dossier, labels à vérifier. Articles possibles : « Internet Corporation for Assigned Names and Numbers », « Serveur racine du DNS », « Registre Internet régional », « Sommet mondial sur la société de l'information ».
 
@@ -1138,3 +1138,8 @@ Les seules sources sont des courtiers et des analystes du secteur, aucune source
 8. **Qui demande une extension ?**
    - Graphique en barres 2012 / 2026 des candidatures gTLD par région (911/675/303/24/17 contre 864/506/218/16/11).
    - Avec les cas .amazon et .africa en encarts repliés (`Etape`).
+
+
+## Mise à jour du 25 novembre 2026
+
+AFRINIC, roulement de la KSK, FGI, UIT, IETF 127, serveurs racine (2 046 instances) : voir [`mises-a-jour-2026-11-25.md`](mises-a-jour-2026-11-25.md).

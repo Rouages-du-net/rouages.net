@@ -230,3 +230,58 @@ test('client et serveur : un fichier, trois chemins', async ({ page }) => {
   await expect(acces.locator('[data-voie="sftp"]')).not.toHaveClass(/ferme/);
   expect(err).toEqual([]);
 });
+
+test('linux : arborescence, terminal, droits, accès et rebonds', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/linux/');
+  const arbo = page.locator('[data-arborescence]');
+  await arbo.locator('.noeud', { hasText: 'etc/' }).click();
+  await arbo.locator('.noeud', { hasText: 'passwd' }).click();
+  await expect(arbo.locator('[data-fiche-chemin]')).toHaveText('Fichier /etc/passwd');
+  const term = page.locator('[data-terminal-linux]');
+  await term.locator('[data-essai="cd ../bob"]').click();
+  await expect(term.locator('[data-invite]')).toHaveText('alice@machine:/home/bob$');
+  await term.locator('[data-commande]').fill('cd ~/cours');
+  await term.locator('[data-commande]').press('Enter');
+  await expect(term.locator('[data-invite]')).toHaveText('alice@machine:~/cours$');
+  await expect(term.locator('[data-explication]')).toContainText('dossier personnel');
+  const droits = page.locator('[data-droits]');
+  await droits.locator('[data-modele="755"]').click();
+  await expect(droits.locator('[data-ls]')).toContainText('-rwxr-xr-x');
+  await droits.locator('[data-saisie]').fill('go-rx');
+  await droits.locator('[data-saisie]').press('Enter');
+  await expect(droits.locator('[data-octal]')).toHaveText('700');
+  await expect(droits.locator('[data-symbolique]')).toHaveText('u=rwx,g=,o=');
+  const qui = page.locator('[data-qui-peut]');
+  await qui.locator('[data-compte]').selectOption('bob');
+  await expect(qui.locator('[data-reponse]')).toContainText('Oui');
+  await qui.locator('[data-compte]').selectOption('root');
+  await qui.locator('[data-op]').selectOption('x');
+  await expect(qui.locator('[data-reponse]')).toContainText('Non');
+  const sudo = page.locator('[data-sudo]');
+  await jusquAuBout(sudo);
+  await expect(sudo.locator('[data-ecran]')).toContainText('n’est pas dans le fichier sudoers');
+  const rebonds = page.locator('[data-rebonds]');
+  await rebonds.locator('[data-mode="saut"]').click();
+  await jusquAuBout(rebonds);
+  await expect(rebonds.locator('[data-voit]')).toContainText('chiffrés');
+  await expect(rebonds.locator('[data-ecran]')).toContainText('ProxyJump');
+  expect(err).toEqual([]);
+});
+
+test('institutions : la carte met en évidence les liens d’un acteur', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/institutions/');
+  const carte = page.locator('[data-carte-acteurs]');
+  await carte.locator('[data-acteur="isoc"]').click();
+  await expect(carte.locator('[data-titre]')).toContainText('ISOC');
+  await expect(carte.locator('[data-liste]')).toContainText('IETF');
+  await carte.locator('input[data-type="finance"]').uncheck();
+  await expect(carte.locator('[data-liste]')).not.toContainText('47,1');
+  await carte.locator('[data-acteur="isoc"]').press('Enter');
+  await expect(carte.locator('[data-titre]')).toContainText('Choisis un acteur');
+  await page.goto('/institutions/icann/');
+  await expect(page.locator('h1')).toContainText('ICANN');
+  await expect(page.locator('.liens')).toContainText('PTI');
+  expect(err).toEqual([]);
+});

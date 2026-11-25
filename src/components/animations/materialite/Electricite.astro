@@ -7,7 +7,7 @@ import { ELEC_FRANCE, ELEC_MONDE } from '../../../data/materialite';
 <div class="anim electricite" data-electricite data-monde={JSON.stringify(ELEC_MONDE)} data-france={JSON.stringify(ELEC_FRANCE)}>
   <div class="anim-repli">
     <p>
-      Monde (Agence internationale de l'énergie) : environ 415 TWh en 2024, 945 TWh en 2030 et 1 200 TWh en
+      Monde (Agence internationale de l'énergie) : environ 415 TWh en 2024, 485 TWh en 2025, 950 TWh en 2030 et 1 200 TWh en
       2035 dans le scénario de référence. France (ADEME) : environ 10 TWh en 2024, 36,7 TWh en 2035 sans
       politique de transition.
     </p>
@@ -52,7 +52,7 @@ import { ELEC_FRANCE, ELEC_MONDE } from '../../../data/materialite';
         }),
       );
       legende.textContent = ech === 'monde'
-        ? 'En 2024, les centres de données du monde ont consommé environ 415 TWh, 1,5 % de l’électricité mondiale. L’AIE prévoit environ 945 TWh en 2030 dans son scénario de référence, surtout à cause de l’IA ; la hausse a été de 17 à 20 % en 2025 selon l’AIE. Les barres hachurées sont des projections.'
+        ? 'En 2025, les centres de données du monde ont consommé environ 485 TWh, un peu plus de 1,5 % de l’électricité mondiale, soit plus de 15 % de plus qu’en 2024. L’AIE prévoit environ 950 TWh en 2030 dans son scénario de référence, surtout à cause de l’IA ; pour 2035, son édition 2026 donne une fourchette de 700 à 1 700 TWh selon les scénarios. Les barres hachurées sont des projections.'
         : 'En France, 352 centres de données ont été recensés en 2024, soit environ 10 TWh avec les salles informatiques des entreprises (estimation de modèle). Sans politique de transition, l’ADEME prévoit 3,7 fois plus en 2035. Plus de la moitié des usages français sont hébergés à l’étranger.';
     }
 

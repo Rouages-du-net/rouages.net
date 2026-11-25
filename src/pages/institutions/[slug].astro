@@ -1,0 +1,82 @@
+---
+// Une fiche institution (données dans src/data/institutions.ts).
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import { FAMILLES, FICHES, LIENS, TYPES_LIENS, VERIFIE, nomActeur, type Fiche } from '../../data/institutions';
+
+export function getStaticPaths() {
+  return FICHES.map((f) => ({ params: { slug: f.slug }, props: { fiche: f } }));
+}
+
+const { fiche } = Astro.props as { fiche: Fiche };
+const lienActeur = (id: string) => (FICHES.some((f) => f.slug === id) ? `/institutions/${id}/` : null);
+const sortants = LIENS.filter((l) => l.de === fiche.slug);
+const entrants = LIENS.filter((l) => l.vers === fiche.slug);
+---
+<Base title={`${fiche.sigle} : fiche institution`} description={fiche.resume}>
+  <p class="tag" data-pagefind-ignore><a href="/institutions/">Qui décide : les institutions</a> · {FAMILLES[fiche.famille].nom}</p>
+  <h1>{fiche.sigle}<span class="nom-complet">{fiche.nom}</span></h1>
+  <MiseAJour date={VERIFIE} evolutif={fiche.etat ? 'nominations, procédures et budgets' : undefined} />
+  <p class="resume">{fiche.resume}</p>
+
+  <dl class="identite">
+    <div><dt>Nature</dt><dd>{fiche.nature}</dd></div>
+    <div><dt>Création</dt><dd>{fiche.creation}</dd></div>
+    {fiche.siege && <div><dt>Siège</dt><dd>{fiche.siege}</dd></div>}
+  </dl>
+
+  {fiche.etat && <p class="etat"><strong>⏳ </strong>{fiche.etat}</p>}
+
+  <section class="texte">
+    <h2>Qui y décide ?</h2>
+    <ul>{fiche.decide.map((d) => <li>{d}</li>)}</ul>
+    <h2>Qui paie ?</h2>
+    <ul>{fiche.finance.map((d) => <li>{d}</li>)}</ul>
+    <h2>Ce qu'elle fait</h2>
+    <ul>{fiche.fait.map((d) => <li>{d}</li>)}</ul>
+    <h2>Quels pouvoirs ?</h2>
+    <p>{fiche.pouvoirs}</p>
+    {fiche.controverses && (
+      <>
+        <h2>Débats et critiques</h2>
+        <ul>{fiche.controverses.map((d) => <li>{d}</li>)}</ul>
+      </>
+    )}
+    {fiche.personnes && <><h2>Des personnes</h2><p>{fiche.personnes}</p></>}
+
+    {(sortants.length > 0 || entrants.length > 0) && (
+      <>
+        <h2>Ses liens avec les autres</h2>
+        <ul class="liens">
+          {sortants.map((l) => {
+            const h = lienActeur(l.vers);
+            return <li><strong>{fiche.sigle}</strong> {TYPES_LIENS[l.type].verbe} {h ? <a href={h}>{nomActeur(l.vers)}</a> : nomActeur(l.vers)} : {l.texte}</li>;
+          })}
+          {entrants.map((l) => {
+            const h = lienActeur(l.de);
+            return <li>{h ? <a href={h}>{nomActeur(l.de)}</a> : nomActeur(l.de)} {TYPES_LIENS[l.type].verbe} <strong>{fiche.sigle}</strong> : {l.texte}</li>;
+          })}
+        </ul>
+        <p><a href={`/institutions/#carte`}>Voir la carte des rapports de force</a></p>
+      </>
+    )}
+    {fiche.module && <p>Pour aller plus loin : le module <a href={fiche.module.lien}>{fiche.module.titre}</a>.</p>}
+  </section>
+
+  <Sources verifie={VERIFIE} sources={fiche.sources} />
+</Base>
+
+<style>
+  .nom-complet { display: block; font-size: 1.05rem; font-weight: 500; color: var(--muted); margin-top: 0.3rem; }
+  .resume { font-size: 1.15rem; max-width: var(--mesure); }
+  .identite { display: grid; gap: 0.4rem; max-width: var(--mesure); margin: 1.5rem 0; padding: 0.8rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; }
+  .identite div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.6rem; }
+  @media (max-width: 30rem) { .identite div { grid-template-columns: 1fr; gap: 0; } }
+  .identite dt { font-weight: 700; }
+  .identite dd { margin: 0; }
+  .etat { max-width: var(--mesure); border-left: 4px solid var(--ill-serveur); padding: 0.3rem 0.8rem; background: var(--card); }
+  .texte { max-width: var(--mesure); }
+  .texte h2 { font-size: 1.25rem; margin-top: 2rem; }
+  .texte li { margin-bottom: 0.4rem; }
+</style>

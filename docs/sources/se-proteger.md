@@ -1501,3 +1501,8 @@ L'existence des pages a été vérifiée (HTTP 200) le 8 novembre 2026. Leur **l
 - **Conseil constitutionnel 2022-987 QPC** : date exacte (avril 2022).
 - **Maersk** : rapport annuel 2017 (site bloqué).
 - **Apple ADP** : date de février 2025 et nouveau recours de 2026, à confirmer sur Apple et sur les décisions publiées de l'IPT.
+
+
+## Mise à jour du 25 novembre 2026
+
+Chat Control (compte rendu du Conseil du 30 septembre 2026), post-quantique, Have I Been Pwned : voir [`mises-a-jour-2026-11-25.md`](mises-a-jour-2026-11-25.md).

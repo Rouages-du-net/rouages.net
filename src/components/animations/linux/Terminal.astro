@@ -1,0 +1,142 @@
+---
+// Animation « Se déplacer : chemins absolus et relatifs » (module Linux,
+// étape 1) : un petit terminal simulé (pwd, cd, ls, ls -a) sur
+// l'arborescence d'exemple. Chaque cd est expliqué pas à pas : chemin absolu
+// ou relatif, ~, . et .. (POSIX, résolution des chemins et développement du
+// tilde). Rien ne s'exécute vraiment : c'est une simulation.
+import { ARBRE } from '../../../data/linux';
+
+const ESSAIS = ['pwd', 'ls', 'cd cours', 'cd ..', 'cd ../bob', 'cd /etc', 'cd ~', 'ls -a', 'cd ../../..'];
+---
+<div class="anim terminal-linux" data-terminal-linux data-arbre={JSON.stringify(ARBRE.map((n) => n.chemin + (n.fichier ? '' : '/')))}>
+  <div class="anim-repli">
+    <p>Exemple de session, en partant du dossier personnel d'alice (<code>/home/alice</code>, noté <code>~</code>) :</p>
+    <pre>alice@machine:~$ pwd
+/home/alice
+alice@machine:~$ cd cours
+alice@machine:~/cours$ cd ..
+alice@machine:~$ cd ../bob
+alice@machine:/home/bob$ cd /etc
+alice@machine:/etc$ cd ~
+alice@machine:~$</pre>
+    <p>
+      <code>cd cours</code> est relatif (depuis le dossier courant) ; <code>cd /etc</code> est absolu (depuis la
+      racine) ; <code>..</code> remonte d'un cran ; <code>~</code> ramène au dossier personnel.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="ecran" data-ecran role="log" aria-label="Sortie du terminal simulé"></div>
+      <form class="saisie" data-saisie>
+        <label class="invite" for="commande-linux" data-invite>alice@machine:~$</label>
+        <input id="commande-linux" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ex. cd /etc" data-commande />
+        <button type="submit" class="anim-bouton principal">Entrée</button>
+      </form>
+      <div class="anim-commandes" aria-label="Commandes à essayer">
+        {ESSAIS.map((e) => <button type="button" data-essai={e}><code>{e}</code></button>)}
+      </div>
+      <ol class="explication" data-explication aria-live="polite"></ol>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { abreger, expliquer, resoudre } from '../../../lib/linux';
+
+  document.querySelectorAll<HTMLElement>('[data-terminal-linux]').forEach((racine) => {
+    activerScene(racine);
+    const tous: string[] = JSON.parse(racine.dataset.arbre!);
+    const dossiers = new Set(tous.filter((c) => c.endsWith('/')).map((c) => (c === '/' ? '/' : c.slice(0, -1))));
+    const fichiers = new Set(tous.filter((c) => !c.endsWith('/')));
+    const maison = '/home/alice';
+    let courant = maison;
+    const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
+    const invite = racine.querySelector<HTMLElement>('[data-invite]')!;
+    const champ = racine.querySelector<HTMLInputElement>('[data-commande]')!;
+    const explication = racine.querySelector<HTMLOListElement>('[data-explication]')!;
+    const prompt = () => `alice@machine:${abreger(courant, maison)}$`;
+
+    const ligne = (texte: string, classe = '') => {
+      const p = document.createElement('p');
+      p.textContent = texte;
+      if (classe) p.className = classe;
+      ecran.append(p);
+      ecran.scrollTop = ecran.scrollHeight;
+    };
+    const expliquerListe = (items: string[]) => {
+      explication.replaceChildren(...items.map((t) => Object.assign(document.createElement('li'), { textContent: t })));
+    };
+    const enfants = (d: string, caches: boolean) => [...dossiers, ...fichiers]
+      .filter((c) => c !== '/' && c.slice(0, c.lastIndexOf('/')) === (d === '/' ? '' : d))
+      .map((c) => c.slice(c.lastIndexOf('/') + 1) + (dossiers.has(c) ? '/' : ''))
+      .filter((n) => caches || !n.startsWith('.'))
+      .sort();
+
+    function executer(cmd: string) {
+      const brut = cmd.trim().replace(/\s+/g, ' ');
+      ligne(`${prompt()} ${brut}`, 'tapee');
+      const [nom, ...args] = brut.split(' ');
+      if (nom === '') return;
+      if (nom === 'pwd') {
+        ligne(courant);
+        expliquerListe([`pwd (« print working directory ») affiche le dossier courant, en chemin absolu : ${courant}.`]);
+      } else if (nom === 'cd') {
+        const cible = args.join(' ');
+        const arrivee = resoudre(courant, cible, maison);
+        const etapes = expliquer(courant, cible, maison);
+        if (fichiers.has(arrivee)) {
+          ligne(`bash: cd: ${cible}: N’est pas un dossier`, 'erreur');
+          expliquerListe([...etapes, `${arrivee} est un fichier : on ne peut pas y entrer.`]);
+        } else if (!dossiers.has(arrivee)) {
+          ligne(`bash: cd: ${cible}: Aucun fichier ou dossier de ce type`, 'erreur');
+          expliquerListe([...etapes, `${arrivee} n’existe pas dans cette machine d’exemple.`]);
+        } else {
+          courant = arrivee;
+          expliquerListe([...etapes, `Nouveau dossier courant : ${courant}. L’invite l’affiche${courant.startsWith(maison) ? ', avec « ~ » pour le dossier personnel' : ''}.`]);
+        }
+      } else if (nom === 'ls') {
+        const caches = args.includes('-a');
+        const autre = args.find((a) => !a.startsWith('-'));
+        const d = autre ? resoudre(courant, autre, maison) : courant;
+        if (fichiers.has(d)) { ligne(autre!); expliquerListe([`${d} est un fichier : ls affiche simplement son nom.`]); return; }
+        if (!dossiers.has(d)) { ligne(`ls: impossible d’accéder à '${autre}': Aucun fichier ou dossier de ce type`, 'erreur'); return; }
+        const liste = enfants(d, caches);
+        ligne((caches ? ['./', '../', ...liste] : liste).join('  ') || '(dossier vide)');
+        expliquerListe([
+          `ls liste le contenu de ${d}. Les noms finis par « / » sont des dossiers (dans un vrai terminal, ils sont en couleur).`,
+          caches ? 'Avec -a, ls montre aussi les fichiers cachés, dont le nom commence par un point, et les deux entrées spéciales « . » (ici) et « .. » (le parent).' : 'Les fichiers dont le nom commence par un point sont cachés : essaie ls -a.',
+        ]);
+      } else if (nom === 'clear') {
+        ecran.replaceChildren();
+      } else {
+        ligne(`${nom} : commande introuvable (ce terminal simulé ne connaît que pwd, cd, ls et clear)`, 'erreur');
+      }
+      invite.textContent = prompt();
+    }
+
+    racine.querySelector('[data-saisie]')!.addEventListener('submit', (e) => {
+      e.preventDefault();
+      executer(champ.value);
+      champ.value = '';
+    });
+    racine.querySelectorAll<HTMLButtonElement>('[data-essai]').forEach((b) =>
+      b.addEventListener('click', () => executer(b.dataset.essai!)));
+    ligne('Terminal simulé : tape une commande ou choisis-en une ci-dessous.', 'info');
+  });
+</script>
+
+<style>
+  .ecran { background: var(--terminal-bg); color: var(--terminal-fg); font-family: var(--police-mono); font-size: 0.85rem; border-radius: 0.5rem 0.5rem 0 0; padding: 0.6rem 0.8rem; height: 11rem; overflow-y: auto; }
+  .ecran :global(p) { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .ecran :global(.tapee) { color: var(--terminal-invite); }
+  .ecran :global(.erreur) { color: var(--terminal-erreur); }
+  .ecran :global(.info) { opacity: 0.75; }
+  .saisie { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; background: var(--terminal-bg); border-radius: 0 0 0.5rem 0.5rem; padding: 0.4rem 0.8rem 0.6rem; }
+  .invite { color: var(--terminal-invite); font-family: var(--police-mono); font-size: 0.85rem; }
+  .saisie input { flex: 1 1 8rem; min-width: 0; font: 0.9rem var(--police-mono); background: transparent; color: var(--terminal-fg); border: 1px solid #3a4a3a; border-radius: 0.3rem; padding: 0.2rem 0.4rem; }
+  .anim-commandes code { font-size: 0.85rem; }
+  .explication { margin: 0.8rem 0 0; padding-left: 1.3rem; max-width: var(--mesure); }
+  .explication :global(li) { margin-bottom: 0.2rem; }
+  pre { background: var(--card); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.6rem; overflow-x: auto; font-size: 0.85rem; }
+</style>

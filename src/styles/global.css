@@ -23,6 +23,7 @@
   --terminal-bg: #0f1410;
   --terminal-fg: #c9f5c9;
   --terminal-invite: #f0b46a;
+  --terminal-erreur: #ffb4a8;
 
   /* Typographie */
   --police: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;

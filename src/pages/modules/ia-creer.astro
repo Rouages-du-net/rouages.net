@@ -26,7 +26,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
   <h1>Les IA qui créent</h1>
-  <MiseAJour date="2026-10-16" evolutif="procès en cours, règles européennes" />
+  <MiseAJour date="2026-11-25" evolutif="procès en cours, règles européennes" />
   <p class="chapo seulement-debut">
     Une phrase suffit pour obtenir une image, une voix, une chanson. Comment une machine
     fabrique-t-elle quelque chose qui n'existait pas ? Et l'a-t-elle vraiment inventé, ou
@@ -211,15 +211,16 @@ const etapes = [
     </div>
     <div slot="decide">
       <table class="proces">
-        <caption>Quelques affaires (état au 16 octobre 2026)</caption>
+        <caption>Quelques affaires (état au 25 novembre 2026)</caption>
         <thead><tr><th scope="col">Affaire</th><th scope="col">Où en est-on ?</th></tr></thead>
         <tbody>
           <tr><td>Stephen Thaler contre le Copyright Office (États-Unis)</td><td>Une image produite par une IA sans auteur humain ne peut pas être protégée (cour d'appel, mars 2025 ; la Cour suprême a refusé l'affaire en mars 2026).</td></tr>
-          <tr><td>Getty Images contre Stability AI (Royaume-Uni)</td><td>Getty a perdu l'essentiel en novembre 2025 : selon la juge, le modèle ne stocke pas les photos. Appel autorisé ; la question de l'entraînement n'a pas été jugée.</td></tr>
-          <tr><td>Robert Kneschke contre LAION (Allemagne)</td><td>LAION a gagné en appel (Hambourg, décembre 2025) : constituer le jeu de données est couvert par les exceptions. Pourvoi autorisé.</td></tr>
-          <tr><td>GEMA contre OpenAI (Allemagne)</td><td>Le tribunal de Munich a jugé en novembre 2025 que mémoriser des paroles de chansons dans le modèle est une reproduction non autorisée.</td></tr>
+          <tr><td>Getty Images contre Stability AI (Royaume-Uni)</td><td>Getty a perdu l'essentiel en novembre 2025 : selon la juge, le modèle ne stocke pas les photos. La Cour d'appel a entendu l'affaire en novembre 2026 ; décision attendue en 2027. La question de l'entraînement n'a pas été jugée.</td></tr>
+          <tr><td>Robert Kneschke contre LAION (Allemagne)</td><td>LAION a gagné en appel (Hambourg, décembre 2025) : constituer le jeu de données est couvert par les exceptions. La Cour fédérale de justice a entendu le pourvoi en septembre 2026 et annonce sa décision pour le 17 décembre 2026.</td></tr>
+          <tr><td>GEMA contre OpenAI (Allemagne)</td><td>Le tribunal de Munich a jugé en novembre 2025 que mémoriser des paroles de chansons dans le modèle est une reproduction non autorisée. OpenAI a fait appel.</td></tr>
           <tr><td>Artistes contre Stability AI, Midjourney, DeviantArt et Runway (États-Unis)</td><td>Procédure en cours ; audience sur le fond repoussée à février 2027.</td></tr>
-          <tr><td><em>New York Times</em> contre OpenAI et Microsoft (États-Unis)</td><td>En cours. Le journal parle de copie massive ; les entreprises, d'usage loyal. Le ministère de la Justice a soutenu OpenAI en septembre 2026 (avis non contraignant).</td></tr>
+          <tr><td><em>New York Times</em> contre OpenAI et Microsoft (États-Unis)</td><td>En cours. Le journal parle de copie massive ; les entreprises, d'usage loyal. Les deux camps ont demandé au juge de trancher sans procès (septembre 2026) ; pas de décision au 25 novembre 2026. Le ministère de la Justice a soutenu OpenAI (avis non contraignant).</td></tr>
+          <tr><td>Like Company contre Google (Union européenne)</td><td>Première affaire sur l'IA générative devant la Cour de justice de l'UE. Pour l'avocat général (3 novembre 2026, avis qui ne lie pas la Cour), un chatbot qui reprend un article de presse au point de dispenser de lire l'original peut violer les droits de l'éditeur ; il écarte les questions sur l'entraînement. Arrêt attendu.</td></tr>
         </tbody>
       </table>
       <p>
@@ -262,7 +263,7 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-10-16"
+    verifie="2026-11-25"
     sources={[
       { auteur: 'J. Sohl-Dickstein, E. A. Weiss, N. Maheswaranathan, S. Ganguli', titre: 'Deep Unsupervised Learning using Nonequilibrium Thermodynamics', url: 'https://arxiv.org/abs/1503.03585', type: 'primaire', annee: 2015, langue: 'en' },
       { auteur: 'Y. Song, S. Ermon', titre: 'Generative Modeling by Estimating Gradients of the Data Distribution', url: 'https://arxiv.org/abs/1907.05600', type: 'primaire', annee: 2019, langue: 'en' },
@@ -315,6 +316,11 @@ const etapes = [
       { auteur: 'TIME', titre: 'TIME100 AI : Sougwen Chung', url: 'https://time.com/collections/time100-ai/6309455/sougwen-chung/', type: 'presse', annee: 2023, langue: 'en' },
       { auteur: 'TIME', titre: 'TIME100 AI : Linda Dounia Rebeiz', url: 'https://time.com/collections/time100-ai/6309451/linda-dounia-rebeiz/', type: 'presse', annee: 2023, langue: 'en' },
       { auteur: 'LG', titre: 'LG Guggenheim Award : Stephanie Dinkins', url: 'https://www.lg.com/global/newsroom/news/media-entertainment-solution/lg-guggenheim-award-recipient-stephanie-dinkins-presents-demo-of-latest-ai-artwork-in-progress/', type: 'site', annee: 2023, langue: 'en' },
+      { auteur: 'BCLP', titre: 'Key AI appeal court hearing: Getty v Stability AI', url: 'https://www.bclplaw.com/en-US/events-insights-news/key-ai-appeal-court-hearing-getty-v-stability-ai-flags-ai-model-training-and-use-conflicts-and-uk-v-eu-v-us-differences.html', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Bundesgerichtshof', titre: 'I ZR 281/25 : audience du 3 septembre 2026, décision le 17 décembre 2026', url: 'https://www.bundesgerichtshof.de/SharedDocs/Termine/DE/Termine/IZR281-25.html', type: 'primaire', annee: 2026, langue: 'de' },
+      { auteur: 'Bayern.Recht', titre: 'LG München I, 42 O 14139/24 (GEMA c. OpenAI), appel 6 U 3662/25 e', url: 'https://www.gesetze-bayern.de/Content/Document/Y-300-Z-GRURRS-B-2025-N-30204', type: 'primaire', annee: 2025, langue: 'de' },
+      { auteur: 'Merit AC News', titre: 'NYT, Authors Guild, OpenAI and Microsoft all move for summary judgment', url: 'https://usemeritai.com/news/nyt-openai-copyright-summary-judgment-motions', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Cour de justice de l’UE', titre: 'Conclusions de l’avocat général Szpunar, C-250/25 Like Company c. Google (3 novembre 2026)', url: 'https://curia.europa.eu/site/jcms/p1_1000088866/en/', type: 'primaire', annee: 2026, langue: 'en' },
     ]}
   />
   </section>

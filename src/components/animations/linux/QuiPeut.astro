@@ -1,0 +1,125 @@
+---
+// Animation « Qui peut faire quoi ? » (module Linux, étape 4) : on choisit
+// un compte, un fichier et une action ; le raisonnement du noyau s'affiche :
+// une seule classe de droits (propriétaire, sinon groupe, sinon autres),
+// et root qui passe outre (POSIX, « File Access Permissions » ;
+// path_resolution(7)). Sources : docs/sources/linux.md.
+import { COMPTES, FICHIERS_DROITS } from '../../../data/linux';
+import { acces, enLettres, NOMS_OPERATIONS, type Operation } from '../../../lib/linux';
+
+const ops: Operation[] = ['r', 'w', 'x'];
+const exemples = [
+  { compte: 'bob', fichier: '/srv/cours/corrige.md', op: 'r' as Operation },
+  { compte: 'eve', fichier: '/srv/cours/corrige.md', op: 'r' as Operation },
+  { compte: 'eve', fichier: '/srv/rendus/eve-tp1.md', op: 'w' as Operation },
+];
+---
+<div class="anim qui-peut" data-qui-peut data-comptes={JSON.stringify(COMPTES)} data-fichiers={JSON.stringify(FICHIERS_DROITS)}>
+  <div class="anim-repli">
+    <p>Les comptes : {COMPTES.map((c, i) => <>{i > 0 && ', '}<strong>{c.nom}</strong> ({c.qui} ; groupes : {c.groupes.join(', ')})</>)}.</p>
+    <ul>
+      {FICHIERS_DROITS.map((f) => <li><code>-{enLettres(f.mode)} {f.proprietaire} {f.groupe} {f.chemin}</code> : {f.note}</li>)}
+    </ul>
+    <p>Quelques cas :</p>
+    <ul>
+      {exemples.map((e) => {
+        const c = COMPTES.find((x) => x.nom === e.compte)!;
+        const f = FICHIERS_DROITS.find((x) => x.chemin === e.fichier)!;
+        const d = acces(c, f, e.op);
+        return <li><strong>{e.compte}</strong> veut {NOMS_OPERATIONS[e.op]} <code>{e.fichier}</code> : {d.permis ? 'oui' : 'non'}. {d.raisons.join(' ')}</li>;
+      })}
+    </ul>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="choix">
+        <label>Compte
+          <select data-compte>{COMPTES.map((c) => <option value={c.nom}>{c.nom} ({c.qui})</option>)}</select>
+        </label>
+        <label>veut
+          <select data-op>{ops.map((o) => <option value={o}>{NOMS_OPERATIONS[o]} ({o})</option>)}</select>
+        </label>
+        <label>le fichier
+          <select data-fichier>{FICHIERS_DROITS.map((f) => <option value={f.chemin}>{f.chemin}</option>)}</select>
+        </label>
+      </div>
+      <p class="ls"><code data-ls></code></p>
+      <p class="anim-note" data-note></p>
+      <p class="anim-note" data-id></p>
+      <div class="trios" data-trios aria-hidden="true"></div>
+      <div class="verdict" data-verdict aria-live="polite">
+        <p class="reponse" data-reponse></p>
+        <ol data-raisons></ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { acces, enLettres, type Compte, type Operation } from '../../../lib/linux';
+
+  document.querySelectorAll<HTMLElement>('[data-qui-peut]').forEach((racine) => {
+    activerScene(racine);
+    const comptes: (Compte & { qui: string })[] = JSON.parse(racine.dataset.comptes!);
+    const fichiers: { chemin: string; proprietaire: string; groupe: string; mode: number; note: string }[] = JSON.parse(racine.dataset.fichiers!);
+    const sel = <T extends HTMLElement>(s: string) => racine.querySelector<T>(s)!;
+    const sCompte = sel<HTMLSelectElement>('[data-compte]');
+    const sOp = sel<HTMLSelectElement>('[data-op]');
+    const sFichier = sel<HTMLSelectElement>('[data-fichier]');
+    sCompte.value = 'eve';
+    sFichier.value = '/srv/cours/corrige.md';
+
+    function rendre() {
+      const c = comptes.find((x) => x.nom === sCompte.value)!;
+      const f = fichiers.find((x) => x.chemin === sFichier.value)!;
+      const op = sOp.value as Operation;
+      const d = acces(c, f, op);
+      const lettres = enLettres(f.mode);
+      sel('[data-ls]').textContent = `-${lettres} 1 ${f.proprietaire} ${f.groupe} ${f.chemin}`;
+      sel('[data-note]').textContent = f.note;
+      sel('[data-id]').textContent = `id ${c.nom} → uid=${c.uid}(${c.nom}) groupes=${c.groupes.join(',')}`;
+      const trios = sel('[data-trios]');
+      trios.replaceChildren(...(['u', 'g', 'o'] as const).map((k, i) => {
+        const div = document.createElement('div');
+        div.className = 'trio';
+        if (d.classe === k) div.classList.add('actif');
+        if (d.classe === 'root') div.classList.add('ignore');
+        const t = lettres.slice(3 * i, 3 * i + 3);
+        div.append(
+          Object.assign(document.createElement('span'), { className: 'qui', textContent: ['propriétaire', 'groupe', 'autres'][i] + (k === 'u' ? ` (${f.proprietaire})` : k === 'g' ? ` (${f.groupe})` : '') }),
+          ...[...t].map((l, j) => Object.assign(document.createElement('span'), {
+            className: 'lettre' + (d.classe === k && 'rwx'[j] === op ? (d.permis ? ' oui' : ' non') : ''),
+            textContent: l,
+          })),
+        );
+        return div;
+      }));
+      sel('[data-reponse]').textContent = d.permis ? `✅ Oui, ${c.nom} peut.` : `⛔ Non : « Permission non accordée ».`;
+      sel('[data-verdict]').classList.toggle('refus', !d.permis);
+      sel('[data-raisons]').replaceChildren(...d.raisons.map((r) => Object.assign(document.createElement('li'), { textContent: r })));
+    }
+    [sCompte, sOp, sFichier].forEach((s) => s.addEventListener('change', rendre));
+    rendre();
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+  .choix label { display: grid; gap: 0.15rem; font-size: 0.85rem; font-weight: 600; min-width: 0; }
+  .choix select { font: inherit; font-weight: 400; padding: 0.25rem; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg); color: var(--fg); }
+  .ls { margin: 0.8rem 0 0.2rem; font-size: 0.9rem; }
+  .ls code { font-weight: 700; }
+  .trios { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.6rem 0; }
+  .trios :global(.trio) { display: flex; align-items: center; gap: 0.2rem; border: 2px solid var(--border); border-radius: 0.4rem; padding: 0.25rem 0.45rem; background: var(--bg); opacity: 0.55; }
+  .trios :global(.trio.actif) { border-color: var(--accent-2); opacity: 1; }
+  .trios :global(.trio.ignore) { opacity: 0.35; text-decoration: line-through; }
+  .trios :global(.qui) { font-size: 0.75rem; color: var(--muted); margin-right: 0.3rem; }
+  .trios :global(.lettre) { font: 700 1rem var(--police-mono); width: 1.2rem; text-align: center; border-radius: 0.2rem; }
+  .trios :global(.lettre.oui) { outline: 2px solid var(--ill-secret-b); }
+  .trios :global(.lettre.non) { outline: 2px solid var(--accent); }
+  .verdict { border-left: 4px solid var(--ill-secret-b); padding: 0.2rem 0.8rem; }
+  .verdict.refus { border-left-color: var(--accent); }
+  .reponse { margin: 0 0 0.3rem; font-weight: 700; }
+  .verdict ol { margin: 0; padding-left: 1.2rem; max-width: var(--mesure); }
+</style>

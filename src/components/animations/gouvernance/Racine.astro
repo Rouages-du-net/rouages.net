@@ -1,13 +1,13 @@
 ---
 // Animation « Treize lettres, deux mille serveurs » (module « Gouvernance
 // technique », étape 5) : les 13 identités de la racine du DNS, leurs
-// opérateurs et leurs instances (root-servers.org, état au 8 novembre 2026).
+// opérateurs et leurs instances (root-servers.org, état au 25 novembre 2026).
 // Démonte le mythe des « 13 serveurs ». Données : src/data/gouvernance.ts.
 import { RACINE, RACINE_TOTAL } from '../../../data/gouvernance';
 ---
 <div class="anim racine" data-racine>
   <div class="anim-repli">
-    <p>La racine du DNS a 13 identités (lettres A à M), exploitées par 12 organisations, et servies par {RACINE_TOTAL.toLocaleString('fr-FR')} instances dans le monde (état au 8 novembre 2026) :</p>
+    <p>La racine du DNS a 13 identités (lettres A à M), exploitées par 12 organisations, et servies par {RACINE_TOTAL.toLocaleString('fr-FR')} instances dans le monde (état au 25 novembre 2026) :</p>
     <ul>
       {RACINE.map((r) => <li><strong>{r.lettre}</strong> : {r.operateur} ({r.pays}), environ {r.instances} instances.</li>)}
     </ul>
