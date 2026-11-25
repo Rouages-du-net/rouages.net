@@ -17,8 +17,9 @@ export const TRAJET = [
 // --- Étape 2 : électricité des centres de données.
 export const ELEC_MONDE = [
   { annee: '2024', twh: 415, note: 'estimation' },
-  { annee: '2030', twh: 945, note: 'scénario de référence' },
-  { annee: '2035', twh: 1200, note: 'scénario de référence' },
+  { annee: '2025', twh: 485, note: 'estimation' },
+  { annee: '2030', twh: 950, note: 'scénario de référence' },
+  { annee: '2035', twh: 1200, note: 'scénario de référence 2025' },
 ];
 export const ELEC_FRANCE = [
   { annee: '2024', twh: 10, note: 'estimation de modèle (centres en France)' },

@@ -1073,3 +1073,572 @@ Et l. 173 : « État au 25 novembre 2026. »
 - 18 déc. 2026 : fin des échanges dans NYT c. OpenAI (jugement sommaire).
 - 17 févr. 2027 : audience Andersen c. Stability AI.
 - 2027 : arrêt CJUE *Like Company* ; Cour d'appel, Getty c. Stability.
+
+## Partie 3 : plateformes, concurrence, faux avis, matérialité, jeux
+
+Non publiés : date d'audience en appel de l'affaire « recherche » (source primaire non lue), World Energy Outlook 2026 (iea.org bloqué), affaire publicitaire américaine, EU KIDS Act, règlement sur l'équité numérique, règle britannique de classement (ajouts facultatifs, à décider). Jeux : 72 liens sur 73 répondent ; **Netsim** ne répondait pas le 25 novembre 2026 (503) : à revérifier avant de le classer parmi les disparus.
+
+
+Recherche du 25 novembre 2026. Dépôt lu sans rien y écrire. Requêtes curl avec le User-Agent
+`RouagesDuNet-research/0.1 (https://rouages.net)`, sans donnée personnelle.
+Statuts : **[lu]** = page ou PDF réellement ouvert et lu (au moins le passage cité) ;
+**[résumé/métadonnées seulement]** = vu seulement dans un extrait de moteur de recherche, ou
+page bloquée ; **[non trouvé]**. Wikipédia n'est cité nulle part.
+
+Avertissement de méthode : plusieurs pages ont été lues par WebFetch, qui renvoie un résumé fait
+par un modèle (je le signale par « [lu, via WebFetch] ») ; les citations entre guillemets viennent
+du texte brut lu par curl/pdftotext quand c'est indiqué « [lu, texte brut] ».
+
+---
+
+#### 1. `src/pages/modules/pagerank.astro` (MiseAJour 2026-10-17, encart « État au 17 octobre 2026 »)
+
+#### 1.1 États-Unis, affaire « recherche » : appel
+
+**(a) Phrase actuelle** — `pagerank.astro:242-246` : « En août 2024, un tribunal fédéral de
+Washington juge que « Google est un monopole ». En septembre 2025, il lui interdit les contrats
+d'exclusivité et l'oblige à partager certaines données de son index avec des concurrents. Google
+et le gouvernement ont fait appel ; la cour d'appel n'a pas encore statué. »
+
+**(b) Ce qui a changé** : sur le fond, **rien** : la cour d'appel du circuit de D.C. n'a pas
+statué. Le mémoire final du gouvernement, déposé le **21 octobre 2026**, porte encore la mention
+« ORAL ARGUMENT NOT YET SCHEDULED ». Une audience serait fixée en **janvier 2027** : un article
+de commentaire (ecorpit.com, 7 nov. 2026) cite une ordonnance du 9 octobre 2026 « to calendar
+argument for the first appropriate date in January 2027 », et Law360 (23 nov. 2026) titre
+« DC Circ. Tees Up Google, Meta Cases For January Arguments ». **Je n'ai pas pu lire
+l'ordonnance elle-même** (Justia, CourtListener et Law360 renvoient 403) : ne pas publier la date
+d'audience sans l'avoir vérifiée.
+
+**(c) Proposition** (facultative, la phrase actuelle reste juste) : « Google et le gouvernement
+ont fait appel ; au 25 novembre 2026, la cour d'appel n'a pas encore statué. » Ajouter « une
+audience est annoncée pour janvier 2027 » **seulement** après lecture de l'ordonnance
+(docket D.C. Cir. n° 26-5023).
+
+**(d) Sources**
+- U.S. DOJ, *United States v. Google LLC*, D.C. Cir. n° 26-5023, « Final Response Brief and
+  Opening Brief on Cross-Appeal for the United States and Co-Plaintiff States », déposé le
+  21/10/2026, https://www.justice.gov/atr/media/1470911/dl — **[lu, texte brut, p. 1]**.
+- U.S. DOJ, « Plaintiffs' Second Status Report as to the Enforcement of and Google's Compliance
+  with the Final Judgment », D.D.C. 1:20-cv-03010, 17/09/2026,
+  https://www.justice.gov/atr/media/1461926/dl — **[lu, texte brut, p. 1]** (l'exécution du
+  jugement suit son cours en première instance).
+- ecorpit.com, « Google antitrust appeal 2027: D.C. Circuit, search remedies, SEO and ads »,
+  7/11/2026, https://ecorpit.com/google-search-antitrust-appeal-2027-seo-ads/ — **[lu, via
+  WebFetch]** (source secondaire, de faible poids).
+- Law360, « DC Circ. Tees Up Google, Meta Cases For January Arguments », 23/11/2026,
+  https://www.law360.com/articles/2558630 — **[résumé/métadonnées seulement]** (403).
+
+#### 1.2 États-Unis, affaire « publicité en ligne » (ad tech) — absente de la page
+
+**(a) Phrase actuelle** : aucune. La page ne parle que de l'affaire « recherche » (le dossier
+`recommander-sans-ia.md` §3.5 demandait de ne pas mélanger les deux affaires). Si l'encart doit
+couvrir « la publicité », il manque un fait antérieur à la date de la page.
+
+**(b) Ce qui a changé** : le **2 septembre 2026**, la juge Leonie Brinkema (tribunal fédéral de
+l'Est de la Virginie) a **refusé d'ordonner la vente d'AdX** demandée par le ministère de la
+Justice et a imposé des mesures de comportement pour **six ans**, sous le contrôle d'un
+superviseur et d'un comité technique : connexions avec l'outil libre Prebid, données exportables
+par les éditeurs, interdiction pour Google Ads d'enchérir en priorité sur les outils de Google.
+Le ministère parle d'une « significant victory » ; Google s'est dit « very pleased the court
+rejected the DOJ's proposal » et fera appel du jugement sur la responsabilité (avril 2025).
+Je n'ai trouvé aucune source sur le dépôt effectif de cet appel.
+
+**(c) Proposition** (ajout facultatif, à placer après le point « États-Unis ») : « Dans une
+autre affaire, sur la publicité en ligne, une juge de Virginie a refusé en septembre 2026
+d'obliger Google à vendre sa bourse publicitaire AdX ; elle lui impose plutôt pendant six ans
+des règles d'ouverture aux concurrents, sous surveillance. Le ministère de la Justice y voit une
+victoire, Google se félicite du refus de la vente et conteste sa condamnation de 2025. »
+
+**(d) Sources**
+- U.S. DOJ, « Department of Justice Again Wins Substantial Relief Against Google », communiqué
+  n° 26-1071, 16/09/2026,
+  https://www.justice.gov/opa/pr/department-justice-again-wins-substantial-relief-against-google
+  — **[lu, via WebFetch]** (partie au procès ; ne mentionne pas le refus de la vente).
+- Al Jazeera, « US judge rejects bid to break up Google's ad business », 2/09/2026,
+  https://www.aljazeera.com/economy/2026/9/2/us-judge-rejects-bid-to-break-up-googles-ad-business
+  — **[lu, via WebFetch]** (refus de la vente d'AdX, citations de Google et du DOJ).
+
+#### 1.3 Union européenne : DMA et Google Shopping
+
+**(a) Phrase actuelle** — `pagerank.astro:247-250` : « En septembre 2024, la Cour de justice
+confirme l'amende de 2,4 milliards d'euros infligée en 2017 pour avoir favorisé Google Shopping.
+Le 23 juillet 2026, la Commission inflige 460 millions d'euros au titre du DMA pour
+auto-préférence dans les résultats de recherche. »
+
+**(b) Ce qui a changé** :
+- Décision DMA du 23 juillet 2026 : **rien de nouveau trouvé** ; aucun recours de Google
+  contre l'amende de 460 M€ confirmé par une source lue. Communiqué IP/26/1670 relu : chiffres
+  exacts.
+- **Nouveau (12 novembre 2026)** : dans l'affaire **AdSense** (publicité liée aux recherches sur
+  des sites tiers, amende de près de 1,5 milliard d'euros de 2019, **annulée** par le Tribunal
+  le 18 septembre 2024), l'avocate générale Juliane Kokott propose à la Cour de justice
+  d'annuler l'arrêt du Tribunal et de lui renvoyer l'affaire. Ce n'est qu'un avis : la Cour
+  statuera plus tard.
+- Pour mémoire, antérieurs au 17 octobre et absents de la page : amende « adtech » de
+  2,95 milliards d'euros (5 septembre 2025, la Commission ordonnant à Google de mettre fin à ses
+  « inherent conflicts of interest ») ; mesures DMA du 16 juillet 2026 obligeant Google à
+  partager des données de recherche anonymisées avec d'autres moteurs (IP/26/1634).
+
+**(c) Proposition** (ajout mineur) : « État au 25 novembre 2026. […] En 2019, la Commission
+avait aussi infligé près de 1,5 milliard d'euros à Google pour ses contrats publicitaires AdSense ;
+le Tribunal a annulé cette amende en 2024, mais le 12 novembre 2026 une avocate générale a
+proposé à la Cour de justice de casser cette annulation. La Cour n'a pas encore tranché. »
+
+**(d) Sources**
+- Commission européenne, IP/26/1670, « Commission fines Google €890 million for breaches of the
+  Digital Markets Act », 23/07/2026,
+  https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1670 — **[lu, texte brut via
+  l'API presscorner]**.
+- CJUE, communiqué n° 164/26, conclusions de l'avocate générale Kokott, affaire C-826/24 P
+  *Commission/Google et Alphabet (Google AdSense)*, 12/11/2026,
+  https://curia.europa.eu/site/upload/docs/application/pdf/2026-11/cp260164fr.pdf — **[lu, texte
+  brut]**.
+- Commission européenne, IP/25/1992, « Commission fines Google €2.95 billion over abusive
+  practices in online advertising technology », 5/09/2025,
+  https://ec.europa.eu/commission/presscorner/detail/en/ip_25_1992 — **[lu, texte brut via
+  l'API presscorner]**.
+- Commission européenne, IP/26/1634, « Commission provides guidance to Google for AI
+  interoperability on Android and sharing of Google Search data under the DMA », 16/07/2026,
+  https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1634 — **[lu, texte brut via
+  l'API presscorner]**.
+- Search Engine Roundtable, « Google appeals EU DMA search history data » (recours de Google
+  contre les mesures de partage de données, 29/09/2026),
+  https://www.seroundtable.com/google-appeals-eu-dma-search-history-data-42180.html — **[lu, via
+  WebFetch]** (secondaire ; pas de source primaire lue sur ce recours : ne pas publier).
+
+#### 1.4 Autres pays
+
+**(a) Phrase actuelle** — `pagerank.astro:251-253` : « Japon. En avril 2025, la Commission de
+la concurrence ordonne à Google de cesser d'imposer la préinstallation de son moteur sur les
+téléphones Android. »
+
+**(b) Ce qui a changé** : Japon : **rien de nouveau trouvé** (pas de recherche approfondie).
+**Royaume-Uni (antérieur à la date de la page, mais applicable bientôt)** : le 17 juin 2026,
+l'autorité de la concurrence (CMA) a imposé à Google une obligation de « classement équitable » :
+classer ses résultats « based on objective and non-discriminatory criteria », y compris dans ses
+fonctions d'IA générative. Elle entre en vigueur « six months after the date of this Notice »,
+soit vers le **17 décembre 2026** (calcul de ma part).
+
+**(c) Proposition** (ajout facultatif, très proche du sujet PageRank) : « Royaume-Uni. Depuis
+juin 2026, l'autorité de la concurrence impose à Google de classer ses résultats selon des
+critères « objectifs et non discriminatoires », y compris dans ses réponses générées par IA ;
+la règle s'applique à partir de décembre 2026. »
+
+**(d) Sources**
+- Competition and Markets Authority, « Fair ranking conduct requirement » (notice), 17/06/2026,
+  https://assets.publishing.service.gov.uk/media/6a312d7acd3a3f24b55a5bff/_Fair_ranking_CR_notice_.pdf
+  — **[lu, texte brut]**.
+- Point de vue de Google sur cette règle : **[non trouvé]** (à chercher avant publication, pour
+  présenter les deux parties).
+
+#### 1.5 Phrase finale
+
+**(a)** `pagerank.astro:256-257` : « Google conteste ces décisions et a fait appel aux
+États-Unis ; les procédures européennes peuvent aussi faire l'objet de recours. »
+**(b)** Toujours exact. **(c)** Remplacer seulement « État au 17 octobre 2026 » (`:240`) par
+« État au 25 novembre 2026 » si l'on intègre 1.2 à 1.4 ; sinon rien à changer.
+
+---
+
+#### 2. `src/pages/modules/ia-recommander.astro` (MiseAJour 2026-10-16)
+
+#### 2.1 Procédures DSA contre TikTok et Meta
+
+**(a) Phrase actuelle** — `ia-recommander.astro:305-309` : « État au 16 octobre 2026. La
+Commission européenne a publié des conclusions préliminaires sur la « conception addictive » de
+TikTok (6 février 2026), puis d'Instagram et de Facebook (10 juillet 2026), en visant notamment
+leurs systèmes de recommandation très personnalisés. Les entreprises peuvent répondre : aucune
+décision finale n'a été prise. »
+
+**(b) Ce qui a changé — IMPORTANT, au cœur du module** : le **6 novembre 2026**, la Commission
+a publié de **nouvelles conclusions préliminaires contre TikTok, cette fois sur l'algorithme du
+fil « Pour toi »** lui-même et son « effet terrier de lapin » (*rabbit hole*) : plus on regarde
+un type de contenu (tristesse, isolement, image du corps), plus l'algorithme en recommande. Selon
+la Commission, TikTok n'a pas correctement évalué ce risque ; ses mesures (diversification,
+bouton « pas intéressé ») ne suffisent pas, car « The algorithm prioritises showing users content
+based on viewing time, over their choice to see less of certain content ». Elle suggère de
+s'appuyer davantage sur les préférences explicites, de **ne plus utiliser le temps de visionnage
+comme signal de recommandation**, d'améliorer les réglages et de tester l'algorithme
+régulièrement. TikTok répond que ces conclusions sont « fundamentally inaccurate and distort our
+platform's architecture and our commitment to user safety ». Aucune décision finale (amende
+possible jusqu'à 6 % du chiffre d'affaires mondial).
+Le même communiqué rappelle d'autres volets : conclusions préliminaires sur la protection des
+mineurs (juillet 2026), accès des chercheur·ses aux données (octobre 2025), et volet publicité
+clos par des engagements (décembre 2025).
+Meta (Instagram, Facebook) : **rien de nouveau trouvé** depuis le 10 juillet 2026 (pas de
+décision finale). X : pas de nouvelle étape trouvée (enquête élargie en janvier 2026 au
+système de recommandation fondé sur Grok ; amende de 120 M€ du 5 décembre 2025 sur d'autres
+sujets) — ces faits ne sont pas sur la page et n'ont été vus qu'en résumé.
+
+**(c) Proposition** :
+« *État au 25 novembre 2026.* La Commission européenne a publié des **conclusions
+préliminaires** sur la « conception addictive » de TikTok (6 février 2026), puis d'Instagram et
+de Facebook (10 juillet 2026). Le 6 novembre 2026, elle vise directement l'algorithme du fil
+« Pour toi » de TikTok : en recommandant toujours plus de vidéos semblables à celles qu'on a
+regardées, il enfermerait des utilisateur·rices fragiles dans des « terriers de lapin » (tristesse,
+image du corps). Elle suggère notamment de ne plus se fonder sur le temps de visionnage. TikTok
+juge ces conclusions « fondamentalement inexactes ». Les entreprises peuvent répondre : aucune
+décision finale n'a été prise. »
+(Le lien avec la page est direct : le module explique justement que le temps de visionnage est
+un objectif chiffré des recommandations.)
+
+**(d) Sources**
+- Commission européenne, IP/26/2361, « Commission preliminarily finds TikTok's 'For You' feed in
+  breach of Digital Services Act for harmful 'rabbit holes' effect », 6/11/2026,
+  https://ec.europa.eu/commission/presscorner/detail/en/ip_26_2361 (même texte sur
+  https://digital-strategy.ec.europa.eu/en/news/commission-preliminarily-finds-tiktoks-you-feed-breach-digital-services-act-harmful-rabbit-holes)
+  — **[lu, texte brut via l'API presscorner ; date 2026-11-06 dans les métadonnées]**.
+- K. Chan (Associated Press), « EU says 'rabbit hole' video feeds on TikTok violate its digital
+  rules », 6/11/2026,
+  https://www.news4jax.com/business/2026/11/06/eu-says-rabbit-hole-video-feeds-on-tiktok-violate-its-digital-rules/
+  — **[lu, via WebFetch]** (réponse de TikTok citée ; communiqué de TikTok lui-même
+  **[non trouvé]**).
+- Meta : recherche sans résultat postérieur au 10/07/2026 ; X : Commission, « Commission
+  investigates Grok and X's recommender systems under the DSA » (janvier 2026),
+  https://digital-strategy.ec.europa.eu/en/news/commission-investigates-grok-and-xs-recommender-systems-under-digital-services-act
+  — **[résumé/métadonnées seulement]**.
+
+#### 2.2 Règle européenne en préparation : EU KIDS Act (absente de la page)
+
+**(a) Phrase actuelle** : aucune (le module cite le DSA, art. 27, 28, 34, 35, 38).
+
+**(b) Ce qui a changé** (17 septembre 2026, donc antérieur à la date de la page, mais non
+repris) : la Commission a proposé un règlement, l'« EU KIDS Act » : pas de compte personnel sur
+les réseaux sociaux avant 15 ans (13-15 ans via un compte géré par les parents), et pour tous
+les services utilisés par des mineur·es, « l'interdiction des fonctionnalités addictives et des
+fils de recommandation fondés sur le profilage qui entraînent les mineurs dans des spirales de
+contenus préjudiciables », plus « des systèmes de recommandation sûrs que les mineurs pourront
+contrôler, régler et réinitialiser ». Ce n'est qu'une proposition : Parlement et Conseil doivent
+l'adopter. Critique : l'association EDRi juge que le texte « leaves largely untouched the
+business models that put us all at risk » et que « Age-gating cannot be a technological shortcut
+for a problem rooted in platform design and business incentives ».
+Le 11 novembre 2026, la Commission a aussi proposé un **règlement sur l'équité numérique**
+(Digital Fairness Act) : « possibilité pour les consommateurs de désactiver les fonctionnalités
+de conception addictives » (surtout celles qui poussent à dépenser).
+
+**(c) Proposition** (ajout dans l'encart « décide ») : « En septembre 2026, la Commission
+européenne a proposé l'EU KIDS Act : pas de compte personnel sur les réseaux sociaux avant
+15 ans, et pour les mineur·es, plus de fil de recommandation fondé sur le profilage ni de
+défilement infini sans pause. C'est une proposition, encore à négocier. Ses partisan·es veulent
+que les plateformes prouvent que leurs services sont « sûrs dès leur conception » ; des
+associations de défense des libertés, comme EDRi, craignent la vérification d'âge généralisée
+et regrettent qu'on protège seulement les enfants plutôt que de changer le modèle des
+plateformes pour tout le monde. »
+
+**(d) Sources**
+- Commission européenne, IP/26/1890, « EU KIDS Act : la Commission propose de restreindre
+  l'accès des plateformes de médias sociaux aux enfants dans l'UE », 17/09/2026,
+  https://ec.europa.eu/commission/presscorner/detail/fr/ip_26_1890 — **[lu, texte brut via
+  l'API presscorner, version FR]**.
+- EDRi, « The KIDS Act will make the internet less safe », 30/09/2026, https://edri.org/?p=63691
+  — **[lu, via WebFetch]** (association opposée).
+- Commission européenne, IP/26/2407, « La Commission renforce la législation relative à la
+  protection des consommateurs pour l'adapter à l'ère numérique », 11/11/2026,
+  https://ec.europa.eu/commission/presscorner/detail/fr/ip_26_2407 — **[lu, texte brut via
+  l'API presscorner, version FR]**.
+
+#### 2.3 France : interdiction des réseaux sociaux avant 15 ans
+
+**(a) Phrase actuelle** — `ia-recommander.astro:312-319` : « […] le Conseil constitutionnel a
+censuré cet article le 14 août 2026 […]. Le gouvernement prépare une nouvelle rédaction. »
+
+**(b) Ce qui a changé** : la phrase était déjà dépassée au 16 octobre : le **14 septembre
+2026**, le gouvernement a **notifié à la Commission européenne** une nouvelle rédaction. Selon le
+rapport de la commission des affaires européennes de l'Assemblée (28 octobre 2026) : « Il ne
+s'agit pas d'une loi adoptée mais d'un projet, qui devra être examiné par le Parlement et pourra
+de nouveau être déféré au Conseil constitutionnel. Ce texte maintient l'interdiction d'accès
+avant quinze ans mais en redéfinit le champ : sont visés les réseaux sociaux dont les
+fonctionnalités ou pratiques commerciales présentent un risque […]. Le texte en énumère dix,
+parmi lesquels le déclenchement automatique et le défilement infini. » Pas d'examen
+parlementaire trouvé au 25 novembre 2026. Le même rapport souligne la question de la
+compatibilité avec le KIDS Act européen.
+
+**(c) Proposition** : « […] le Conseil constitutionnel a censuré cet article le 14 août 2026
+[…]. Le 14 septembre 2026, le gouvernement a notifié à la Commission européenne une nouvelle
+version : l'interdiction viserait les réseaux sociaux qui ont au moins une de dix
+fonctionnalités jugées à risque, comme la lecture automatique ou le défilement infini. Au
+25 novembre 2026, le Parlement ne l'a pas encore examinée. »
+
+**(d) Sources**
+- Assemblée nationale, rapport n° 3425 (M. Karamanli, commission des affaires européennes) sur
+  la proposition de résolution européenne n° 3281, enregistré le 28/10/2026,
+  https://www.assemblee-nationale.fr/dyn/docs/RAPPANR5L17B3425.raw — **[lu, texte brut]**.
+- Assemblée nationale, proposition de résolution européenne n° 3281, 7/10/2026,
+  https://www.assemblee-nationale.fr/dyn/opendata/PNREANR5L17B3281.html — **[lu, texte brut,
+  début]**.
+- Franceinfo, « "Ne rien lâcher" : le gouvernement soumet une nouvelle version de l'interdiction
+  des réseaux sociaux aux moins de 15 ans à la Commission européenne », 14/09/2026,
+  https://www.franceinfo.fr/internet/reseaux-sociaux/le-gouvernement-soumet-une-nouvelle-version-de-l-interdiction-des-reseaux-sociaux-aux-moins-de-15-ans-a-la-commission-europeenne-apres-la-censure-d-un-precedent-texte-par-le-conseil-constitutionnel_8191493.html
+  — **[lu, via WebFetch]**.
+- Fiche TRIS de la notification : **[non trouvé]** (numéro non identifié avec certitude).
+
+#### 2.4 Recherche sur les effets des algorithmes
+
+**(a)** `ia-recommander.astro:242-282` (études 2015-2024, débat santé mentale).
+**(b) Rien de nouveau trouvé** de majeur publié entre le 16 octobre et le 25 novembre 2026 (une
+recherche ; résultats : étude CHI 2026 et prépublication « Prosocial Ranking Challenge » de mars
+2026, non lues, antérieures). **(c)** Rien à changer. **(d)** Recherche web du 25/11/2026 —
+**[résumé/métadonnées seulement]**.
+
+---
+
+#### 3. `src/pages/modules/classer-notes.astro` (MiseAJour 2026-10-17)
+
+#### 3.1 Règle de la FTC sur les faux avis — **ERREUR À CORRIGER**
+
+**(a) Phrase actuelle** — `classer-notes.astro:237-241` : « […] En décembre 2025, la FTC a
+envoyé des lettres d'avertissement à dix entreprises ; à notre connaissance, aucune sanction n'a
+encore été prononcée sur cette base. »
+
+**(b) Ce qui a changé** (faits antérieurs à la date de la page, manqués par le dossier) :
+- **13 avril 2026** : première action de la FTC fondée sur la règle. La plainte contre
+  TruHeight (compléments alimentaires « pour grandir » destinés aux enfants) vise la loi FTC et
+  la « Reviews and Testimonials Rule » : des milliers d'avis 5 étoiles « actually written by
+  company employees », des avis payés en produits gratuits et de faux profils gérés par des
+  robots. Accord amiable : **750 000 dollars** (jugement de 4 M$ suspendu en partie). Vote 2-0.
+  **Ordonnance définitive le 15 juillet 2026.** L'entreprise a transigé ; aucune reconnaissance
+  de culpabilité n'apparaît dans le communiqué.
+- **11 mai 2026** : la FTC et l'Illinois, avec le ministère de la Justice, poursuivent Premium
+  Home Service : des milliers de fiches d'entreprises de dépannage inexistantes, avec de faux
+  avis 5 étoiles ; la plainte invoque la règle et demande des sanctions civiles. Affaire en cours.
+
+**(c) Proposition** : « États-Unis. Une règle de la FTC, adoptée à l'unanimité en août 2024 et
+en vigueur depuis le 21 octobre 2024, interdit d'acheter ou de vendre de faux avis, y compris
+générés par IA. Après des lettres d'avertissement (décembre 2025), la FTC a obtenu en 2026 un
+premier accord sur cette base : un vendeur de compléments alimentaires dont les salarié·es
+écrivaient des avis 5 étoiles paiera 750 000 dollars, sans reconnaître de faute. Une autre
+plainte, contre une entreprise accusée d'avoir inventé des milliers de fausses fiches d'artisans
+avec leurs avis, est en cours (état au 25 novembre 2026). »
+
+**(d) Sources**
+- FTC, « FTC Takes Action Against TruHeight for Deceptive and Unsubstantiated Advertising of
+  Supposed Height-Enhancing Supplements for Kids and Teens », 13/04/2026,
+  https://www.ftc.gov/news-events/news/press-releases/2026/04/ftc-takes-action-against-truheight-deceptive-unsubstantiated-advertising-supposed-height-enhancing
+  — **[lu, via WebFetch ; date vérifiée dans le HTML brut]**.
+- FTC, « FTC Approves Final Order Against TruHeight… », 15/07/2026,
+  https://www.ftc.gov/news-events/news/press-releases/2026/07/ftc-approves-final-order-against-truheight-deceptive-unsubstantiated-advertising-supplements-kids
+  — **[lu, via WebFetch]** (ne nomme pas la règle ; c'est la plainte d'avril qui la cite).
+- FTC, « FTC and Illinois Take Action to Stop Deceptive Conduct by Company that Created Thousands
+  of Business Listings of Fake Local Home Repair Businesses », 11/05/2026,
+  https://www.ftc.gov/news-events/news/press-releases/2026/05/ftc-illinois-take-action-stop-deceptive-conduct-company-created-thousands-business-listings-fake
+  — **[lu, via WebFetch]**.
+- Covington & Burling (Global Policy Watch), « FTC and DOJ Continue Focus on Consumer Reviews Rule
+  with Complaint Against Premium Home Service », 2/06/2026,
+  https://www.globalpolicywatch.com/2026/06/ftc-and-doj-continue-focus-on-consumer-reviews-rule-with-complaint-against-premium-home-service/
+  — **[lu, via WebFetch]** (source indépendante n° 2).
+- Plaintes elles-mêmes (PDF ftc.gov) : **[non lues]**.
+
+#### 3.2 Union européenne (Omnibus)
+
+**(a)** `classer-notes.astro:225-229` (directive « Omnibus », appliquée depuis le 28 mai 2022).
+**(b)** Directive inchangée. Nouveau : le 11 novembre 2026, la Commission a proposé un
+règlement sur l'équité numérique (Digital Fairness Act) et des pouvoirs d'enquête et d'amende
+directs pour les affaires de grande ampleur (révision du règlement CPC). **Le communiqué ne
+parle pas des avis** ; une source secondaire dit que le texte transformerait la directive sur les
+pratiques commerciales déloyales en règlement (non vérifié).
+**(c)** Rien à changer à la phrase. Ajout facultatif : « En novembre 2026, la Commission a
+proposé de renforcer ces règles (règlement sur l'équité numérique) et de pouvoir elle-même
+enquêter et sanctionner les infractions de grande ampleur ; le texte doit encore être adopté. »
+**(d)** Commission européenne, IP/26/2407, 11/11/2026,
+https://ec.europa.eu/commission/presscorner/detail/fr/ip_26_2407 — **[lu, texte brut]**.
+
+#### 3.3 France, DGCCRF
+
+**(a)** `classer-notes.astro:217-219` (« la DGCCRF disait en 2023 développer un outil
+d'intelligence artificielle ») et `:230-236`.
+**(b) Rien de nouveau trouvé.** Un résumé de recherche indique que l'outil s'appelle
+« Polygraphe », déployé en 2023 ; la page DGCCRF « Comment la DGCCRF enquête sur les faux avis »
+est bloquée (403, protection anti-robots), donc non vérifié.
+**(c)** Rien à changer. **(d)** https://www.economie.gouv.fr/dgccrf/comment-la-dgccrf-enquete-sur-les-faux-avis
+— **[résumé/métadonnées seulement]** (403).
+
+#### 3.4 Seuil IMDb
+
+**(a)** `classer-notes.astro:74-78` : « […] avec un seuil de 25 000 votes pour entrer au
+classement (état au 17 octobre 2026) ».
+**(b) Rien de changé** : « m = minimum ratings required to be listed in the Top Rated 250 chart
+(currently 25,000) » ; IMDb dit toujours ne pas révéler sa pondération.
+**(c)** Remplacer seulement la date : « (état au 25 novembre 2026) ».
+**(d)** IMDb, « Ratings FAQ »,
+https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV — **[lu, via
+WebFetch]**.
+
+---
+
+#### 4. `src/pages/jeux/index.astro` et `src/data/jeux.ts` (17 et 24 octobre 2026)
+
+Méthode : les 73 liens externes de `jeux.ts` ouverts le 25/11/2026 avec curl (suivi des
+redirections, code HTTP, puis titre de la page) ; dépôts GitHub vérifiés par WebFetch (le proxy
+refuse curl et `gh` pour ces dépôts).
+
+#### 4.1 Lien qui ne répond plus : Netsim
+
+**(a)** `jeux.ts:105` : `{ nom: 'Netsim', lien: 'https://netsim.erinn.io/', … }`.
+**(b)** Le 25/11/2026 : HTTPS → connexion réinitialisée (curl, code 000, deux essais espacés) ;
+WebFetch → **HTTP 503 Service Unavailable**. Le nom de domaine résout encore. Le dossier
+`jeux.md:356` le notait « fonctionne (lu) » le 17 octobre. Panne passagère ou fin du service :
+impossible à dire.
+**(c)** Revérifier dans quelques jours ; si la panne dure, déplacer Netsim dans « Disparus ou à
+éviter » : « Netsim (ne répond plus au 25 novembre 2026) ».
+**(d)** https://netsim.erinn.io/ — **[non trouvé]** (503 / connexion réinitialisée).
+
+#### 4.2 Tous les autres liens répondent (code 200, titre attendu)
+
+Rien à changer pour : Terminus, Hacknet, OverTheWire (Bandit, Natas), bashcrawl, CMD Challenge,
+VIM Adventures, Castor, Algoréa, France-IOI, Blockly Games, LightBot, Human Resource Machine,
+7 Billion Humans, Robocode Tank Royale, NandGame, Turing Complete, Digital Logic Sim, TIS-100,
+SHENZHEN I/O, EXAPUNKS, MHRD, Grid Garden, Flexbox Froggy, CSS Diner, Learn Git Branching,
+Oh My Git!, SQL Murder Mystery, Untrusted, CS Unplugged, fiche SNT (PDF), Filius, Cisco Packet
+Tracer, NetsBlox, Root-Me (page anti-robot, normal), CyLab Security Academy, quiz hameçonnage,
+Interland, deux jeux CNIL, Hacksplaining, TryHackMe, Grey Hack, Cyber Manhunt, Quick Draw!,
+Survival of the Best Fit, Agent Breaker, Which Face Is Real?, Moral Machine, Teachable Machine,
+E.M.I.SSAIRE, Médiasphères, Classe Investigation, Bad News, Spot the Troll, Fakey, Cranky Uncle,
+Cryptris, MysteryTwister, CryptoHack, Cryptopals, Evolution of Trust, Parable of the Polygons,
+Guess the Correlation, clickclickclick, VisuAlgo, Fresque du Numérique.
+GameShell et The Command Line Murders (GitHub) : en ligne, non archivés **[lu, via WebFetch]**.
+
+Remarques sans changement nécessaire :
+- CodinGame : le titre est toujours « CodinGame: the arena for engineering agents » ; la
+  description de `jeux.ts:66` reste juste.
+- Harmony Square : `harmonysquare.game/fr` redirige toujours vers `harmonysquare.getbadnews.com/fr`
+  (déjà noté dans `jeux.md:545`).
+- AI for Oceans : `code.org/oceans` redirige vers `studio.code.org/…/oceans/…`, titre
+  « AI for Oceans - CodeAI » : conforme.
+- picoctf.org affiche toujours « picoCTF.org is now CyLab Security Academy » et « Coming Soon:
+  picoCTF.com » : conforme à `jeux/index.astro:80-81`.
+- « Disparus ou à éviter » (`jeux/index.astro:77-81`) : Go Viral! et SQL Island ne répondent
+  toujours pas (code 000), humanornot.ai redirige toujours vers ai21.com, gandalf.lakera.ai vers
+  Agent Breaker. Troll Factory (trollitehdas.yle.fi) répond 200 : c'est la version archivée déjà
+  signalée. **Rien à changer.**
+
+**(c)** Mettre à jour la date « ne marchent plus au 17 octobre 2026 » (`jeux/index.astro:77`)
+seulement si l'on republie la page, en ajoutant Netsim si sa panne se confirme.
+**(d)** Résultats bruts : `/tmp/claude-0/-home-user-rouages-net/333aff90-b346-5874-849d-9adc7dc73165/scratchpad/liens-res.txt`.
+Contrôle limité au code HTTP et au titre ; prix, pisteurs et descriptions **non revérifiés**
+(sauf CodinGame et picoCTF).
+
+---
+
+#### 5. `src/pages/modules/materialite.astro` et `src/data/materialite.ts` (6 novembre 2026)
+
+#### 5.1 Électricité des centres de données (AIE)
+
+**(a)** `materialite.astro:89-90` : « En 2024, ils ont consommé environ 1,5 % de l'électricité
+mondiale. » ; `:94` « l'AIE prévoit un doublement d'ici 2030 » ; `:212` « pèsent 1,5 % de
+l'électricité mondiale (2024) » ; `materialite.ts:19-21` : 2024 = 415 TWh, 2030 = 945 TWh,
+2035 = 1 200 TWh.
+
+**(b) Ce qui a changé** :
+- Le rapport AIE *Key Questions on Energy and AI* (PDF créé le 16 avril 2026), que le dossier
+  `materialite.md:141,770` n'avait pas pu lire (403), est **lisible** sur le stockage de l'AIE.
+  Il donne l'année **2025** : « Our updated projections see electricity consumption from data
+  centres roughly doubling from **485 TWh in 2025 to 950 TWh in 2030**, accounting for around 3%
+  of global electricity demand by that date » ; ailleurs : « grew by more than 15% between 2024
+  and 2025, adding around 70 terawatt-hours […] taking the sector's annual consumption to almost
+  500 TWh, or slightly more than 1.5% of global electricity demand ». Le scénario de base
+  conserve « around 415 TWh in 2024 to around 950 TWh in 2030 ». Pour 2035 : « from around
+  500 TWh today to between 700 TWh and 1 700 TWh in 2035, depending on the case ».
+  Attention : le rapport dit à la fois « 485 TWh » et « almost 500 TWh » ; et 950 TWh en 2030
+  (le site affiche 945, valeur du rapport 2025).
+- **World Energy Outlook 2026**, publié le **19 novembre 2026** (nouvelle édition) : selon
+  Euronews, la consommation des centres de données « could double by 2030, reaching up to 1,000
+  terawatt-hours » (scénario des politiques annoncées). **Rapport AIE non lu** (iea.org en 403) :
+  ne pas reprendre ce chiffre.
+
+**(c) Proposition** :
+- `materialite.astro:89-90` : « En 2025, ils ont consommé près de 500 TWh (485 selon l'AIE),
+  un peu plus de 1,5 % de l'électricité mondiale, en hausse de plus de 15 % en un an. »
+- `materialite.ts` : ajouter `{ annee: '2025', twh: 485, note: 'estimation' }` ; garder 2024
+  (415) pour montrer la hausse ; pour 2030, 950 TWh (scénario de base mis à jour en 2026) au lieu
+  de 945, ou garder 945 en citant le rapport 2025. Ne pas toucher 2035 sans le dire : le rapport
+  2026 ne donne plus qu'une fourchette (700 à 1 700 TWh selon le scénario).
+- `:212` : « pèsent un peu plus de 1,5 % de l'électricité mondiale (2025) ».
+- Mettre à jour la source (`materialite.astro:229-230`) avec le rapport *Key Questions on Energy
+  and AI* (AIE, 2026).
+
+**(d) Sources**
+- AIE, *Key Questions on Energy and AI*, avril 2026,
+  https://iea.blob.core.windows.net/assets/3179f7f8-01f6-4dd6-bffa-c9f7b73f1dc9/KeyQuestionsonEnergyandAI.pdf
+  — **[lu, texte brut ; passages cités p. ~ chap. 1]**.
+- P. Davies (Euronews), « Data centre energy consumption could double by 2030, straining grids,
+  IEA warns », 19/11/2026,
+  https://www.euronews.com/2026/11/19/data-centre-energy-consumption-could-double-by-2030-straining-grids-iea-warns
+  — **[lu, via WebFetch]**.
+- AIE, *World Energy Outlook 2026*, https://www.iea.org/reports/world-energy-outlook-2026 —
+  **[résumé/métadonnées seulement]** (403).
+
+#### 5.2 Eau consommée par Google — nouvelle édition parue
+
+**(a)** `materialite.astro:101-102` : « Google, qui publie les trois, annonce environ
+31 milliards de litres consommés en 2024, en hausse de 28 % » (source : rapport 2025, `:234`).
+
+**(b) Ce qui a changé** : le **rapport environnemental 2026** de Google (données 2025) est paru
+(juin-juillet 2026). « In 2025, we consumed 10.9 billion gallons (41 billion liters or 41 million
+cubic meters) of water across our data centers and offices […] Our water consumption increased
+34% from 2024 to 2025 ». Tableau : consommation totale 8 135 → 10 869 millions de gallons
+(2024 → 2025), dont 10 523 pour les centres de données. Google dit avoir « reconstitué » environ
+7,7 milliards de gallons, « roughly 78% of our freshwater consumption » (périmètre « eau douce »,
+différent du total).
+
+**(c) Proposition** : « Google, qui publie les trois, annonce environ 41 milliards de litres
+consommés en 2025 (centres de données et bureaux), en hausse de 34 % en un an ; les sites
+refroidis à l'air n'en consomment presque pas. »
+
+**(d) Sources**
+- Google, *2026 Environmental Report*,
+  https://sustainability.google/files/1699a2e19277e478b38a659f00cb38398a836e8c/download-1699a2e1.pdf
+  (page d'accueil : https://sustainability.google/reports/google-2026-environmental-report/) —
+  **[lu, texte brut]** (partie prenante).
+
+#### 5.3 Autres chiffres datés
+
+- TSMC, eau 2025 (rapport annuel 2025) : pages de investor.tsmc.com en 403 le 25/11/2026 —
+  **[non trouvé]**. Rien à changer.
+- Autres chiffres (USGS 2026, ADEME, RTE, e-waste 2024, câbles) : hors périmètre « nouvelle
+  édition AIE » ; non revérifiés.
+
+---
+
+### Liste triée
+
+### Changements importants
+1. **classer-notes.astro:240-241** — corriger « aucune sanction n'a encore été prononcée » :
+   accord TruHeight (avril 2026, définitif le 15 juillet 2026, 750 000 $) et plainte Premium Home
+   Service (mai 2026). Faits antérieurs au 17 octobre, donc **erreur actuelle** de la page. [lu]
+2. **ia-recommander.astro:305-309** — ajouter les conclusions préliminaires du **6 novembre
+   2026** contre l'algorithme « Pour toi » de TikTok (« terriers de lapin », temps de visionnage)
+   et la réponse de TikTok. [lu]
+3. **ia-recommander.astro:319** — « Le gouvernement prépare une nouvelle rédaction » est dépassé :
+   nouvelle version notifiée à Bruxelles le 14 septembre 2026 (dix fonctionnalités à risque),
+   pas encore examinée par le Parlement. [lu]
+4. **materialite.astro:89-90, :212, materialite.ts:19-21** — chiffre AIE 2025 (≈ 485 TWh, un
+   peu plus de 1,5 %) désormais lisible en source primaire. [lu]
+5. **materialite.astro:101-102** — eau de Google : 41 milliards de litres en 2025 (+34 %),
+   rapport 2026. [lu]
+
+### Changements mineurs ou facultatifs
+6. ia-recommander : mentionner la proposition **EU KIDS Act** (17/09/2026) avec la critique
+   d'EDRi, et éventuellement le règlement sur l'équité numérique (11/11/2026). [lu]
+7. pagerank : avis de l'avocate générale sur **AdSense** (12/11/2026). [lu]
+8. pagerank : affaire **ad tech** aux États-Unis (pas de vente d'AdX, mesures sur six ans,
+   septembre 2026). [lu]
+9. pagerank : obligation britannique de **classement équitable** (CMA, applicable vers le
+   17/12/2026) ; point de vue de Google à trouver. [lu]
+10. pagerank:246 — « État au 25 novembre 2026 » ; l'appel n'est toujours pas jugé ; date
+    d'audience (janvier 2027) **à vérifier** avant toute mention. [résumé seulement]
+11. classer-notes:76-77 — seuil IMDb inchangé : changer seulement la date. [lu]
+12. classer-notes (Omnibus) — ajout facultatif sur le Digital Fairness Act. [lu]
+13. jeux.ts:105 — **Netsim** ne répond plus le 25/11/2026 (503) : revérifier, puis déplacer
+    dans « Disparus » si la panne dure. [non trouvé]
+14. materialite : *World Energy Outlook 2026* (19/11/2026) annonce ~1 000 TWh en 2030 selon la
+    presse : **ne pas publier** sans lecture du rapport. [résumé seulement]
+
+### Rien à changer
+- pagerank : Google Shopping (2024), amende DMA de 460 M€ (chiffres relus), Japon, phrase
+  finale sur les recours.
+- ia-recommander : Meta (pas de décision finale), X (rien de nouveau trouvé), recherche sur
+  les effets (pas d'étude majeure nouvelle trouvée).
+- classer-notes : directive Omnibus, France/DGCCRF (rien de nouveau trouvé ; page DGCCRF en 403).
+- jeux : 72 liens sur 73 répondent ; descriptions de CodinGame, CyLab, Agent Breaker, Harmony
+  Square, AI for Oceans conformes ; liste « Disparus » toujours exacte.
+- materialite : TSMC (rapport 2025 inaccessible), autres chiffres hors périmètre.
