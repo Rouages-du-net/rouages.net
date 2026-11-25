@@ -1642,3 +1642,7 @@ refroidis à l'air n'en consomment presque pas. »
 - jeux : 72 liens sur 73 répondent ; descriptions de CodinGame, CyLab, Agent Breaker, Harmony
   Square, AI for Oceans conformes ; liste « Disparus » toujours exacte.
 - materialite : TSMC (rapport 2025 inaccessible), autres chiffres hors périmètre.
+
+## Compléments publiés le 25 novembre 2026 (seconde passe)
+
+À la demande de l'équipe, les ajouts facultatifs de la partie 3 ont été publiés : affaire publicitaire américaine (AdX), conclusions AdSense (C-826/24 P), montants DMA (460 + 430 M€, vérifiés dans IP/26/1670), règle britannique de classement équitable (CMA ; point de vue de Google non trouvé), EU KIDS Act (avec la critique d'EDRi) et proposition du 11 novembre 2026 sur les fonctionnalités addictives.
