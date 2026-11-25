@@ -47,8 +47,9 @@ export const GRIEFS: { qui: string; date: string; reproche: string; issue: strin
   { qui: 'X', date: '5 décembre 2025', reproche: 'La coche bleue « vérifié » peut s’acheter sans vérification ; le registre des publicités est incomplet ; les chercheur·ses n’ont pas accès aux données publiques.', issue: 'Amende de 120 millions d’euros, la première au titre du DSA.' },
   { qui: 'Temu', date: '28 mai 2026', reproche: 'Évaluation insuffisante du risque de produits illégaux et dangereux, comme des chargeurs ou des jouets pour bébés.', issue: 'Amende de 200 millions d’euros.' },
   { qui: 'AliExpress', date: '20 juillet 2026', reproche: 'Produits illégaux, dangereux ou contrefaits, modérateur·rices trop peu nombreux, recommandations qui mettent ces produits en avant.', issue: 'Amende de 550 millions d’euros, la plus forte à ce jour.' },
-  { qui: 'TikTok', date: '6 novembre 2026', reproche: 'Le fil « Pour toi » enfermerait des utilisateur·rices dans des spirales de contenus nocifs (« rabbit holes »).', issue: 'Constatation préliminaire : TikTok peut répondre avant toute décision. État au 8 novembre 2026.' },
-  { qui: 'Meta', date: '10 juillet 2026', reproche: 'Une conception d’Instagram et de Facebook qui pousserait à l’usage compulsif, notamment chez les mineur·es.', issue: 'Constatation préliminaire. État au 8 novembre 2026.' },
+  { qui: 'TikTok', date: '6 novembre 2026', reproche: 'Le fil « Pour toi » enfermerait des utilisateur·rices dans des spirales de contenus nocifs (« rabbit holes »).', issue: 'Constatation préliminaire : TikTok peut répondre avant toute décision. État au 25 novembre 2026.' },
+  { qui: 'Meta', date: '10 juillet 2026', reproche: 'Une conception d’Instagram et de Facebook qui pousserait à l’usage compulsif, notamment chez les mineur·es.', issue: 'Constatation préliminaire. État au 25 novembre 2026.' },
+  { qui: 'Temu', date: '17 novembre 2026', reproche: 'Des contrôles qui ne vérifient presque jamais la sécurité des produits eux-mêmes, trop peu de modérateur·rices, et des sanctions qui visent une boutique plutôt que le vendeur, qui peut en tenir plusieurs.', issue: 'Constatation préliminaire, après l’amende de mai : Temu conteste et peut répondre avant toute décision. État au 25 novembre 2026.' },
 ];
 
 /** Où l'on peut bloquer une connexion (animation « Blocage »). */

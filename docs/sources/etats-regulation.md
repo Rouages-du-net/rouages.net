@@ -1083,3 +1083,8 @@ Non consulté ici. Pistes : « Censure d'Internet en république populaire de Ch
 - Rapport IODA comparatif sur l'Iran (serveur en erreur lors de la consultation).
 - Chiffres récents de l'ANJ ; article L. 333-10 du code du sport sur Légifrance.
 - Résumé intégral de Rydzak (SSRN bloqué).
+
+
+## Mise à jour du 25 novembre 2026
+
+Omnibus RGPD, pourvoi DPF, moins de 15 ans, Iran, Russie, AI Act, DSA (Temu, 17 novembre 2026), Digital Networks Act : voir [`mises-a-jour-2026-11-25.md`](mises-a-jour-2026-11-25.md).

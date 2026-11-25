@@ -35,7 +35,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Qui décide · module en construction</p>
   <h1>États et régulation : qui fait les lois du numérique ?</h1>
-  <MiseAJour date="2026-11-08" evolutif />
+  <MiseAJour date="2026-11-25" evolutif />
   <p class="chapo seulement-debut">
     Les règles techniques d'internet s'écrivent par consensus, dans des organisations ouvertes. Les lois, elles,
     sont votées par les États : protéger tes données, obliger les plateformes à rendre des comptes, encadrer
@@ -112,12 +112,12 @@ const etapes = [
         sur la surveillance américaine. En 2015, puis en 2020, la Cour de justice de l'UE annule les accords qui
         permettaient d'envoyer les données des Européen·nes aux États-Unis. Un troisième accord est adopté en 2023 ;
         le député français Philippe Latombe l'a contesté, le Tribunal de l'UE l'a validé en septembre 2025, et un
-        pourvoi est en cours (état au 8 novembre 2026).
+        pourvoi est en cours (état au 25 novembre 2026).
       </p>
     </div>
     <div slot="decide">
       <p>
-        <strong>Le RGPD bientôt modifié ? (état au 8 novembre 2026)</strong> En novembre 2025, la Commission a
+        <strong>Le RGPD bientôt modifié ? (état au 25 novembre 2026)</strong> En novembre 2025, la Commission a
         proposé un « omnibus numérique » pour simplifier les règles, avec jusqu'à 5 milliards d'euros
         d'économies administratives. Les autorités de protection des données ont demandé de ne pas toucher à la
         définition de la donnée personnelle ; l'association noyb y voit des changements « surtout utiles aux
@@ -171,10 +171,13 @@ const etapes = [
     </div>
     <div slot="histoire">
       <p>
-        <strong>Les moins de 15 ans (état au 8 novembre 2026).</strong> En France, une loi interdisant les réseaux
+        <strong>Les moins de 15 ans (état au 25 novembre 2026).</strong> En France, une loi interdisant les réseaux
         sociaux aux moins de 15 ans a été censurée le 14 août 2026 par le Conseil constitutionnel : une
         interdiction générale, sans regarder les contenus ni les risques, et sans que les parents puissent la lever,
-        porte atteinte à la liberté d'expression. La Commission européenne a proposé en septembre 2026 un âge
+        porte atteinte à la liberté d'expression. En septembre, le gouvernement a soumis à la Commission européenne
+        une nouvelle version, qui viserait les réseaux aux fonctionnalités jugées addictives (défilement infini,
+        notifications la nuit…), avec des dérogations possibles pour les 13-15 ans si les parents l'acceptent ;
+        certain·es juristes jugent que ces règles relèvent déjà du droit européen. La Commission européenne a proposé en septembre 2026 un âge
         minimum de 15 ans pour les services « à risque ».
       </p>
     </div>
@@ -235,7 +238,10 @@ const etapes = [
         Les opérateurs européens demandent que les grandes plateformes, qui génèrent l'essentiel du trafic,
         participent au coût des réseaux (« fair share »). Le régulateur européen des télécoms n'a trouvé en 2022
         « aucune preuve de parasitisme » ; les plateformes y voient une atteinte à la neutralité. Le débat continue
-        avec un projet de loi européen de 2026 sur les réseaux.
+        avec le projet européen de 2026 sur les réseaux : le rapporteur du Parlement propose qu'un régulateur puisse
+        trancher si une grande plateforme et un opérateur ne s'entendent pas sur l'interconnexion ; l'Internet
+        Society y voit un retour du « fair share » et un risque pour la neutralité. Vote en commission attendu début
+        2027 (état au 25 novembre 2026).
       </p>
     </div>
   </Etape>
@@ -294,8 +300,9 @@ const etapes = [
     <p slot="curieux">
       Le 27 janvier 2011, l'Égypte disparaît d'internet en vingt minutes : ses opérateurs retirent presque toutes
       leurs annonces de routes (<Terme id="bgp">BGP</Terme>). Aujourd'hui, l'Iran garde ses routes mais ne laisse
-      passer qu'une liste blanche de services. Depuis janvier 2026, il a imposé la plus longue coupure nationale
-      jamais documentée par Freedom House : environ 88 jours d'affilée (état au 8 novembre 2026).
+      passer qu'une liste blanche de services. En 2026, il a imposé la plus longue coupure nationale jamais
+      documentée par Freedom House : environ 88 jours d'affilée, de fin février à fin mai, après une première
+      coupure de 20 jours en janvier. Depuis, l'accès n'est revenu que partiellement (état au 25 novembre 2026).
     </p>
     <p slot="ingenieur">
       Couper seulement le réseau mobile, ou ralentir un service au lieu de le bloquer, est plus discret et plus
@@ -345,7 +352,7 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-08"
+    verifie="2026-11-25"
     sources={[
       { auteur: 'CNUCED', titre: 'Data protection and privacy legislation worldwide (données 2026)', url: 'https://unctad.org/page/data-protection-and-privacy-legislation-worldwide', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Acteurs publics', titre: '1978, année zéro de la protection des données', url: 'https://acteurspublics.fr/articles/1978-annee-zero-de-la-protection-des-donnees/', type: 'presse', annee: 2018 },
@@ -437,6 +444,12 @@ const etapes = [
       { auteur: 'A. Gohdes', titre: 'Pulling the plug: network disruptions and violence in civil conflict (Journal of Peace Research, résumé)', url: 'https://ideas.repec.org/a/sae/joupea/v52y2015i3p352-367.html', type: 'recherche', annee: 2015, langue: 'en' },
       { auteur: 'J. Rydzak', titre: 'Of Blackouts and Bandhs (résumé)', url: 'https://papers.ssrn.com/abstract=3330413', type: 'recherche', annee: 2019, langue: 'en' },
       { auteur: 'OONI', titre: 'Risques liés à l’utilisation d’OONI Probe', url: 'https://ooni.org/about/risks/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'AFP (via DH)', titre: 'Ce que l’on sait des nouvelles pistes pour interdire les réseaux sociaux aux ados', url: 'https://www.dhnet.be/dernieres-depeches/2026/09/14/ce-que-lon-sait-des-nouvelles-pistes-pour-interdire-les-reseaux-sociaux-aux-ados-PBBO7ZB7Z5HYFERNJ7IOTUGVMM/', type: 'presse', annee: 2026, langue: 'fr' },
+      { auteur: 'Siècle Digital', titre: 'Réseaux sociaux interdits aux moins de 15 ans : Macron pense avoir trouvé la solution', url: 'https://siecledigital.fr/2026/09/14/reseaux-sociaux-interdits-aux-moins-de-15-ans-macron-pense-avoir-trouve-la-solution/', type: 'presse', annee: 2026, langue: 'fr' },
+      { auteur: 'Internet Society', titre: 'Digital Networks Act: The European Parliament Must Correct Course', url: 'https://www.internetsociety.org/blog/2026/11/digital-networks-act-the-european-parliament-must-correct-course/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'The European Post', titre: 'Digital Networks Act Report Reopens The Network Fee Fight In ITRE', url: 'https://theeuropeanpost.eu/policy-gazette/digital-networks-act-report-reopens-the-network-fee-fight-in-itre/', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'ACLED', titre: 'Has Iran really restored internet access?', url: 'https://acleddata.com/expert-comment/has-iran-really-restored-internet-access', type: 'recherche', annee: 2026, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'IP/26/2463 : constatation préliminaire contre Temu (DSA)', url: 'https://ec.europa.eu/commission/presscorner/detail/en/ip_26_2463', type: 'primaire', annee: 2026, langue: 'en' },
     ]}
   />
   </section>

@@ -35,7 +35,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Comment ça marche · module en construction</p>
   <h1>Se protéger : mots de passe, hameçonnage, chiffrement, mises à jour</h1>
-  <MiseAJour date="2026-11-08" evolutif />
+  <MiseAJour date="2026-11-25" evolutif />
   <p class="chapo seulement-debut">
     La plupart des attaques ne visent personne en particulier : des robots essaient des mots de passe volés, des
     messages piégés partent par millions, des failles connues attendent qu'on oublie de mettre à jour. Ce module
@@ -99,7 +99,7 @@ const etapes = [
       authentification</Terme> ajoute une deuxième preuve : un mot de passe volé ne suffit plus.
     </p>
     <p slot="curieux">
-      Le service Have I Been Pwned recense 17,8 milliards de comptes fuités dans 1 049 fuites (état au 8 novembre
+      Le service Have I Been Pwned recense 17,9 milliards de comptes fuités dans 1 055 fuites (état au 25 novembre
       2026), dont France Travail, Free, Bouygues Telecom. La CNIL a sanctionné en janvier 2026 France Travail
       (5 millions d'euros) et Free (42 millions) pour des protections insuffisantes. Le code par SMS vaut mieux que
       rien, mais l'ANSSI le déconseille : un escroc peut se faire attribuer ton numéro (« SIM swap »).
@@ -279,9 +279,12 @@ const etapes = [
         annoncé qu'il quitterait le marché plutôt que de s'y plier.
       </p>
       <p>
-        <strong>État au 8 novembre 2026</strong> : le projet de règlement européen contre les abus sexuels sur
-        enfants (dit « Chat Control ») n'a pas abouti : selon les comptes rendus des négociations, le désaccord porte sur la détection
-        dans les messages privés. Le régime provisoire, prolongé jusqu'en avril 2028, ne permet que des
+        <strong>État au 25 novembre 2026</strong> : le projet de règlement européen contre les abus sexuels sur
+        enfants (dit « Chat Control ») n'a pas abouti. Selon le Conseil, les négociateur·rices se sont entendu·es en
+        septembre sur la détection dans les contenus publics, limitée aux images déjà connues, mais pas sur les
+        messages privés : les gouvernements veulent permettre aux services de les analyser volontairement, hors
+        chiffrement de bout en bout ; le Parlement n'accepte que des ordres ciblés, en dernier recours. Une nouvelle
+        réunion est prévue en décembre. Le régime provisoire, prolongé jusqu'en avril 2028, ne permet que des
         détections volontaires et exclut les communications chiffrées de bout en bout.
       </p>
     </div>
@@ -346,7 +349,7 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-08"
+    verifie="2026-11-25"
     sources={[
       { auteur: 'ANSSI', titre: 'Recommandations relatives à l’authentification multifacteur et aux mots de passe (v2.0)', url: 'https://messervices.cyber.gouv.fr/documents-guides/anssi-guide-authentification_multifacteur_et_mots_de_passe.pdf', type: 'primaire', annee: 2021 },
       { auteur: 'CNIL', titre: 'Délibération n° 2022-100 (recommandation sur les mots de passe)', url: 'https://cnil.fr/sites/cnil/files/atoms/files/deliberation-2022-100-du-21-juillet-2022_recommandation-aux-mots-de-passe.pdf', type: 'primaire', annee: 2022 },
@@ -361,7 +364,7 @@ const etapes = [
       { auteur: 'A. Adams, M. A. Sasse', titre: 'Users Are Not The Enemy (Communications of the ACM)', url: 'https://tlseminar.github.io/docs/usersnotenemy.pdf', type: 'recherche', annee: 1999, langue: 'en' },
       { auteur: 'L. F. Cranor (FTC)', titre: 'Time to rethink mandatory password changes', url: 'https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2016/03/time-rethink-mandatory-password-changes', type: 'primaire', annee: 2016, langue: 'en' },
       { auteur: 'L. F. Cranor et al.', titre: 'Helping Users Create Better Passwords (;login:)', url: 'https://www.usenix.net/system/files/login/articles/login1212_ur.pdf', type: 'recherche', annee: 2012, langue: 'en' },
-      { auteur: 'Have I Been Pwned', titre: 'Liste publique des fuites (API v3, état au 8 novembre 2026)', url: 'https://haveibeenpwned.com/api/v3/breaches', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Have I Been Pwned', titre: 'Liste publique des fuites (API v3, état au 25 novembre 2026)', url: 'https://haveibeenpwned.com/api/v3/breaches', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Have I Been Pwned', titre: 'API v3 : Pwned Passwords et k-anonymat', url: 'https://haveibeenpwned.com/API/v3', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'T. Hunt', titre: 'Understanding Have I Been Pwned’s use of SHA-1 and k-anonymity', url: 'https://www.troyhunt.com/understanding-have-i-been-pwneds-use-of-sha-1-and-k-anonymity/', type: 'site', annee: 2022, langue: 'en' },
       { auteur: 'CNIL', titre: 'France Travail : la CNIL enquête sur la fuite de données', url: 'https://www.cnil.fr/fr/france-travail-la-cnil-enquete-sur-la-fuite-de-donnees-et-donne-des-conseils-pour-se-proteger', type: 'primaire', annee: 2024 },
@@ -435,6 +438,7 @@ const etapes = [
       { auteur: 'Microsoft', titre: 'Windows 10 Extended Security Updates', url: 'https://www.microsoft.com/en-us/windows/extended-security-updates', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Silicon UK (Canalys)', titre: 'Report warns of landfill risk when Microsoft ends Windows 10 support', url: 'https://www.silicon.co.uk/e-innovation/green-it/report-warns-of-landfill-risk-when-microsoft-ends-windows-10-support-544026', type: 'presse', annee: 2023, langue: 'en' },
       { auteur: 'US-CERT (P. Ruggiero)', titre: 'Data Backup Options (règle 3-2-1)', url: 'https://www.cisa.gov/sites/default/files/publications/data_backup_options.pdf', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'Conseil de l’UE', titre: 'WK 15082/2026 : Outcome of the trilogue on 29 September 2026 (règlement CSAM)', url: 'https://data.consilium.europa.eu/doc/document/WK-15082-2026-INIT/en/pdf', type: 'primaire', annee: 2026, langue: 'en' },
     ]}
   />
   </section>

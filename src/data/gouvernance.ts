@@ -118,7 +118,7 @@ export const RIRS: { nom: string; region: string; siege: string; fondation: stri
   { nom: 'AFRINIC', region: 'Afrique et océan Indien', siege: 'Ébène (Maurice)', fondation: '2005', ipv4: 'le seul à attribuer encore de petits blocs neufs (phase 2 depuis janvier 2020)' },
 ];
 
-/** Les 13 identités de la racine du DNS (root-servers.org, 8 novembre 2026). */
+/** Les 13 identités de la racine du DNS (root-servers.org, 25 novembre 2026). */
 export const RACINE: { lettre: string; operateur: string; pays: string; instances: number }[] = [
   { lettre: 'A', operateur: 'Verisign', pays: 'États-Unis', instances: 56 },
   { lettre: 'B', operateur: 'Université de Californie du Sud (ISI)', pays: 'États-Unis', instances: 6 },
@@ -134,7 +134,7 @@ export const RACINE: { lettre: string; operateur: string; pays: string; instance
   { lettre: 'L', operateur: 'ICANN', pays: 'États-Unis', instances: 257 },
   { lettre: 'M', operateur: 'WIDE Project', pays: 'Japon', instances: 34 },
 ];
-export const RACINE_TOTAL = 2048;
+export const RACINE_TOTAL = 2046;
 
 /** Qui peut couper quoi ? (animation « Couper »). */
 export const COUPER: { action: string; reponse: string; texte: string }[] = [
