@@ -1,0 +1,357 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Circuit from '../../components/animations/savoirs/Circuit.astro';
+import Couleurs from '../../components/animations/savoirs/Couleurs.astro';
+import Article30 from '../../components/animations/savoirs/Article30.astro';
+import Biographies from '../../components/animations/savoirs/Biographies.astro';
+
+// Faits sourcés : docs/sources/savoirs.md. Aucune adresse de site illégal.
+const etapes = [
+  { ancre: 'voyage', court: 'Le voyage d’un article' },
+  { ancre: 'qui-paie', court: 'Payer pour lire, payer pour publier' },
+  { ancre: 'deposer', court: 'Le droit de déposer' },
+  { ancre: 'sud', court: 'Le savoir vu du Sud' },
+  { ancre: 'sci-hub', court: 'Sci-Hub' },
+  { ancre: 'ombre', court: 'Bibliothèques de l’ombre et IA' },
+  { ancre: 'communs', court: 'Les communs de la connaissance' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+const SUD = [
+  { nom: 'SciELO', ou: 'Brésil, puis 16 pays', quand: '1997-1998', quoi: 'Bibliothèque en ligne de revues en accès ouvert, financée à 90 % par la fondation publique de recherche de l’État de São Paulo (FAPESP). Conçue par Rogério Meneghini et Abel Laerte Packer.' },
+  { nom: 'Redalyc', ou: 'Mexique, 31 pays', quand: '2003', quoi: 'Plateforme de l’Université autonome de l’État de Mexico : 1 572 revues en 2024. Depuis 2018, elle n’accueille que des revues où ni lecteur ni auteur ne paient. Cofondée par Arianna Becerril-García : « la science doit être un bien public ».' },
+  { nom: 'AmeliCA', ou: 'Amérique latine', quand: '2018', quoi: 'Infrastructure non commerciale pensée comme un commun, avec l’UNESCO et CLACSO, présidée par Arianna Becerril-García.' },
+  { nom: 'African Journals Online', ou: 'Afrique du Sud, 40 pays', quand: '1998 (gestion africaine depuis 2005)', quoi: '985 revues africaines, dont 290 en accès ouvert sans frais (novembre 2026).' },
+  { nom: 'One Nation One Subscription', ou: 'Inde', quand: '2025-2027', quoi: 'L’État paie environ 6 000 crores de roupies (60 milliards) pour que plus de 6 300 établissements publics lisent près de 13 000 revues de 30 éditeurs. Critique : il paie aussi des frais de publication, mais seulement dans les revues les mieux classées par Scopus, une base qui appartient à Elsevier, lui-même payé par le dispositif.' },
+];
+const PROCES = [
+  { ou: 'États-Unis, 2017', quoi: 'Jugements par défaut (Sci-Hub ne se défend pas) : 15 millions de dollars pour Elsevier, 4,8 millions pour l’American Chemical Society. Jamais payés, semble-t-il.' },
+  { ou: 'France, 2019-2022', quoi: 'Le tribunal de Paris ordonne aux grands fournisseurs d’accès de bloquer Sci-Hub et LibGen (2019), puis renouvelle le blocage en décembre 2020 et en octobre 2022, pour 18 mois chaque fois. Aucun renouvellement trouvé depuis.' },
+  { ou: 'Inde, depuis 2020', quoi: 'En 2020, Alexandra Elbakyan s’engage devant la Haute Cour de Delhi à ne plus ajouter d’articles de ces éditeurs. En août 2025, la Cour la juge « à première vue » coupable d’avoir violé cet engagement et fait bloquer Sci-Hub ; en décembre 2025, le blocage s’étend aux sites miroirs. Prochaine audience le 9 décembre 2026.' },
+];
+---
+<Base
+  title="Savoirs : à qui appartient la connaissance ?"
+  description="Le voyage d'un article scientifique et qui le paie, l'accès ouvert (voies verte, dorée, diamant), le droit de déposer ses articles, le savoir vu du Sud, Sci-Hub, les bibliothèques de l'ombre et l'IA, les communs de la connaissance."
+>
+  <p class="tag" data-pagefind-ignore>Qui décide · module en construction</p>
+  <h1>Savoirs : à qui appartient la connaissance ?</h1>
+  <MiseAJour date="2026-11-26" evolutif="procès en cours, accords avec les éditeurs" />
+  <p class="chapo seulement-debut">
+    La recherche est en grande partie payée par de l'argent public. Pourtant, lire ses résultats est souvent payant.
+    Comment en est-on arrivé là ? Qui gagne quoi ? Que font les chercheur·ses, les bibliothèques, les États… et ceux
+    qui contournent les règles ? Ce module suit un article, de l'idée à la lecture, et présente toutes les parties.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Le voyage d'un article" ancre="voyage">
+    <Circuit slot="animation" />
+    <p slot="decouverte">
+      Un article scientifique passe par beaucoup de mains : la chercheuse qui l'écrit, les collègues qui le relisent,
+      l'éditeur qui le publie, la bibliothèque qui paie pour le lire. À plusieurs étapes, c'est de l'argent public
+      qui paie.
+    </p>
+    <p slot="curieux">
+      Les grands éditeurs scientifiques sont très rentables : environ 38 % de marge opérationnelle ajustée pour la
+      branche scientifique de RELX (Elsevier) en 2025, environ 32 % pour la branche recherche de Springer Nature.
+      Ces chiffres couvrent plus que les revues (bases de données, outils), et se calculent chacun à sa façon : ils
+      donnent un ordre de grandeur, pas un classement.
+    </p>
+    <p slot="ingenieur">
+      Les critiques parlent de « triple paiement » : l'argent public paie la recherche, la relecture (le temps des
+      chercheur·ses) et l'abonnement. La coalition de financeurs cOAlition S reproche aussi aux revues « hybrides »
+      d'être payées deux fois, par les abonnements et par les frais de publication. Les éditeurs répondent qu'ils
+      sélectionnent, coordonnent, mettent en forme, archivent et font vivre des plateformes ; la stratégie française
+      de science ouverte reconnaît d'ailleurs que l'édition « a un coût légitime ». Nouveau : les éditeurs vendent
+      aussi des licences de leurs contenus pour entraîner des IA (49 millions de dollars pour Wiley sur un an).
+    </p>
+    <p slot="verifie">
+      Ouvre un article récent sur le site d'une revue : regarde s'il est en accès libre, sous quelle licence, et qui a
+      financé la recherche (la rubrique « Funding » ou « Financement », souvent en fin d'article).
+    </p>
+    <p slot="mythes">
+      <strong>« Les chercheur·ses sont payé·es par la revue qui les publie. »</strong> Non : en général, la revue ne
+      paie ni les auteur·es ni les relecteur·rices. Elles et ils publient pour faire connaître leurs travaux et pour
+      leur carrière, qui dépend beaucoup de leurs publications.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Payer pour lire, payer pour publier" ancre="qui-paie">
+    <Couleurs slot="animation" />
+    <p slot="decouverte">
+      L'<Terme id="acces-ouvert">accès ouvert</Terme>, c'est mettre les articles en ligne gratuitement, pour tout le
+      monde. Il y a plusieurs façons de le faire : déposer son article dans une archive ouverte, ou publier dans une
+      revue elle-même gratuite à lire. Mais quelqu'un paie toujours quelque chose.
+    </p>
+    <p slot="curieux">
+      Selon l'association des éditeurs STM, 44 % des articles publiés dans le monde en 2025 l'ont été dans des revues
+      en accès ouvert (hybrides comprises), et la part des articles sur abonnement seul est passée de 66 % en 2015 à
+      50 % en 2025. En France, 62 % des publications de 2024 sont en accès ouvert. Le revers : des frais de
+      publication qui grimpent, jusqu'à 10 850 € au prix catalogue de <em>Nature</em>, et qui écartent les équipes
+      les moins riches.
+    </p>
+    <p slot="ingenieur">
+      La définition de référence est celle de l'Initiative de Budapest (2002) : un accès gratuit sur internet,
+      permettant de lire, télécharger, copier, distribuer, imprimer et lier les textes intégraux, « sans barrière
+      financière, juridique ou technique ». Les financeurs réunis dans le Plan S (lancé en 2018) exigent l'accès
+      ouvert immédiat des travaux qu'ils paient ; leur stratégie 2026-2030 reconnaît « plusieurs voies » et cite la
+      hausse des frais de publication parmi les défis. Les <Terme id="prepublication">prépublications</Terme>, elles,
+      ont pris une place nouvelle : environ un quart des publications sur le Covid-19 en 2020.
+    </p>
+    <div slot="histoire">
+      <p>
+        L'accès ouvert n'est pas né d'un coup. Avant 1991, la physicienne Joanne Cohn, jeune chercheuse à Princeton,
+        faisait circuler à la main, par courriel, les prépublications de son domaine à plus d'une centaine de
+        collègues ; en 1991, Paul Ginsparg automatise l'idée : ce sera arXiv. En 2002, l'Initiative de Budapest donne
+        un nom et une définition à l'accès ouvert ; parmi ses signataires, Leslie Chan, de Bioline International
+        (Toronto), et Jean-Claude Guédon, de l'Université de Montréal.
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Accès ouvert, ça veut dire gratuit pour tout le monde. »</strong> Gratuit à lire, oui ; pas forcément à
+      publier. Seul le modèle « diamant » ne fait payer ni l'un ni l'autre.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Le droit de déposer ses articles" ancre="deposer">
+    <Article30 slot="animation" />
+    <p slot="decouverte">
+      En France, une chercheuse financée par l'argent public a le droit de mettre en libre accès la version acceptée
+      de son article, même si elle a signé un contrat avec un éditeur : immédiatement si l'éditeur l'autorise, sinon
+      au plus tard 6 ou 12 mois après la publication.
+    </p>
+    <p slot="curieux">
+      Ce droit vient de l'article 30 de la loi pour une République numérique (2016). Le dépôt se fait le plus souvent
+      dans HAL, l'archive ouverte de la recherche française créée en 2001 à l'initiative du physicien Franck Laloë,
+      dirigée ensuite notamment par Christine Berthaud puis Nathalie Fargier : près de 1,7 million de documents en
+      texte intégral en 2026.
+    </p>
+    <p slot="ingenieur">
+      C'est un droit, pas une obligation : il ne vaut que pour les écrits parus dans un périodique, financés au moins
+      pour moitié par des fonds publics. Depuis, la France a fait de la science ouverte une politique : plans
+      nationaux de 2018 et 2021-2024, puis une stratégie 2026-2033. Aux États-Unis, une consigne fédérale de 2022
+      (le « mémo Nelson ») demandait aux agences de rendre accessibles sans délai, au plus tard fin 2025, les
+      publications qu'elles financent.
+    </p>
+    <p slot="verifie">
+      Cherche le nom d'une chercheuse ou d'un laboratoire sur hal.science : beaucoup d'articles y sont en accès libre,
+      légalement.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="Le savoir vu du Sud" ancre="sud">
+    <p slot="decouverte">
+      L'accès ouvert n'est pas qu'une affaire européenne. En Amérique latine, des universités et des fondations
+      publiques font vivre depuis la fin des années 1990 des milliers de revues gratuites à lire et à publier.
+    </p>
+    <div slot="curieux">
+      <ul class="sud">
+        {SUD.map((s) => <li><strong>{s.nom}</strong> <span class="ou">({s.ou}, {s.quand})</span> : {s.quoi}</li>)}
+      </ul>
+    </div>
+    <p slot="ingenieur">
+      Pour les pays du Sud, le passage aux frais de publication pose un problème nouveau : on peut lire gratuitement,
+      mais publier coûte, en Europe, environ 2 400 € en moyenne par article (2024). Le modèle diamant, très présent
+      en Amérique latine, évite ce nouveau mur. Les grands utilisateurs de Sci-Hub, en 2016, étaient d'ailleurs l'Iran, la Chine, l'Inde, la Russie…
+      et les États-Unis : le besoin d'accès n'est pas que celui des pays pauvres.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Sci-Hub et Alexandra Elbakyan" ancre="sci-hub">
+    <p slot="decouverte">
+      En 2011, Alexandra Elbakyan, étudiante au Kazakhstan, crée Sci-Hub, un site qui met en ligne des articles
+      scientifiques payants, sans l'accord des éditeurs. En France, aux États-Unis ou en Inde, télécharger ou
+      diffuser ces articles protégés, c'est de la contrefaçon ; selon les éditeurs, le site est bloqué dans au moins
+      onze pays. Mais le site est très utilisé, y compris par des
+      chercheur·ses.
+    </p>
+    <p slot="curieux">
+      En 2017, Sci-Hub contenait 85 % des articles des revues payantes ; en six mois de 2015-2016, 28 millions de
+      documents y ont été téléchargés. Pour ses défenseur·ses, c'est la preuve d'un besoin que le système ne
+      satisfait pas. Pour les éditeurs, c'est du piratage à grande échelle, qui menace le financement de
+      l'évaluation et de l'édition. Les deux peuvent être vrais en même temps.
+    </p>
+    <div slot="ingenieur">
+      <ul>{PROCES.map((p) => <li><strong>{p.ou}.</strong> {p.quoi}</li>)}</ul>
+      <p>
+        Pour les éditeurs, Sci-Hub est un site « voyou » qui a violé un engagement pris devant la justice ; pour
+        Alexandra Elbakyan, les articles ajoutés l'ont été par erreur technique. Des associations indiennes de
+        scientifiques ont demandé depuis 2021 à intervenir dans la procédure ; leurs demandes ont été écartées.
+      </p>
+    </div>
+    <div slot="decide">
+      <p>
+        Ce sont les tribunaux qui décident, pays par pays : ils ordonnent des blocages aux fournisseurs d'accès, sans
+        poursuivre les lecteur·rices. Aucun jugement n'a été rendu à l'issue d'un vrai débat contradictoire : aux
+        États-Unis, Sci-Hub ne s'est pas défendu, et en Inde la procédure est toujours en cours (état au 26 novembre
+        2026).
+      </p>
+    </div>
+    <p slot="verifie">
+      Pour lire légalement un article payant : cherche-le sur HAL ou arXiv, utilise l'accès de ta bibliothèque
+      universitaire ou municipale, ou demande-le directement à l'autrice.
+    </p>
+    <p slot="mythes">
+      <strong>« Sci-Hub, c'est seulement pour les pays pauvres. »</strong> En 2016, les États-Unis étaient parmi
+      les cinq pays qui l'utilisaient le plus. Et <strong>« le site est gelé depuis 2020 »</strong> : c'est ce
+      qu'Elbakyan s'était engagée à faire en Inde ; la Haute Cour de Delhi a constaté des ajouts postérieurs.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Bibliothèques de l'ombre et IA" ancre="ombre">
+    <p slot="decouverte">
+      D'autres sites, comme LibGen ou Anna's Archive, rassemblent des millions de livres et d'articles copiés sans
+      autorisation : on les appelle des « bibliothèques de l'ombre ». Depuis quelques années, ces collections ont
+      un nouvel usage : entraîner des intelligences artificielles.
+    </p>
+    <p slot="curieux">
+      En 2025, un juge américain estime que l'entreprise Anthropic pouvait entraîner son IA sur des livres
+      (« extrêmement transformateur »), mais pas constituer une bibliothèque permanente de plus de 7 millions de
+      copies piratées, venues notamment de LibGen. Anthropic accepte de payer 1,5 milliard de dollars aux auteur·es,
+      environ 3 000 $ par livre ; le règlement, approuvé en juillet 2026, ne fait pas jurisprudence. La même année,
+      un autre juge donne raison à Meta contre 13 auteur·es.
+    </p>
+    <p slot="ingenieur">
+      Ironie de l'histoire : Elsevier, qui poursuit Sci-Hub et LibGen depuis 2015, attaque en mai 2026, avec d'autres
+      éditeurs, Meta et son patron, accusés d'avoir téléchargé des livres et des articles sur LibGen et Anna's
+      Archive pour entraîner son IA (ce sont des accusations ; Meta conteste et l'affaire est en cours). Les
+      défenseur·ses de l'accès ouvert relèvent le contraste : un étudiant est poursuivi, une grande entreprise
+      négocie. LibGen et Anna's Archive ont été condamnés par défaut aux États-Unis (2024, 2026).
+    </p>
+    <p slot="mythes">
+      <strong>« Si une IA l'a lu, c'est que c'était légal. »</strong> Non : la légalité de l'entraînement se juge
+      au cas par cas, et la façon dont les textes ont été obtenus compte, comme l'a montré l'affaire Anthropic.
+    </p>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Les communs de la connaissance" ancre="communs">
+    <Biographies slot="animation" />
+    <p slot="decouverte">
+      Certains savoirs sont construits et partagés par tout le monde, librement : Wikipédia, le Projet Gutenberg et
+      ses 79 577 livres du domaine public, l'Internet Archive qui garde la mémoire du web. On les appelle des
+      « communs ». Mais un commun reflète ceux qui le font : sur Wikipédia, à peine une biographie sur cinq parle
+      d'une femme.
+    </p>
+    <p slot="curieux">
+      Des bénévoles s'y attaquent : le projet Women in Red, fondé en 2015 par Rosie Stephenson-Goodknight et Roger
+      Bamkin, et le collectif francophone Les sans pagEs écrivent les biographies manquantes. Sur Wikipédia en
+      anglais, la part des biographies de femmes est passée de 15,5 % en 2015 à 20,47 % en novembre 2026.
+    </p>
+    <p slot="ingenieur">
+      Les communs ont leurs limites juridiques : en 2024, la justice américaine a jugé que le prêt numérique de
+      livres sous droits par l'Internet Archive n'était pas un « usage loyal » ; l'Archive a renoncé à aller devant
+      la Cour suprême. La bibliothécaire Charlotte Hess et l'économiste Elinor Ostrom ont proposé fin 2006 d'étudier
+      le savoir comme un commun, avec ses règles, ses gardien·nes et ses menaces.
+    </p>
+    <div slot="histoire">
+      <p>
+        En 2008, le programmeur Aaron Swartz publie un « manifeste pour l'accès ouvert de guérilla ». En 2010-2011, il
+        télécharge des millions d'articles de la base JSTOR depuis le réseau du MIT. JSTOR récupère les copies et
+        renonce aux poursuites civiles, mais le procureur fédéral l'inculpe. Il meurt le 11 janvier 2013, avant son
+        procès. Une proposition de loi à son nom, pour limiter les poursuites de ce type, a été déposée en 2013 et
+        2015.
+      </p>
+    </div>
+    <p slot="verifie">
+      Sur Wikipédia, une page « liste rouge » de Women in Red recense des femmes sans article : choisis-en une et
+      regarde ce qu'il faudrait de sources pour l'écrire.
+    </p>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>La recherche est souvent payée par l'argent public</strong>, la relecture faite par des chercheur·ses, et les bibliothèques paient pour lire.</li>
+      <li><strong>L'accès ouvert a plusieurs couleurs</strong> : verte (archive ouverte), dorée (revue gratuite à lire, souvent payante à publier), diamant (gratuite des deux côtés).</li>
+      <li><strong>En France, tu as le droit de déposer</strong> la version acceptée d'un article financé par l'argent public, après 6 ou 12 mois au plus.</li>
+      <li><strong>Le Sud a ses propres modèles</strong> : SciELO, Redalyc, AmeliCA, AJOL, souvent diamant.</li>
+      <li><strong>Sci-Hub est jugé illégal</strong> en France, aux États-Unis, en Inde… mais très utilisé ; il existe des voies légales.</li>
+      <li><strong>Les bibliothèques de l'ombre nourrissent aussi des IA</strong>, ce qui ouvre de nouveaux procès.</li>
+      <li><strong>Les communs ont des angles morts</strong>, que des bénévoles s'efforcent de combler.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/modules/construire-ensemble/">Construire ensemble</a> (Wikipédia, OpenStreetMap,
+      Elinor Ostrom), <a href="/modules/ia-creer/">Les IA qui créent</a> (droit d'auteur et IA), et
+      <a href="/modules/etats-regulation/">États et régulation</a> (blocages).
+    </p>
+
+  <Sources
+    verifie="2026-11-26"
+    sources={[
+      { auteur: 'Budapest Open Access Initiative', titre: 'Texte de la déclaration (14 février 2002)', url: 'https://www.budapestopenaccessinitiative.org/read/', type: 'primaire', annee: 2002, langue: 'en' },
+      { auteur: 'B. Aczel, B. Szaszi, A. O. Holcombe', titre: 'A billion-dollar donation: estimating the cost of researchers’ time spent on peer review', url: 'https://link.springer.com/article/10.1186/s41073-021-00118-2', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'RELX', titre: 'RELX 2025 Results', url: 'https://www.relx.com/~/media/Files/R/RELX-Group/documents/press-releases/2026/results-2025-pressrelease.pdf', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Springer Nature', titre: 'FY 2025 results', url: 'https://group.springernature.com/de/group/media/press-releases/fy-2025-results/27849734', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Wiley', titre: 'Fourth Quarter and Fiscal 2026 Results', url: 'https://newsroom.wiley.com/press-releases/press-release-details/2026/Research-and-AI-Momentum-Record-Margins-and-Cash-Flow-Growth-Highlight-Wileys-Fourth-Quarter-and-Fiscal-2026-Results/default.aspx', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Next', titre: 'La recherche française signe avec Elsevier pour 134 millions d’euros sur 4 ans', url: 'https://next.ink/142995/la-recherche-francaise-signe-avec-elsevier-pour-un-montant-de-134-millions-deuros-sur-4-ans/', type: 'presse', annee: 2024, langue: 'fr' },
+      { auteur: 'cOAlition S', titre: 'Why hybrid journals do not lead to full and immediate Open Access', url: 'https://www.coalition-s.org/?p=2617', type: 'site', annee: 2021, langue: 'en' },
+      { auteur: 'cOAlition S', titre: 'Stratégie 2026-2030', url: 'https://www.coalition-s.org/coalition-s-reinforces-open-access-commitment-while-advancing-next-strategic-phase/', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Nature', titre: 'Publishing options (frais de publication)', url: 'https://www.nature.com/nature/for-authors/publishing-options', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'OpenAPC', titre: 'Frais de publication déclarés par les établissements (apc_de.csv)', url: 'https://raw.githubusercontent.com/OpenAPC/openapc-de/master/data/apc_de.csv', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'STM (association des éditeurs)', titre: 'OA dashboard : uptake of open access', url: 'http://stm-assoc.org/oa-dashboard/uptake-of-open-access/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'MESRE / SIES', titre: 'Baromètre français de la science ouverte 2025', url: 'https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-02/nf-sies-2026-04-39514.pdf', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'MESRE', titre: 'Stratégie de science ouverte 2026-2033', url: 'https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-09/MESRE_SSO_2026_FR.pdf', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'N. Fraser, L. Brierley, G. Dey, J. K. Polka et al.', titre: 'The evolving role of preprints in the dissemination of COVID-19 research (PLOS Biology)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8046348', type: 'recherche', annee: 2021, langue: 'en' },
+      { auteur: 'P. Ginsparg', titre: 'It was twenty years ago today… (arXiv:1108.2700)', url: 'https://arxiv.org/abs/1108.2700', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'Comité pour la science ouverte', titre: 'Guide d’application de la loi pour une République numérique, article 30', url: 'https://www.ouvrirlascience.fr/wp-content/uploads/2018/11/180221_Guide-d%E2%80%99application-de-la-loi-article30-version-courte.pdf', type: 'primaire', annee: 2018, langue: 'fr' },
+      { auteur: 'CCSD', titre: 'L’odyssée de HAL, 2001-2021', url: 'https://www.ccsd.cnrs.fr/wp-content/uploads/2021/12/Brochure20ans_Web.pdf', type: 'primaire', annee: 2021, langue: 'fr' },
+      { auteur: 'OSTP (Maison-Blanche)', titre: 'Guidance to make federally funded research freely available without delay (2022)', url: 'https://bidenwhitehouse.archives.gov/ostp/news-updates/2022/08/25/ostp-issues-guidance-to-make-federally-funded-research-freely-available-without-delay/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Agência FAPESP', titre: 'SciELO completa 20 anos', url: 'https://agencia.fapesp.br/scielo-completa-20-anos-de-apoio-a-producao-cientifica/28878', type: 'presse', annee: 2018, langue: 'pt' },
+      { auteur: 'SPARC', titre: 'Lessons from Redalyc’s Organic Rise as a Model of Diamond Open Access', url: 'https://sparcopen.org/news/2024/lessons-from-redalycs-organic-rise-as-a-model-of-diamond-open-access/', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'AmeliCA', titre: 'About AmeliCA', url: 'https://amelica.org/index.php/en/about/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'African Journals Online', titre: 'About AJOL et compteurs (novembre 2026)', url: 'https://www.ajol.info/index.php/ajol/about-AJOL-African-Journals-Online', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'The Tribune', titre: 'Cabinet approves One Nation One Subscription scheme', url: 'https://www.tribuneindia.com/news/cabinet-approves-one-nation-one-subscription-scheme-for-access-to-research-articles-journals', type: 'presse', annee: 2024, langue: 'en' },
+      { auteur: 'H. A. Ansari (SpicyIP)', titre: 'ONOS’s APC Guidelines: Opening Access or Opening Pockets?', url: 'https://spicyip.com/2025/10/onoss-apc-guidelines-opening-access-or-opening-pockets.html', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'D. S. Himmelstein et al.', titre: 'Sci-Hub provides access to nearly all scholarly literature (eLife)', url: 'https://elifesciences.org/articles/32822', type: 'recherche', annee: 2018, langue: 'en' },
+      { auteur: 'A. Elbakyan, J. Bohannon', titre: 'Data from: Who’s downloading pirated papers? Everyone (Dryad)', url: 'https://datadryad.org/dataset/doi:10.5061/dryad.q447c', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'Next', titre: 'Sci-Hub et LibGen à nouveau bloqués en France chez les principaux FAI (2021)', url: 'https://next.ink/brief_article/sci-hub-et-libgen-a-nouveau-bloques-en-france-chez-les-principaux-fai/', type: 'presse', annee: 2021, langue: 'fr' },
+      { auteur: 'Next', titre: 'Nouvelle décision juridique de blocage de Sci-Hub et LibGen (2022)', url: 'https://next.ink/1335/nouvelle-decision-juridique-blocage-sci-hub-et-libgen/', type: 'presse', annee: 2023, langue: 'fr' },
+      { auteur: 'N. Thapliyal (LiveLaw)', titre: 'Delhi High Court Orders Blocking Of Sci-Hub (août 2025)', url: 'https://www.livelaw.in/high-court/delhi-high-court/delhi-high-court-orders-blocking-of-sci-hub-mirror-websites-in-india-in-publishers-copyright-infringement-suit-301777', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'Haute Cour de Delhi', titre: 'CS(COMM) 572/2020 : ordonnances (portail officiel, rechercher l’affaire par numéro)', url: 'https://delhihighcourt.nic.in/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Tribunal fédéral de Californie du Nord', titre: 'Bartz v. Anthropic, Order on Fair Use (23 juin 2025)', url: 'https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_24-cv-05417/pdf/USCOURTS-cand-3_24-cv-05417-0.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Authors Guild', titre: 'Court grants final approval to Anthropic copyright settlement', url: 'https://authorsguild.org/news/court-grants-final-approval-anthropic-copyright-settlement/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'U.S. Copyright Office', titre: 'Fair Use Index : Kadrey v. Meta Platforms (2025)', url: 'https://www.copyright.gov/fair-use/summaries/Kadrey-v-Meta-Platforms-Inc-788-F-Supp-3d-1028-ND-Cal-2025.pdf', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Association of American Publishers', titre: 'Publishers and authors file class action lawsuit against Meta (5 mai 2026)', url: 'https://publishers.org/news/publishers-and-authors-file-class-action-lawsuit-against-meta-and-zuckerberg-for-willful-copyright-infringement-to-develop-llama-ai-models/', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Cour d’appel du 2e circuit', titre: 'Hachette v. Internet Archive (4 septembre 2024)', url: 'https://www.govinfo.gov/content/pkg/USCOURTS-ca2-23-01260/pdf/USCOURTS-ca2-23-01260-0.pdf', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'Projet Gutenberg', titre: 'Page d’accueil (compteur)', url: 'https://www.gutenberg.org/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Meta-Wiki', titre: 'Women in Red', url: 'https://meta.wikimedia.org/wiki/Women_in_Red', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'M. Saliou (Next)', titre: 'Sur Wikipédia, 20 % des biographies concernent désormais des femmes', url: 'https://next.ink/147182/sur-wikipedia-20-des-biographies-concernent-desormais-des-femmes/', type: 'presse', annee: 2024, langue: 'fr' },
+      { auteur: 'C. Hess, E. Ostrom (dir.)', titre: 'Understanding Knowledge as a Commons (MIT Press)', url: 'https://doi.org/10.7551/mitpress/6980.001.0001', type: 'recherche', annee: 2006, langue: 'en' },
+      { auteur: 'H. Abelson et al. (MIT)', titre: 'MIT and the Prosecution of Aaron Swartz', url: 'https://swartz-report.mit.edu/docs/report-to-the-president.pdf', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'R. Wyden', titre: 'Aaron’s Law (2015)', url: 'https://www.wyden.senate.gov/news/press-releases/wyden-lofgren-paul-introduce-bipartisan-bicameral-aarons-law-to-reform-abused-computer-fraud-and-abuse-act-', type: 'primaire', annee: 2015, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 2px solid var(--fg); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+  .sud { padding-left: 1.1rem; }
+  .sud li { margin-bottom: 0.6rem; }
+  .ou { color: var(--muted); }
+</style>

@@ -1,10 +1,10 @@
 ---
 // Animation « Combien de femmes dans Wikipédia ? » (module Savoirs) : part
 // des biographies de femmes, en anglais (Women in Red, Humaniki) et en
-// français (Les sans pagEs), face à la parité. Indicateur fondé sur le genre
+// français (Les sans pagEs), face à la parité ; anglais au 22 novembre 2026. Indicateur fondé sur le genre
 // renseigné dans Wikidata. Sources : docs/sources/savoirs.md.
 const SERIES = [
-  { langue: 'Wikipédia en anglais', avant: { annee: 2015, part: 15.5 }, apres: { annee: 2024, part: 20.0 } },
+  { langue: 'Wikipédia en anglais', avant: { annee: 2015, part: 15.5 }, apres: { annee: 2026, part: 20.47 } },
   { langue: 'Wikipédia en français', avant: { annee: 2016, part: 16 }, apres: { annee: 2024, part: 20 } },
 ];
 ---
@@ -26,7 +26,7 @@ const SERIES = [
       ))}
       <div class="anim-commandes">
         <button type="button" class="principal" data-annee="avant">Avant (2015-2016)</button>
-        <button type="button" data-annee="apres">Après (2024)</button>
+        <button type="button" data-annee="apres">Aujourd’hui (2024-2026)</button>
       </div>
       <p class="anim-legende" aria-live="polite"></p>
     </div>

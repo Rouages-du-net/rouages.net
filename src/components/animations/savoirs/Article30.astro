@@ -45,7 +45,7 @@
       if (!/^\d{4}-\d{2}-\d{2}$/.test(publication)) return;
       const r = article30({ publication, discipline: f.get('discipline') as Discipline, periodique: f.has('periodique'), fondsPublics: f.has('fondsPublics') });
       racine.querySelector('[data-reponse]')!.textContent = r.applicable
-        ? `✅ Tu peux déposer ta version acceptée en accès libre (HAL, par exemple) au plus tard à partir du ${lisible(r.date!)}.`
+        ? `✅ Tu peux déposer ta version acceptée en accès libre (sur HAL, par exemple) dès le ${lisible(r.date!)} au plus tard, et plus tôt si ton éditeur l’accepte.`
         : '⛔ L’article 30 ne s’applique pas ici (mais ton contrat avec l’éditeur le permet peut-être : vérifie-le).';
       racine.querySelector('[data-verdict]')!.classList.toggle('non', !r.applicable);
       racine.querySelector('[data-raisons]')!.replaceChildren(...r.raisons.map((t) => Object.assign(document.createElement('li'), { textContent: t })));

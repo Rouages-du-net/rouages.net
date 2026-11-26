@@ -10,9 +10,9 @@ const MODELES = [
   { id: 'vert', nom: 'Voie verte', couleur: 'var(--ill-secret-b)', lire: 'Personne', publier: 'Personne', libre: true,
     texte: 'L’autrice dépose elle-même une version de son article dans une archive ouverte (HAL, arXiv), en plus de la revue. C’est l’« auto-archivage » de l’Initiative de Budapest (2002). En France, l’article 30 de la loi de 2016 le garantit après un délai.' },
   { id: 'dore', nom: 'Voie dorée', couleur: 'var(--ill-serveur)', lire: 'Personne', publier: 'Souvent l’autrice (ou son labo) : des frais de publication', libre: true,
-    texte: 'La revue elle-même est en libre accès : tout le monde lit gratuitement. Pour se financer, beaucoup d’éditeurs font payer la publication, ce qui déplace le mur de l’argent du lecteur vers l’autrice.' },
+    texte: 'La revue elle-même est en libre accès : tout le monde lit gratuitement. Pour se financer, beaucoup d’éditeurs font payer la publication : en Europe, environ 2 400 € en moyenne par article en 2024, et jusqu’à 10 850 € au prix catalogue de Nature. Le mur de l’argent passe du lecteur à l’autrice.' },
   { id: 'diamant', nom: 'Diamant', couleur: 'var(--accent)', lire: 'Personne', publier: 'Personne', libre: true,
-    texte: 'Ni lecteur ni autrice ne paient : la revue est portée par une université, un organisme public ou une société savante. Beaucoup de revues d’Amérique latine fonctionnent ainsi.' },
+    texte: 'Ni lecteur ni autrice ne paient : la revue est portée par une université, un organisme public, une société savante, souvent avec des bénévoles. C’est le seul modèle qu’accepte depuis 2018 la plateforme latino-américaine Redalyc.' },
 ];
 ---
 <div class="anim couleurs" data-couleurs data-modeles={JSON.stringify(MODELES)}>
@@ -52,8 +52,8 @@ const MODELES = [
       racine.querySelector('[data-lire]')!.textContent = m.lire;
       racine.querySelector('[data-publier]')!.textContent = m.publier;
       racine.querySelector<HTMLElement>('.revue')!.style.setProperty('--c', m.couleur);
-      racine.querySelector<HTMLElement>('[data-paie="lire"]')!.textContent = m.lire === 'Personne' ? 'gratuit' : '€';
-      racine.querySelector<HTMLElement>('[data-paie="publier"]')!.textContent = m.publier.startsWith('Personne') ? 'gratuit' : '€';
+      racine.querySelector<HTMLElement>('[data-paie="lire"]')!.textContent = m.lire === 'Personne' ? 'gratuit' : 'payant';
+      racine.querySelector<HTMLElement>('[data-paie="publier"]')!.textContent = m.publier.startsWith('Personne') ? 'gratuit' : 'payant';
       racine.querySelector('.anim-legende')!.textContent = `${m.nom}${m.libre ? ' (accès ouvert)' : ''} : ${m.texte}`;
     }
     racine.querySelectorAll<HTMLButtonElement>('[data-modele]').forEach((b) => b.addEventListener('click', () => choisir(b.dataset.modele!)));

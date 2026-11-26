@@ -303,3 +303,18 @@ test('clins d’œil : Konami, sudo, terminal', async ({ page }) => {
   await expect(term.locator('[data-ecran]')).toContainText('< bonjour >');
   expect(err).toEqual([]);
 });
+
+test('savoirs : couleurs de l’accès ouvert et article 30', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/savoirs/');
+  const c = page.locator('[data-couleurs]');
+  await c.locator('[data-modele="diamant"]').click();
+  await expect(c.locator('[data-publier]')).toHaveText('Personne');
+  const a = page.locator('[data-article30]');
+  await a.locator('input[name="publication"]').fill('2026-03-10');
+  await a.locator('input[value="shs"]').check();
+  await expect(a.locator('[data-reponse]')).toContainText('10 mars 2027');
+  await a.locator('input[name="fondsPublics"]').uncheck();
+  await expect(a.locator('[data-reponse]')).toContainText('ne s’applique pas');
+  expect(err).toEqual([]);
+});
