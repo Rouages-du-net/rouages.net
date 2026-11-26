@@ -1,0 +1,24 @@
+---
+// Une revue de veille hebdomadaire (src/content/revues/*.md, draft: false).
+import { getCollection, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const revues = await getCollection('revues', ({ data }) => !data.draft);
+  return revues.map((r) => ({ params: { id: r.id }, props: { revue: r } }));
+}
+const { revue } = Astro.props;
+const { Content } = await render(revue);
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' });
+---
+<Base title={revue.data.title} description={revue.data.description}>
+  <p class="tag"><a href="/veille/">Veille</a> · {fmt.format(revue.data.date)}</p>
+  <h1>{revue.data.title}</h1>
+  <article class="revue"><Content /></article>
+  <p><a href="/veille/">Toutes les revues et les liens du jour</a> · <a href="/veille/revues.xml">S'abonner (Atom)</a></p>
+</Base>
+
+<style>
+  .revue { max-width: var(--mesure); }
+  .revue :global(li) { margin-bottom: 0.5rem; }
+</style>
