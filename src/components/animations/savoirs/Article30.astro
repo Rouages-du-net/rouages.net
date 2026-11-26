@@ -1,0 +1,71 @@
+---
+// Animation « Ai-je le droit de déposer mon article ? » (module Savoirs) :
+// calcul du délai de l'article 30 de la loi pour une République numérique
+// (art. L. 533-4 du code de la recherche). Sources : docs/sources/savoirs.md.
+---
+<div class="anim article30" data-article30>
+  <div class="anim-repli">
+    <p>
+      En France, l'article 30 de la loi pour une République numérique (2016) donne aux chercheur·ses le
+      <strong>droit</strong> de mettre en libre accès la version acceptée de leur article, au plus tard
+      <strong>6 mois</strong> après sa publication en sciences, techniques et médecine, <strong>12 mois</strong> en
+      sciences humaines et sociales, si la recherche est financée au moins pour moitié par des fonds publics et
+      publiée dans une revue.
+    </p>
+  </div>
+  <div class="anim-scene" hidden>
+    <form class="anim-cadre formulaire" data-formulaire>
+      <label>Date de publication de l’article <input type="date" name="publication" value="2026-03-10" required /></label>
+      <fieldset>
+        <legend>Domaine</legend>
+        <label><input type="radio" name="discipline" value="stm" checked /> Sciences, techniques, médecine</label>
+        <label><input type="radio" name="discipline" value="shs" /> Sciences humaines et sociales</label>
+      </fieldset>
+      <label class="case"><input type="checkbox" name="periodique" checked /> Publié dans une revue (au moins une fois par an)</label>
+      <label class="case"><input type="checkbox" name="fondsPublics" checked /> Recherche financée au moins pour moitié par des fonds publics</label>
+      <div class="verdict" data-verdict aria-live="polite">
+        <p class="reponse" data-reponse></p>
+        <ul data-raisons></ul>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+  import { article30, type Discipline } from '../../../lib/savoirs';
+
+  document.querySelectorAll<HTMLElement>('[data-article30]').forEach((racine) => {
+    activerScene(racine);
+    const form = racine.querySelector<HTMLFormElement>('[data-formulaire]')!;
+    const lisible = (iso: string) => new Date(iso + 'T00:00:00Z').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    function rendre() {
+      const f = new FormData(form);
+      const publication = String(f.get('publication') || '');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(publication)) return;
+      const r = article30({ publication, discipline: f.get('discipline') as Discipline, periodique: f.has('periodique'), fondsPublics: f.has('fondsPublics') });
+      racine.querySelector('[data-reponse]')!.textContent = r.applicable
+        ? `✅ Tu peux déposer ta version acceptée en accès libre (HAL, par exemple) au plus tard à partir du ${lisible(r.date!)}.`
+        : '⛔ L’article 30 ne s’applique pas ici (mais ton contrat avec l’éditeur le permet peut-être : vérifie-le).';
+      racine.querySelector('[data-verdict]')!.classList.toggle('non', !r.applicable);
+      racine.querySelector('[data-raisons]')!.replaceChildren(...r.raisons.map((t) => Object.assign(document.createElement('li'), { textContent: t })));
+    }
+    form.addEventListener('input', rendre);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    rendre();
+  });
+</script>
+
+<style>
+  .formulaire { display: grid; gap: 0.7rem; }
+  .formulaire > label { display: grid; gap: 0.2rem; font-weight: 600; max-width: 22rem; }
+  .formulaire input[type='date'] { font: inherit; padding: 0.3rem 0.5rem; border: 2px solid var(--fg); border-radius: 0.5rem; background: var(--bg); color: var(--fg); }
+  fieldset { border: 2px dashed var(--border); border-radius: 0.6rem; padding: 0.4rem 0.8rem; display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; }
+  legend { font-weight: 700; padding: 0 0.3rem; }
+  .case { display: flex !important; gap: 0.5rem; align-items: center; font-weight: 400 !important; max-width: none !important; }
+  input[type='radio'], input[type='checkbox'] { accent-color: var(--accent); width: 1.1rem; height: 1.1rem; }
+  .verdict { border-left: 6px solid var(--ill-secret-b); padding: 0.3rem 0.9rem; }
+  .verdict:global(.non) { border-left-color: var(--accent-2); }
+  .reponse { font-weight: 700; margin: 0 0 0.4rem; }
+  .verdict ul { margin: 0; padding-left: 1.2rem; max-width: var(--mesure); }
+</style>
