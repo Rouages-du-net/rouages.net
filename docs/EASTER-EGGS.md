@@ -10,7 +10,7 @@ l'utilisateur réduit les mouvements, jamais de boucle infinie. Code :
 |---|---|---|
 | Partout | Code Konami : ↑ ↑ ↓ ↓ ← → ← → B A | « Mode phosphore » : le site devient un vieux terminal vert (lignes de balayage). Même code ou Échap pour revenir. Gardé le temps de l'onglet. |
 | Partout | Taper `sudo` (hors d'un champ) | Le site refuse, avec le vrai message de sudo (« … n'est pas dans le fichier sudoers »). |
-| Accueil | Cliquer trois fois sur les rouages de la scène | Les rouages s'emballent ; la troisième fois, l'histoire de la RFC 2324 (HTCPCP, poisson d'avril de 1998) et du code « 418 I'm a teapot ». Source : https://www.rfc-editor.org/rfc/rfc2324 |
+| Logo (partout) et scène de l'accueil | Cliquer trois fois sur le rouage du logo (ou appuyer trois fois sur Entrée dessus), ou sur les rouages de la scène | Sur l'accueil, le logo ne recharge pas la page ; ailleurs, le premier clic ramène à l'accueil et compte quand même. Les rouages s'emballent ; la troisième fois, l'histoire de la RFC 2324 (HTCPCP, poisson d'avril de 1998) et du code « 418 I'm a teapot ». Source : https://www.rfc-editor.org/rfc/rfc2324 |
 | Module Linux, terminal simulé | `cowsay message`, `sl`, `whoami`, `rm -rf /`, `sudo …` | Une vache qui parle, une locomotive (le farceur `sl`, pour qui tape mal `ls`), et un refus pédagogique des commandes dangereuses. (`src/components/animations/linux/Terminal.astro`) |
 | Page 404 | — | Un paquet perdu dont le TTL tombe à zéro, façon `traceroute`. (`src/pages/404.astro`) |
 | Console du navigateur | Ouvrir les outils de développement | Un message pour les curieux·ses, et un indice. |

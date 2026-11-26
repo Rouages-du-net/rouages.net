@@ -296,6 +296,13 @@ test('clins d’œil : Konami, sudo, terminal', async ({ page }) => {
   await expect(page.locator('html')).not.toHaveAttribute('data-phosphore', '');
   await page.keyboard.type('sudo');
   await expect(page.locator('[data-clin]')).toContainText('sudoers');
+  // Trois clics sur le logo, depuis une autre page : le premier ramène à l'accueil.
+  await page.goto('/glossaire/');
+  await page.locator('[data-logo]').click();
+  await page.waitForURL('**/');
+  await page.locator('[data-logo]').click();
+  await page.locator('[data-logo]').click();
+  await expect(page.locator('[data-clin]')).toContainText('418');
   await page.goto('/modules/linux/');
   const term = page.locator('[data-terminal-linux]');
   await term.locator('[data-commande]').fill('cowsay bonjour');

@@ -53,22 +53,47 @@ document.addEventListener('keydown', (e) => {
 
 try { if (sessionStorage.getItem('rouages-phosphore')) document.documentElement.setAttribute('data-phosphore', ''); } catch { /* rien */ }
 
-// 3. Les rouages de l'accueil : trois clics et ils s'emballent.
-document.querySelectorAll<HTMLElement>('[data-rouages-secrets]').forEach((scene) => {
-  let clics = 0;
-  scene.addEventListener('click', () => {
-    clics += 1;
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      scene.classList.remove('emballe');
-      void scene.getBoundingClientRect(); // relance l'animation
-      scene.classList.add('emballe');
-    }
-    if (clics === 3) {
-      clics = 0;
-      clin('Rouage secret débloqué ☕ Le 1ᵉʳ avril 1998, la RFC 2324 décrit un protocole pour piloter des cafetières par internet. Une théière à qui l’on demande du café doit répondre « 418 I’m a teapot ».');
-    }
-  });
-});
+// 3. Trois clics sur un rouage (le logo, ou ceux de la scène d'accueil) : ils
+// s'emballent. Le logo est un lien vers l'accueil : sur l'accueil, il ne
+// recharge plus la page ; ailleurs, le premier clic y ramène et le compte est
+// gardé quelques secondes (sessionStorage), pour que les clics suivants comptent.
+const SECRET_RFC = 'Rouage secret débloqué ☕ Le 1ᵉʳ avril 1998, la RFC 2324 décrit un protocole pour piloter des cafetières par internet. Une théière à qui l’on demande du café doit répondre « 418 I’m a teapot ».';
+const CLE_CLICS = 'rouages-clics';
+const lireClics = () => {
+  try {
+    const [n, t] = (sessionStorage.getItem(CLE_CLICS) ?? '0|0').split('|').map(Number);
+    return Date.now() - t < 6000 ? n : 0;
+  } catch { return 0; }
+};
+const ecrireClics = (n: number) => { try { sessionStorage.setItem(CLE_CLICS, `${n}|${Date.now()}`); } catch { /* rien */ } };
+let clicsRouage = lireClics();
+
+function emballer(el: Element | null) {
+  if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.classList.remove('emballe');
+  void (el as HTMLElement).getBoundingClientRect(); // relance l'animation
+  el.classList.add('emballe');
+}
+function clicRouage() {
+  clicsRouage += 1;
+  ecrireClics(clicsRouage);
+  emballer(document.querySelector('[data-logo]'));
+  emballer(document.querySelector('[data-rouages-secrets]'));
+  if (clicsRouage >= 3) {
+    clicsRouage = 0;
+    ecrireClics(0);
+    clin(SECRET_RFC);
+  }
+}
+document.querySelectorAll<HTMLElement>('[data-rouages-secrets]').forEach((scene) => scene.addEventListener('click', clicRouage));
+document.querySelectorAll<HTMLAnchorElement>('[data-logo]').forEach((logo) => logo.addEventListener('click', (e) => {
+  if (location.pathname === '/') {
+    e.preventDefault(); // déjà sur l'accueil : pas de rechargement
+    clicRouage();
+  } else {
+    ecrireClics(clicsRouage + 1); // compté, puis la page d'accueil s'ouvre
+  }
+}));
 
 // 6. Pour les curieux·ses qui ouvrent la console.
 console.info(
