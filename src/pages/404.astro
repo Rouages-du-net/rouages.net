@@ -1,7 +1,38 @@
 ---
+// Page introuvable : un paquet qui a fait trop de sauts (TTL à zéro), façon
+// traceroute. Clin d'œil au module « De l'Entrée à la page ».
 import Base from '../layouts/Base.astro';
+
+const SAUTS = [
+  ['1', 'ta-box.maison', '1 ms'],
+  ['2', 'routeur.operateur.example', '8 ms'],
+  ['3', 'point-echange.example', '12 ms'],
+  ['4', 'cable-sous-marin.example', '71 ms'],
+  ['5', '???', '* * *'],
+  ['6', 'quelque-part.example', '* * *'],
+];
 ---
 <Base title="Page introuvable" indexer={false}>
-  <h1>404 — Ce rouage est introuvable</h1>
-  <p>La page demandée n'existe pas (ou plus). <a href="/">Retour à l'accueil</a>.</p>
+  <p class="tag">Erreur 404</p>
+  <h1>Ce paquet s'est perdu</h1>
+  <p class="intro">
+    Il a sauté de routeur en routeur… et son compteur de sauts, le <abbr title="Time To Live">TTL</abbr>, est tombé
+    à zéro avant d'arriver. Le dernier routeur l'a jeté, comme le prévoit le protocole IP. Rien de cassé chez toi :
+    cette page n'existe pas, ou plus.
+  </p>
+  <pre class="trace" aria-label="Trace du paquet perdu">{`$ traceroute la-page-que-tu-cherches
+${SAUTS.map(([n, h, t]) => `${n.padStart(2)}  ${h.padEnd(28)} ${t}`).join('\n')}
+    TTL = 0 : paquet abandonné. 🪦`}</pre>
+  <ul class="pistes">
+    <li><a href="/">Revenir à l'accueil</a></li>
+    <li><a href="/recherche/">Chercher une notion</a></li>
+    <li><a href="/modules/entree-a-la-page/#voyage">Comprendre le TTL et traceroute</a></li>
+  </ul>
 </Base>
+
+<style>
+  .intro { font-size: 1.1rem; max-width: var(--mesure); }
+  .trace { background: var(--terminal-bg); color: var(--terminal-fg); border: 2px solid var(--fg); border-radius: 0.8rem; box-shadow: var(--ombre); padding: 1rem; overflow-x: auto; font-size: 0.9rem; max-width: 40rem; }
+  .pistes { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; padding: 0; }
+  .pistes a { display: inline-block; padding: 0.4rem 0.8rem; border: 2px solid var(--fg); border-radius: 0.6rem; background: var(--card); box-shadow: var(--ombre); color: var(--fg); text-decoration: none; font-weight: 700; }
+</style>

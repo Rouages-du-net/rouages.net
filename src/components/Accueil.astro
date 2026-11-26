@@ -21,7 +21,7 @@ import { traceRouage } from '../lib/rouage';
       <li><a class="porte" href="/ia/"><span aria-hidden="true">🤖</span> L'IA m'intrigue<small>sans magie</small></a></li>
     </ul>
   </div>
-  <svg class="scene" viewBox="0 0 320 220" aria-hidden="true" focusable="false">
+  <svg class="scene" viewBox="0 0 320 220" aria-hidden="true" focusable="false" data-rouages-secrets>
     <g class="etoiles">
       <path d="M40 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" />
       <path d="M268 22 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" />
@@ -67,5 +67,11 @@ import { traceRouage } from '../lib/rouage';
   .rouage-b { fill: var(--accent-2); stroke: var(--fg); stroke-width: 0.8; }
   .paquet { fill: var(--soleil); stroke: var(--fg); stroke-width: 2.5; }
   .etoiles path { fill: var(--soleil); stroke: var(--fg); stroke-width: 1.5; }
+  .rouage-a, .rouage-b { transform-box: fill-box; transform-origin: center; }
+  .scene { cursor: pointer; }
+  .scene:global(.emballe) .rouage-a { animation: emballe 1.2s cubic-bezier(.2, .8, .3, 1) 1; }
+  .scene:global(.emballe) .rouage-b { animation: emballe-inverse 1.2s cubic-bezier(.2, .8, .3, 1) 1; }
+  @keyframes emballe { from { rotate: 0deg; } to { rotate: 720deg; } }
+  @keyframes emballe-inverse { from { rotate: 0deg; } to { rotate: -900deg; } }
   @media (prefers-reduced-motion: reduce) { .paquet { display: none; } }
 </style>

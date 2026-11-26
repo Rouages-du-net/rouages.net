@@ -285,3 +285,21 @@ test('institutions : la carte met en évidence les liens d’un acteur', async (
   await expect(page.locator('.liens')).toContainText('PTI');
   expect(err).toEqual([]);
 });
+
+test('clins d’œil : Konami, sudo, terminal', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/');
+  for (const k of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']) await page.keyboard.press(k);
+  await expect(page.locator('html')).toHaveAttribute('data-phosphore', '');
+  await expect(page.locator('[data-clin]')).toContainText('phosphore');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('html')).not.toHaveAttribute('data-phosphore', '');
+  await page.keyboard.type('sudo');
+  await expect(page.locator('[data-clin]')).toContainText('sudoers');
+  await page.goto('/modules/linux/');
+  const term = page.locator('[data-terminal-linux]');
+  await term.locator('[data-commande]').fill('cowsay bonjour');
+  await term.locator('[data-commande]').press('Enter');
+  await expect(term.locator('[data-ecran]')).toContainText('< bonjour >');
+  expect(err).toEqual([]);
+});

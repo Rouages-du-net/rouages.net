@@ -210,3 +210,27 @@ html[data-lecture='ecrans'][data-ecran-courant]:not([data-ecran-courant='0']) .s
    élargir la page (les polices varient d'un système à l'autre). */
 main th, main td { overflow-wrap: anywhere; }
 main select { max-width: 100%; }
+
+/* Clins d'œil (src/scripts/clins.ts, docs/EASTER-EGGS.md). */
+.clin-bulle {
+  position: fixed; left: 50%; bottom: 1.2rem; transform: translateX(-50%); z-index: 50;
+  width: min(34rem, calc(100vw - 2rem)); margin: 0; padding: 0.8rem 1rem;
+  background: var(--card); color: var(--fg); border: 2px solid var(--fg); border-radius: 0.8rem;
+  box-shadow: var(--ombre); font-family: var(--police-mono); font-size: 0.9rem;
+}
+.clin-bulle[hidden] { display: none; }
+/* Mode « phosphore » : un vieux terminal vert (code Konami). */
+html[data-phosphore] {
+  --bg: #03140a; --card: #062312; --border: #0f4a26; --fg: #7dffa8; --muted: #4fd07f;
+  --accent: #c2ff6b; --accent-2: #7dffa8; --soleil: #7dffa8; --sur-soleil: #03140a;
+  --grille: rgba(125, 255, 168, 0.06); --ombre: 4px 4px 0 #0f4a26;
+  --ill-client: #7dffa8; --ill-reseau: #4fd07f; --ill-serveur: #c2ff6b; --ill-paquet: #e6ff9e;
+  --ill-secret-a: #9dffd0; --ill-secret-b: #c2ff6b; --ill-commun: #7dffa8;
+  --police: var(--police-mono); --police-titre: var(--police-mono);
+  color-scheme: dark;
+}
+html[data-phosphore] body { text-shadow: 0 0 6px rgba(125, 255, 168, 0.35); }
+html[data-phosphore] body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 40;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+}
