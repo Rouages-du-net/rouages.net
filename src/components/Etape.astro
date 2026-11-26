@@ -79,10 +79,13 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
     place-items: center;
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--bg);
-    font-weight: 700;
+    border-radius: 0.6rem;
+    border: 2px solid var(--fg);
+    box-shadow: 3px 3px 0 var(--fg);
+    background: var(--soleil);
+    color: var(--sur-soleil);
+    font-family: var(--police-pixel);
+    font-weight: 400;
   }
   .duree { color: var(--muted); font-size: 0.9rem; }
   .animation { margin: 0 0 2.5rem; }
@@ -104,7 +107,7 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
   }
   .encart {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 2px solid var(--fg);
     border-radius: 0.75rem;
     font-size: 0.97rem;
   }
@@ -121,5 +124,5 @@ const rendus = await Promise.all(encarts.map((e) => s.render(e.slot)));
   .contenu :global(ul) { margin: 0; padding-left: 1.1rem; }
   .contenu :global(li + li) { margin-top: 0.5rem; }
   .encart-verifie :global(code) { white-space: nowrap; }
-  .mythes { border-left: 4px solid var(--accent); }
+  .mythes { border-left: 8px solid var(--accent-2); }
 </style>

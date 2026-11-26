@@ -1,33 +1,42 @@
 /* Charte graphique : voir docs/CHARTE.md. Toutes les couleurs passent par
    ces variables ; les composants n'écrivent jamais de couleur en dur. */
 :root {
+  /* « Atelier de nuit » : papier millimétré bleu le jour, ciel étoilé la nuit.
+     Encre marine, bleu électrique, corail, jaune signal, menthe. */
   /* Interface */
-  --bg: #fbf8f3;
+  --bg: #f5f7ff;
   --card: #ffffff;
-  --border: #e6dfd3;
-  --fg: #1d1b18;
-  --muted: #665f55;
-  --accent: #a84a14;
-  --accent-2: #1b6670;
+  --border: #cfd6f2;
+  --fg: #141a3a;
+  --muted: #4d567f;
+  --accent: #2b4fd8;
+  --accent-2: #c62853;
+  --soleil: #ffd23f;          /* surface seulement (surlignage, pastilles) */
+  --sur-soleil: #141a3a;      /* texte posé sur --soleil, dans les deux thèmes */
+  --grille: rgba(43, 79, 216, 0.07);
+  --ombre: 4px 4px 0 var(--fg);
 
   /* Schémas et animations */
-  --ill-client: #1b6670;
-  --ill-reseau: #5f5a52;
-  --ill-serveur: #7a5c12;
-  --ill-paquet: #a84a14;
-  --ill-secret-a: #6b3fa0;
-  --ill-secret-b: #2f7a3a;
-  --ill-commun: #d9a300;
+  --ill-client: #0b7285;
+  --ill-reseau: #565e84;
+  --ill-serveur: #8a5300;
+  --ill-paquet: #c62853;
+  --ill-secret-a: #7a3fc4;
+  --ill-secret-b: #1e7a46;
+  --ill-commun: #ffc533;
 
   /* Terminal (jeux) : sombre dans les deux thèmes */
-  --terminal-bg: #0f1410;
-  --terminal-fg: #c9f5c9;
-  --terminal-invite: #f0b46a;
-  --terminal-erreur: #ffb4a8;
+  --terminal-bg: #0b1026;
+  --terminal-fg: #b9f6d0;
+  --terminal-invite: #ffd23f;
+  --terminal-erreur: #ffb4c4;
+  --terminal-bord: #2c3470;
 
   /* Typographie */
   --police: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --police-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Menlo, Consolas, monospace;
+  --police-titre: 'Bricolage Grotesque Variable', var(--police);
+  --police-pixel: 'Silkscreen', var(--police-mono);
 
   /* Largeur de lecture confortable pour le texte courant (~70 signes). */
   --mesure: 42rem;
@@ -36,21 +45,24 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #15140f;
-    --card: #1f1d17;
-    --border: #34302a;
-    --fg: #ece7de;
-    --muted: #a39b8e;
-    --accent: #e8874a;
-    --accent-2: #5fbcc6;
+    --bg: #0d1230;
+    --card: #161c45;
+    --border: #2c3470;
+    --fg: #eef0ff;
+    --muted: #a9b0dd;
+    --accent: #86a8ff;
+    --accent-2: #ff7a9c;
+    --soleil: #ffd84d;
+    --grille: rgba(134, 168, 255, 0.06);
+    --ombre: 4px 4px 0 #050819;
 
-    --ill-client: #5fbcc6;
-    --ill-reseau: #a39b8e;
-    --ill-serveur: #d6b25a;
-    --ill-paquet: #e8874a;
-    --ill-secret-a: #b48ce6;
-    --ill-secret-b: #7cc98a;
-    --ill-commun: #e3b934;
+    --ill-client: #5fd9e8;
+    --ill-reseau: #a9b0dd;
+    --ill-serveur: #ffc95c;
+    --ill-paquet: #ff7a9c;
+    --ill-secret-a: #c39bff;
+    --ill-secret-b: #6fe0a0;
+    --ill-commun: #ffd84d;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -59,33 +71,63 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--fg);
   font: 1.0625rem/1.7 var(--police);
+  /* Papier millimétré : un carreau de 24 px, une ligne plus marquée tous les 5. */
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grille) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grille) 1px, transparent 1px),
+    linear-gradient(var(--grille) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grille) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
 }
-h1, h2, h3 { line-height: 1.25; font-weight: 700; }
+@media (prefers-color-scheme: dark) {
+  /* La nuit, quelques étoiles par-dessus la grille. */
+  body {
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 255, 255, 0.55), transparent 60%),
+      radial-gradient(1px 1px at 70% 12%, rgba(255, 255, 255, 0.45), transparent 60%),
+      radial-gradient(1.5px 1.5px at 85% 60%, rgba(255, 216, 77, 0.5), transparent 60%),
+      radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.4), transparent 60%),
+      linear-gradient(var(--grille) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grille) 1px, transparent 1px);
+    background-size: 480px 480px, 480px 480px, 480px 480px, 480px 480px, 24px 24px, 24px 24px;
+  }
+}
+h1, h2, h3, h4 { font-family: var(--police-titre); line-height: 1.2; font-weight: 750; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 800; }
 code, kbd, pre { font-family: var(--police-mono); }
-a { color: var(--accent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); text-underline-offset: 0.18em; text-decoration-thickness: 0.08em; }
+a:hover { text-decoration-thickness: 0.16em; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+::selection { background: var(--soleil); color: var(--sur-soleil); }
 .wrap { max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
-header.site { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+header.site { border-bottom: 2px solid var(--fg); padding: 0.8rem 0; background: var(--bg); }
 header.site a { color: var(--fg); text-decoration: none; font-weight: 700; }
 .entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.entete nav { display: flex; gap: 1rem; }
-.entete nav a { font-weight: 500; color: var(--muted); }
+.entete nav { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.entete nav a { font-family: var(--police-pixel); font-weight: 400; font-size: 0.85rem; color: var(--fg); padding: 0.15rem 0.5rem; border: 2px solid transparent; border-radius: 0.4rem; }
+.entete nav a:hover { border-color: var(--fg); background: var(--card); }
 .recherche-entete { display: flex; gap: 0.25rem; }
 .recherche-entete input {
   font: inherit; font-size: 0.9rem; width: 11rem; max-width: 100%; padding: 0.3rem 0.6rem;
-  border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--fg);
+  border: 2px solid var(--fg); border-radius: 0.5rem; background: var(--card); color: var(--fg);
 }
-.recherche-entete button { font: inherit; background: none; border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.55rem; cursor: pointer; color: var(--fg); }
-.logo { display: inline-flex; align-items: center; gap: 0.5rem; }
-.logo svg { width: 1.6rem; height: 1.6rem; color: var(--accent); }
-footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2rem 0; color: var(--muted); font-size: .9rem; }
-.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: 1.25rem; }
+.recherche-entete button { font: inherit; background: var(--soleil); border: 2px solid var(--fg); border-radius: 0.5rem; padding: 0.3rem 0.55rem; cursor: pointer; color: var(--sur-soleil); }
+.logo { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--police-titre); font-size: 1.15rem; }
+.logo svg { width: 1.8rem; height: 1.8rem; color: var(--accent); transition: transform 0.6s cubic-bezier(.3, 1.6, .5, 1); }
+.logo:hover svg { transform: rotate(60deg); }
+.logo .curseur { display: inline-block; width: 0.55em; height: 1em; margin-left: 0.1em; background: var(--accent-2); vertical-align: -0.12em; }
+footer.site { border-top: 2px solid var(--fg); margin-top: 4rem; padding: 2rem 0; color: var(--muted); font-size: .9rem; background: var(--bg); }
+footer.site .clin { font-family: var(--police-mono); font-size: 0.85rem; }
+.grid { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.card { background: var(--card); border: 2px solid var(--fg); border-radius: 0.9rem; padding: 1.25rem; box-shadow: var(--ombre); }
 .card h3 { margin-top: 0; }
 .tag { display: inline-block; font-size: .8rem; color: var(--muted); }
+/* Sur-titre des pages (« Les bases techniques · module en construction ») */
+main > p.tag:first-child { font-family: var(--police-pixel); color: var(--accent-2); font-size: 0.8rem; margin-top: 1.5rem; }
+main > p.tag:first-child a { color: inherit; }
 .visuellement-cache {
   position: absolute;
   width: 1px;
@@ -99,9 +141,10 @@ footer.site { border-top: 1px solid var(--border); margin-top: 4rem; padding: 2r
 .anim { margin: 1rem 0; }
 .anim-cadre {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border: 2px solid var(--fg);
+  border-radius: 0.9rem;
   padding: 1rem;
+  box-shadow: var(--ombre);
 }
 .anim-cadre-defile { overflow-x: auto; }
 .anim-repli { overflow-wrap: anywhere; }
@@ -113,12 +156,13 @@ code { overflow-wrap: anywhere; }
   font: inherit;
   font-size: 0.9rem;
   padding: 0.4rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  border: 2px solid var(--fg);
   background: var(--card);
   color: var(--fg);
   cursor: pointer;
 }
+.anim-commandes button:not(:disabled):hover, .anim-bouton:not(:disabled):hover { box-shadow: 2px 2px 0 var(--fg); }
 .anim-commandes .principal, .anim-commandes [data-action='suivant'], .anim-bouton.principal {
   background: var(--accent);
   color: var(--bg);

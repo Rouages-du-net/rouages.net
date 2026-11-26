@@ -7,31 +7,42 @@ composant, toujours passer par une variable.
 
 ## Intention
 
-- **Papier et laiton** : un fond chaud, comme une planche d'atlas ou un carnet
-  d'ingénieur ; un accent cuivre, la couleur des rouages… et des fils de
-  cuivre qui transportent les données.
-- **Lisible avant tout** : une police conçue pour les personnes malvoyantes,
-  des contrastes AA partout, un mode sombre soigné.
+- **Atelier de nuit** : un papier millimétré bleu le jour, un ciel étoilé la
+  nuit, comme la table d'un·e inventeur·rice qui démonte une machine pour
+  voir comment elle marche. Technique, mais joueur : on doit avoir envie
+  d'ouvrir le capot.
+- **Traits nets, ombres franches** : bordures de 2 px couleur d'encre, ombres
+  portées décalées sans flou (`--ombre`), coins arrondis. Pas de dégradés
+  « glossy », pas de flou.
+- **Des clins d'œil** : une police pixel pour les petites étiquettes, des
+  étoiles, un curseur de terminal, quelques secrets cachés (voir
+  [`EASTER-EGGS.md`](EASTER-EGGS.md)). Jamais au détriment de la lecture.
+- **Lisible avant tout** : une police conçue pour les personnes malvoyantes
+  pour le texte, des contrastes AA partout, un mode sombre soigné.
 - **Montrer la mécanique** : schémas précis plutôt qu'illustrations
   décoratives ; on préfère une flèche juste à une jolie image.
 
 ## Couleurs
 
-Contrastes calculés selon WCAG 2 : toutes les couleurs ci-dessous atteignent
-au moins **4,5:1** sur le fond et sur les cartes, dans les deux thèmes (elles
-peuvent donc aussi servir pour du texte).
+Contrastes calculés selon WCAG 2 : toutes les couleurs de texte ci-dessous
+atteignent au moins **5:1** sur le fond et sur les cartes, dans les deux
+thèmes.
 
 ### Interface
 
 | Variable | Rôle | Clair | Sombre |
 |---|---|---|---|
-| `--bg` | fond de page (« papier ») | `#fbf8f3` | `#15140f` |
-| `--card` | cartes, encarts | `#ffffff` | `#1f1d17` |
-| `--border` | filets, bordures | `#e6dfd3` | `#34302a` |
-| `--fg` | texte | `#1d1b18` | `#ece7de` |
-| `--muted` | texte secondaire | `#665f55` | `#a39b8e` |
-| `--accent` | cuivre : liens, éléments actifs | `#a84a14` | `#e8874a` |
-| `--accent-2` | sarcelle : second accent | `#1b6670` | `#5fbcc6` |
+| `--bg` | fond (papier millimétré / ciel de nuit) | `#f5f7ff` | `#0d1230` |
+| `--card` | cartes, encarts | `#ffffff` | `#161c45` |
+| `--border` | filets discrets | `#cfd6f2` | `#2c3470` |
+| `--fg` | texte, traits d'encre | `#141a3a` | `#eef0ff` |
+| `--muted` | texte secondaire | `#4d567f` | `#a9b0dd` |
+| `--accent` | bleu électrique : liens, éléments actifs | `#2b4fd8` | `#86a8ff` |
+| `--accent-2` | corail : second accent, sur-titres | `#c62853` | `#ff7a9c` |
+| `--soleil` | jaune signal, **surface seulement** (pastilles, surlignage) | `#ffd23f` | `#ffd84d` |
+| `--sur-soleil` | texte posé sur `--soleil` | `#141a3a` | `#141a3a` |
+| `--grille` | lignes du papier millimétré | bleu à 7 % | bleu à 6 % |
+| `--ombre` | ombre portée franche | `4px 4px 0` encre | `4px 4px 0 #050819` |
 
 ### Schémas et animations
 
@@ -41,25 +52,31 @@ chaque élément porte aussi une étiquette ou une forme distinctive.
 
 | Variable | Représente | Clair | Sombre |
 |---|---|---|---|
-| `--ill-client` | ton appareil, ton navigateur | `#1b6670` | `#5fbcc6` |
-| `--ill-reseau` | box, routeurs, câbles | `#5f5a52` | `#a39b8e` |
-| `--ill-serveur` | serveurs, datacenters | `#7a5c12` | `#d6b25a` |
-| `--ill-paquet` | données en transit, paquets | `#a84a14` | `#e8874a` |
-| `--ill-secret-a` | secret de la première partie | `#6b3fa0` | `#b48ce6` |
-| `--ill-secret-b` | secret de la seconde partie | `#2f7a3a` | `#7cc98a` |
-| `--ill-commun` | élément public, partagé | `#d9a300` | `#e3b934` |
+| `--ill-client` | ton appareil, ton navigateur | `#0b7285` | `#5fd9e8` |
+| `--ill-reseau` | box, routeurs, câbles | `#565e84` | `#a9b0dd` |
+| `--ill-serveur` | serveurs, datacenters | `#8a5300` | `#ffc95c` |
+| `--ill-paquet` | données en transit, paquets | `#c62853` | `#ff7a9c` |
+| `--ill-secret-a` | secret de la première partie | `#7a3fc4` | `#c39bff` |
+| `--ill-secret-b` | secret de la seconde partie | `#1e7a46` | `#6fe0a0` |
+| `--ill-commun` | élément public, partagé | `#ffc533` | `#ffd84d` |
 
 `--ill-commun` est une couleur de **surface** (remplissage), pas de texte.
+Le terminal (`--terminal-*`) reste sombre dans les deux thèmes.
 
 ## Typographie
 
+Toutes les polices sont **servies par le site lui-même** (paquets
+`@fontsource`), sous licence OFL, sans appel à un service tiers.
+
 - **Texte** : *Atkinson Hyperlegible Next*, conçue par le Braille Institute
-  pour la lisibilité des personnes malvoyantes (licence OFL), **servie par le
-  site lui-même** (paquet `@fontsource-variable`), sans appel à un service
-  tiers.
-- **Code et commandes** : *Atkinson Hyperlegible Mono*, de la même famille.
-- Taille de base 17 px, interligne 1,6 ; titres en graisse 700 ; jamais de
-  texte en dessous de 13 px.
+  pour la lisibilité des personnes malvoyantes.
+- **Titres** : *Bricolage Grotesque*, une grotesque un peu bricolée, pour le
+  côté atelier (`--police-titre`).
+- **Étiquettes** : *Silkscreen*, police pixel (`--police-pixel`), seulement
+  pour de courts libellés (navigation, badges, numéros d'étape, sur-titres),
+  jamais pour du texte courant, jamais sous 12,8 px.
+- **Code et commandes** : *Atkinson Hyperlegible Mono*.
+- Taille de base 17 px, interligne 1,7 ; jamais de texte en dessous de 13 px.
 
 ## Mise en page : aérer
 

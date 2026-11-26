@@ -1,0 +1,71 @@
+---
+// En-tête de la page d'accueil : la promesse du site, trois portes d'entrée
+// et une petite scène (un ordinateur, des rouages, un serveur, un paquet qui
+// voyage). Décorative : son contenu est dit dans le texte. Le paquet fait
+// trois allers, puis s'arrête (jamais de boucle infinie) ; rien ne bouge si
+// l'utilisateur réduit les animations.
+import { traceRouage } from '../lib/rouage';
+---
+<section class="accueil" aria-labelledby="titre-accueil">
+  <div class="texte">
+    <p class="sur-titre">// ouvre le capot</p>
+    <h1 id="titre-accueil">Les rouages <span class="du">du</span> net</h1>
+    <p class="promesse">
+      Que se passe-t-il entre ton clic et la page ? Comment une machine « apprend »-elle ? Qui décide des règles
+      d'internet ? Ici, on démonte la machine <strong>rouage par rouage</strong>, avec les vraies commandes, les
+      vraies sources, et des animations à manipuler.
+    </p>
+    <ul class="portes">
+      <li><a class="porte" href="/modules/entree-a-la-page/"><span aria-hidden="true">🔭</span> Je découvre<small>du clic à la page</small></a></li>
+      <li><a class="porte" href="#g-les-bases-techniques"><span aria-hidden="true">🧰</span> Je prépare un cours<small>IP, Linux, binaire…</small></a></li>
+      <li><a class="porte" href="/ia/"><span aria-hidden="true">🤖</span> L'IA m'intrigue<small>sans magie</small></a></li>
+    </ul>
+  </div>
+  <svg class="scene" viewBox="0 0 320 220" aria-hidden="true" focusable="false">
+    <g class="etoiles">
+      <path d="M40 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" />
+      <path d="M268 22 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" />
+      <path d="M296 120 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2z" />
+    </g>
+    <path class="fil" d="M70 150 C 110 150, 110 90, 160 90 S 220 150, 252 150" />
+    <g class="ordi">
+      <rect x="22" y="122" width="52" height="38" rx="5" />
+      <rect x="14" y="160" width="68" height="8" rx="3" />
+      <text x="48" y="146">:)</text>
+    </g>
+    <g class="serveur">
+      <rect x="250" y="112" width="48" height="74" rx="6" />
+      <line x1="258" y1="132" x2="290" y2="132" /><line x1="258" y1="150" x2="290" y2="150" /><line x1="258" y1="168" x2="290" y2="168" />
+      <circle cx="286" cy="124" r="3" class="led" />
+    </g>
+    <path transform="translate(160 90) scale(2.4)" class="rouage-a" d={traceRouage(10)} fill-rule="evenodd" />
+    <path transform="translate(196 58) scale(1.4)" class="rouage-b" d={traceRouage(8)} fill-rule="evenodd" />
+    <circle class="paquet" r="6">
+      <animateMotion dur="2.4s" repeatCount="3" fill="freeze" path="M70 150 C 110 150, 110 90, 160 90 S 220 150, 252 150" />
+    </circle>
+  </svg>
+</section>
+
+<style>
+  .accueil { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.5rem; align-items: center; margin: 2rem 0 3rem; }
+  @media (max-width: 46rem) { .accueil { grid-template-columns: 1fr; } .scene { max-width: 20rem; justify-self: center; } }
+  .sur-titre { font-family: var(--police-pixel); color: var(--accent-2); margin: 0; font-size: 0.95rem; }
+  h1 { margin: 0.2rem 0 0.8rem; font-size: clamp(2.4rem, 7vw, 3.8rem); line-height: 1; }
+  .du { font-family: var(--police-pixel); font-weight: 400; font-size: 0.55em; padding: 0 0.15em; background: var(--soleil); color: var(--sur-soleil); border: 2px solid var(--fg); border-radius: 0.3rem; vertical-align: 0.25em; }
+  .promesse { font-size: 1.15rem; max-width: var(--mesure); }
+  .portes { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .porte { display: inline-grid; gap: 0; padding: 0.55rem 0.9rem; border: 2px solid var(--fg); border-radius: 0.8rem; background: var(--card); color: var(--fg); text-decoration: none; font-weight: 700; box-shadow: var(--ombre); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .porte small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+  .porte:hover, .porte:focus-visible { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--fg); }
+  .scene { width: 100%; height: auto; overflow: visible; }
+  .fil { fill: none; stroke: var(--muted); stroke-width: 3; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .ordi rect, .serveur rect { fill: var(--card); stroke: var(--fg); stroke-width: 3; }
+  .ordi text { fill: var(--accent); font: 700 16px var(--police-mono); text-anchor: middle; }
+  .serveur line { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+  .led { fill: var(--ill-secret-b); }
+  .rouage-a { fill: var(--accent); stroke: var(--fg); stroke-width: 0.6; }
+  .rouage-b { fill: var(--accent-2); stroke: var(--fg); stroke-width: 0.8; }
+  .paquet { fill: var(--soleil); stroke: var(--fg); stroke-width: 2.5; }
+  .etoiles path { fill: var(--soleil); stroke: var(--fg); stroke-width: 1.5; }
+  @media (prefers-reduced-motion: reduce) { .paquet { display: none; } }
+</style>
