@@ -742,3 +742,5 @@ fois Cloudflare retiré) :
 | TLS | SSL Labs, `https://api.ssllabs.com/api/v3/analyze?host=rouages.net` | TLS 1.2 et 1.3, ALPN `h2` et `http/1.1` (HTTP/2), pas de HSTS, **note T** : le serveur présente un certificat **auto-signé, expiré le 10 février 2026**, au nom de l'hôte technique du compte d'hébergement (nom non reproduit) |
 
 À faire : lancer AutoSSL dans cPanel (« État SSL/TLS ») pour obtenir un certificat Let's Encrypt, corriger l'enregistrement `www`, puis refaire ce relevé et le `traceroute` (impossible depuis le conteneur).
+
+**Mise à jour du 26 novembre 2026, après AutoSSL** : SSL Labs donne la **note A**. Certificat Let's Encrypt (autorité intermédiaire YR2) pour `rouages.net` et `www.rouages.net`, valable du 25 novembre 2026 au 23 février 2027 (90 jours, renouvelé automatiquement par AutoSSL). `www.rouages.net` résout désormais vers l'hébergement (`109.234.166.10`, via un alias). HSTS toujours absent : à activer une fois le renouvellement automatique observé.
