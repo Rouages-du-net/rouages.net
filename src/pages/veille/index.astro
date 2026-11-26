@@ -1,0 +1,87 @@
+---
+// La veille : les revues hebdomadaires publiées, puis les liens des derniers
+// jours, chacun rattaché aux modules du site qu'il concerne. Données mises à
+// jour chaque jour par .github/workflows/veille.yml (voir docs/VEILLE.md).
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { articles, genereLe, jourDe, jourLisible, sources, THEMES, TITRES_MODULES } from '../../lib/veille';
+
+const revues = (await getCollection('revues', ({ data }) => !data.draft)).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const JOURS = 14;
+const limite = Date.now() - JOURS * 86400000;
+const recents = articles.filter((a) => new Date(a.date).getTime() >= Math.min(limite, genereLe.getTime() - JOURS * 86400000));
+const parJour = new Map<string, typeof recents>();
+for (const a of recents) {
+  const j = jourDe(a.date);
+  if (!parJour.has(j)) parJour.set(j, []);
+  parJour.get(j)!.push(a);
+}
+const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' });
+---
+<Base title="La veille" description="Ce qui bouge dans les rouages d'internet : une revue chaque semaine, et chaque jour des liens choisis chez les régulateurs, les institutions d'internet, les chercheur·ses et la presse.">
+  <p class="tag">Veille</p>
+  <h1>La veille</h1>
+  <p class="intro">
+    Les règles d'internet bougent vite : décisions de justice, lois, nouvelles normes, pannes, procès. Chaque jour, un
+    programme lit une vingtaine de sources choisies à la main ; chaque semaine, une revue résume l'essentiel et nous
+    signale les modules du site à remettre à jour.
+  </p>
+  <p class="abonnement">
+    <a class="bouton" href="/veille/revues.xml">📡 S'abonner aux revues (Atom)</a>
+    <a class="bouton" href="/veille/feed.xml">🔗 Tous les liens (Atom)</a>
+  </p>
+
+  <section aria-labelledby="t-revues">
+    <h2 id="t-revues">Les revues de la semaine</h2>
+    {revues.length === 0 ? (
+      <p>La première revue arrive bientôt.</p>
+    ) : (
+      <ul class="revues">
+        {revues.map((r) => <li><a href={`/veille/revues/${r.id}/`}>{r.data.title}</a> <span class="date">· {fmt.format(r.data.date)}</span><br /><span class="desc">{r.data.description}</span></li>)}
+      </ul>
+    )}
+  </section>
+
+  <section aria-labelledby="t-liens">
+    <h2 id="t-liens">Les liens des derniers jours</h2>
+    <p class="maj">Mis à jour le {fmt.format(genereLe)}. Les liens mènent aux sites des sources ; leurs contenus n'engagent qu'elles.</p>
+    {[...parJour.entries()].map(([jour, liste]) => (
+      <>
+        <h3 class="jour">{jourLisible(jour)}</h3>
+        <ul class="liens">
+          {liste.map((a) => (
+            <li>
+              <a href={a.lien} lang={a.langue !== 'fr' ? a.langue : undefined}>{a.titre}</a>
+              <span class="source"> · {a.source}{a.langue !== 'fr' && ' (en anglais)'}</span>
+              {a.extrait && <span class="extrait" lang={a.langue !== 'fr' ? a.langue : undefined}>{a.extrait}</span>}
+              {a.modules.length > 0 && (
+                <span class="modules">Pour aller plus loin : {a.modules.map((m, i) => <>{i > 0 && ', '}<a href={`/modules/${m}/`}>{TITRES_MODULES[m] ?? m}</a></>)}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </>
+    ))}
+  </section>
+
+  <section aria-labelledby="t-sources">
+    <h2 id="t-sources">Les sources suivies</h2>
+    <ul class="sources">
+      {sources.map((s) => <li><a href={s.site ?? s.url}>{s.nom}</a> <span class="themes">({s.themes.map((t) => THEMES[t] ?? t).join(', ')})</span></li>)}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .intro, .maj { max-width: var(--mesure); }
+  .intro { font-size: 1.1rem; }
+  .abonnement { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .bouton { display: inline-block; padding: 0.45rem 0.9rem; border: 2px solid var(--fg); border-radius: 0.6rem; background: var(--card); color: var(--fg); text-decoration: none; font-weight: 700; box-shadow: var(--ombre); }
+  .revues, .liens, .sources { padding-left: 1.1rem; max-width: var(--mesure); }
+  .revues li, .liens li { margin-bottom: 0.8rem; }
+  .date, .source, .themes, .maj { color: var(--muted); font-size: 0.9rem; }
+  .desc, .extrait { display: block; font-size: 0.95rem; }
+  .extrait { color: var(--muted); }
+  .modules { display: block; font-size: 0.85rem; }
+  .jour { font-size: 1.05rem; margin: 1.6rem 0 0.5rem; font-family: var(--police-pixel); font-weight: 400; color: var(--accent-2); text-transform: capitalize; }
+</style>

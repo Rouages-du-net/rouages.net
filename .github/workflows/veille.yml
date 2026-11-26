@@ -1,0 +1,54 @@
+name: Veille quotidienne
+
+# Chaque jour à 5 h 37 UTC : lecture des flux de data/veille-sources.yaml, mise
+# à jour de data/veille.json, et le lundi, brouillon de la revue hebdomadaire
+# dans src/content/revues/ (draft: true, à rédiger et relire : docs/VEILLE.md).
+# S'il y a du nouveau, commit sur main puis déploiement. Un push fait avec le
+# jeton par défaut ne déclenche pas les autres workflows : on lance donc
+# deploy.yml explicitement (workflow_dispatch, qui garde les tests).
+
+on:
+  schedule:
+    - cron: '37 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: veille
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/veille/rafraichir.mjs
+      - name: Revue hebdomadaire (le lundi)
+        run: |
+          if [ "$(date -u +%u)" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node scripts/veille/revue.mjs
+          else
+            echo "Pas lundi : pas de revue."
+          fi
+      - name: Commit et déploiement si changements
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/veille.json data/veille-etat.json src/content/revues/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Aucun changement."
+          else
+            git commit -m "veille : mise à jour quotidienne"
+            git push
+            gh workflow run deploy.yml --ref main
+          fi

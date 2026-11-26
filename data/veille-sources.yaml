@@ -1,0 +1,112 @@
+# Sources de la veille (page /veille/). Fichier relu par un humain : ajouter une
+# source est une décision éditoriale (voir docs/VEILLE.md).
+#
+# Champs :
+#   id        identifiant stable, en minuscules avec tirets
+#   nom       nom affiché
+#   url       adresse du flux RSS ou Atom (vérifiée à l'ajout)
+#   site      page d'accueil
+#   themes    un ou plusieurs parmi : gouvernance, regulation, securite, ia, savoirs, reseau, libertes
+#   modules   modules du site que la source concerne en général (slug de /modules/<slug>/)
+#   langue    fr ou en
+#   max_items nombre maximal d'items retenus par passage (défaut 6)
+#   mots_cles si présent, un item n'est retenu que si son titre ou son extrait contient l'un des mots
+#   extrait   false pour n'afficher que le titre (presse : titres et liens seulement)
+#   actif     false pour suspendre une source sans la supprimer
+
+sources:
+  # — Qui décide : régulateurs et institutions
+  - { id: cnil, nom: CNIL, url: 'https://www.cnil.fr/fr/rss.xml', site: 'https://www.cnil.fr/', themes: [regulation], modules: [etats-regulation, surveillance-vie-privee], langue: fr, max_items: 5 }
+  - { id: arcom, nom: Arcom, url: 'https://www.arcom.fr/rss.xml', site: 'https://www.arcom.fr/', themes: [regulation], modules: [etats-regulation], langue: fr, max_items: 4 }
+  - { id: cepd, nom: Comité européen de la protection des données, url: 'https://www.edpb.europa.eu/feed/news_en', site: 'https://www.edpb.europa.eu/', themes: [regulation], modules: [etats-regulation], langue: en, max_items: 4 }
+  - { id: commission-numerique, nom: Commission européenne (stratégie numérique), url: 'https://digital-strategy.ec.europa.eu/en/rss.xml', site: 'https://digital-strategy.ec.europa.eu/', themes: [regulation], modules: [etats-regulation], langue: en, max_items: 6 }
+  - { id: conseil-etat, nom: Conseil d'État, url: 'https://www.conseil-etat.fr/outils/flux-rss/actualites-rss', site: 'https://www.conseil-etat.fr/', themes: [regulation], modules: [], langue: fr, max_items: 4, mots_cles: [numérique, internet, algorithm, données personnelles, vidéoprotection, vidéosurveillance, intelligence artificielle, CNIL, réseaux sociaux] }
+  - { id: ietf, nom: IETF, blog, url: 'https://www.ietf.org/blog/feed/', site: 'https://www.ietf.org/', themes: [gouvernance, reseau], modules: [gouvernance-technique], langue: en, max_items: 4 }
+  - { id: isoc, nom: Internet Society, url: 'https://www.internetsociety.org/feed/', site: 'https://www.internetsociety.org/', themes: [gouvernance], modules: [gouvernance-technique], langue: en, max_items: 4 }
+  - { id: isoc-pulse, nom: Internet Society Pulse (coupures), url: 'https://pulse.internetsociety.org/en/blog/rss/', site: 'https://pulse.internetsociety.org/', themes: [gouvernance, libertes], modules: [etats-regulation], langue: en, max_items: 3 }
+  - { id: ripe-labs, nom: RIPE Labs, url: 'https://labs.ripe.net/feed.xml', site: 'https://labs.ripe.net/', themes: [reseau, gouvernance], modules: [gouvernance-technique], langue: en, max_items: 3 }
+  - { id: apnic-blog, nom: APNIC, blog, url: 'https://blog.apnic.net/feed/', site: 'https://blog.apnic.net/', themes: [reseau], modules: [adresses-ip, gouvernance-technique], langue: en, max_items: 3 }
+  - { id: w3c, nom: W3C, actualités, url: 'https://www.w3.org/news/feed/', site: 'https://www.w3.org/', themes: [gouvernance], modules: [gouvernance-technique], langue: en, max_items: 3 }
+
+  # — Sécurité et réseau
+  - { id: cert-fr, nom: CERT-FR (ANSSI), actualités, url: 'https://cert.cyber.gouv.fr/actualite/feed/', site: 'https://cert.cyber.gouv.fr/', themes: [securite], modules: [se-proteger], langue: fr, max_items: 3 }
+  - { id: cloudflare, nom: Cloudflare, blog, url: 'https://blog.cloudflare.com/rss/', site: 'https://blog.cloudflare.com/', themes: [reseau], modules: [entree-a-la-page], langue: en, max_items: 3, mots_cles: [outage, shutdown, disruption, post-quantum, 'HTTP/3', QUIC, DNS, BGP] }
+
+  # — Savoirs
+  - { id: coalition-s, nom: cOAlition S (Plan S), url: 'https://coalition-s.org/feed/', site: 'https://www.coalition-s.org/', themes: [savoirs], modules: [savoirs], langue: en, max_items: 3 }
+  - { id: internet-archive, nom: Internet Archive, blog, url: 'https://blog.archive.org/feed/', site: 'https://blog.archive.org/', themes: [savoirs], modules: [savoirs], langue: en, max_items: 3 }
+  - { id: torrentfreak, nom: TorrentFreak, url: 'https://torrentfreak.com/feed/', site: 'https://torrentfreak.com/', themes: [savoirs], modules: [savoirs], langue: en, max_items: 3, extrait: false, mots_cles: [sci-hub, libgen, "anna's archive", z-library, shadow librar, elbakyan, internet archive] }
+
+  # — IA, libertés, presse
+  - { id: algorithmwatch, nom: AlgorithmWatch, url: 'https://algorithmwatch.org/en/feed/', site: 'https://algorithmwatch.org/', themes: [ia, libertes], modules: [ia-decident, ia-surveiller], langue: en, max_items: 3 }
+  - { id: eff, nom: Electronic Frontier Foundation, url: 'https://www.eff.org/rss/updates.xml', site: 'https://www.eff.org/', themes: [libertes], modules: [], langue: en, max_items: 4 }
+  - { id: lqdn, nom: La Quadrature du Net, url: 'https://www.laquadrature.net/feed/', site: 'https://www.laquadrature.net/', themes: [libertes], modules: [surveillance-vie-privee, ia-surveiller], langue: fr, max_items: 3 }
+  - { id: next, nom: Next, url: 'https://next.ink/feed/', site: 'https://next.ink/', themes: [regulation, ia], modules: [], langue: fr, max_items: 8, extrait: false }
+  - { id: linuxfr, nom: LinuxFr.org, dépêches, url: 'https://linuxfr.org/news.atom', site: 'https://linuxfr.org/', themes: [reseau], modules: [linux], langue: fr, max_items: 3, extrait: false }
+
+# Mots-clés qui rattachent un article à un module, quelle que soit la source :
+# c'est ce qui permet de repérer les pages à revérifier (« sujets évolutifs »).
+modules_par_mot_cle:
+  afrinic: [gouvernance-technique]
+  icann: [gouvernance-technique]
+  ietf: [gouvernance-technique]
+  'itu': [gouvernance-technique]
+  'uit': [gouvernance-technique]
+  'internet governance forum': [gouvernance-technique]
+  'root zone': [gouvernance-technique]
+  ksk: [gouvernance-technique]
+  'chat control': [se-proteger]
+  csam: [se-proteger]
+  'post-quantique': [se-proteger]
+  'post-quantum': [se-proteger]
+  'have i been pwned': [se-proteger]
+  'ai act': [etats-regulation, ia]
+  'règlement sur l''ia': [etats-regulation, ia]
+  'digital services act': [etats-regulation, ia-recommander]
+  'dsa': [etats-regulation, ia-recommander]
+  'digital markets act': [etats-regulation, pagerank]
+  'dma': [etats-regulation, pagerank]
+  'rgpd': [etats-regulation]
+  'gdpr': [etats-regulation]
+  'omnibus': [etats-regulation]
+  'digital networks act': [etats-regulation]
+  'neutralité': [etats-regulation]
+  'net neutrality': [etats-regulation]
+  'shutdown': [etats-regulation]
+  'coupure': [etats-regulation]
+  'tiktok': [ia-recommander, etats-regulation]
+  'temu': [etats-regulation]
+  'aliexpress': [etats-regulation]
+  'moins de 15 ans': [etats-regulation, ia-recommander]
+  'antitrust': [pagerank]
+  'google search': [pagerank]
+  'faux avis': [classer-notes]
+  'fake review': [classer-notes]
+  'copyright': [ia-creer]
+  "droit d'auteur": [ia-creer]
+  'laion': [ia-creer]
+  'getty': [ia-creer]
+  'vidéosurveillance': [ia-surveiller, ia-voir]
+  'vidéoprotection': [ia-surveiller, ia-voir]
+  'reconnaissance faciale': [ia-voir, ia-surveiller]
+  'facial recognition': [ia-voir, ia-surveiller]
+  'cnaf': [ia-decident]
+  'waymo': [ia-agir]
+  'robotaxi': [ia-agir]
+  'autonomous weapons': [ia-agir]
+  'armes autonomes': [ia-agir]
+  'deepfake': [ia-entendre]
+  'data center': [materialite]
+  'datacenter': [materialite]
+  'centre de données': [materialite]
+  'sci-hub': [savoirs]
+  'libgen': [savoirs]
+  "anna's archive": [savoirs]
+  'open access': [savoirs]
+  'accès ouvert': [savoirs]
+  'plan s': [savoirs]
+  'elsevier': [savoirs]
+  'tor': [dark-net]
+  'ipv6': [adresses-ip]
+  'openssh': [linux]
+  'sudo': [linux]

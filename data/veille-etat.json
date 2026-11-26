@@ -1,0 +1,107 @@
+{
+  "cnil": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "arcom": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "cepd": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "commission-numerique": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "conseil-etat": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "0 entrées lues"
+  },
+  "ietf": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "603 entrées lues"
+  },
+  "isoc": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "20 entrées lues"
+  },
+  "isoc-pulse": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "5 entrées lues"
+  },
+  "ripe-labs": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "15 entrées lues"
+  },
+  "apnic-blog": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "30 entrées lues"
+  },
+  "w3c": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "25 entrées lues"
+  },
+  "cert-fr": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "40 entrées lues"
+  },
+  "cloudflare": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "5 entrées lues"
+  },
+  "coalition-s": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "internet-archive": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "torrentfreak": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "1 entrées lues"
+  },
+  "algorithmwatch": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "eff": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "50 entrées lues"
+  },
+  "lqdn": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "10 entrées lues"
+  },
+  "next": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "50 entrées lues"
+  },
+  "linuxfr": {
+    "erreurs_consecutives": 0,
+    "dernier_succes": "2026-11-26T18:49:49.832Z",
+    "dernier_message": "15 entrées lues"
+  }
+}
