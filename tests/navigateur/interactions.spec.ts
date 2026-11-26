@@ -285,3 +285,36 @@ test('institutions : la carte met en évidence les liens d’un acteur', async (
   await expect(page.locator('.liens')).toContainText('PTI');
   expect(err).toEqual([]);
 });
+
+test('clins d’œil : Konami, sudo, terminal', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/');
+  for (const k of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']) await page.keyboard.press(k);
+  await expect(page.locator('html')).toHaveAttribute('data-phosphore', '');
+  await expect(page.locator('[data-clin]')).toContainText('phosphore');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('html')).not.toHaveAttribute('data-phosphore', '');
+  await page.keyboard.type('sudo');
+  await expect(page.locator('[data-clin]')).toContainText('sudoers');
+  await page.goto('/modules/linux/');
+  const term = page.locator('[data-terminal-linux]');
+  await term.locator('[data-commande]').fill('cowsay bonjour');
+  await term.locator('[data-commande]').press('Enter');
+  await expect(term.locator('[data-ecran]')).toContainText('< bonjour >');
+  expect(err).toEqual([]);
+});
+
+test('savoirs : couleurs de l’accès ouvert et article 30', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/savoirs/');
+  const c = page.locator('[data-couleurs]');
+  await c.locator('[data-modele="diamant"]').click();
+  await expect(c.locator('[data-publier]')).toHaveText('Personne');
+  const a = page.locator('[data-article30]');
+  await a.locator('input[name="publication"]').fill('2026-03-10');
+  await a.locator('input[value="shs"]').check();
+  await expect(a.locator('[data-reponse]')).toContainText('10 mars 2027');
+  await a.locator('input[name="fondsPublics"]').uncheck();
+  await expect(a.locator('[data-reponse]')).toContainText('ne s’applique pas');
+  expect(err).toEqual([]);
+});

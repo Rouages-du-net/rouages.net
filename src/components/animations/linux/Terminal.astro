@@ -107,10 +107,28 @@ alice@machine:~$</pre>
           `ls liste le contenu de ${d}. Les noms finis par « / » sont des dossiers (dans un vrai terminal, ils sont en couleur).`,
           caches ? 'Avec -a, ls montre aussi les fichiers cachés, dont le nom commence par un point, et les deux entrées spéciales « . » (ici) et « .. » (le parent).' : 'Les fichiers dont le nom commence par un point sont cachés : essaie ls -a.',
         ]);
+      } else if (nom === 'whoami') {
+        ligne('alice');
+        expliquerListe(['whoami affiche le nom du compte qui lance la commande.']);
+      } else if (nom === 'cowsay') {
+        const dit = args.join(' ') || 'Meuh. Essaie cowsay suivi d’un message.';
+        const bord = '-'.repeat(Math.min(dit.length + 2, 40));
+        ligne(` ${bord}\n< ${dit} >\n ${bord}\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||`);
+        expliquerListe(['cowsay est un vrai petit programme, installable sur la plupart des Linux, qui ne sert… qu’à faire parler une vache. Les informaticien·nes aiment ce genre de clins d’œil.']);
+      } else if (nom === 'sl') {
+        ligne('      ====        ________                ___________\n  _D _|  |_______/        \\__I_I_____===__|_________|\n   |(_)---  |   H\\________/ |   |        =|___ ___|\n   /     |  |   H  |  |     |   |         ||_| |_||\n  |      |  |   H  |__--------------------| [___] |\n  |  ____|__|__/|__|___________________________|\n   \\_/      \\_O=====O=====O=====O_/      \\_/');
+        expliquerListe(['Tu voulais taper ls ? « sl » est un programme farceur qui fait passer une locomotive (Steam Locomotive) pour punir cette faute de frappe.']);
+      } else if (nom === 'rm' || (nom === 'sudo' && args[0] === 'rm')) {
+        ligne(`${brut} : refusé par ce terminal d’exemple.`, 'erreur');
+        expliquerListe(['Bien essayé ! rm supprime des fichiers sans corbeille ; avec -rf et /, il tente d’effacer tout le système. Dans un vrai terminal, ne lance jamais une commande rm que tu ne comprends pas.']);
+      } else if (nom === 'sudo') {
+        ligne('[sudo] Mot de passe de alice : ');
+        ligne('Ce terminal est une simulation : même avec sudo, il ne fait rien de dangereux.', 'info');
+        expliquerListe(['sudo exécute une commande en tant que root. Voir l’étape « root et sudo » de ce module.']);
       } else if (nom === 'clear') {
         ecran.replaceChildren();
       } else {
-        ligne(`${nom} : commande introuvable (ce terminal simulé ne connaît que pwd, cd, ls et clear)`, 'erreur');
+        ligne(`${nom} : commande introuvable (ce terminal simulé connaît pwd, cd, ls, whoami, clear… et quelques surprises)`, 'erreur');
       }
       invite.textContent = prompt();
     }
@@ -134,7 +152,7 @@ alice@machine:~$</pre>
   .ecran :global(.info) { opacity: 0.75; }
   .saisie { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; background: var(--terminal-bg); border-radius: 0 0 0.5rem 0.5rem; padding: 0.4rem 0.8rem 0.6rem; }
   .invite { color: var(--terminal-invite); font-family: var(--police-mono); font-size: 0.85rem; }
-  .saisie input { flex: 1 1 8rem; min-width: 0; font: 0.9rem var(--police-mono); background: transparent; color: var(--terminal-fg); border: 1px solid #3a4a3a; border-radius: 0.3rem; padding: 0.2rem 0.4rem; }
+  .saisie input { flex: 1 1 8rem; min-width: 0; font: 0.9rem var(--police-mono); background: transparent; color: var(--terminal-fg); border: 1px solid var(--terminal-bord); border-radius: 0.3rem; padding: 0.2rem 0.4rem; }
   .anim-commandes code { font-size: 0.85rem; }
   .explication { margin: 0.8rem 0 0; padding-left: 1.3rem; max-width: var(--mesure); }
   .explication :global(li) { margin-bottom: 0.2rem; }

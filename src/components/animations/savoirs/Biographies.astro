@@ -1,0 +1,68 @@
+---
+// Animation « Combien de femmes dans Wikipédia ? » (module Savoirs) : part
+// des biographies de femmes, en anglais (Women in Red, Humaniki) et en
+// français (Les sans pagEs), face à la parité ; anglais au 22 novembre 2026. Indicateur fondé sur le genre
+// renseigné dans Wikidata. Sources : docs/sources/savoirs.md.
+const SERIES = [
+  { langue: 'Wikipédia en anglais', avant: { annee: 2015, part: 15.5 }, apres: { annee: 2026, part: 20.47 } },
+  { langue: 'Wikipédia en français', avant: { annee: 2016, part: 16 }, apres: { annee: 2024, part: 20 } },
+];
+---
+<div class="anim biographies" data-biographies data-series={JSON.stringify(SERIES)}>
+  <div class="anim-repli">
+    <ul>{SERIES.map((s) => <li>{s.langue} : {s.avant.part.toLocaleString('fr-FR')} % de biographies de femmes en {s.avant.annee}, environ {s.apres.part.toLocaleString('fr-FR')} % en {s.apres.annee}.</li>)}</ul>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      {SERIES.map((s, i) => (
+        <div class="serie">
+          <p class="langue">{s.langue}</p>
+          <div class="piste" aria-hidden="true">
+            <div class="barre" data-barre={i}></div>
+            <div class="parite"><span>parité</span></div>
+          </div>
+          <p class="valeur" data-valeur={i}></p>
+        </div>
+      ))}
+      <div class="anim-commandes">
+        <button type="button" class="principal" data-annee="avant">Avant (2015-2016)</button>
+        <button type="button" data-annee="apres">Aujourd’hui (2024-2026)</button>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-biographies]').forEach((racine) => {
+    activerScene(racine);
+    type Point = { annee: number; part: number };
+    const series: { langue: string; avant: Point; apres: Point }[] = JSON.parse(racine.dataset.series!);
+    const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
+    function montrer(moment: 'avant' | 'apres') {
+      series.forEach((s, i) => {
+        const p = s[moment];
+        racine.querySelector<HTMLElement>(`[data-barre="${i}"]`)!.style.width = `${p.part}%`;
+        racine.querySelector(`[data-valeur="${i}"]`)!.textContent = `${p.part.toLocaleString('fr-FR')} % de biographies de femmes (${p.annee})`;
+      });
+      racine.querySelectorAll('[data-annee]').forEach((b) => b.classList.toggle('principal', (b as HTMLElement).dataset.annee === moment));
+      legende.textContent = moment === 'avant'
+        ? 'Au milieu des années 2010, environ une biographie sur six parle d’une femme.'
+        : 'Grâce notamment à des bénévoles de Women in Red et des sans pagEs, on approche d’une sur cinq : mieux, mais loin de la moitié.';
+    }
+    racine.querySelectorAll<HTMLButtonElement>('[data-annee]').forEach((b) => b.addEventListener('click', () => montrer(b.dataset.annee as 'avant' | 'apres')));
+    montrer('avant');
+  });
+</script>
+
+<style>
+  .serie { margin-bottom: 0.8rem; }
+  .langue { margin: 0 0 0.2rem; font-weight: 700; }
+  .piste { position: relative; height: 1.6rem; border: 2px solid var(--fg); border-radius: 0.5rem; background: var(--bg); overflow: hidden; }
+  .barre { height: 100%; width: 0; background: var(--accent-2); transition: width 0.9s cubic-bezier(.3, 1.3, .5, 1); }
+  .parite { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px dashed var(--fg); }
+  .parite span { position: absolute; left: 0.3rem; top: 0.1rem; font-family: var(--police-pixel); font-size: 0.8rem; }
+  .valeur { margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--muted); }
+</style>

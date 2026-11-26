@@ -729,3 +729,18 @@ fois Cloudflare retiré) :
   à `a.nel.cloudflare.com` : un envoi vers un tiers, à mettre en regard de la
   règle « aucun pisteur, aucune ressource tierce » (décision à prendre par
   l'équipe : désactiver NEL dans Cloudflare, ou le dire dans le module).
+
+## Second relevé, Cloudflare retiré (25 novembre 2026)
+
+| Mesure | Source | Résultat |
+|---|---|---|
+| Adresse IPv4 | `https://dns.google/resolve?name=rouages.net&type=A` | `109.234.166.10` (bloc 109.234.164.0-109.234.167.255, O2SWITCH, France, d'après le RDAP du RIPE NCC) |
+| Adresse IPv6 | idem, `type=AAAA` | aucune : l'hébergement n'a pas d'IPv6 |
+| Serveurs DNS faisant autorité | idem, `type=NS` | toujours `cass`/`jason.ns.cloudflare.com` (Cloudflare reste l'hébergeur DNS, sans proxy) |
+| DNSSEC | `type=DS`, drapeau `AD` | zone signée (algorithme 13) |
+| `www.rouages.net` | `type=A` | pointe encore vers des adresses Cloudflare (172.67.137.176, 104.21.56.234) au moment du relevé |
+| TLS | SSL Labs, `https://api.ssllabs.com/api/v3/analyze?host=rouages.net` | TLS 1.2 et 1.3, ALPN `h2` et `http/1.1` (HTTP/2), pas de HSTS, **note T** : le serveur présente un certificat **auto-signé, expiré le 10 février 2026**, au nom de l'hôte technique du compte d'hébergement (nom non reproduit) |
+
+À faire : lancer AutoSSL dans cPanel (« État SSL/TLS ») pour obtenir un certificat Let's Encrypt, corriger l'enregistrement `www`, puis refaire ce relevé et le `traceroute` (impossible depuis le conteneur).
+
+**Mise à jour du 26 novembre 2026, après AutoSSL** : SSL Labs donne la **note A**. Certificat Let's Encrypt (autorité intermédiaire YR2) pour `rouages.net` et `www.rouages.net`, valable du 25 novembre 2026 au 23 février 2027 (90 jours, renouvelé automatiquement par AutoSSL). `www.rouages.net` résout désormais vers l'hébergement (`109.234.166.10`, via un alias). HSTS toujours absent : à activer une fois le renouvellement automatique observé.

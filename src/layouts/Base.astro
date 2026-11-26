@@ -1,6 +1,8 @@
 ---
 import '@fontsource-variable/atkinson-hyperlegible-next';
 import '@fontsource-variable/atkinson-hyperlegible-mono';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/silkscreen';
 import '../styles/global.css';
 import Rouage from '../components/Rouage.astro';
 
@@ -37,7 +39,7 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
   <body>
     <header class="site">
       <div class="wrap entete">
-        <a href="/" class="logo"><Rouage />Les rouages du net</a>
+        <a href="/" class="logo" data-logo><Rouage />Les rouages du net<span class="curseur" aria-hidden="true"></span></a>
         <nav aria-label="Navigation principale"><a href="/ia/">L'IA</a> <a href="/notions/">Notions</a> <a href="/glossaire/">Glossaire</a> <a href="/jeux/">Jeux</a></nav>
         <form class="recherche-entete" action="/recherche/" method="get" role="search">
           <label for="recherche-entete" class="visuellement-cache">Rechercher sur le site</label>
@@ -51,8 +53,13 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
     </main>
     <footer class="site">
       <div class="wrap">
-        Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage.
+        <p>Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage, sans publicité.</p>
+        <p class="clin">Fabriqué avec des rouages, des RFC et beaucoup de curiosité. Il paraît que des secrets se cachent ici et là… ↑ ↑ ↓ ↓</p>
       </div>
     </footer>
+    <p class="clin-bulle" role="status" aria-live="polite" data-clin hidden></p>
+    <script>
+      import '../scripts/clins';
+    </script>
   </body>
 </html>

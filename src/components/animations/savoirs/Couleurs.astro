@@ -1,0 +1,79 @@
+---
+// Animation « Qui paie : le lecteur, l'autrice, ou personne ? » (module
+// Savoirs) : les modèles d'édition scientifique et les « couleurs » de
+// l'accès ouvert. Pour chaque modèle : qui paie pour lire, qui paie pour
+// publier, où va l'argent. Sources : docs/sources/savoirs.md (BOAI 2002 pour
+// les deux voies, loi République numérique, accord Couperin).
+const MODELES = [
+  { id: 'abonnement', nom: 'Abonnement', couleur: 'var(--muted)', lire: 'La bibliothèque (ou toi, à l’article)', publier: 'Personne, en général', libre: false,
+    texte: 'Le modèle classique : la revue est fermée, les bibliothèques paient des abonnements, souvent par gros lots négociés au niveau national.' },
+  { id: 'vert', nom: 'Voie verte', couleur: 'var(--ill-secret-b)', lire: 'Personne', publier: 'Personne', libre: true,
+    texte: 'L’autrice dépose elle-même une version de son article dans une archive ouverte (HAL, arXiv), en plus de la revue. C’est l’« auto-archivage » de l’Initiative de Budapest (2002). En France, l’article 30 de la loi de 2016 le garantit après un délai.' },
+  { id: 'dore', nom: 'Voie dorée', couleur: 'var(--ill-serveur)', lire: 'Personne', publier: 'Souvent l’autrice (ou son labo) : des frais de publication', libre: true,
+    texte: 'La revue elle-même est en libre accès : tout le monde lit gratuitement. Pour se financer, beaucoup d’éditeurs font payer la publication : en Europe, environ 2 400 € en moyenne par article en 2024, et jusqu’à 10 850 € au prix catalogue de Nature. Le mur de l’argent passe du lecteur à l’autrice.' },
+  { id: 'diamant', nom: 'Diamant', couleur: 'var(--accent)', lire: 'Personne', publier: 'Personne', libre: true,
+    texte: 'Ni lecteur ni autrice ne paient : la revue est portée par une université, un organisme public, une société savante, souvent avec des bénévoles. C’est le seul modèle qu’accepte depuis 2018 la plateforme latino-américaine Redalyc.' },
+];
+---
+<div class="anim couleurs" data-couleurs data-modeles={JSON.stringify(MODELES)}>
+  <div class="anim-repli">
+    <dl>{MODELES.map((m) => <><dt>{m.nom}</dt><dd>Pour lire : {m.lire}. Pour publier : {m.publier}. {m.texte}</dd></>)}</dl>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="onglets" role="group" aria-label="Modèles d'édition">
+        {MODELES.map((m) => <button type="button" class="anim-bouton" data-modele={m.id} style={`--c: ${m.couleur}`} aria-pressed="false">{m.nom}</button>)}
+      </div>
+      <div class="schema" aria-hidden="true">
+        <div class="bloc"><span>👩‍🔬</span><small>autrice</small><b class="paie" data-paie="publier"></b></div>
+        <div class="fleche">→</div>
+        <div class="bloc revue"><span>📖</span><small>revue</small></div>
+        <div class="fleche">→</div>
+        <div class="bloc"><span>🧑‍🎓</span><small>lecteur·rice</small><b class="paie" data-paie="lire"></b></div>
+      </div>
+      <dl class="detail">
+        <div><dt>Qui paie pour lire ?</dt><dd data-lire></dd></div>
+        <div><dt>Qui paie pour publier ?</dt><dd data-publier></dd></div>
+      </dl>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-couleurs]').forEach((racine) => {
+    activerScene(racine);
+    const modeles: { id: string; nom: string; lire: string; publier: string; libre: boolean; texte: string; couleur: string }[] = JSON.parse(racine.dataset.modeles!);
+    function choisir(id: string) {
+      const m = modeles.find((x) => x.id === id)!;
+      racine.querySelectorAll<HTMLButtonElement>('[data-modele]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.modele === id)));
+      racine.querySelector('[data-lire]')!.textContent = m.lire;
+      racine.querySelector('[data-publier]')!.textContent = m.publier;
+      racine.querySelector<HTMLElement>('.revue')!.style.setProperty('--c', m.couleur);
+      racine.querySelector<HTMLElement>('[data-paie="lire"]')!.textContent = m.lire === 'Personne' ? 'gratuit' : 'payant';
+      racine.querySelector<HTMLElement>('[data-paie="publier"]')!.textContent = m.publier.startsWith('Personne') ? 'gratuit' : 'payant';
+      racine.querySelector('.anim-legende')!.textContent = `${m.nom}${m.libre ? ' (accès ouvert)' : ''} : ${m.texte}`;
+    }
+    racine.querySelectorAll<HTMLButtonElement>('[data-modele]').forEach((b) => b.addEventListener('click', () => choisir(b.dataset.modele!)));
+    choisir('abonnement');
+  });
+</script>
+
+<style>
+  .onglets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+  .onglets [aria-pressed='true'] { background: var(--c); color: var(--bg); border-color: var(--fg); }
+  .schema { display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .bloc { position: relative; display: grid; justify-items: center; padding: 0.5rem 0.9rem; border: 2px solid var(--fg); border-radius: 0.8rem; background: var(--bg); min-width: 6rem; }
+  .bloc span { font-size: 1.8rem; }
+  .bloc small { color: var(--muted); }
+  .revue { border-width: 4px; border-color: var(--c, var(--fg)); }
+  .fleche { font-size: 1.4rem; font-weight: 700; }
+  .paie { position: absolute; top: -0.8rem; right: -0.6rem; font-family: var(--police-pixel); font-weight: 400; font-size: 0.8rem; padding: 0 0.35rem; border: 2px solid var(--fg); border-radius: 0.4rem; background: var(--soleil); color: var(--sur-soleil); }
+  .detail { display: grid; gap: 0.3rem; margin: 0; }
+  .detail div { display: grid; grid-template-columns: 12rem 1fr; gap: 0.5rem; }
+  @media (max-width: 40rem) { .detail div { grid-template-columns: 1fr; gap: 0; } }
+  .detail dt { font-weight: 700; }
+  .detail dd { margin: 0; }
+</style>

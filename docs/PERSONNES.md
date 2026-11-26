@@ -94,7 +94,7 @@ scientifique, Plan S, accès ouvert en France, LibGen, Anna's Archive).
 
 | Qui / quoi | Où | Quand | Pourquoi | Statut |
 |---|---|---|---|---|
-| **Alexandra Elbakyan** | Kazakhstan | 2011– | Crée Sci-Hub, qui donnait accès en 2017 à 85 % des articles scientifiques payants ; condamnée aux États-Unis, bloquée en France depuis 2019, en procès en Inde | 🟨 |
+| **Alexandra Elbakyan** | Kazakhstan | 2011– | Crée Sci-Hub, qui donnait accès en 2017 à 85 % des articles scientifiques payants ; condamnée par défaut aux États-Unis, bloquée en France de 2019 à au moins 2024 (état actuel non confirmé), en procès en Inde (prochaine audience le 9 décembre 2026) | 🟨 |
 | Michael Hart | États-Unis | 1971 | Projet Gutenberg, l'une des toutes premières bibliothèques numériques | 🟨 |
 | Paul Ginsparg (et Joanne Cohn, précurseure) | Los Alamos, puis Cornell, États-Unis | 1991 | arXiv, serveur de prépublications ouvertes | 🟨 |
 | Brewster Kahle | États-Unis | 1996 | Internet Archive (Wayback Machine en 2001) ; perd en 2023-2024 le procès sur le prêt de livres numérisés | 🟨 |

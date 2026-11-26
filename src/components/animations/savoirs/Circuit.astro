@@ -1,0 +1,69 @@
+---
+// Animation « Le voyage d'un article » (module Savoirs, étape 0) : pas à pas,
+// de la recherche à la lecture, avec à chaque étape qui travaille et qui
+// paie. Chiffres : docs/sources/savoirs.md (Aczel et al. 2021 pour
+// l'évaluation par les pairs ; accord Couperin-Elsevier 2024-2027 ; RELX 2025).
+const ETAPES = [
+  { qui: 'chercheuse', icone: '🔬', titre: 'Chercher et écrire', public: true,
+    texte: 'Une chercheuse, payée par son université ou son organisme de recherche, souvent avec de l’argent public, mène une recherche et en tire un article.' },
+  { qui: 'revue', icone: '📮', titre: 'Soumettre à une revue', public: false,
+    texte: 'Elle l’envoie à une revue scientifique. Dans une revue classique, publier ne coûte rien à l’autrice ; dans certaines revues en accès ouvert, l’éditeur demande des frais de publication.' },
+  { qui: 'relecteurs', icone: '🧐', titre: 'Relire et critiquer', public: true,
+    texte: 'D’autres chercheur·ses relisent l’article et demandent des corrections : c’est l’évaluation par les pairs. L’éditeur ne les paie en général pas ; leur employeur, si. En 2020, ce travail a représenté plus de 100 millions d’heures dans le monde.' },
+  { qui: 'editeur', icone: '🏢', titre: 'Mettre en forme, publier', public: false,
+    texte: 'L’éditeur coordonne, met en page, publie, archive et fait tourner la plateforme. La branche scientifique de RELX, propriétaire d’Elsevier, dégage environ 38 % de marge opérationnelle ajustée (2025).' },
+  { qui: 'bibliotheque', icone: '🏛️', titre: 'Payer pour lire', public: true,
+    texte: 'Les bibliothèques universitaires paient pour que leurs lecteur·rices accèdent aux revues. En France, l’accord national avec Elsevier coûte environ 33 à 34 millions d’euros par an de 2024 à 2027, publication en accès ouvert comprise.' },
+  { qui: 'lectrice', icone: '🚧', titre: 'Et hors de l’université ?', public: false,
+    texte: 'Un médecin de ville, une journaliste, un·e élève tombent souvent sur un mur payant. Restent les voies légales : une archive ouverte comme HAL ou arXiv, ou une demande directe à l’autrice.' },
+];
+---
+<div class="anim circuit" data-circuit data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li><strong>{e.titre}.</strong> {e.texte}{e.public && ' (argent public)'}</li>)}</ol>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <ol class="chaine" aria-hidden="true">
+        {ETAPES.map((e, i) => (
+          <li data-maillon={i}><span class="icone">{e.icone}</span><span class="nom">{e.titre}</span>{e.public && <span class="euro" title="argent public">€ public</span>}</li>
+        ))}
+      </ol>
+      <div class="compteur-public" aria-hidden="true">Étapes payées avec de l’argent public : <strong data-public>0</strong></div>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">← Précédent</button>
+        <button type="button" data-action="suivant">Suivant →</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+        <span class="anim-compteur"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-circuit]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { titre: string; texte: string; public: boolean }[] = JSON.parse(racine.dataset.etapes!);
+    const maillons = [...racine.querySelectorAll<HTMLElement>('[data-maillon]')];
+    pasAPas(racine, () => etapes.length, (n) => {
+      maillons.forEach((m, i) => { m.classList.toggle('fait', i < n); m.classList.toggle('actif', i === n - 1); });
+      racine.querySelector('[data-public]')!.textContent = String(etapes.slice(0, n).filter((e) => e.public).length);
+      return `${etapes[n - 1].titre}. ${etapes[n - 1].texte}`;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .chaine { list-style: none; margin: 0 0 0.8rem; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.5rem; }
+  @media (max-width: 44rem) { .chaine { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .chaine li { position: relative; display: grid; justify-items: center; gap: 0.2rem; text-align: center; padding: 0.5rem 0.3rem; border: 2px dashed var(--border); border-radius: 0.7rem; opacity: 0.45; transition: opacity 0.3s, transform 0.3s; }
+  .chaine li:global(.fait) { opacity: 1; border-style: solid; border-color: var(--fg); background: var(--card); }
+  .chaine li:global(.actif) { transform: translateY(-4px); box-shadow: var(--ombre); }
+  .icone { font-size: 1.6rem; }
+  .nom { font-size: 0.8rem; font-weight: 700; line-height: 1.2; }
+  .euro { font-family: var(--police-pixel); font-size: 0.8rem; padding: 0 0.3rem; border-radius: 0.3rem; background: var(--soleil); color: var(--sur-soleil); border: 1px solid var(--fg); }
+  .compteur-public { font-size: 0.9rem; color: var(--muted); }
+</style>

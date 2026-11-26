@@ -666,6 +666,24 @@ export const GLOSSAIRE: Record<string, Entree> = {
       "Secure Shell : protocole pour ouvrir un terminal sur une machine distante, ou y transférer des fichiers, à travers une connexion chiffrée (port 22). Le serveur et la personne prouvent chacun leur identité, souvent par des clés.",
     voirAussi: ['sftp', 'bastion'],
   },
+  'acces-ouvert': {
+    terme: 'Accès ouvert (open access)',
+    definition:
+      "Mise à disposition gratuite des articles scientifiques sur internet, que chacun·e peut lire, télécharger et partager. Deux voies : déposer l'article dans une archive ouverte (voie verte) ou publier dans une revue en accès ouvert (voie dorée, et diamant si personne ne paie).",
+    voirAussi: ['evaluation-par-les-pairs', 'prepublication'],
+  },
+  'evaluation-par-les-pairs': {
+    terme: 'Évaluation par les pairs',
+    definition:
+      "Relecture d'un article par d'autres chercheur·ses du domaine, avant publication, pour en vérifier la méthode et demander des corrections. Elle est en général faite sans rémunération de l'éditeur.",
+    voirAussi: ['acces-ouvert'],
+  },
+  prepublication: {
+    terme: 'Prépublication (preprint)',
+    definition:
+      "Version d'un article mise en ligne par ses auteur·es avant l'évaluation par les pairs, sur un serveur comme arXiv, bioRxiv ou HAL. Rapide et gratuite, mais pas encore relue : à lire avec prudence.",
+    voirAussi: ['acces-ouvert', 'evaluation-par-les-pairs'],
+  },
   bastion: {
     terme: 'Bastion',
     definition:

@@ -28,7 +28,7 @@ recopiés sur le site.
 - Couverture : en mars 2017, Sci-Hub contenait 68,9 % des 81,6 millions d'articles enregistrés chez Crossref, et 85,1 % des articles publiés dans des revues payantes [1]. Down To Earth cite environ 88 millions de documents en 2025, d'après le compteur du site (chiffre déclaratif) [12].
 - Usage : 28 millions de documents ont été téléchargés en six mois (septembre 2015 à février 2016). Les plus gros utilisateurs étaient l'Iran, la Chine, l'Inde, la Russie et les États-Unis : il n'y a pas que des pays pauvres [2].
 - États-Unis : le 21 juin 2017, le tribunal fédéral de New York (district Sud, juge Robert W. Sweet) rend un jugement par défaut (Sci-Hub ne s'est pas défendu). Il retient une contrefaçon délibérée, accorde 15 M$ de dommages légaux (150 000 $ × 100 œuvres) et prononce une injonction permanente [4]. En novembre 2017, l'American Chemical Society obtient en Virginie un autre jugement par défaut de 4,8 M$, avec une injonction visant aussi des intermédiaires (registres de noms de domaine, hébergeurs, moteurs de recherche) [5]. Ces sommes n'ont, semble-t-il, jamais été payées.
-- France : le 7 mars 2019, le TGI de Paris (jugement « en la forme des référés », RG 18/14194) ordonne à Orange, SFR, Free et Bouygues Télécom de bloquer Sci-Hub et LibGen, à la demande d'Elsevier et de Springer Nature [6][7]. Le blocage est renouvelé en 2021, puis le 20 octobre 2022 par le tribunal judiciaire de Paris : 18 mois, 278 noms de domaine et sous-domaines, aux frais des FAI [8].
+- France : le 7 mars 2019, le TGI de Paris (jugement « en la forme des référés », RG 18/14194) ordonne à Orange, SFR, Free et Bouygues Télécom de bloquer Sci-Hub et LibGen, à la demande d'Elsevier et de Springer Nature [6][7]. Le blocage est renouvelé le 18 décembre 2020 (278 noms de domaine et sous-domaines, 18 mois), puis le 20 octobre 2022 par le tribunal judiciaire de Paris (18 mois ; 183 noms de domaine constatés) [8]. *(Corrigé le 26 novembre 2026 : les 278 domaines sont ceux de 2020 ; « aux frais des FAI » n'est pas confirmé. Voir le complément ci-dessous.)*
 - Inde : depuis décembre 2020, Elsevier, Wiley et l'ACS poursuivent Sci-Hub et LibGen devant la Haute Cour de Delhi (CS(COMM) 572/2020). Le 24 décembre 2020, Elbakyan s'engage à ne plus mettre en ligne de nouveaux articles de ces éditeurs. Le 19 août 2025, la Cour la juge *prima facie* coupable d'outrage (des articles de 2022 avaient été ajoutés sur Sci-Hub et Sci-Net) et ordonne le blocage de Sci-Hub, de ses miroirs et de Sci-Net en Inde. Il s'agit d'une ordonnance provisoire : le fond n'est pas jugé [9][10][11].
 
 **Sources**
@@ -304,3 +304,296 @@ recopiés sur le site.
 - **Women in Red et Les sans pagEs** : la date de création de Les sans pagEs (2014 ou 2016) diverge selon les sources. Les chiffres de 2025-2026 (environ 20,1 % en anglais) proviennent de bulletins communautaires non ouverts.
 - **Repères** : le communiqué officiel du MESR et de Couperin sur l'accord Elsevier (« 33 M€ par an », 241 établissements) n'a pas pu être ouvert. L'assouplissement du Plan S (Rights Retention Strategy, stratégie 2026-2030) n'a pas été vérifié. Le jugement par défaut de 322 M$ contre Anna's Archive n'a été lu que dans la presse spécialisée, pas dans la pièce judiciaire.
 - **Labels Wikipédia** : vérifiés par l'API pour tous les titres cités, sauf l'article EN « Wikipedia » (API saturée, erreur 429 répétée). L'article FR « Déclaration de Berlin » ne fait que 538 octets (probablement une homonymie) : il n'y a pas d'article FR dédié à la déclaration de Berlin de 2003. Les archives Wayback ont été demandées deux fois par URL ; quand le résultat reste « aucune », il peut s'agir d'un faux négatif de l'API.
+
+
+---
+
+# Complément du 26 novembre 2026 (module `/modules/savoirs/`)
+
+Recherche déléguée à un agent puis relue ; seuls les faits [lu] sont publiés dans le module. Aucune adresse de site illégal (les annexes des ordonnances de Delhi listent des domaines : ne rien en recopier).
+
+- **Recherche effectuée** : 25-26 novembre 2026, en complément de `docs/sources/savoirs.md` (dossier du 11 octobre 2026). Ce qui y est déjà sourcé n'est pas refait : on renvoie à la fiche (« → savoirs.md, fiche X »).
+- **Statuts** : [lu] = page ou document ouvert et lu ; [résumé] = lu seulement en résumé, extrait de moteur ou métadonnées ; [non trouvé] = cherché sans résultat fiable.
+- **Types** : P primaire · R recherche · Pr presse · S site institutionnel.
+- **Règle** : aucune adresse ni domaine de Sci-Hub, Sci-Net, LibGen, Anna's Archive ou Z-Library. **Attention** : les ordonnances de Delhi citées ci-dessous contiennent en annexe des listes de domaines miroirs. Ne rien en recopier sur le site.
+- Aucune donnée personnelle sensible : pas de lieu de résidence pour Alexandra Elbakyan.
+
+---
+
+## 1. Le circuit de l'édition scientifique
+
+Déjà sourcé (→ savoirs.md, « Repères ») : marge 2025 de la division STM de RELX (38,1 %), accord Couperin-Elsevier 2024-2027 (134,5 M€), relecture bénévole (Aczel *et al.* 2021, plus de 100 millions d'heures en 2020).
+
+### Springer Nature, exercice 2025 [lu]
+- Chiffre d'affaires du groupe : **1 926,4 M€**. Résultat opérationnel ajusté (AOP) : **543,6 M€**. Segment Research (les revues) : 1 517,2 M€ de chiffre d'affaires et 486,4 M€ d'AOP, soit **environ 32 % de marge** (calcul de notre part, non publié tel quel). Plus de 53 % des articles de recherche primaire sont publiés en accès ouvert.
+- Citation : « more than 53% of primary research articles published OA ».
+- Source : Springer Nature, communiqué « FY 2025 results », 17 mars 2026. https://group.springernature.com/de/group/media/press-releases/fy-2025-results/27849734 — P.
+- Attention : la marge est une marge **ajustée** et le calcul par segment est le nôtre. À écrire : « environ 28 % pour le groupe, environ 32 % pour la branche Recherche ».
+
+### Wiley, exercice 2026 (clos le 30 avril 2026) [lu]
+- Chiffre d'affaires total : 1 677 M$. Segment Research : **1 130 M$** (+5 %), EBITDA ajusté 375 M$, soit une **marge d'EBITDA ajusté de 33,2 %**. Revenus liés à l'IA (licences de contenus) : 49 M$ (+23 %), plus de 110 M$ au total depuis le début.
+- Source : Wiley, communiqué « Research and AI Momentum, Record Margins… », 16 juin 2026. https://newsroom.wiley.com/press-releases/press-release-details/2026/Research-and-AI-Momentum-Record-Margins-and-Cash-Flow-Growth-Highlight-Wileys-Fourth-Quarter-and-Fiscal-2026-Results/default.aspx — P.
+- Attention : une marge d'EBITDA n'est pas une marge opérationnelle. Ne pas comparer directement avec les 38 % de RELX.
+- Point pour le module : les éditeurs vendent désormais aussi leurs corpus aux développeurs d'IA, sous licence.
+
+### Frais de publication (APC)
+
+**Prix catalogue de Nature** [lu] : « The APC to publish Gold Open Access in Nature is £9390.00/$12850.00/€10850.00. » Source : Nature, « Publishing options », consulté le 26 novembre 2026. https://www.nature.com/nature/for-authors/publishing-options — P. Pour comparer : 9 500 € au lancement de l'option en 2020 [résumé : *Physics Today* / *The Scientist*, extraits de moteur seulement].
+
+**Montants réellement payés : jeu de données OpenAPC** [lu, calcul de notre part] :
+
+| Année | Revues entièrement en OA (gold) : moyenne / médiane | Revues hybrides : moyenne / médiane |
+|---|---|---|
+| 2019 | 1 708 € / 1 633 € (17 947 articles) | 2 572 € / 2 570 € (6 727) |
+| 2022 | 2 066 € / 1 989 € (27 044) | 2 910 € / 2 730 € (3 181) |
+| 2024 | 2 434 € / 2 382 € (18 913) | 3 135 € / 3 014 € (2 932) |
+| 2025 (données partielles) | 2 585 € / 2 434 € (8 985) | 3 352 € / 3 122 € (1 437) |
+
+- Montant individuel le plus élevé déclaré : **13 166 €** (*Nature Sustainability*, 2025) ; 13 044 € (*Nature Human Behaviour*, 2024). Pour la revue *Nature* elle-même, la moyenne déclarée est d'environ 9 800 € en 2024 (23 articles), avec un maximum de 12 554 €.
+- Source : OpenAPC, fichier `data/apc_de.csv` (téléchargé le 26 novembre 2026). https://raw.githubusercontent.com/OpenAPC/openapc-de/master/data/apc_de.csv — P (données déclarées par les établissements).
+- Attention : ces données sont déclarées surtout par des établissements européens, en majorité allemands ; ce n'est pas un échantillon mondial. Les paiements faits dans le cadre d'accords transformants sont rangés dans d'autres fichiers. Le traitement de la TVA varie selon les établissements (non vérifié). À écrire : « en Europe, un article coûte en moyenne environ 2 400 € dans une revue entièrement en accès ouvert, et plus de 3 000 € dans une revue hybride (2024) ».
+
+**Contexte institutionnel** [lu] : la *Stratégie de science ouverte 2026-2033* du ministère (voir § 2) relève que le nombre d'articles « a augmenté de près de 50 % » entre 2016 et 2022. Elle relie cette hausse à l'évaluation au nombre de publications et au modèle des APC, « qui rémunère l'éditeur en fonction de la quantité d'articles diffusés ». Elle reconnaît aussi que l'édition « a un coût légitime ». C'est une formulation équilibrée, utile pour le module.
+
+### « Double dipping » (double paiement)
+- [lu] cOAlition S, « Why hybrid journals do not lead to full and immediate Open Access », 29 avril 2021 : les revues hybrides reviennent, selon cOAlition S, à des « publishers being paid twice for the same content ». La coalition s'appuie sur Pinfield *et al.* (2016) et demande que les éditeurs ouvrent leurs comptes à un audit indépendant. https://www.coalition-s.org/?p=2617 — P (position d'une partie).
+- [résumé] Jisc, « Working with transitional agreements » (erreur 403 à l'ouverture ; extrait de moteur seulement) : Jisc exige que la facture totale (lecture et publication) soit inférieure à l'abonnement antérieur. https://jisc.ac.uk/guides/working-with-transitional-agreements
+- Position des éditeurs : ils affirment que les deux flux de revenus sont séparés et que les accords transformants compensent les APC. Aucune source d'éditeur n'a été ouverte sur ce point : [non trouvé].
+
+### Dépenses totales des bibliothèques françaises (Couperin, ensemble des éditeurs) [non trouvé]
+Aucun chiffre global récent n'a été ouvert. Seul l'accord Elsevier est sourcé (→ savoirs.md).
+
+---
+
+## 2. Le libre accès
+
+### Définition de la BOAI (2002) [lu]
+- « By "open access" to this literature, we mean its free availability on the public internet, permitting any users to read, download, copy, distribute, print, search, or link to the full texts of these articles […] without financial, legal, or technical barriers other than those inseparable from gaining access to the internet itself. » Deux stratégies : « I. Self-Archiving » et « II. Open-access Journals ».
+- https://www.budapestopenaccessinitiative.org/read/ — P (déjà cité → savoirs.md, fiche BOAI ; la citation exacte est ajoutée ici).
+- Vocabulaire : « voie verte » = auto-archivage ; « voie dorée » = revues en accès ouvert. Ces deux termes sont postérieurs à la BOAI (attribution non vérifiée). « Diamant » = revue en accès ouvert sans frais ni pour les lecteur·ices ni pour les auteur·es.
+
+### Revues diamant [lu en partie]
+- *OA Diamond Journals Study. Part 1: Findings* (Bosman J., Frantsvåg J.E., **Bianca Kramer**, Langlais P.-C., **Vanessa Proudman**), Zenodo, 9 mars 2021, commandée par cOAlition S : 1 619 revues interrogées. L'étude décrit « an economy that largely depends on volunteers, universities and government ». https://zenodo.org/records/4558704 — R.
+- Les chiffres souvent cités (17 000 à 29 000 revues diamant, 8 à 9 % des articles) ne figurent pas sur la page de présentation ; le PDF n'a pas été lu : [non trouvé].
+
+### Part de l'accès ouvert dans le monde
+- [lu] Association STM (éditeurs), tableau de bord OA : « 44% of all scholarly articles, reviews and conference papers published globally in 2025 » sont en **gold** (hybride compris). Les articles sur abonnement seul passent de 66 % (2015) à 50 % (2025). http://stm-assoc.org/oa-dashboard/uptake-of-open-access/ — S (organisation professionnelle des éditeurs : à présenter comme telle). Source des données non nommée sur la page.
+- [résumé] Analyse OpenAlex d'un blogueur (2025) : 47 % d'articles en accès ouvert en 2024. Ce n'est qu'un billet de blog, donc à ne pas publier seul.
+- Baromètre français : → savoirs.md (62 %, édition 2025, février 2026). [non trouvé] : aucune édition 2026 n'a été repérée au 26 novembre 2026.
+
+### Plan S en 2026 [lu]
+- Le 12 novembre 2025, cOAlition S adopte sa **stratégie 2026-2030**, en deux phases (2026-2027, puis 2028-2030). Elle a trois priorités : un accès ouvert équitable et durable aux articles évalués, les infrastructures numériques, et des modèles de publication justes. Elle reconnaît « plusieurs voies » vers l'accès ouvert et cite la hausse des APC et l'IA parmi les défis. Citation : « We remain determined to accelerate full and immediate Open Access » (**Mari Sundli Tveit**, présidente du Leaders Group). Citée aussi : **Lidia Borrell-Damián**.
+- https://www.coalition-s.org/coalition-s-reinforces-open-access-commitment-while-advancing-next-strategic-phase/ — P.
+- [résumé] Fin du soutien financier par défaut aux accords transformants : affirmé seulement par des commentaires (CASRAI), non lu dans le texte de la stratégie.
+
+### Science ouverte en France : 3e cadre national [lu]
+- **Stratégie de science ouverte 2026-2033** (MESRE, septembre 2026, DOI 10.52949/93 ; version anglaise 10.52949/94). Elle succède aux plans de 2018 et 2021-2024, qui suivaient « des cycles courts de trois à quatre ans », et sera déclinée en plans d'action quadriennaux. Le premier couvre 2026-2029 et compte huit objectifs [résumé pour le nombre d'actions, environ 30, selon le JST].
+- https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-09/MESRE_SSO_2026_FR.pdf — P.
+- [résumé] Le réseau des agences de financement (ANR, ADEME, ANRS MIE, Anses, FRM, INCa) présente son plan 2026-2030 le 23 septembre 2026 à l'UNESCO, par la voix de **Claire Giry** (PDG de l'ANR). https://anr.fr/fr/actus/details/news/science-ouverte-le-reseau-des-agences-de-financement-francaises-presente-son-plan-daction-2026-20/ (extrait de moteur).
+- Ce point corrige la mention « non vérifié » de savoirs.md (fiche HAL).
+- Loi République numérique, art. 30, et HAL : → savoirs.md.
+
+### Prépublications et Covid [lu]
+- Du 1er janvier au 31 octobre 2020 : plus de 125 000 publications sur le Covid-19, dont **30 260 prépublications (environ 25 %)**. La part atteignait environ 35 % fin avril 2020. medRxiv (7 882) et bioRxiv (2 328) en accueillent une grande partie, arXiv 2 592. 21,1 % de ces prépublications étaient publiées en revue fin octobre.
+- Fraser N., Brierley L., Dey G., **Jessica K. Polka**, Pálfy M., Nanni F., Coates J.A., « The evolving role of preprints in the dissemination of COVID-19 research and their impact on the science communication landscape », *PLOS Biology* 19(4):e3000959, 2 avril 2021. https://pmc.ncbi.nlm.nih.gov/articles/PMC8046348 — R.
+- Attention : les communiqués de presse disent 35 à 40 % ; c'est le chiffre du début de la pandémie. Citer les 25 % de l'article.
+
+### États-Unis : mémo Nelson (2022) [lu]
+- Le 25 août 2022, l'OSTP demande aux agences fédérales de rendre les publications financées par l'argent public accessibles « without an embargo or cost », au plus tard le 31 décembre 2025. https://bidenwhitehouse.archives.gov/ostp/news-updates/2022/08/25/ostp-issues-guidance-to-make-federally-funded-research-freely-available-without-delay/ — P.
+- [non trouvé] État réel d'application au 26 novembre 2026, agence par agence (les dates des NIH divergent selon les sources).
+
+---
+
+## 3. Le monde hors Occident
+
+### SciELO (Brésil, 1997-1998) [lu]
+- Conçu en 1997 par **Rogério Meneghini** (USP) et **Abel Laerte Packer** (Bireme/OPS/OMS), lancé en 1998 avec 10 revues pilotes. La FAPESP finance 90 % du projet (« A FAPESP provê 90% dos recursos necessários »). En 2018, le réseau compte 1 285 revues, dont 291 au Brésil, dans 16 pays, Afrique du Sud comprise.
+- Agência FAPESP, « SciELO completa 20 anos… », 5 octobre 2018. https://agencia.fapesp.br/scielo-completa-20-anos-de-apoio-a-producao-cientifica/28878 — Pr (institutionnel).
+- [lu] Site de SciELO (26 novembre 2026) : collections actives en Argentine, Bolivie, Brésil, Chili, Colombie, Costa Rica, Cuba, Équateur, Mexique, Paraguay, Pérou, Portugal, Afrique du Sud, Espagne et Uruguay, plus une collection Santé publique. Collections « in development » : République dominicaine, Venezuela, Antilles. SciELO Preprints et SciELO Books existent aussi. https://www.scielo.org/en/ — P. Nombre actuel de revues et d'articles : [non trouvé].
+
+### Redalyc (Mexique) et AmeliCA [lu]
+- Redalyc est esquissé en 2002 par **Eduardo Aguado López** et **Arianna Becerril-García** (alors étudiante en informatique) et lancé en 2003 à l'Université autonome de l'État de Mexico (UAEMex, Toluca). En 2024 : 1 572 revues, près de 800 000 articles en texte intégral, 31 pays. En 2018, la plateforme décide de ne plus accueillir que des revues **diamant** : « We decided to work only with journals that don't charge authors or readers ». Becerril-García : « Science should be public good ».
+- SPARC, « Lessons from Redalyc's Organic Rise as a Model of Diamond Open Access », 21 mai 2024. https://sparcopen.org/news/2024/lessons-from-redalycs-organic-rise-as-a-model-of-diamond-open-access/ — Pr (association pro-OA).
+- AmeliCA : « AmeliCA emerged in 2018 with the support of UNESCO, CLACSO, and Redalyc ». Modèle « non-profit scholarly », pensé comme un « commun ». Arianna Becerril-García préside AmeliCA. https://amelica.org/index.php/en/about/ — P.
+- Pour le module : AmeliCA se présente comme antérieur au Plan S (billet LSE Impact Blog d'Aguado-López et Becerril-García, 8 août 2019, « AmeliCA before Plan S », cité par la page AmeliCA mais non ouvert). Bonne illustration d'un modèle non occidental et non commercial, porté par une femme.
+
+### African Journals Online (AJOL) [lu]
+- « initiated in May 1998 as a pilot project managed by the International Network for the Availability of Scientific Publication (INASP) » (Oxford). « In 2005, AJOL moved to African management and is now a not-for-profit company in its own right, based in South Africa. » https://www.ajol.info/index.php/ajol/about-AJOL-African-Journals-Online — P.
+- Compteurs au 26 novembre 2026 : **985 revues de 40 pays**, dont 461 en accès ouvert et **290 en accès ouvert sans frais**, soit 177 650 articles en texte intégral en accès ouvert, dont 53 254 sans frais. https://www.ajol.info/index.php/ajol — P.
+- [résumé] **Susan Murray**, directrice générale d'AJOL, a publié sur le sujet. Ville du siège (Makhanda, ex-Grahamstown) : non vérifiée dans une source primaire.
+
+### Inde : One Nation One Subscription (ONOS) [lu, presse ; primaire inaccessible]
+- Approuvé par le gouvernement le 25 novembre 2024 : environ **6 000 crores de roupies** (60 milliards de roupies) pour 2025, 2026 et 2027. Il couvre 30 éditeurs et près de 13 000 revues pour plus de 6 300 établissements publics, soit près de 1,8 crore (18 millions) d'étudiant·es et de chercheur·ses. La coordination est assurée par INFLIBNET.
+- The Tribune, 26 novembre 2024. https://www.tribuneindia.com/news/cabinet-approves-one-nation-one-subscription-scheme-for-access-to-research-articles-journals — Pr. *(Les communiqués du PIB, sur pmindia.gov.in et education.gov.in, renvoient une erreur 403 ; le PDF de onos.gov.in une erreur 404.)*
+- **Critique** [lu] : Hafsah Azhar Ansari, « ONOS's APC Guidelines: Opening Access or Opening Pockets? », SpicyIP, 16 octobre 2025. Selon l'article, ONOS paie aussi des APC, mais seulement dans des revues entièrement en OA classées dans « the top 1% of its Scopus field ». Or Scopus appartient à Elsevier, lui-même payé par ONOS : il y a conflit d'intérêts. L'autrice relève aussi l'exclusion des revues indiennes et en langues régionales, l'absence d'obligation de licence libre et de plafond de prix, et le fait que la phase 1 ne couvre que 30 éditeurs sur 70 négociés. https://spicyip.com/2025/10/onoss-apc-guidelines-opening-access-or-opening-pockets.html — Pr (blog juridique reconnu ; autrice étudiante).
+- [résumé] Phase 2 (ouverture possible aux universités privées) évoquée le 8 septembre 2026 par le bureau du conseiller scientifique principal : extraits de moteur seulement.
+- Lien avec Sci-Hub : ONOS a été lancé pendant la procédure de Delhi. L'Inde était l'un des plus gros utilisateurs de Sci-Hub (→ savoirs.md, Bohannon et Elbakyan 2016).
+
+### Research4Life [résumé]
+- Accès gratuit (groupe A) ou à 1 500 $ par établissement et par an (groupe B) pour les institutions à but non lucratif des pays éligibles. Les pays dont le RNB total dépasse 1 000 milliards de dollars sont exclus (ce qui écarte notamment l'Inde, la Chine et le Brésil : déduction de notre part, non vérifiée). Pages research4life.org en erreur 403 ; extraits de moteur seulement. Date de lancement de HINARI (2002) : [non trouvé].
+
+### Chine [non trouvé]
+Aucune source primaire ouverte sur les politiques chinoises d'accès ouvert ou de bibliothèques nationales (CAS, NSFC, CNKI). À rechercher.
+
+---
+
+## 4. Sci-Hub et Alexandra Elbakyan
+
+Déjà sourcé (→ savoirs.md, fiche Elbakyan) : création en 2011, Himmelstein *et al.* 2018 (85 % des articles payants), données de Bohannon et Elbakyan 2016, jugements par défaut aux États-Unis (2017), décision de Delhi du 19 août 2025 (vue dans la presse).
+
+### Inde : Haute Cour de Delhi, *Elsevier Ltd. & Ors. v. Alexandra Elbakyan & Ors.*, CS(COMM) 572/2020 — **état au 26 novembre 2026** [lu, ordonnances officielles]
+
+Toutes les ordonnances ont été téléchargées sur le portail officiel, au format `https://delhihighcourt.nic.in/app/downloadOrderbByDate/CS(COMM)/572/2020/JJ-MM-AAAA` — P. Leurs annexes contiennent des listes de domaines : ne pas les reproduire.
+
+- **19 août 2025** (juge Manmeet Pritam Singh Arora), ordonnance de 14 pages, désormais lue dans la pièce elle-même :
+  - rappel de l'engagement du 24 décembre 2020 : « no new articles or publications, in which the plaintiffs have copyright, will be uploaded or made available, by defendant no. 1/Alexandra Elbakyan, via the internet » ;
+  - dans un e-mail du 15 août 2025, Elbakyan explique que les articles de 2022 sont apparus « due to a technical error » et que Sci-Net est un projet distinct. La Cour juge Sci-Net « sister website » et retient « defendant no. 1 is prima facie guilty of contempt » ;
+  - Sci-Hub et Sci-Net sont qualifiés de « rogue website » (critères de la jurisprudence *UTV Software c. 1337x.to*). Les plaignants affirment que Sci-Hub est bloqué dans **11 pays** ;
+  - le DoT et le MeitY doivent émettre des ordres de blocage sous 72 heures, puis les FAI bloquer sous 24 heures, « till further orders » ;
+  - l'avocat d'Elbakyan déclare n'avoir « no instructions » et demande à être déchargé. Des intervenant·es (I.A. 590/2021) refusent d'assumer l'engagement d'Elbakyan : la Cour ne les entend pas.
+- **9 décembre 2025** (même juge) :
+  - blocage étendu à 26 domaines miroirs, redirections et variantes listés en annexe. La Cour note qu'après le 19 août, Elbakyan a publié sur Sci-Hub des moyens de contourner le blocage ;
+  - le DoT avait émis l'ordre de blocage le 22 août 2025 ;
+  - Elbakyan est désormais jugée **ex parte** (« proceeded ex-parte »), personne ne s'étant présenté pour elle ;
+  - demandes d'intervention rejetées pour défaut de comparution (Society for Delhi Science Forum et Society for Knowledge Commons ; Forum for Medical Ethics Society) ou retirées (I.A. 14908/2021).
+- **2026** :
+  - de février à septembre, une série de renvois sans décision de fond (17, 18, 23, 25 et 26 février ; 25 et 30 mars ; 20 avril ; 14 et 21 mai ; 30 juillet ; 9 septembre), devant la juge Jyoti Singh ;
+  - de nouvelles demandes sont enregistrées (I.A. 4436/2026 et 4437/2026, objet non connu) ;
+  - **24 septembre 2026** (juge Vikas Mahajan) : la plaidoirie des éditeurs commence (« addressed the Court for some time »), avec un délai de deux semaines pour déposer une note et la jurisprudence ;
+  - l'audience du 16 novembre 2026 est reportée au **17 novembre** (jour férié), puis l'affaire n'est pas appelée faute de temps : « List on 09.12.2026 ».
+- **État au 26 novembre 2026** : pas de jugement au fond ni de sanction prononcée pour l'outrage. Le blocage de Sci-Hub et de Sci-Net en Inde reste en vigueur (ordonnance provisoire « till further orders »). Prochaine audience le **9 décembre 2026**.
+- Incohérence à signaler : les ordonnances des 18 et 23 février 2026 indiquent un avocat « for D-1 and D-2 ». Le même avocat est noté « for D-5 » les 9 décembre 2025 et 24 septembre 2026. Il s'agit probablement d'une erreur de saisie : ne pas en déduire qu'Elbakyan s'est de nouveau fait représenter.
+- Positions :
+  - éditeurs : contrefaçon délibérée, violation d'un engagement pris devant la Cour, site « rogue » ;
+  - Elbakyan (e-mail du 15 août 2025, cité par la Cour) : erreur technique, Sci-Net distinct ;
+  - chercheur·ses et associations indiennes : demandes d'intervention depuis 2021 (Delhi Science Forum, Society for Knowledge Commons, Forum for Medical Ethics Society), toutes écartées sans examen au fond ;
+  - critiques scientifiques de l'interdiction (« huge loss ») : → savoirs.md, sources 11 et 12.
+
+### France : blocage par les FAI [lu ; corrige savoirs.md]
+- **7 mars 2019** (TGI de Paris) : → savoirs.md.
+- **18 décembre 2020** (tribunal judiciaire de Paris), à la demande d'Elsevier et de Springer Nature : 278 noms de domaine et sous-domaines, 18 mois.
+  - Next, « Sci-Hub et LibGen à nouveau bloqués en France chez les principaux FAI », 24 mars 2021. https://next.ink/brief_article/sci-hub-et-libgen-a-nouveau-bloques-en-france-chez-les-principaux-fai/ — Pr.
+  - Clavey M., « [Exclusif] Pourquoi les principaux FAI français bloquent de nouveau Sci-hub et Libgen », Sound of Science, 24 mars 2021 (« le 18 décembre dernier »). https://www.soundofscience.fr/2724 — Pr.
+- **20 octobre 2022** (tribunal judiciaire de Paris, procédure accélérée au fond) : nouveau blocage de 18 mois à compter de la mise en œuvre (sous 15 jours après la signification). L'huissier avait constaté **183** noms de domaine.
+  - Next, 2 février 2023. https://next.ink/1335/nouvelle-decision-juridique-blocage-sci-hub-et-libgen/ — Pr (déjà cité dans savoirs.md, avec des détails erronés).
+- **Après 2022** [non trouvé] : aucun renouvellement trouvé. La décision de 2022 a dû expirer vers mi-2024. On ignore si un nouveau jugement a été rendu ou si les FAI maintiennent le blocage. Le mécanisme de l'Arcom contre les sites miroirs (2022) concerne l'audiovisuel, pas Sci-Hub [lu : note Arcom de mai 2023, résumé]. À écrire : « bloqué en France entre 2019 et au moins 2024 ; état actuel non confirmé ».
+
+### Royaume-Uni (contexte) [lu]
+- Les éditeurs (Publishers Association, Elsevier, Springer Nature) font régulièrement mettre à jour par la High Court les listes de blocage visant Sci-Hub, LibGen, Z-Library et Anna's Archive (mises à jour de novembre 2024 à janvier 2025).
+- TorrentFreak, 3 février 2025. https://torrentfreak.com/?p=263510 — Pr. Aussi TorrentFreak, 12 novembre 2021. https://torrentfreak.com/?p=211370 — Pr.
+
+---
+
+## 5. Les bibliothèques de l'ombre et l'IA
+
+Déjà sourcé (→ savoirs.md, « Repères ») : LibGen (Bodó 2018 ; jugement par défaut de 30 M$ à New York, 24 septembre 2024), Anna's Archive (lancement en 2022, jugements par défaut de 2026).
+
+### *Bartz v. Anthropic* (Californie du Nord, 3:24-cv-05417) [lu]
+- **23 juin 2025** (juge William Alsup), « Order on Fair Use » (doc. 231) :
+  - Anthropic a téléchargé « at least five million copies of books from Library Genesis », plus des copies de la Pirate Library Mirror (PiLiMi) et de Books3, soit « over seven million copies » ;
+  - l'entraînement est jugé « exceedingly transformative » et relève du fair use (« spectacularly so ») ; la numérisation de livres papier achetés aussi ;
+  - en revanche, constituer une bibliothèque centrale permanente de copies piratées « was not itself a fair use » : ce volet devait aller au procès.
+  - https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_24-cv-05417/pdf/USCOURTS-cand-3_24-cv-05417-0.pdf — P.
+- **Règlement** : 1,5 milliard de dollars, environ 482 000 œuvres, soit environ 3 000 $ par œuvre avant frais. **Approbation définitive le 20 juillet 2026** par la juge **Araceli Martínez-Olguín** (l'affaire lui a été réattribuée), avec jugement et classement de l'affaire. Honoraires ramenés à environ 101,6 M$. Les copies issues de LibGen et de PiLiMi doivent être détruites. Le règlement ne couvre ni les sorties des modèles ni les faits postérieurs au 25 août 2025. Il ne crée **pas de précédent**.
+  - Authors Guild, « Court grants final approval… », 21 juillet 2026. https://authorsguild.org/news/court-grants-final-approval-anthropic-copyright-settlement/ — Pr (partie prenante : association d'auteurs).
+  - National Law Review, « AI vs. Authors Update… », 31 juillet 2026. https://natlawreview.com/article/ai-vs-authors-update-court-approves-historic-anthropic-settlement-while-meta — Pr.
+  - L'ordonnance d'approbation elle-même n'a pas été lue : [résumé].
+
+### *Kadrey v. Meta* (Californie du Nord, 3:23-cv-03417) [lu en partie]
+- **25 juin 2025** (juge Vince Chhabria) : jugement partiel pour Meta. L'entraînement de Llama sur des livres issus de bibliothèques de l'ombre est jugé « highly transformative ». L'usage de ces bibliothèques compte pour la bonne foi mais ne « move the needle ». La « dilution du marché » est un préjudice possible, mais il n'a pas été démontré. La décision ne vaut que pour 13 auteurs.
+  - US Copyright Office, Fair Use Index, résumé de *Kadrey v. Meta Platforms, Inc.*, 788 F. Supp. 3d (N.D. Cal. 2025). https://www.copyright.gov/fair-use/summaries/Kadrey-v-Meta-Platforms-Inc-788-F-Supp-3d-1028-ND-Cal-2025.pdf — P (résumé officiel).
+- **2026** [résumé, presse] :
+  - mars 2026 : le juge autorise les auteurs à ajouter une plainte pour contrefaçon contributive. Pendant le téléchargement par BitTorrent, Meta aurait remis des fragments des livres à disposition d'autres utilisateurs ;
+  - le privilège avocat-client de Meta est confirmé ;
+  - le refus de certifier un appel interlocutoire le 8 juillet 2026 n'est attesté que par un site de suivi des procès.
+  - Sources : National Law Review, 31 juillet 2026 (ci-dessus) ; TorrentFreak, « Judge Allows BitTorrent Seeding Claims Against Meta… », https://torrentfreak.com/judge-allows-bittorrent-seeding-claims-against-meta-despite-lawyers-lame-excuses/ (non ouvert).
+- **État au 26 novembre 2026** : [non trouvé] pour octobre et novembre 2026. L'affaire reste en cours sur le volet distribution ; aucun procès ni décision finale n'a été repéré.
+
+### *Elsevier Inc. et al. v. Meta Platforms et Mark Zuckerberg* (New York, district Sud, 1:26-cv-03689) [lu]
+- Plainte collective déposée le **5 mai 2026** par Elsevier, Cengage, Hachette, Macmillan, McGraw Hill et l'auteur Scott Turow. Meta aurait téléchargé par torrent « countless protected books and journal articles » depuis des sites pirates, dont **LibGen et Anna's Archive**, et Zuckerberg l'aurait personnellement autorisé (ce sont des allégations).
+- Maria A. Pallante (AAP) : « AI will never be properly realized if tech companies prioritize pirate sites over scholarship and imagination. »
+- Association of American Publishers, communiqué du 5 mai 2026. https://publishers.org/news/publishers-and-authors-file-class-action-lawsuit-against-meta-and-zuckerberg-for-willful-copyright-infringement-to-develop-llama-ai-models/ — P (partie).
+- Position de Meta : « We will fight this lawsuit aggressively » [résumé, presse].
+- État : en cours ; aucune décision repérée [non trouvé après juillet 2026].
+- **Intérêt pour le module** : Elsevier, adversaire de Sci-Hub et de LibGen depuis 2015, poursuit maintenant une entreprise d'IA qui aurait utilisé ces mêmes bibliothèques. Les corpus « pirates » sont devenus une matière première de l'IA. Présenter toutes les parties : éditeurs (contrefaçon), Meta (fair use), auteur·es, et les défenseur·ses de l'accès ouvert, qui relèvent l'asymétrie (un étudiant poursuivi contre une entreprise qui négocie).
+
+---
+
+## 6. Internet Archive, Gutenberg, Wikipédia
+
+- *Hachette v. Internet Archive* et règlement des 78 tours (15 septembre 2025) : → savoirs.md, fiche Kahle. [non trouvé] Aucune évolution nouvelle en 2026 n'a été recherchée en détail, faute de temps.
+- Projet Gutenberg : → savoirs.md.
+- **Women in Red : chiffre à jour** [lu] : « Using QLever, as of 22 November 2026, it had risen further to 20.47%. That means that of 2,158,524 biographies, only 441,947 are about women. » La même page date le seuil de 20,003 % au **16 décembre 2024**.
+  - Page du projet sur Wikipédia en anglais, « Wikipedia:WikiProject Women in Red » (texte source, consulté le 26 novembre 2026). https://en.wikipedia.org/w/index.php?title=Wikipedia:WikiProject_Women_in_Red&action=raw — P (page du projet, pas un article encyclopédique).
+  - Attention : mesure établie à partir de Wikidata, à présenter comme un indicateur.
+
+---
+
+## 7. Aaron Swartz : les réformes qui ont suivi (ou non)
+
+Biographie, manifeste et affaire JSTOR : → savoirs.md, fiche Swartz.
+
+- **Aaron's Law** [lu] : proposition de loi pour réformer le CFAA. Elle aurait exclu la seule violation de conditions d'utilisation et interdit le cumul de chefs d'accusation. Déposée en 2013 (Zoe Lofgren, Ron Wyden), redéposée le 21 avril 2015 avec Rand Paul. Wyden : « The CFAA is so inconsistently and capriciously applied it results in misguided, heavy-handed prosecution. »
+  - https://www.wyden.senate.gov/news/press-releases/wyden-lofgren-paul-introduce-bipartisan-bicameral-aarons-law-to-reform-abused-computer-fraud-and-abuse-act- — P.
+  - Adoption : [non trouvé]. Elle n'a vraisemblablement jamais été votée, mais congress.gov renvoie une erreur 403 : à confirmer avant de l'écrire.
+- **Cour suprême, *Van Buren v. United States*** (n° 19-783, décision du 3 juin 2021) [lu] : la Cour restreint l'interprétation de « exceeds authorized access ». Elle ne vise plus que l'accès à des zones d'un ordinateur (fichiers, dossiers, bases de données) interdites à la personne, et non le mauvais usage d'un accès autorisé. https://www.supremecourt.gov/opinions/20pdf/19-783_k53l.pdf — P.
+  - Attention : le lien avec Swartz est une mise en perspective de notre part. La décision ne le cite pas (non vérifié dans le texte intégral).
+- **Mémo Nelson (2022)** : → § 2. C'est la réforme d'accès ouvert la plus nette aux États-Unis. Le communiqué ne mentionne pas Swartz.
+
+---
+
+## Les communs de la connaissance
+
+- [lu, métadonnées] Hess C., Ostrom E. (dir.), *Understanding Knowledge as a Commons: From Theory to Practice*, MIT Press, DOI 10.7551/mitpress/6980.001.0001. Crossref date la publication au **1er décembre 2006** (l'ouvrage est souvent cité « 2007 »). Chapitres de Hess et Ostrom : « Introduction: An Overview of the Knowledge Commons » et « A Framework for Analyzing the Knowledge Commons ».
+  - Métadonnées : https://api.crossref.org/works?query.bibliographic=Understanding+Knowledge+as+a+Commons+Hess+Ostrom&rows=3 — P. *(Pages de MIT Press en erreur 403 ; le contenu n'a pas été lu.)*
+  - À écrire : « 2006-2007 » ou « fin 2006 ». Mettre en avant **Charlotte Hess**, bibliothécaire, et **Elinor Ostrom**, prix de la Banque de Suède en sciences économiques en mémoire d'Alfred Nobel 2009 (le site Nobel renvoie une erreur 403 : fait connu mais non vérifié ici).
+- Mouvements qui se réclament explicitement des communs : AmeliCA (§ 3), la Society for Knowledge Commons, qui a demandé à intervenir dans la procédure de Delhi (§ 4), et la stratégie française, qui parle de « bibliodiversité ».
+
+---
+
+## (a) Faits du dossier existant (`docs/sources/savoirs.md`, `docs/PERSONNES.md`) à corriger ou actualiser
+
+1. **Blocage en France (fiche Elbakyan)** : la phrase « Le blocage est renouvelé en 2021, puis le 20 octobre 2022 […] : 18 mois, 278 noms de domaine » mélange deux décisions.
+   - Corriger : décision du **18 décembre 2020** (publiée en mars 2021) : 278 noms de domaine et sous-domaines, 18 mois ;
+   - puis décision du **20 octobre 2022** : 18 mois, 183 noms de domaine constatés par huissier.
+   - La mention « aux frais des FAI » n'est pas confirmée par l'article de 2023 : vérifier dans le PDF du jugement ou la retirer.
+2. **Statut actuel en France** : aucun renouvellement trouvé après octobre 2022. Dans `PERSONNES.md`, remplacer « bloquée en France depuis 2019 » par « bloqué en France de 2019 à au moins 2024 (état actuel non confirmé) ».
+3. **Inde** : à mettre à jour avec les ordonnances officielles.
+   - 9 décembre 2025 : extension du blocage aux miroirs, Elbakyan jugée ex parte, interventions écartées ;
+   - 2026 : renvois, puis plaidoirie des éditeurs ouverte le 24 septembre ;
+   - audience du 16 novembre 2026 reportée au **9 décembre 2026**.
+   - « L'audience du 1er décembre 2025 » de « À vérifier » : l'ordonnance utile est celle du 9 décembre 2025.
+   - Citer désormais l'ordonnance du 19 août 2025 comme source primaire, et pas seulement LiveLaw.
+   - Ajouter « état au 26 novembre 2026 » et le drapeau `evolutif`.
+4. **Women in Red** :
+   - date du seuil de 20,003 % : la page du projet indique le **16 décembre 2024**, savoirs.md le 19 (d'après le *Signpost* et Wikimedia Australia) ; harmoniser ou écrire « décembre 2024 » ;
+   - nouveau chiffre : **20,47 % au 22 novembre 2026** (QLever), à substituer aux « 20 % fin 2024 » de `PERSONNES.md` ;
+   - les « environ 20,1 % » de 2025-2026 donnés en « non vérifié » sont dépassés.
+5. **Stratégie française 2026-2033** : n'est plus « non vérifiée » (fiche HAL). Document du MESRE de septembre 2026, DOI 10.52949/93.
+6. **Plan S** : la « stratégie 2026-2030 » est confirmée (12 novembre 2025). L'assouplissement envers les accords transformants n'est attesté que par des commentaires.
+7. **Repères « IA »** : le point « non vérifié dans ce lot » (*Kadrey v. Meta*) peut être remplacé par les éléments du § 5 : décisions Alsup et Chhabria de juin 2025, règlement Anthropic approuvé le 20 juillet 2026, plainte d'Elsevier et d'autres éditeurs contre Meta (5 mai 2026).
+8. **Anna's Archive** : ajouter que la plainte des éditeurs contre Meta l'accuse d'avoir servi à alimenter l'entraînement de Llama (allégation, non jugée).
+9. **Repères « marges »** : compléter par Springer Nature (environ 28 % pour le groupe, environ 32 % pour la Recherche, 2025) et Wiley (marge d'EBITDA ajusté de 33,2 % pour la Recherche, exercice 2026). Préciser que les indicateurs ne sont pas homogènes.
+10. **Hess et Ostrom** : la date est fin 2006 selon Crossref, souvent citée 2007.
+11. **Baromètre** : l'édition 2025 (février 2026) reste la dernière au 26 novembre 2026 ; aucune édition 2026 n'a été trouvée.
+
+## (b) Faits non confirmés
+
+- France : tout renouvellement du blocage de Sci-Hub et LibGen après le 20 octobre 2022 ; la prise en charge des coûts par les FAI.
+- Inde : l'objet des demandes I.A. 4436/2026 et 4437/2026 ; la représentation éventuelle d'Elbakyan en 2026 (incohérence « D-1 » / « D-5 ») ; toute sanction pour outrage.
+- *Kadrey v. Meta* : l'état en octobre et novembre 2026 ; le refus d'appel interlocutoire du 8 juillet 2026.
+- *Elsevier v. Meta* : l'état après juillet 2026 ; l'autorisation personnelle de Zuckerberg (allégation de la plainte et de la presse).
+- *Bartz v. Anthropic* : le texte de l'ordonnance d'approbation (connue par l'Authors Guild et la National Law Review) ; la date de réattribution à la juge Martínez-Olguín.
+- APC : un chiffre mondial (OpenAPC est surtout européen) ; le traitement de la TVA dans OpenAPC.
+- Diamant : 17 000 à 29 000 revues, 8 à 9 % des articles (PDF de l'étude non lu).
+- Part mondiale de l'accès ouvert : 47 % en 2024 (blog OpenAlex) ; la source des données du tableau de bord STM.
+- Couperin : dépenses totales d'abonnement en France, tous éditeurs confondus.
+- ONOS : la date de démarrage effectif (janvier 2025 ?), la phase 2, le nombre exact d'éditeurs (30 ou 32 selon les sources) ; les communiqués primaires du PIB inaccessibles (erreur 403).
+- Research4Life : la date de HINARI (2002), le nombre de ressources, la liste des pays exclus.
+- SciELO : nombre actuel de revues et d'articles ; Redalyc : 2002 (esquisse) ou 2003 (lancement), à formuler ainsi ; AJOL : ville du siège.
+- Chine : aucune source.
+- Double dipping : texte exact de Jisc (erreur 403) ; position chiffrée des éditeurs.
+- Aaron's Law : non adoptée (vraisemblable, non vérifié sur congress.gov).
+- Mémo Nelson : état réel d'application par agence en 2026.
+- Ostrom : prix Nobel 2009 (site Nobel en erreur 403) ; contenu de l'ouvrage de Hess et Ostrom non lu.
+- Internet Archive : aucun développement de 2026 vérifié.
