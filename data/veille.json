@@ -1,6 +1,128 @@
 {
-  "genere_le": "2026-11-27T08:43:27.938Z",
+  "genere_le": "2026-11-27T15:33:46.239Z",
   "items": [
+    {
+      "titre": "☕️ Le New York Times interdit Photoshop 2027 à ses photographes à cause de l’IA",
+      "lien": "https://next.ink/brief-article/le-new-york-times-interdit-photoshop-2027-a-ses-photographes-a-cause-de-lia/",
+      "date": "2026-11-27T15:19:00.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "Carte bancaire : qui connaît vraiment votre code PIN ?",
+      "lien": "https://next.ink/228974/carte-bancaire-qui-connait-vraiment-votre-code-pin/",
+      "date": "2026-11-27T14:51:00.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "☕️ X met enfin en place des contrôles parentaux",
+      "lien": "https://next.ink/brief-article/x-met-enfin-en-place-des-controles-parentaux/",
+      "date": "2026-11-27T14:29:00.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "Ariane succède officiellement à la DINUM et pourra imposer ses outils aux ministères",
+      "lien": "https://next.ink/270519/ariane-succede-officiellement-a-la-dinum-et-pourra-imposer-ses-outils-aux-ministeres/",
+      "date": "2026-11-27T14:07:51.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "IA en contexte de soins : accompagner le bon usage avec le guide CNIL et HAS",
+      "lien": "https://www.cnil.fr/fr/ia-en-soins-guide-has-cnil",
+      "date": "2026-11-27T12:00:00.000Z",
+      "extrait": "Avec la publication du guide «&nbsp;IA en contexte de soins&nbsp;: accompagner le bon usage&nbsp;» qu’elles ont conjointement élaboré, la Haute Autorité de santé (HAS) et la CNIL se mobilisent pour accompagner les…",
+      "source_id": "cnil",
+      "source": "CNIL",
+      "themes": [
+        "regulation"
+      ],
+      "modules": [
+        "etats-regulation",
+        "surveillance-vie-privee"
+      ],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "Olala ! On a testé des IA génératives sur CPU, avec 5 machines et plus de 1 000 prompts",
+      "lien": "https://next.ink/268574/olala-on-a-teste-des-ia-generatives-sur-cpu-avec-5-machines-et-plus-de-1-000-prompts/",
+      "date": "2026-11-27T10:34:49.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "#Nextquick : comment fonctionnent les IA génératives, en 5 minutes",
+      "lien": "https://next.ink/270502/nextquick-comment-fonctionnent-les-ia-generatives-en-5-minutes/",
+      "date": "2026-11-27T09:20:03.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
+    {
+      "titre": "La faille NFS2ROOT permet de prendre le contrôle de NAS et nœuds Kubernetes",
+      "lien": "https://next.ink/270556/la-faille-nfs2root-permet-de-prendre-le-controle-de-nas-et-noeuds-kubernetes/",
+      "date": "2026-11-27T08:44:42.000Z",
+      "extrait": "",
+      "source_id": "next",
+      "source": "Next",
+      "themes": [
+        "regulation",
+        "ia"
+      ],
+      "modules": [],
+      "langue": "fr",
+      "vu_le": "2026-11-27T15:33:46.239Z"
+    },
     {
       "titre": "Rad Gifts That Fund the Fight: EFF's Holiday Merch Guide for 2026",
       "lien": "https://www.eff.org/deeplinks/2026/11/rad-gifts-fund-fight-effs-holiday-merch-guide-2026",
