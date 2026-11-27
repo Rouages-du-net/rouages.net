@@ -34,7 +34,7 @@ commandes.
 
 - Site **100 % statique** (Astro), hébergé sur un simple mutualisé ; recherche
   plein texte avec **Pagefind**, servie par le site lui-même.
-- **Aucun pistage, aucune publicité, aucune ressource tierce** (hors une
+- **Aucune publicité, aucun cookie, aucune ressource tierce** (hors une
   mesure d'audience Umami auto-hébergée, sans cookie, qui respecte Do Not Track) : polices
   (Atkinson Hyperlegible, Bricolage Grotesque, Silkscreen, sous OFL) et scripts
   auto-hébergés.

@@ -8,7 +8,7 @@ import { AUDIENCE_ACTIVE } from '../lib/audience';
 // (adresse ou formulaire). Tant qu'il est vide, le bloc n'est pas affiché.
 const CONTACT: { texte: string; lien: string } | null = { texte: '✉️ contact@rouages.net', lien: 'mailto:contact@rouages.net' };
 ---
-<Base title="À propos" description="Pourquoi Les rouages du net existe, comment chaque fait est vérifié et daté, ce que le site ne fait pas (pistage, publicité), sa licence et comment signaler une erreur.">
+<Base title="À propos" description="Pourquoi Les rouages du net existe, comment chaque fait est vérifié et daté, ce que le site ne fait pas (publicité, cookies), sa licence et comment signaler une erreur.">
   <p class="tag">À propos</p>
   <h1>Ouvrir le capot, sans tricher</h1>
   <p class="chapo">
@@ -44,7 +44,7 @@ const CONTACT: { texte: string; lien: string } | null = { texte: '✉️ contact
   <section aria-labelledby="t-pas">
     <h2 id="t-pas">Ce que le site ne fait pas</h2>
     <ul>
-      <li><strong>Aucun pistage, aucune publicité.</strong>{AUDIENCE_ACTIVE ? ' Seulement une mesure d’audience anonyme (voir plus bas).' : ' Aucune mesure d’audience.'}</li>
+      <li><strong>Aucune publicité, aucun cookie.</strong>{AUDIENCE_ACTIVE ? ' Seulement une mesure d’audience anonyme (voir plus bas).' : ' Aucune mesure d’audience.'}</li>
       <li><strong>Aucune ressource tierce</strong> : polices, scripts et images sont servis par le site lui-même. Exceptions : le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>, projet frère chargé depuis son propre site{AUDIENCE_ACTIVE && <>, et le petit script de mesure d'audience, servi par notre propre instance Umami</>}.</li>
       <li><strong>Rien n'est enregistré sur un serveur</strong> : tes réglages (niveau de lecture, mode « une étape par écran ») restent dans ton navigateur.</li>
       <li><strong>Aucune adresse de site illégal</strong>, même quand on en parle (Sci-Hub, bibliothèques de l'ombre).</li>

@@ -20,6 +20,6 @@
    article en accès libre.
    https://rouages.net/modules/savoirs/ #openaccess #scienceouverte
 
-5. Un site sans pistage ni pub (juste un compteur de visites maison, sans cookie), lisible sans
+5. Un site sans pub ni cookie (juste un compteur de visites maison, anonyme), lisible sans
    JavaScript. Et quelques secrets cachés. Indice : ↑ ↑ ↓ ↓ ← → ← → B A.
    https://rouages.net #accessibilité

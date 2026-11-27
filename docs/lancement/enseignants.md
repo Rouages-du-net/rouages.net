@@ -5,7 +5,7 @@
 Bonjour,
 
 Je vous signale *Les rouages du net* (https://rouages.net), un site gratuit,
-sans publicité ni pistage, qui explique internet, l'informatique et l'IA avec
+sans publicité ni cookie, qui explique internet, l'informatique et l'IA avec
 des animations que les élèves manipulent.
 
 Quelques modules directement utilisables en cours :
