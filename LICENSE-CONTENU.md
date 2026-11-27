@@ -3,6 +3,7 @@
 Les contenus des *Rouages du net* sont mis à disposition sous la licence
 **Creative Commons Attribution – Partage dans les mêmes conditions 4.0
 International (CC BY-SA 4.0)**.
+Titulaire des droits : MayetCo SAS, éditeur du site, et les contributeur·rices.
 
 - Résumé : <https://creativecommons.org/licenses/by-sa/4.0/deed.fr>
 - Texte juridique : <https://creativecommons.org/licenses/by-sa/4.0/legalcode.fr>
