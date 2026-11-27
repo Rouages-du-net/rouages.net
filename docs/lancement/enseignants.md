@@ -25,6 +25,6 @@ vérification. Les contenus sont sous licence libre (CC BY-SA) : vous pouvez les
 reprendre dans vos supports.
 
 Si vous l'utilisez, vos retours (et les erreurs repérées) m'intéressent
-beaucoup : [moyen de contact].
+beaucoup : contact@rouages.net.
 
 [Signature]

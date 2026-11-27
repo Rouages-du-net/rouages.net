@@ -55,16 +55,18 @@ const etapes = [
   <Etape numero={0} titre="Tout part de la racine" ancre="racine">
     <Arborescence slot="animation" />
     <p slot="decouverte">
-      Sous Linux, tous les fichiers sont rangés dans un seul grand arbre de dossiers. Il part de la
-      <strong>racine</strong>, qu'on écrit <code>/</code>. Chaque dossier a un rôle : <code>/home</code> pour les
-      dossiers personnels, <code>/etc</code> pour la configuration, <code>/tmp</code> pour les fichiers temporaires,
-      <code>/var/log</code> pour les journaux.
+      Imagine un arbre posé la tête en bas. Tout en haut, un seul point de départ : la <strong>racine</strong>, qu'on
+      écrit <code>/</code>. De là partent toutes les branches, des dossiers qui contiennent d'autres dossiers, jusqu'aux
+      fichiers. Sous Linux, absolument tout est rangé dans cet arbre-là. Et chaque grosse branche a son métier :
+      <code>/home</code> pour les dossiers personnels, <code>/etc</code> pour la configuration, <code>/tmp</code> pour
+      les fichiers temporaires, <code>/var/log</code> pour les journaux.
     </p>
     <p slot="curieux">
-      Pas de lettre de lecteur comme <code>C:</code> sous Windows : un deuxième disque ou une clé USB apparaît comme
-      un dossier de l'arbre (sous <code>/media</code>, par exemple). On dit qu'on le « monte ». Et les chemins
-      s'écrivent avec des barres obliques <code>/</code>, pas des barres inversées <code>\</code>. macOS, qui
-      descend aussi d'Unix, suit la même logique, avec <code>/Users</code> à la place de <code>/home</code>.
+      Tu cherches le lecteur <code>C:</code> ? Il n'y en a pas. Branche une clé USB ou un deuxième disque : il apparaît
+      comme un dossier de plus dans l'arbre (sous <code>/media</code>, par exemple). On dit qu'on le « monte ». Autre
+      différence avec Windows : les chemins s'écrivent avec des barres obliques <code>/</code>, pas des barres inversées
+      <code>\</code>. macOS, cousin de Linux par Unix, fonctionne pareil, avec <code>/Users</code> à la place de
+      <code>/home</code>.
     </p>
     <p slot="ingenieur">
       Cette organisation est décrite par le <em>Filesystem Hierarchy Standard</em> (FHS 3.0, 2015), publié par la
@@ -107,14 +109,16 @@ const etapes = [
   <Etape numero={1} titre="Se déplacer : chemins absolus et relatifs" ancre="chemins">
     <Terminal slot="animation" />
     <p slot="decouverte">
-      Dans un terminal, on est toujours « quelque part » : le dossier courant. Un chemin qui commence par
-      <code>/</code> est <strong>absolu</strong> : il part de la racine, et marche de n'importe où. Un chemin sans
-      <code>/</code> au début est <strong>relatif</strong> : il part du dossier courant.
+      Dans un terminal, tu es toujours quelque part, comme dans une maison : c'est le dossier courant. Pour aller
+      ailleurs, deux façons de donner le chemin. En partant de la racine, avec un <code>/</code> au début : c'est un
+      chemin <strong>absolu</strong>, il marche d'où que tu sois. Ou en partant de là où tu es, sans <code>/</code> au
+      début : c'est un chemin <strong>relatif</strong>.
     </p>
     <p slot="curieux">
-      Trois raccourcis : <code>.</code> veut dire « ici », <code>..</code> « le dossier au-dessus », et
-      <code>~</code> « mon dossier personnel ». Ainsi, depuis <code>/home/alice</code>, <code>cd ../bob</code> mène à
-      <code>/home/bob</code>. L'invite du <Terme id="shell">shell</Terme> rappelle où l'on est :
+      Trois raccourcis à connaître par cœur : <code>.</code> veut dire « ici », <code>..</code> « le dossier
+      au-dessus », et <code>~</code> « chez moi », ton dossier personnel. Depuis <code>/home/alice</code>,
+      <code>cd ../bob</code> remonte d'un cran puis entre chez bob : te voilà dans <code>/home/bob</code>. Et pour ne
+      jamais te perdre, l'invite du <Terme id="shell">shell</Terme> te rappelle où tu es :
       <code>alice@machine:~/cours$</code> se lit « alice, sur la machine nommée machine, dans
       <code>/home/alice/cours</code> ».
     </p>
@@ -139,15 +143,17 @@ const etapes = [
   <Etape numero={2} titre="Comptes et groupes" ancre="comptes">
     <Passwd slot="animation" />
     <p slot="decouverte">
-      Linux est multi-utilisateur·rices : chaque personne a son compte, son mot de passe, son dossier personnel. Des
-      comptes servent aussi à des programmes : le serveur web tourne par exemple sous le compte
-      <code>www-data</code>, pour ne pas avoir plus de droits que nécessaire. Les comptes se rangent dans des
-      <strong>groupes</strong> (les profs, les élèves…).
+      Sur une même machine Linux, plein de monde peut cohabiter : chaque personne a son compte, son mot de passe, son
+      dossier à elle. Même des programmes ont leur compte. Le serveur web, par exemple, tourne sous le compte
+      <code>www-data</code> : s'il se fait pirater, l'attaquant n'a, en principe, que les droits de ce compte, pas ceux de toute la
+      machine. Et pour ne pas tout régler une personne à la fois, on range les comptes en <strong>groupes</strong> :
+      les profs, les élèves…
     </p>
     <p slot="curieux">
-      La liste des comptes est un simple fichier texte, <code>/etc/passwd</code> : une ligne par compte, sept
-      champs séparés par « : ». Malgré son nom, il ne contient plus de mot de passe : ils sont rangés, hachés, dans
-      <code>/etc/shadow</code>, que seul root peut lire. Les groupes sont dans <code>/etc/group</code>.
+      Où est rangée la liste des comptes ? Dans un simple fichier texte, <code>/etc/passwd</code> : une ligne par
+      compte, sept champs séparés par des « : ». Surprise : malgré son nom, il ne contient plus aucun mot de passe. Ils
+      ont déménagé, hachés, dans <code>/etc/shadow</code>, que seul root peut lire. Les groupes, eux, sont dans
+      <code>/etc/group</code>.
     </p>
     <p slot="ingenieur">
       Le noyau ne connaît pas les noms : il ne manipule que des numéros, l'UID (identifiant d'utilisateur) et le GID
@@ -171,16 +177,17 @@ const etapes = [
   <Etape numero={3} titre="Les droits et leurs écritures" ancre="droits">
     <Droits slot="animation" />
     <p slot="decouverte">
-      Chaque fichier a un <strong>propriétaire</strong>, un <strong>groupe</strong>, et trois droits pour trois
-      catégories de personnes : <strong>r</strong> (lire), <strong>w</strong> (écrire), <strong>x</strong>
-      (exécuter), pour le propriétaire, pour le groupe, et pour tous les autres. <code>ls -l</code> les affiche en
-      neuf lettres : <code>rwxr-x---</code>.
+      Chaque fichier a un <strong>propriétaire</strong> et un <strong>groupe</strong>. Et il distribue trois
+      autorisations : <strong>r</strong> pour lire, <strong>w</strong> pour écrire, <strong>x</strong> pour exécuter.
+      Trois fois : pour le propriétaire, pour le groupe, pour tous les autres. Tape <code>ls -l</code> et tu les vois,
+      en neuf lettres : <code>rwxr-x---</code>.
     </p>
     <p slot="curieux">
-      Les mêmes droits s'écrivent aussi en chiffres : r vaut 4, w vaut 2, x vaut 1, et on additionne. rwx = 7,
-      r-x = 5, --- = 0 : <code>rwxr-x---</code> s'écrit donc <code>750</code>. La commande <code>chmod</code>
-      accepte les deux écritures : <code>chmod 750 fichier</code>, ou <code>chmod g-w,o-rwx fichier</code> pour
-      retirer ou ajouter un droit précis (u = propriétaire, g = groupe, o = autres, a = tous).
+      Les mêmes droits se disent aussi en chiffres. Le code secret : r vaut 4, w vaut 2, x vaut 1, et on additionne.
+      rwx, c'est 4 + 2 + 1 = 7 ; r-x, 4 + 1 = 5 ; ---, 0. Donc <code>rwxr-x---</code> s'écrit <code>750</code>. La
+      commande <code>chmod</code> comprend les deux langues : <code>chmod 750 fichier</code> d'un coup, ou
+      <code>chmod g-w,o-rwx fichier</code> pour retirer ou ajouter un droit précis (u = propriétaire, g = groupe,
+      o = autres, a = tous).
     </p>
     <p slot="ingenieur">
       Chaque chiffre octal correspond à trois bits : 750 = 111 101 000 (voir le module
@@ -214,15 +221,16 @@ const etapes = [
   <Etape numero={4} titre="Qui peut faire quoi ?" ancre="qui-peut">
     <QuiPeut slot="animation" />
     <p slot="decouverte">
-      Quand un programme veut ouvrir un fichier, le noyau regarde qui le demande. Propriétaire ? Il applique les
-      droits du propriétaire. Sinon, membre du groupe ? Les droits du groupe. Sinon, ceux des autres. Si la lettre
-      voulue n'y est pas : « Permission non accordée ».
+      Un programme veut ouvrir un fichier. Le noyau, le gardien de la machine, mène l'enquête : « Qui es-tu ? Le
+      propriétaire ? Alors je regarde les droits du propriétaire. Non ? Tu es dans le groupe ? Les droits du groupe.
+      Non plus ? Ceux des autres. » Si la lettre demandée n'y est pas, la porte reste fermée : « Permission non
+      accordée ».
     </p>
     <p slot="curieux">
-      Le noyau s'arrête à la <strong>première</strong> catégorie qui correspond : il ne cumule pas. Un propriétaire
-      qui n'a que <code>r--</code> ne peut pas modifier son fichier, même si son groupe a <code>rw-</code>. Mais
-      comme propriétaire, il peut changer les droits avec <code>chmod</code>. Seul root peut changer le
-      propriétaire (<code>chown</code>).
+      Le détail qui piège tout le monde : le noyau s'arrête à la <strong>première</strong> catégorie qui correspond.
+      Il ne cumule pas. Un propriétaire qui n'a que <code>r--</code> ne peut pas modifier son propre fichier, même si
+      son groupe a <code>rw-</code>. Mais, en tant que propriétaire, il peut changer les droits avec
+      <code>chmod</code>. Changer le propriétaire lui-même (<code>chown</code>), seul root le peut.
     </p>
     <p slot="ingenieur">
       root (UID 0) passe outre les droits de lecture et d'écriture. Pour exécuter un fichier, il lui faut quand même
@@ -241,16 +249,17 @@ const etapes = [
   <Etape numero={5} titre="root et sudo : administrer sans tout risquer" ancre="root-sudo">
     <Sudo slot="animation" />
     <p slot="decouverte">
-      <Terme id="root">root</Terme> est le compte administrateur : il peut tout faire, y compris tout casser. On ne
-      travaille donc pas en root. Quand une commande en a besoin (installer un logiciel, modifier la
-      configuration), on la préfixe de <code><Terme id="sudo">sudo</Terme></code> : elle s'exécute en root, et
-      seulement elle.
+      <Terme id="root">root</Terme>, c'est le compte qui a tous les pouvoirs. Tous : y compris celui de tout casser
+      d'une faute de frappe. Alors on ne travaille pas en root. Quand une commande a besoin de ces super-pouvoirs
+      (installer un logiciel, toucher à la configuration), on la fait précéder de
+      <code><Terme id="sudo">sudo</Terme></code> : elle seule s'exécute en root, le temps d'une commande.
     </p>
     <p slot="curieux">
-      sudo demande <strong>ton</strong> mot de passe, pas celui de root : il vérifie que c'est bien toi. Il consulte
-      ensuite <code>/etc/sudoers</code> pour savoir si tu y as droit (sous Debian et Ubuntu : être dans le groupe
-      <code>sudo</code> ; sous Fedora : le groupe <code>wheel</code>), et note chaque commande dans un journal.
-      L'invite change aussi : <code>$</code> pour un compte ordinaire, <code>#</code> pour root.
+      sudo te demande <strong>ton</strong> mot de passe, pas celui de root : il vérifie juste que c'est bien toi
+      devant le clavier. Puis il consulte <code>/etc/sudoers</code> pour savoir si tu as le droit (sous Debian et
+      Ubuntu, il faut être dans le groupe <code>sudo</code> ; sous Fedora, dans <code>wheel</code>), et il note chaque
+      commande dans un journal. Un indice qui ne trompe pas : l'invite finit par <code>$</code> pour un compte
+      ordinaire, par <code>#</code> pour root.
     </p>
     <p slot="ingenieur">
       L'autre outil, <code>su</code>, ouvre un shell sous un autre compte en demandant le mot de passe de ce compte.
@@ -282,15 +291,17 @@ const etapes = [
   <Etape numero={6} titre="Se connecter à distance : SSH" ancre="ssh">
     <Ssh slot="animation" />
     <p slot="decouverte">
-      <Terme id="ssh">SSH</Terme> permet d'ouvrir un terminal sur une autre machine, à travers le réseau, de façon
-      chiffrée : <code>ssh alice@serveur.example</code>. Tout ce qu'on tape s'exécute sur le serveur. C'est l'outil
-      habituel pour administrer un serveur Linux à distance, sur le port 22.
+      Et si ton clavier pouvait taper sur un ordinateur à l'autre bout du monde ? C'est ce que fait
+      <Terme id="ssh">SSH</Terme> : <code>ssh alice@serveur.example</code> ouvre un terminal sur une autre machine, à
+      travers le réseau, et tout passe chiffré. Ce que tu tapes s'exécute là-bas. C'est l'outil de base pour
+      administrer un serveur Linux à distance, sur le port 22.
     </p>
     <p slot="curieux">
-      Deux vérifications se croisent. Le serveur prouve son identité par sa <strong>clé d'hôte</strong> : à la
-      première connexion, ssh affiche son empreinte et la retient dans <code>~/.ssh/known_hosts</code>. Puis tu
-      prouves la tienne, par mot de passe ou, mieux, par une <strong>paire de clés</strong> : la clé publique est
-      déposée sur le serveur, la clé privée ne quitte jamais ton ordinateur.
+      Chacun doit prouver qui il est. D'abord le serveur, avec sa <strong>clé d'hôte</strong> : à la première
+      connexion, ssh t'en montre l'empreinte et s'en souvient dans <code>~/.ssh/known_hosts</code>. La fois suivante,
+      si l'empreinte a changé, il crie à l'imposteur. Puis c'est ton tour : par mot de passe, ou mieux, par une
+      <strong>paire de clés</strong>. La clé publique est déposée sur le serveur ; la clé privée, elle, ne quitte
+      jamais ton ordinateur.
     </p>
     <p slot="ingenieur">
       Avec une clé, le serveur ne reçoit jamais de secret : le client signe des données propres à la session, et le
@@ -326,15 +337,15 @@ const etapes = [
   <Etape numero={7} titre="Rebondir de machine en machine" ancre="rebonds">
     <Rebonds slot="animation" />
     <p slot="decouverte">
-      Les serveurs importants ne sont souvent pas joignables directement depuis internet. On passe par une seule
-      machine d'entrée, très surveillée : un <Terme id="bastion">bastion</Terme>. Pour atteindre le serveur interne,
-      on « rebondit » par lui.
+      Les serveurs les plus importants ne sont pas joignables directement depuis internet. Pour les atteindre, il
+      faut passer par une seule porte d'entrée, très surveillée : un <Terme id="bastion">bastion</Terme>. On entre
+      par lui, puis on « rebondit » vers le serveur qu'on vise.
     </p>
     <p slot="curieux">
-      On peut se connecter au bastion, puis, de là, au serveur : c'est simple, mais le bastion voit tout passer en
-      clair, et il faut lui confier sa clé. Avec <code>ssh -J bastion serveur</code> (<em>ProxyJump</em>), le
-      bastion ne fait que relayer : la connexion SSH va directement du portable au serveur, à l'intérieur de la
-      première, et la clé privée reste sur le portable.
+      Première façon : se connecter au bastion, puis, de là, au serveur. Simple… mais le bastion voit tout passer en
+      clair, et il faut lui confier sa clé. Deuxième façon, plus maligne : <code>ssh -J bastion serveur</code>
+      (<em>ProxyJump</em>). Le bastion ne fait plus que relayer : la connexion SSH va directement du portable au
+      serveur, emballée dans la première, et la clé privée reste sur le portable.
     </p>
     <p slot="ingenieur">
       ProxyJump existe depuis OpenSSH 7.3 (2016). Il s'écrit une fois pour toutes dans <code>~/.ssh/config</code> ;

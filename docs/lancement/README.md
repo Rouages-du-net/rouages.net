@@ -11,7 +11,7 @@ automatiquement). Les passages entre crochets `[…]` sont à compléter.
 
 ## Avant de lancer
 
-- [ ] Renseigner le moyen de contact dans `src/pages/a-propos.astro` (constante `CONTACT`).
+- [x] Moyen de contact : contact@rouages.net (page À propos).
 - [ ] Vérifier l'aperçu de partage : coller un lien dans un outil de prévisualisation (l'image est `public/og.png`).
 - [ ] Relire au moins les trois modules mis en avant (Entrée à la page, Adresses IP, Linux).
 - [ ] Publier la première revue de veille (`draft: false`).

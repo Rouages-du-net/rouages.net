@@ -113,3 +113,27 @@ Une page dense fatigue. Règles :
 - `prefers-reduced-motion: reduce` : pas de mouvement, la scène s'affiche dans
   son état final avec ses étapes en texte.
 - Chaque scène a un **équivalent texte** complet, lu par les lecteurs d'écran.
+
+## Ton des textes
+
+Validé le 27 novembre 2026 sur un extrait avant/après (étape DNS du module
+*De l'Entrée à la page*), puis appliqué à ce module et au module Linux.
+
+- **Partir de ce que vit le lecteur** : « Ton ordinateur ne sait pas lire
+  “rouages.net” » plutôt que « Les ordinateurs ne connaissent pas les noms ».
+- **Phrases courtes**, une idée par phrase ; une question de temps en temps
+  pour relancer (« Raté ? », « Le plus étonnant ? »).
+- **Faire parler les machines** quand c'est un dialogue (« Qui s'occupe des
+  .net ? »), plutôt que de décrire l'échange.
+- **Des exemples réels** (une vraie adresse, une vraie commande) plutôt que
+  « telle adresse ». Un exemple qui peut vieillir (adresse IP du site) se note
+  dans le dossier de sources.
+- **Un peu d'émerveillement**, jamais au prix de l'exactitude : « tour de
+  magie », « super-pouvoirs », mais les faits restent ceux des sources.
+- **À éviter** : tournures toutes faites (« En effet », « Ainsi », « Il est
+  important de noter »), énumérations systématiques en trois points, phrases
+  qui commencent toutes pareil.
+- **Niveau ingénieur** : précis et sobre, sans effets ; c'est là que vivent les
+  RFC, les numéros de port et les noms exacts.
+- On **tutoie** le lecteur ; écriture inclusive au point médian quand c'est
+  naturel.

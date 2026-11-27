@@ -38,9 +38,9 @@ const etapes = [
   <h1>De l'Entrée à la page</h1>
   <MiseAJour date="2026-10-11" />
   <p class="chapo seulement-debut">
-    Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. En une seconde
-    environ, des dizaines de machines, d'organisations et de règles entrent en jeu.
-    Suivons la page d'accueil de ce site, depuis ton clavier jusqu'à l'écran.
+    Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. Environ une seconde plus tard, la
+    page est là. Entre les deux ? Des dizaines de machines, d'organisations et de règles. Suivons la page d'accueil
+    de ce site, de ton clavier jusqu'à ton écran.
   </p>
 
   <div class="reglages" data-pagefind-ignore>
@@ -55,15 +55,15 @@ const etapes = [
   <Etape numero={0} titre="Avant même d'appuyer sur Entrée" ancre="avant">
     <BarreAdresse slot="animation" />
     <p slot="decouverte">
-      Pendant que tu tapes, le navigateur devine déjà où tu vas. Il regarde aussi s'il
-      n'a pas gardé une copie récente de la page.
+      Tu n'as même pas fini de taper que ton navigateur s'active déjà. Il essaie de deviner où tu vas, et il
+      vérifie s'il n'a pas gardé, quelque part dans sa mémoire, une copie récente de la page.
     </p>
     <p slot="curieux">
-      La barre d'adresse sert aussi de barre de recherche. Comme <code>rouages.net</code>
-      ressemble à un <Terme id="nom-de-domaine">nom de domaine</Terme>, le navigateur décide d'y
-      aller au lieu de lancer une recherche. Les navigateurs récents (Chrome, par exemple) essaient d'abord
-      <code>https://</code> (la version chiffrée, voir l'étape 4) et ne reviennent à <code>http://</code> qu'en cas d'échec, sauf si le
-      site impose HTTPS.
+      La barre d'adresse fait aussi barre de recherche. Alors comment le navigateur sait-il que tu veux aller sur un
+      site, et pas chercher les mots « rouages.net » ? <code>rouages.net</code> a la tête d'un
+      <Terme id="nom-de-domaine">nom de domaine</Terme> : il y va. Et il frappe d'abord à la porte chiffrée,
+      <code>https://</code> (on y revient à l'étape 4). Les navigateurs récents (Chrome, par exemple) ne retentent
+      <code>http://</code> qu'en cas d'échec, sauf si le site impose HTTPS.
     </p>
     <p slot="ingenieur">
       Analyse de l'URL (schéma, hôte, chemin). Si le domaine figure dans la liste HSTS
@@ -84,27 +84,28 @@ const etapes = [
     <QuestionDns slot="animation" />
     <div slot="decouverte">
       <p>
-        Les ordinateurs ne connaissent pas les noms, seulement des numéros : les
-        {' '}<Terme id="adresse-ip">adresses IP</Terme>. Le <Terme id="dns">DNS</Terme>, c'est l'annuaire
-        d'internet. Mais aucun annuaire ne contient tout : on demande de proche en proche,
-        comme on demanderait son chemin.
+        Ton ordinateur ne sait pas lire « rouages.net ». Lui ne comprend que des numéros, comme
+        <code>109.234.166.10</code> : les {' '}<Terme id="adresse-ip">adresses IP</Terme>. Alors, avant toute chose,
+        il doit trouver le bon numéro. Il le demande au <Terme id="dns">DNS</Terme>, l'annuaire d'internet. Sauf que
+        cet annuaire n'existe nulle part en entier : on le consulte morceau par morceau, comme on demande son chemin
+        dans une ville inconnue, de passant en passant.
       </p>
     </div>
     <div slot="curieux">
       <p>
-        Le navigateur regarde d'abord dans sa mémoire (<Terme id="cache">cache</Terme>) et dans celle du système, puis demande
-        à un <Terme id="resolveur">résolveur DNS</Terme>, souvent celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
-        S'il ne connaît pas la réponse, le résolveur interroge dans l'ordre :
+        D'abord, ton navigateur fouille sa mémoire : « Je ne l'aurais pas déjà demandé tout à l'heure ? » (c'est le
+        <Terme id="cache">cache</Terme>, le sien et celui du système). Raté ? Il pose la question à un
+        <Terme id="resolveur">résolveur DNS</Terme>, en général celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
+        Et si le résolveur ne sait pas non plus, il part enquêter, en trois questions :
       </p>
       <ol>
-        <li>un <Terme id="serveur-racine">serveur racine</Terme> : « voici qui gère <code>.net</code> » ;</li>
-        <li>le {' '}<Terme id="registre">registre</Terme> de <code>.net</code> (l'organisme qui gère cette extension) : « voici les serveurs DNS de ce domaine » ;</li>
-        <li>les serveurs du domaine : « <code>rouages.net</code>, c'est telle adresse ».</li>
+        <li>au <Terme id="serveur-racine">serveur racine</Terme> : « Qui s'occupe des <code>.net</code> ? »</li>
+        <li>au {' '}<Terme id="registre">registre</Terme> du <code>.net</code>, l'organisme qui gère cette extension : « Et <code>rouages.net</code>, qui le connaît ? »</li>
+        <li>aux serveurs du domaine : « Alors, quelle adresse ? » — « <code>109.234.166.10</code>. »</li>
       </ol>
       <p>
-        Chaque réponse est gardée en mémoire un certain temps (le <Terme id="ttl">TTL</Terme>). En
-        pratique, le résolveur connaît presque toujours déjà les serveurs de <code>.net</code> et
-        ne repasse que rarement par la racine.
+        Chaque réponse est gardée un moment (c'est le <Terme id="ttl">TTL</Terme>), si bien qu'en vrai le résolveur
+        saute presque toujours les premières questions : il connaît déjà par cœur les serveurs du <code>.net</code>.
       </p>
     </div>
     <p slot="ingenieur">
@@ -128,9 +129,9 @@ const etapes = [
       </p>
     </div>
     <p slot="histoire">
-      Avant le DNS, une seule liste de noms était tenue à la main par l'équipe
-      d'<strong>Elizabeth Feinler</strong>. Le DNS (Paul Mockapetris, 1983) est né parce
-      qu'elle devenait ingérable.
+      Avant le DNS, tout internet tenait dans une seule liste de noms, tenue à la main par l'équipe
+      d'<strong>Elizabeth Feinler</strong>. Chaque nouvel ordinateur devait y être ajouté. Quand le réseau a grandi,
+      c'est devenu intenable : en 1983, Paul Mockapetris invente le DNS.
     </p>
     <p slot="verifie">
       <code>dig rouages.net</code> ou <code>dig +trace rouages.net</code> (Linux, macOS) ;
@@ -146,15 +147,16 @@ const etapes = [
   <Etape numero={2} titre="Ta box et ton réseau local" ancre="box" duree="~1 à 10 ms">
     <BoxNat slot="animation" />
     <p slot="decouverte">
-      Ton ordinateur ne parle pas directement à internet : il passe par ta
-      {' '}<Terme id="box">box</Terme> (ou, sur ton téléphone en 4G ou 5G, par l'antenne-relais de ton opérateur). La box est la porte de la maison.
+      Ta demande quitte ton ordinateur par le Wi-Fi ou un câble et file vers ta
+      {' '}<Terme id="box">box</Terme> (ou, sur ton téléphone en 4G ou 5G, vers l'antenne-relais de ton opérateur).
+      La box, c'est la porte de la maison : tout ce qui sort ou entre passe par elle.
     </p>
     <p slot="curieux">
-      Chez toi, chaque appareil a une adresse privée (souvent <code>192.168.x.x</code>). Vu de
-      l'extérieur, toute la maison partage une adresse IPv4 publique, et de plus en plus
-      souvent la partage même avec d'autres abonné·es : c'est le <Terme id="nat">NAT</Terme>. Avec
-      {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des abonné·es en France, chaque
-      appareil peut avoir sa propre adresse publique.
+      Chez toi, chaque appareil a sa propre adresse, privée (souvent <code>192.168.x.x</code>). Mais vu de dehors,
+      toute la maison n'en montre qu'une : une seule adresse IPv4 publique, que la box partage entre tous tes
+      appareils, et de plus en plus souvent avec d'autres abonné·es. Ce tour de passe-passe s'appelle le
+      <Terme id="nat">NAT</Terme>. Avec {' '}<Terme id="ipv6">IPv6</Terme>, activé chez la grande majorité des
+      abonné·es en France, plus besoin de partager : chaque appareil peut avoir sa propre adresse publique.
     </p>
     <p slot="ingenieur">
       DHCP (attribution d'adresse), ARP ou NDP (trouver l'adresse matérielle de la box),
@@ -177,15 +179,16 @@ const etapes = [
   <Etape numero={3} titre="Ouvrir la liaison" ancre="liaison" duree="~10 à 100 ms">
     <PoigneeTcp slot="animation" />
     <p slot="decouverte">
-      Avant de parler, on se dit bonjour : ton navigateur et le {' '}<Terme id="serveur">serveur</Terme> vérifient qu'ils
-      se reçoivent bien, puis la page peut voyager.
+      Avant de se parler, on se dit bonjour. Ton navigateur et le {' '}<Terme id="serveur">serveur</Terme> vérifient
+      qu'ils s'entendent bien : « Tu me reçois ? » « Oui, et toi ? » « Oui ! » Ensuite seulement, la page peut voyager.
     </p>
     <p slot="curieux">
-      Internet transporte des <Terme id="paquet">paquets</Terme> indépendants, qui peuvent se perdre
-      ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il numérote, accuse
-      réception, renvoie ce qui manque. Il commence par une poignée de main en trois temps.
-      Quand le serveur le propose, les navigateurs utilisent <Terme id="quic">QUIC</Terme> (HTTP/3),
-      qui économise un aller-retour. Selon son hébergeur, ce site peut t'arriver par TCP (HTTP/2) ou par QUIC (HTTP/3) : regarde la colonne « Protocole » ci-dessous.
+      Internet ne transporte pas de longs messages, mais des <Terme id="paquet">paquets</Terme> indépendants, qui
+      peuvent se perdre en route ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il
+      numérote chaque paquet, accuse réception, renvoie ce qui manque. Tout commence par cette poignée de main en
+      trois temps. Quand le serveur le propose, les navigateurs préfèrent <Terme id="quic">QUIC</Terme> (HTTP/3), qui
+      économise un aller-retour. Selon son hébergeur, ce site peut t'arriver par TCP (HTTP/2) ou par QUIC (HTTP/3) :
+      regarde la colonne « Protocole » ci-dessous.
     </p>
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
@@ -212,15 +215,17 @@ const etapes = [
   <Etape numero={4} titre="Le cadenas" ancre="cadenas" duree="~10 à 100 ms">
     <PotsDePeinture slot="animation" />
     <p slot="decouverte">
-      Avant d'envoyer quoi que ce soit, on s'assure de parler au <strong>bon</strong> serveur et
-      on chiffre la conversation (on la brouille avec une clé secrète) pour que personne en chemin ne puisse la lire.
+      Avant d'envoyer quoi que ce soit, deux questions. Est-ce que je parle au <strong>bon</strong> serveur, et pas à
+      un imposteur ? Et est-ce que quelqu'un peut écouter ? On vérifie donc l'identité du serveur, puis on chiffre la
+      conversation : on la brouille avec une clé secrète, pour que personne en chemin ne puisse la lire.
     </p>
     <p slot="curieux">
-      Les deux machines fabriquent d'abord ensemble une clé secrète, sans jamais l'envoyer
-      sur le réseau (<Terme id="diffie-hellman">Diffie-Hellman</Terme>). Puis le serveur présente,
-      déjà chiffré, son <Terme id="certificat">certificat</Terme>, qui garantit qu'il a le droit de
-      parler au nom de <code>rouages.net</code>, et il signe l'échange avec la clé secrète qui va avec : un imposteur pourrait copier le certificat, pas cette signature. Le certificat garantit le nom du site, pas
-      l'honnêteté de son propriétaire.
+      Le tour de magie : les deux machines fabriquent ensemble une clé secrète… sans jamais l'envoyer sur le réseau
+      (<Terme id="diffie-hellman">Diffie-Hellman</Terme> ; l'animation le montre avec des pots de peinture). Puis le
+      serveur présente, déjà chiffré, son <Terme id="certificat">certificat</Terme> : une sorte de carte d'identité qui
+      dit qu'il a le droit de parler au nom de <code>rouages.net</code>. Il signe l'échange avec la clé secrète qui va
+      avec : un imposteur pourrait copier le certificat, pas cette signature. Attention, le certificat garantit le nom
+      du site, pas l'honnêteté de son propriétaire.
     </p>
     <p slot="ingenieur">
       {' '}<Terme id="tls">TLS</Terme> 1.3 (RFC 8446) : <code>ClientHello</code> (nom du site en clair dans
@@ -252,17 +257,20 @@ const etapes = [
   <Etape numero={5} titre="Le voyage des paquets" ancre="voyage" duree="~5 à 150 ms">
     <VoyagePaquets slot="animation" />
     <p slot="decouverte">
-      Ta demande voyage en petits morceaux, les {' '}<Terme id="paquet">paquets</Terme>. Ils sautent de <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui
-      passe de centre de tri en centre de tri. Personne ne connaît tout le chemin : chaque
-      routeur sait seulement où envoyer ensuite.
+      Ta demande voyage en petits morceaux, les {' '}<Terme id="paquet">paquets</Terme>. Ils sautent de
+      <Terme id="routeur">routeur</Terme> en routeur, comme une lettre qui passe de centre de tri en centre de tri.
+      Le plus étonnant ? Personne ne connaît tout le chemin. Chaque routeur sait seulement à qui passer le paquet
+      ensuite.
     </p>
     <p slot="curieux">
-      Depuis ta box, les paquets entrent chez ton fournisseur d'accès, puis passent d'un réseau
-      à l'autre, soit dans des <Terme id="point-echange">points d'échange</Terme> (France-IX à Paris,
-      Marseille, Lyon…), soit par des liaisons directes. Si le serveur est sur un autre
-      continent, ils empruntent un <Terme id="cable-sous-marin">câble sous-marin</Terme>. Chaque
-      réseau annonce aux autres les adresses qu'il sait atteindre : c'est
-      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble. Ce voyage n'a pas lieu une seule fois : chaque aller-retour des étapes 1, 3, 4 et 6 le refait, c'est pourquoi la distance du serveur compte autant.
+      Depuis ta box, les paquets entrent chez ton fournisseur d'accès, puis passent d'un réseau à l'autre : dans des
+      <Terme id="point-echange">points d'échange</Terme> (France-IX, à Paris, Marseille, Lyon…) ou par des liaisons
+      directes. Si le serveur est sur un autre continent, ils plongent dans un
+      <Terme id="cable-sous-marin">câble sous-marin</Terme>. Mais comment chaque réseau sait-il par où passer ? Les
+      réseaux s'annoncent les uns aux autres les adresses qu'ils savent atteindre : c'est
+      {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble. Et ce voyage n'a pas lieu une seule
+      fois : chaque aller-retour des étapes 1, 3, 4 et 6 le refait. Voilà pourquoi la distance du serveur compte
+      autant.
     </p>
     <p slot="ingenieur">
       Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
@@ -291,16 +299,16 @@ const etapes = [
   <Etape numero={6} titre="Le serveur répond" ancre="serveur" duree="~1 à 50 ms">
     <ServeurCasiers slot="animation" />
     <p slot="decouverte">
-      Le <Terme id="serveur">serveur</Terme> est un ordinateur allumé en permanence dans un
-      <Terme id="datacenter">datacenter</Terme>. Il reçoit ta demande, trouve le bon fichier et te l'envoie.
+      Au bout du voyage, le <Terme id="serveur">serveur</Terme> : un ordinateur allumé jour et nuit dans un
+      <Terme id="datacenter">datacenter</Terme>. Il lit ta demande, trouve le bon fichier et te le renvoie.
     </p>
     <p slot="curieux">
-      Le navigateur envoie une requête <Terme id="http">HTTP</Terme> : « donne-moi la page d'accueil
-      de <code>rouages.net</code> ». Chez l'<Terme id="hebergeur">hébergeur</Terme>, un même serveur
-      héberge de nombreux sites : il regarde le nom demandé pour savoir lequel servir. Le
-      logiciel Apache applique les règles du site (forcer HTTPS, compresser), trouve
-      <code>index.html</code> et le renvoie avec le <Terme id="code-http">code</Terme> 200 : « tout va
-      bien ». Ce site est statique : la page a été fabriquée à l'avance.
+      Ton navigateur envoie une requête <Terme id="http">HTTP</Terme>, qui dit en substance : « Donne-moi la page
+      d'accueil de <code>rouages.net</code>. » Chez l'<Terme id="hebergeur">hébergeur</Terme>, un même serveur loge
+      de nombreux sites : il regarde le nom demandé pour savoir lequel servir. Le logiciel Apache applique les règles
+      du site (forcer HTTPS, compresser), trouve <code>index.html</code> et le renvoie avec le
+      <Terme id="code-http">code</Terme> 200 : « tout va bien ». Rien n'est calculé à la volée : ce site est statique,
+      la page a été fabriquée à l'avance.
     </p>
     <p slot="ingenieur">
       En HTTP/2, pas de ligne <code>GET / HTTP/1.1</code> mais des pseudo-en-têtes
@@ -327,15 +335,15 @@ const etapes = [
   <Etape numero={7} titre="Le retour, et tout ce qui manque encore" ancre="retour" duree="~10 à 500 ms">
     <CompteurRequetes slot="animation" />
     <p slot="decouverte">
-      La page arrive… mais ce n'est qu'un plan. Pour la dessiner, le navigateur doit aller
-      chercher le reste : les styles (couleurs, mise en page), les images, les scripts (de petits programmes).
+      La page arrive… mais ce n'est qu'un plan. Pour la dessiner, il manque encore les styles (couleurs, mise en
+      page), les images, les scripts (de petits programmes). Le navigateur repart les chercher.
     </p>
     <p slot="curieux">
-      En lisant le HTML, le navigateur découvre d'autres fichiers à demander
-      (<Terme id="css">CSS</Terme>, images, polices, scripts), sur la même connexion, en parallèle.
-      Ce qu'il a déjà en cache n'est pas redemandé. Sur beaucoup de sites, ces fichiers
-      viennent aussi d'autres serveurs : publicité, statistiques, réseaux sociaux. Ce site
-      n'en utilise aucun.
+      En lisant le HTML, le navigateur découvre sa liste de courses : feuilles de style
+      (<Terme id="css">CSS</Terme>), images, polices, scripts. Il les demande en parallèle, sur la même connexion, et
+      ne redemande pas ce qu'il a déjà en cache. Sur beaucoup de sites, une partie de ces fichiers vient d'autres
+      serveurs : publicité, statistiques, réseaux sociaux. Celui-ci n'en utilise aucun ; compte toi-même avec
+      l'animation.
     </p>
     <p slot="ingenieur">
       Multiplexage HTTP/2 ; fichiers versionnés <code>/_astro/…</code> mis en cache un an
@@ -353,13 +361,13 @@ const etapes = [
   <Etape numero={8} titre="L'affichage" ancre="affichage" duree="~10 à 200 ms">
     <Affichage slot="animation" />
     <p slot="decouverte">
-      Le navigateur assemble les pièces comme un puzzle : il lit le plan, applique le style,
-      place chaque élément, puis peint l'écran.
+      Dernière étape : le navigateur assemble les pièces comme un puzzle. Il lit le plan, applique le style, place
+      chaque élément… puis peint l'écran. La page est là.
     </p>
     <p slot="curieux">
-      Le HTML devient un arbre d'éléments (le <Terme id="dom">DOM</Terme>), le CSS dit à quoi chacun
-      ressemble, le navigateur calcule la place de chaque bloc, puis dessine les pixels. Les
-      scripts peuvent ensuite modifier la page.
+      Le HTML devient un arbre d'éléments, le <Terme id="dom">DOM</Terme> ; le CSS dit à quoi chacun ressemble ; le
+      navigateur calcule la place de chaque bloc, puis dessine les pixels. Et ce n'est pas fini : les scripts
+      peuvent encore modifier la page pendant que tu la regardes.
     </p>
     <p slot="ingenieur">
       HTML → DOM ; CSS → CSSOM ; arbre de rendu ; <i>layout</i> ; <i>paint</i> ; composition
