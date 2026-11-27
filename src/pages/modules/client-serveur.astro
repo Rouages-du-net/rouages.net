@@ -35,10 +35,10 @@ const etapes = [
   <h1>Client et serveur : protocoles, ports, URL</h1>
   <MiseAJour date="2026-11-10" />
   <p class="chapo seulement-debut">
-    Quand tu ouvres une page, envoies un courriel ou déposes un fichier, deux programmes se parlent : un
-    <Terme id="client">client</Terme> qui demande, un <Terme id="serveur">serveur</Terme> qui répond. Pour se
-    comprendre, ils suivent un protocole, se retrouvent sur un port, et désignent ce qu'ils veulent par une
-    <Terme id="url">URL</Terme>. Ce module montre tout cela en mouvement.
+    Tu ouvres une page, tu envoies un courriel, tu déposes un fichier : à chaque fois, deux programmes se parlent.
+    Un <Terme id="client">client</Terme> qui demande, un <Terme id="serveur">serveur</Terme> qui répond. Pour se
+    comprendre, ils suivent un protocole, se donnent rendez-vous sur un port, et désignent ce qu'ils veulent par une
+    <Terme id="url">URL</Terme>. Ce module les montre en pleine conversation.
   </p>
 
   <div class="reglages" data-pagefind-ignore>
@@ -53,15 +53,15 @@ const etapes = [
   <Etape numero={0} titre="Qui demande, qui répond" ancre="qui-demande">
     <Dialogue slot="animation" />
     <p slot="decouverte">
-      Le client demande, le serveur répond. Le navigateur de ton téléphone est un client ; le programme qui envoie
-      les pages d'un site est un serveur. C'est toujours le client qui commence la conversation, et le serveur
-      répond à chacun séparément.
+      Le client demande, le serveur répond. Le navigateur de ton téléphone est un client ; le programme qui envoie les
+      pages d'un site est un serveur. Une règle ne bouge jamais : c'est toujours le client qui commence la
+      conversation. Et le serveur répond à chacun séparément, même s'ils sont des milliers à demander en même temps.
     </p>
     <p slot="curieux">
-      Un serveur est d'abord un <em>programme</em> qui attend des demandes. Par extension, on appelle aussi
-      « serveur » l'ordinateur qui le fait tourner. N'importe quel ordinateur peut être serveur : ton portable aussi,
-      si tu y lances un programme serveur. Dans un centre de données, ce sont des machines faites pour ça, allumées
-      en permanence.
+      Un serveur, c'est d'abord un <em>programme</em> qui attend qu'on lui demande quelque chose. Par extension, on
+      appelle aussi « serveur » l'ordinateur qui le fait tourner. Et n'importe quel ordinateur peut jouer ce rôle :
+      ton portable aussi, si tu y lances un programme serveur. Dans un centre de données, ce sont simplement des
+      machines faites pour ça, allumées jour et nuit.
     </p>
     <p slot="ingenieur">
       Un même gros site répond avec des centaines de serveurs derrière une seule adresse, grâce à des répartiteurs
@@ -90,14 +90,14 @@ const etapes = [
     <Ports slot="animation" />
     <p slot="decouverte">
       L'<Terme id="adresse-ip">adresse IP</Terme> désigne une machine, comme l'adresse d'un immeuble. Le
-      <Terme id="port">port</Terme> désigne le programme à qui l'on parle, comme le numéro de l'appartement. Un même
-      serveur peut faire tourner un site web (port 443), un accès SSH (port 22) et un serveur de fichiers en même
-      temps.
+      <Terme id="port">port</Terme> désigne le programme à qui l'on parle, comme le numéro de l'appartement. Ainsi,
+      dans le même immeuble, un site web (port 443), un accès SSH (port 22) et un serveur de fichiers peuvent vivre
+      côte à côte.
     </p>
     <p slot="curieux">
-      Les numéros des services courants sont enregistrés par l'IANA : 80 pour HTTP, 443 pour HTTPS, 21 pour FTP,
-      22 pour SSH et SFTP, 25 pour le courriel entre serveurs, 53 pour le DNS. Ce sont des conventions : on peut faire
-      tourner un site sur le port 8080, il faut alors l'écrire dans l'URL.
+      Qui attribue les numéros ? L'IANA tient le registre des services courants : 80 pour HTTP, 443 pour HTTPS, 21
+      pour FTP, 22 pour SSH et SFTP, 25 pour le courriel entre serveurs, 53 pour le DNS. Ce sont des conventions, pas
+      des lois de la physique : on peut faire tourner un site sur le port 8080, il faut juste l'écrire dans l'URL.
     </p>
     <p slot="ingenieur">
       Un port est un nombre sur 16 bits, de 0 à 65 535. L'IANA distingue trois plages : les ports « système » (0 à
@@ -117,13 +117,15 @@ const etapes = [
   <Etape numero={2} titre="Lire une URL" ancre="url">
     <LireUrl slot="animation" />
     <p slot="decouverte">
-      Une URL dit au client trois choses : <strong>comment</strong> parler (le schéma : https, ftp, sftp…),
-      <strong>à qui</strong> (le nom du serveur, et parfois le port), et <strong>quoi</strong> demander (le chemin).
+      Une URL, c'est un petit message pour le client, qui lui dit trois choses : <strong>comment</strong> parler (le
+      schéma : https, ftp, sftp…), <strong>à qui</strong> (le nom du serveur, parfois avec le port), et
+      <strong>quoi</strong> demander (le chemin).
     </p>
     <p slot="curieux">
       Le port est presque toujours sous-entendu : <code>https://</code> veut dire port 443. Après le chemin, un
-      <code>?</code> introduit des paramètres (une recherche, un numéro de page), et un <code>#</code> un endroit
-      dans la page : cette dernière partie, le fragment, n'est jamais envoyée au serveur.
+      <code>?</code> ouvre des paramètres (une recherche, un numéro de page), et un <code>#</code> désigne un endroit
+      dans la page. Cette dernière partie, le fragment, a une particularité : elle n'est jamais envoyée au serveur.
+      Elle reste dans ton navigateur.
     </p>
     <p slot="ingenieur">
       La syntaxe est fixée par la RFC 3986 (2005), écrite par Tim Berners-Lee, Roy Fielding et Larry Masinter. Son
@@ -142,14 +144,14 @@ const etapes = [
   <Etape numero={3} titre="De l'URL au fichier" ancre="fichiers">
     <Arborescence slot="animation" />
     <p slot="decouverte">
-      Sur un serveur web simple, un site est un dossier. Le chemin de l'URL indique quel fichier prendre dans ce
-      dossier : <code>/reseau/ports.html</code> donne le fichier <code>ports.html</code> du sous-dossier
-      <code>reseau</code>. Ce site, rouages.net, fonctionne exactement comme ça.
+      Sur un serveur web simple, un site n'est rien d'autre qu'un dossier. Le chemin de l'URL dit quel fichier y
+      prendre : <code>/reseau/ports.html</code>, c'est le fichier <code>ports.html</code> du sous-dossier
+      <code>reseau</code>. Et ce site, rouages.net, fonctionne exactement comme ça.
     </p>
     <p slot="curieux">
-      Quand l'URL désigne un dossier (elle finit par <code>/</code>), le serveur envoie le fichier
-      <code>index.html</code> de ce dossier. Sans la barre finale, il répond souvent « c'est ailleurs » (code 301)
-      vers l'adresse avec la barre. Et si rien ne correspond : 404.
+      Et si l'URL désigne un dossier (elle finit par <code>/</code>) ? Le serveur envoie le fichier
+      <code>index.html</code> de ce dossier. S'il manque la barre finale, il répond souvent « c'est ailleurs »
+      (code 301), vers l'adresse avec la barre. Et si rien ne correspond : la fameuse 404.
     </p>
     <p slot="ingenieur">
       Ce n'est pas toujours un fichier : un chemin peut aussi déclencher un programme (PHP, Python, Node…) qui
@@ -170,15 +172,15 @@ const etapes = [
   <Etape numero={4} titre="Un fichier, trois chemins" ancre="trois-chemins">
     <Acces slot="animation" />
     <p slot="decouverte">
-      Sur le serveur, le site est un dossier : sur un hébergement comme celui de ce site, il s'appelle
-      <code>public_html</code> (ou <code>www</code>). C'est la <strong>racine du site</strong> : tout fichier rangé
-      dedans a une adresse web, et tout fichier rangé ailleurs n'en a pas.
+      Sur le serveur, le site est un dossier. Sur un hébergement comme celui de ce site, il s'appelle
+      <code>public_html</code> (ou <code>www</code>) : c'est la <strong>racine du site</strong>. La règle est simple :
+      tout fichier rangé dedans a une adresse web ; tout fichier rangé ailleurs n'en a pas.
     </p>
     <p slot="curieux">
-      HTTPS, FTPS et SFTP ne sont que trois façons d'atteindre <strong>les mêmes fichiers</strong> sur le même disque.
-      Le navigateur passe par le serveur web (port 443) et ne voit que la racine du site ; FTPS et SFTP servent à
-      déposer et modifier ces fichiers. Quand on corrige une page par SFTP, il suffit de recharger le navigateur pour
-      voir la nouvelle version : il n'y a qu'un fichier.
+      HTTPS, FTPS et SFTP ? Trois portes différentes vers <strong>les mêmes fichiers</strong>, sur le même disque. Le
+      navigateur passe par le serveur web (port 443) et ne voit que la racine du site ; FTPS et SFTP servent à déposer
+      et modifier ces fichiers. Tu corriges une page par SFTP ? Recharge le navigateur : la nouvelle version est déjà
+      là. Il n'y a qu'un fichier.
     </p>
     <p slot="ingenieur">
       Le serveur web Apache appelle ce dossier la <code>DocumentRoot</code> : il « ajoute le chemin de l'URL demandée
@@ -198,14 +200,15 @@ const etapes = [
   <Etape numero={5} titre="Transférer des fichiers : FTP, FTPS, SFTP" ancre="transferts">
     <Transfert slot="animation" />
     <p slot="decouverte">
-      Pour déposer les fichiers d'un site sur un serveur, on utilise un protocole de transfert. FTP, le plus ancien,
-      envoie tout en clair, mot de passe compris. FTPS et SFTP chiffrent tout : ce sont eux qu'il faut utiliser.
+      Pour déposer les fichiers d'un site sur un serveur, on utilise un protocole de transfert. Le plus ancien, FTP,
+      envoie tout en clair : n'importe qui sur le chemin peut lire ton mot de passe. FTPS et SFTP, eux, chiffrent
+      tout. Ce sont eux qu'il faut utiliser.
     </p>
     <p slot="curieux">
-      <strong>FTPS</strong>, c'est FTP enveloppé dans TLS, le même chiffrement que HTTPS : soit dès la connexion
-      (port 990), soit en le demandant sur le port 21 avec la commande <code>AUTH TLS</code>. <strong><Terme
-      id="sftp">SFTP</Terme></strong>, malgré son nom, n'est pas du FTP : c'est un autre protocole, qui fonctionne
-      à l'intérieur d'une connexion SSH (port 22).
+      <strong>FTPS</strong>, c'est le bon vieux FTP glissé dans TLS, le même chiffrement que HTTPS : soit dès la
+      connexion (port 990), soit en le demandant sur le port 21 avec la commande <code>AUTH TLS</code>.
+      <strong><Terme id="sftp">SFTP</Terme></strong>, malgré son nom, n'a rien à voir avec FTP : c'est un autre
+      protocole, qui voyage à l'intérieur d'une connexion SSH (port 22).
     </p>
     <p slot="ingenieur">
       FTP utilise deux connexions : une pour les commandes (port 21), une autre pour chaque transfert de données.
@@ -231,15 +234,16 @@ const etapes = [
   <Etape numero={6} titre="Une conversation HTTP" ancre="http">
     <Requete slot="animation" />
     <p slot="decouverte">
-      Le web parle <Terme id="http">HTTP</Terme>. Le client envoie une requête de quelques lignes de texte
-      (« donne-moi /reseau/ports.html »), le serveur répond par un code et le contenu. <Terme id="https">HTTPS</Terme>,
-      c'est la même conversation dans un canal chiffré, sur le port 443.
+      Le web parle <Terme id="http">HTTP</Terme>. Le client envoie quelques lignes de texte (« donne-moi
+      /reseau/ports.html »), le serveur répond par un code et le contenu. Et <Terme id="https">HTTPS</Terme> ? C'est
+      exactement la même conversation, glissée dans un canal chiffré, sur le port 443.
     </p>
     <p slot="curieux">
-      Les <Terme id="code-http">codes de réponse</Terme> se lisent par famille : 2xx tout va bien (200), 3xx c'est
-      ailleurs (301), 4xx erreur du client (404, page introuvable), 5xx erreur du serveur (500). La ligne
-      <code>Host</code> dit quel site on veut : un seul serveur, à une seule adresse IP, peut ainsi héberger des
-      milliers de sites, comme sur un hébergement mutualisé.
+      Les <Terme id="code-http">codes de réponse</Terme> se lisent par famille, comme des chiffres de dizaines :
+      2xx, tout va bien (200) ; 3xx, c'est ailleurs (301) ; 4xx, le client s'est trompé (404, page introuvable) ;
+      5xx, le serveur a un problème (500). Et la ligne <code>Host</code> dit quel site on veut : c'est grâce à elle
+      qu'un seul serveur, à une seule adresse IP, peut héberger des milliers de sites, comme sur un hébergement
+      mutualisé.
     </p>
     <p slot="ingenieur">
       HTTP est décrit par la RFC 9110 (2022). La première ligne contient la méthode (GET pour lire, POST pour

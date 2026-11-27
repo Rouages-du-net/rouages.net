@@ -117,7 +117,8 @@ Une page dense fatigue. Règles :
 ## Ton des textes
 
 Validé le 27 novembre 2026 sur un extrait avant/après (étape DNS du module
-*De l'Entrée à la page*), puis appliqué à ce module et au module Linux.
+*De l'Entrée à la page*), puis appliqué à ce module et au module Linux, et le 27 novembre aux modules
+Adresses IP, Sous-réseaux et Client et serveur.
 
 - **Partir de ce que vit le lecteur** : « Ton ordinateur ne sait pas lire
   “rouages.net” » plutôt que « Les ordinateurs ne connaissent pas les noms ».

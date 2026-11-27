@@ -29,10 +29,10 @@ const etapes = [
   <h1>Découper un réseau en sous-réseaux</h1>
   <MiseAJour date="2026-11-06" />
   <p class="chapo seulement-debut">
-    Une école, une entreprise ou une box reçoivent un bloc d'adresses et le découpent : un réseau pour les
-    salles, un pour l'administration, un pour le Wi-Fi des invité·es. Découper, c'est déplacer la frontière
-    du <Terme id="masque-reseau">masque</Terme> vers la droite. Pour suivre, il vaut mieux avoir vu <a
-    href="/modules/adresses-ip/">Adresses IP et masques</a>.
+    Une école, une entreprise, même ta box reçoivent un bloc d'adresses… et le découpent : un réseau pour les
+    salles, un pour l'administration, un pour le Wi-Fi des invité·es. Découper, c'est simplement pousser la frontière
+    du <Terme id="masque-reseau">masque</Terme> vers la droite. Pour suivre, il vaut mieux avoir vu
+    <a href="/modules/adresses-ip/">Adresses IP et masques</a>.
   </p>
 
   <div class="reglages" data-pagefind-ignore>
@@ -47,14 +47,15 @@ const etapes = [
   <Etape numero={0} titre="Couper en parts égales" ancre="parts-egales">
     <Decoupe slot="animation" />
     <p slot="decouverte">
-      Pour couper un réseau en 2, en 4 ou en 8, on prend 1, 2 ou 3 bits de la partie « machine » et on les
-      donne à la partie « réseau ». Le préfixe s'allonge (/24 devient /26), et chaque morceau a moins
-      d'adresses : la moitié, le quart, le huitième.
+      Tu veux couper un réseau en 2, en 4 ou en 8 parts égales ? On emprunte 1, 2 ou 3 bits à la partie « machine »
+      et on les donne à la partie « réseau ». Le préfixe s'allonge (/24 devient /26), et chaque part a moins
+      d'adresses : la moitié, le quart, le huitième. Comme une pizza.
     </p>
     <p slot="curieux">
-      Avec k bits empruntés, on obtient 2<sup>k</sup> sous-réseaux. Chacun a 2<sup>32−n</sup> adresses (n étant
-      le nouveau préfixe), moins deux : la première est l'adresse du sous-réseau, la dernière celle de
-      diffusion. Les sous-réseaux se suivent : 192.0.2.0, 192.0.2.64, 192.0.2.128, 192.0.2.192 pour des /26.
+      Avec k bits empruntés, on obtient 2<sup>k</sup> sous-réseaux. Chacun a 2<sup>32−n</sup> adresses (n étant le
+      nouveau préfixe), moins deux qu'on ne donne jamais à une machine : la première, c'est l'adresse du sous-réseau,
+      la dernière, celle de diffusion. Les sous-réseaux se suivent, sagement alignés : 192.0.2.0, 192.0.2.64,
+      192.0.2.128, 192.0.2.192 pour des /26.
     </p>
     <p slot="ingenieur">
       Un sous-réseau /n commence toujours à un multiple de sa taille (2<sup>32−n</sup>) : c'est l'alignement.
@@ -78,14 +79,15 @@ const etapes = [
   <Etape numero={1} titre="Des parts à la bonne taille" ancre="vlsm">
     <PlanVLSM slot="animation" />
     <p slot="decouverte">
-      Les besoins ne sont presque jamais égaux : 100 appareils sur le Wi-Fi, 50 dans une salle, 20 à
-      l'administration. Plutôt que des parts égales, on donne à chacun un sous-réseau à sa taille : c'est le
-      VLSM, des masques de longueurs différentes dans un même réseau.
+      Dans la vraie vie, les besoins sont rarement égaux : 100 appareils sur le Wi-Fi, 50 dans une salle, 20 à
+      l'administration. Couper en parts égales gaspillerait des adresses. Alors on taille à chacun un sous-réseau à sa
+      mesure : c'est le VLSM, des masques de longueurs différentes dans un même réseau.
     </p>
     <p slot="curieux">
-      La méthode : trier les besoins du plus grand au plus petit, puis, pour chacun, prendre le plus petit
-      bloc qui suffit (2<sup>k</sup> − 2 ≥ nombre de machines) et le placer au premier endroit libre bien
-      aligné. Commencer par les grands blocs évite de laisser des trous inutilisables.
+      La recette : trier les besoins du plus grand au plus petit. Puis, pour chacun, prendre le plus petit bloc qui
+      suffit (2<sup>k</sup> − 2 ≥ nombre de machines) et le poser au premier endroit libre bien aligné. Pourquoi
+      commencer par les gros ? Comme pour ranger une valise : les gros objets d'abord, sinon il reste des trous où
+      plus rien ne rentre.
     </p>
     <p slot="ingenieur">
       Une liaison entre deux routeurs n'a que deux extrémités. On lui donnait un /30 (4 adresses, dont 2
@@ -103,14 +105,14 @@ const etapes = [
   <Etape numero={2} titre="Exercices corrigés" ancre="exercices">
     <Exercices slot="animation" />
     <p slot="decouverte">
-      Six types d'exercices, tirés au hasard : adresse du réseau, adresse de diffusion, nombre de machines,
-      masque en décimal, préfixe pour un nombre de machines, deux adresses dans le même réseau. Chaque
-      correction montre le calcul pas à pas.
+      À toi de jouer ! Six types d'exercices, tirés au hasard : adresse du réseau, adresse de diffusion, nombre de
+      machines, masque en décimal, préfixe pour un nombre de machines, deux adresses dans le même réseau. Chaque
+      correction déroule le calcul pas à pas.
     </p>
     <p slot="curieux">
-      Chaque exercice a un numéro : le même numéro donne toujours le même exercice. Un·e enseignant·e peut
-      donc donner « l'exercice n° 42 » à toute la classe et retrouver la même correction. Les adresses sont
-      celles réservées aux exemples (192.0.2.x, 198.51.100.x, 203.0.113.x) ou des adresses privées (10.x.x.x).
+      Chaque exercice porte un numéro, et le même numéro donne toujours le même exercice. Pratique en classe :
+      « Faites tous l'exercice n° 42 », et tout le monde retrouve la même correction. Les adresses sont celles
+      réservées aux exemples (192.0.2.x, 198.51.100.x, 203.0.113.x) ou des adresses privées (10.x.x.x).
     </p>
     <p slot="ingenieur">
       Astuce de calcul mental : la « taille de bloc » vaut 256 moins l'octet du masque qui n'est ni 255 ni 0.
@@ -122,13 +124,13 @@ const etapes = [
   <Etape numero={3} titre="Et en IPv6 ?" ancre="ipv6">
     <Ipv6Sites slot="animation" />
     <p slot="decouverte">
-      En IPv6, plus besoin de compter les machines : chaque réseau local reçoit un /64, qui contient bien plus
-      d'adresses qu'il n'y aura jamais d'appareils. Découper, c'est seulement numéroter ses réseaux locaux.
+      En IPv6, fini de compter les machines : chaque réseau local reçoit un /64, qui contient bien plus d'adresses
+      qu'il n'y aura jamais d'appareils. Découper, ici, c'est juste numéroter ses réseaux locaux.
     </p>
     <p slot="curieux">
-      Un fournisseur attribue à un site un préfixe plus court, par exemple un /48 ou un /56. Entre ce préfixe
-      et /64, il reste 16 ou 8 bits : 65 536 ou 256 réseaux locaux possibles. En hexadécimal, chaque chiffre
-      vaut 4 bits, donc le numéro du réseau local se lit directement dans le 4ᵉ groupe de l'adresse.
+      Ton fournisseur attribue à ton site un préfixe plus court, par exemple un /48 ou un /56. Entre ce préfixe et
+      /64, il reste 16 ou 8 bits : de quoi créer 65 536 ou 256 réseaux locaux. Et l'hexadécimal rend ça lisible :
+      chaque chiffre vaut 4 bits, donc le numéro du réseau local se lit directement dans le 4ᵉ groupe de l'adresse.
     </p>
     <p slot="ingenieur">
       La limite /64 vient de l'architecture d'IPv6 : la plupart des adresses ont un identifiant d'interface de
