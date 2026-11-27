@@ -2,6 +2,7 @@
 // Page « À propos » : pourquoi ce site, comment les faits sont vérifiés, ce
 // qu'il ne fait pas, licence, accessibilité, comment signaler une erreur.
 import Base from '../layouts/Base.astro';
+import { AUDIENCE_ACTIVE } from '../lib/audience';
 
 // Moyen de contact pour signaler une erreur : à renseigner par l'équipe
 // (adresse ou formulaire). Tant qu'il est vide, le bloc n'est pas affiché.
@@ -43,12 +44,25 @@ const CONTACT: { texte: string; lien: string } | null = { texte: '✉️ contact
   <section aria-labelledby="t-pas">
     <h2 id="t-pas">Ce que le site ne fait pas</h2>
     <ul>
-      <li><strong>Aucun pistage, aucune publicité, aucune mesure d'audience.</strong></li>
-      <li><strong>Aucune ressource tierce</strong> : polices, scripts et images sont servis par le site lui-même. Seule exception : le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>, projet frère chargé depuis son propre site.</li>
+      <li><strong>Aucun pistage, aucune publicité.</strong>{AUDIENCE_ACTIVE ? ' Seulement une mesure d’audience anonyme (voir plus bas).' : ' Aucune mesure d’audience.'}</li>
+      <li><strong>Aucune ressource tierce</strong> : polices, scripts et images sont servis par le site lui-même. Exceptions : le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>, projet frère chargé depuis son propre site{AUDIENCE_ACTIVE && <>, et le petit script de mesure d'audience, servi par notre propre instance Umami</>}.</li>
       <li><strong>Rien n'est enregistré sur un serveur</strong> : tes réglages (niveau de lecture, mode « une étape par écran ») restent dans ton navigateur.</li>
       <li><strong>Aucune adresse de site illégal</strong>, même quand on en parle (Sci-Hub, bibliothèques de l'ombre).</li>
     </ul>
   </section>
+
+  {AUDIENCE_ACTIVE && (
+    <section id="confidentialite" aria-labelledby="t-conf">
+      <h2 id="t-conf">Mesure d'audience</h2>
+      <p>
+        Pour savoir quelles pages sont lues et améliorer le site, nous comptons les visites avec
+        <a href="https://umami.is/">Umami</a>, un logiciel libre que nous hébergeons nous-mêmes. Pas de cookie, pas de
+        bandeau, pas de revente, pas de suivi d'un site à l'autre : nous voyons des totaux (pages vues, pays, type
+        d'appareil, site d'où l'on vient), pas des personnes. Si ton navigateur demande de ne pas être suivi
+        (réglage « Do Not Track »), rien n'est compté.
+      </p>
+    </section>
+  )}
 
   <section aria-labelledby="t-acces">
     <h2 id="t-acces">Pour tout le monde</h2>
@@ -75,7 +89,7 @@ const CONTACT: { texte: string; lien: string } | null = { texte: '✉️ contact
       Un fait faux, une source morte, une explication bancale : ça arrive, et on corrige. Pour le signaler, précise la
       page, la phrase, et si possible une source.
     </p>
-    {CONTACT && <p class="contact"><a href={CONTACT.lien}>{CONTACT.texte}</a></p>}
+    {CONTACT && <p class="contact"><a href={CONTACT.lien} data-umami-event="contact">{CONTACT.texte}</a></p>}
   </section>
 </Base>
 

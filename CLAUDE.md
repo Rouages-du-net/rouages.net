@@ -79,7 +79,11 @@ Consignes à donner à tout agent de recherche web :
   animation, `prefers-reduced-motion` respecté, navigation au clavier, contraste
   AA.
 - Aucun pisteur, aucune ressource tierce (polices et scripts servis par le
-  site lui-même). Seule exception : le jeu **Quêtes de Sysadmin**, projet frère
+  site lui-même). Exception : la **mesure d'audience Umami**, auto-hébergée,
+  sans cookie, respectant Do Not Track, chargée seulement en production si les
+  variables `PUBLIC_UMAMI_SRC` et `PUBLIC_UMAMI_WEBSITE_ID` sont définies
+  (`src/lib/audience.ts`) ; tout texte qui décrit les requêtes du site dépend de
+  `AUDIENCE_ACTIVE`. Autre exception : le jeu **Quêtes de Sysadmin**, projet frère
   et indépendant (dépôt `Rouages-du-net/quetes-de-sysadmin`), intégré depuis
   son propre site `https://sysadmin.rouages.net/integration/quetes-de-sysadmin.js`
   sur `/jeux/quetes-de-sysadmin/`. Son code n'est jamais copié ici : les

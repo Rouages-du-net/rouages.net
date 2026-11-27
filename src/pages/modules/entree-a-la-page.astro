@@ -16,6 +16,7 @@ import PoigneeTcp from '../../components/animations/PoigneeTcp.astro';
 import ServeurCasiers from '../../components/animations/ServeurCasiers.astro';
 import CompteurRequetes from '../../components/animations/CompteurRequetes.astro';
 import Affichage from '../../components/animations/Affichage.astro';
+import { AUDIENCE_ACTIVE } from '../../lib/audience';
 
 const etapes = [
   { ancre: 'avant', court: 'Avant' },
@@ -342,8 +343,9 @@ const etapes = [
       En lisant le HTML, le navigateur découvre sa liste de courses : feuilles de style
       (<Terme id="css">CSS</Terme>), images, polices, scripts. Il les demande en parallèle, sur la même connexion, et
       ne redemande pas ce qu'il a déjà en cache. Sur beaucoup de sites, une partie de ces fichiers vient d'autres
-      serveurs : publicité, statistiques, réseaux sociaux. Celui-ci n'en utilise aucun ; compte toi-même avec
-      l'animation.
+      serveurs : publicité, statistiques, réseaux sociaux. {AUDIENCE_ACTIVE
+        ? 'Celui-ci n’en appelle qu’un : sa propre mesure d’audience, sans cookie. Compte toi-même avec l’animation.'
+        : 'Celui-ci n’en utilise aucun ; compte toi-même avec l’animation.'}
     </p>
     <p slot="ingenieur">
       Multiplexage HTTP/2 ; fichiers versionnés <code>/_astro/…</code> mis en cache un an

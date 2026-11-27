@@ -5,6 +5,7 @@ import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource/silkscreen';
 import '../styles/global.css';
 import Rouage from '../components/Rouage.astro';
+import { AUDIENCE_ACTIVE, UMAMI_SRC, UMAMI_WEBSITE_ID } from '../lib/audience';
 
 interface Props {
   title?: string;
@@ -40,6 +41,9 @@ const canonique = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:image:alt" content="Les rouages du net : un ordinateur, des rouages et un serveur reliés par un fil, sur papier millimétré." />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {AUDIENCE_ACTIVE && (
+      <script defer is:inline src={UMAMI_SRC} data-website-id={UMAMI_WEBSITE_ID} data-domains="rouages.net,www.rouages.net" data-do-not-track="true"></script>
+    )}
     <link rel="alternate" type="application/atom+xml" title="Les rouages du net · Revues de veille" href="/veille/revues.xml" />
     <script is:inline>
       // Mode de lecture des modules (src/lib/ecrans.ts), posé avant l'affichage.
@@ -67,7 +71,7 @@ const canonique = new URL(Astro.url.pathname, Astro.site).href;
     </main>
     <footer class="site">
       <div class="wrap">
-        <p>Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage, sans publicité. <a href="/a-propos/">À propos</a> · <a href="/veille/">Veille</a> · <a href="/veille/revues.xml">Flux Atom</a></p>
+        <p>Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage, sans publicité{AUDIENCE_ACTIVE && <>, avec une <a href="/a-propos/#confidentialite">mesure d'audience anonyme</a></>}. <a href="/a-propos/">À propos</a> · <a href="/veille/">Veille</a> · <a href="/veille/revues.xml">Flux Atom</a></p>
         <p class="clin">Fabriqué avec des rouages, des RFC et beaucoup de curiosité. Il paraît que des secrets se cachent ici et là… ↑ ↑ ↓ ↓</p>
       </div>
     </footer>
