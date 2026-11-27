@@ -1,0 +1,87 @@
+---
+// Page « À propos » : pourquoi ce site, comment les faits sont vérifiés, ce
+// qu'il ne fait pas, licence, accessibilité, comment signaler une erreur.
+import Base from '../layouts/Base.astro';
+
+// Moyen de contact pour signaler une erreur : à renseigner par l'équipe
+// (adresse ou formulaire). Tant qu'il est vide, le bloc n'est pas affiché.
+const CONTACT: { texte: string; lien: string } | null = null;
+---
+<Base title="À propos" description="Pourquoi Les rouages du net existe, comment chaque fait est vérifié et daté, ce que le site ne fait pas (pistage, publicité), sa licence et comment signaler une erreur.">
+  <p class="tag">À propos</p>
+  <h1>Ouvrir le capot, sans tricher</h1>
+  <p class="chapo">
+    <em>Les rouages du net</em> explique internet, l'informatique et l'intelligence artificielle avec des animations à
+    manipuler. Une seule règle : simplifier, oui ; mentir, jamais. Le niveau « ingénieur » de chaque étape montre les
+    vrais paquets, les vrais protocoles, les vraies commandes.
+  </p>
+
+  <section aria-labelledby="t-pourquoi">
+    <h2 id="t-pourquoi">Pourquoi ce site ?</h2>
+    <p>
+      On utilise internet tous les jours sans voir ses rouages : les câbles, les serveurs, les protocoles, mais aussi
+      les entreprises, les lois et les institutions qui décident de son fonctionnement. Ce site les rend visibles,
+      pour les élèves, leurs enseignant·es, et toute personne curieuse.
+    </p>
+    <ul>
+      <li><strong>Trois niveaux de lecture</strong> par étape : 🟢 découverte, 🟡 curieux, 🔴 ingénieur.</li>
+      <li><strong>Une histoire mondiale</strong>, pas seulement celle de la Silicon Valley, qui met en avant les femmes et les personnes oubliées des récits habituels.</li>
+      <li><strong>Toutes les parties</strong> présentées sur les sujets qui fâchent : entreprises, régulateurs, associations, chercheur·ses.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-verif">
+    <h2 id="t-verif">Comment les faits sont vérifiés</h2>
+    <ul>
+      <li><strong>Chaque fait a sa source</strong>, en bas de page, avec la date de la dernière vérification. On préfère les sources primaires : textes de loi, décisions de justice, normes (RFC), rapports officiels, articles de recherche.</li>
+      <li><strong>Deux sources indépendantes</strong> pour un fait surprenant ou contesté. Wikipédia sert de lecture « pour aller plus loin », jamais de preuve.</li>
+      <li><strong>Ce qui bouge vite est daté</strong> : procès, lois, chiffres portent la mention « état au… », et un ⏳ prévient quand une page risque d'avoir vieilli. Une <a href="/veille/">veille</a> quotidienne nous signale les pages à revérifier.</li>
+      <li><strong>Une partie de la recherche et de la rédaction est faite avec l'aide d'un assistant d'IA.</strong> Chaque fait est rattaché à une source effectivement lue, consignée avec sa date dans un dossier de recherche conservé avec le code du site. Les modules qui n'ont pas encore eu leur relecture humaine complète sont marqués « module en construction ».</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-pas">
+    <h2 id="t-pas">Ce que le site ne fait pas</h2>
+    <ul>
+      <li><strong>Aucun pistage, aucune publicité, aucune mesure d'audience.</strong></li>
+      <li><strong>Aucune ressource tierce</strong> : polices, scripts et images sont servis par le site lui-même. Seule exception : le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a>, projet frère chargé depuis son propre site.</li>
+      <li><strong>Rien n'est enregistré sur un serveur</strong> : tes réglages (niveau de lecture, mode « une étape par écran ») restent dans ton navigateur.</li>
+      <li><strong>Aucune adresse de site illégal</strong>, même quand on en parle (Sci-Hub, bibliothèques de l'ombre).</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-acces">
+    <h2 id="t-acces">Pour tout le monde</h2>
+    <p>
+      Les textes sont en police Atkinson Hyperlegible, pensée pour les personnes malvoyantes ; les contrastes respectent
+      le niveau AA ; tout se lit sans JavaScript, chaque animation a son équivalent en texte, et rien ne bouge si ton
+      système demande de réduire les animations. Le site est entièrement statique : il est hébergé en France, sur
+      un simple hébergement mutualisé.
+    </p>
+  </section>
+
+  <section aria-labelledby="t-licence">
+    <h2 id="t-licence">Licence</h2>
+    <p>
+      Les contenus sont sous licence <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">Creative Commons
+      BY-SA 4.0</a> : tu peux les reprendre, les adapter et les distribuer, y compris en classe, en citant
+      <em>Les rouages du net</em> et en partageant tes modifications sous la même licence.
+    </p>
+  </section>
+
+  <section aria-labelledby="t-erreur">
+    <h2 id="t-erreur">Une erreur ? Une idée ?</h2>
+    <p>
+      Un fait faux, une source morte, une explication bancale : ça arrive, et on corrige. Pour le signaler, précise la
+      page, la phrase, et si possible une source.
+    </p>
+    {CONTACT && <p class="contact"><a href={CONTACT.lien}>{CONTACT.texte}</a></p>}
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  section { max-width: var(--mesure); margin-top: 2.2rem; }
+  li { margin-bottom: 0.5rem; }
+  .contact a { display: inline-block; padding: 0.45rem 0.9rem; border: 2px solid var(--fg); border-radius: 0.6rem; background: var(--soleil); color: var(--sur-soleil); font-weight: 700; text-decoration: none; box-shadow: var(--ombre); }
+</style>

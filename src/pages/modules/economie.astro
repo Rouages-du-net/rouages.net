@@ -1,0 +1,321 @@
+---
+import Base from '../../layouts/Base.astro';
+import Etape from '../../components/Etape.astro';
+import Terme from '../../components/Terme.astro';
+import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
+import Sources from '../../components/Sources.astro';
+import MiseAJour from '../../components/MiseAJour.astro';
+import Frise from '../../components/Frise.astro';
+import ModeLecture from '../../components/ModeLecture.astro';
+import Tuyaux from '../../components/animations/economie/Tuyaux.astro';
+import Enchere from '../../components/animations/economie/Enchere.astro';
+import Argent from '../../components/animations/economie/Argent.astro';
+
+// Faits sourcés : docs/sources/economie.md.
+const etapes = [
+  { ancre: 'tuyaux', court: 'Qui paie les tuyaux ?' },
+  { ancre: 'cloud', court: 'Le cloud, des ordinateurs à louer' },
+  { ancre: 'enchere', court: 'Une pub en 120 ms' },
+  { ancre: 'argent', court: 'D’où vient l’argent ?' },
+  { ancre: 'gratuit', court: 'Gratuit, vraiment ?' },
+  { ancre: 'monopoles', court: 'Monopoles et règles' },
+  { ancre: 'normes', court: 'Quand une entreprise écrit la règle' },
+  { ancre: 'bilan', court: 'Ce qu’il faut retenir', pastille: '✓' },
+];
+---
+<Base
+  title="Entreprises et économie du net : qui gagne de l'argent avec internet ?"
+  description="Qui paie les câbles et le trafic, le cloud, une enchère publicitaire en 120 millisecondes, d'où vient l'argent de Google, Meta et Amazon, la gratuité et les effets de réseau, les monopoles et leurs régulateurs, et les entreprises qui écrivent les normes."
+>
+  <p class="tag" data-pagefind-ignore>Qui décide · module en construction</p>
+  <h1>Entreprises et économie du net</h1>
+  <MiseAJour date="2026-11-27" evolutif="procès en cours, chiffres annuels" />
+  <p class="chapo seulement-debut">
+    Ton moteur de recherche est gratuit, ta messagerie aussi, et les vidéos défilent sans fin. Pourtant, quelques
+    entreprises d'internet comptent parmi les plus riches du monde. Qui paie quoi, et qui gagne quoi ? Ce module suit
+    l'argent : dans les câbles, dans les centres de données, dans chaque publicité affichée.
+  </p>
+
+  <div class="reglages" data-pagefind-ignore>
+    <SelecteurNiveau />
+    <ModeLecture />
+    <p class="tag" data-pagefind-ignore>Choisis ton niveau et ta façon de lire : tu peux en changer à tout moment.</p>
+  </div>
+
+  <Frise etapes={etapes} />
+
+  <!-- Étape 0 -->
+  <Etape numero={0} titre="Qui paie les tuyaux ?" ancre="tuyaux">
+    <Tuyaux slot="animation" />
+    <p slot="decouverte">
+      Pour qu'une vidéo arrive chez toi, elle traverse plusieurs réseaux. Chacun a été construit par quelqu'un, qui
+      veut être payé. Tu paies ton abonnement à ton fournisseur d'accès ; les plateformes, elles, paient pour
+      apporter leurs vidéos jusqu'à lui… ou pas, selon les accords.
+    </p>
+    <p slot="curieux">
+      Les opérateurs français ont investi 10,3 milliards d'euros dans leurs réseaux en 2025, en baisse de 15 % : la
+      quatrième baisse d'affilée. Cinq acteurs, Akamai, Netflix, Amazon, Google et Meta,
+      apportent à eux seuls 48,9 % du trafic qui arrive chez les abonné·es français.
+    </p>
+    <p slot="ingenieur">
+      Deux contrats : le <strong>transit</strong> (un client paie pour joindre tout internet) et le
+      <strong>peering</strong> (deux réseaux échangent directement leur trafic, souvent gratuitement, d'une
+      « poignée de main »). Quand l'échange est très déséquilibré, le peering devient payant pour celui qui envoie le
+      plus. Les grandes plateformes installent aussi leurs propres serveurs de cache chez les fournisseurs d'accès :
+      environ 21 % du trafic vers les abonné·es fin 2025. C'est tout l'enjeu du débat sur le « fair share » (voir
+      <a href="/modules/etats-regulation/">États et régulation</a>) : les uns disent que les plateformes ne paient pas
+      leur part, les autres qu'elles paient déjà, et investissent.
+    </p>
+    <p slot="verifie">
+      Le baromètre de l'interconnexion de l'Arcep, publié chaque été, donne ces chiffres pour la France.
+    </p>
+  </Etape>
+
+  <!-- Étape 1 -->
+  <Etape numero={1} titre="Le cloud, des ordinateurs à louer" ancre="cloud">
+    <p slot="decouverte">
+      Le « cloud », ce sont des ordinateurs que l'on loue au lieu de les acheter, dans les immenses centres de données
+      de quelques entreprises. Une grande partie des sites et des applications que tu utilises tournent dessus.
+    </p>
+    <p slot="curieux">
+      Trois entreprises américaines dominent : au troisième trimestre 2026, Amazon (AWS) détient environ 26 % du marché
+      mondial, Microsoft 19 % et Google 16 %, selon le cabinet Synergy. En Europe, la part des fournisseurs européens
+      est passée de 29 % en 2017 à 15 % en 2022, et n'a plus bougé depuis. Ces chiffres varient selon ce qu'on compte : ce sont des ordres de
+      grandeur.
+    </p>
+    <p slot="ingenieur">
+      L'Autorité de la concurrence a pointé en 2023 deux mécanismes qui retiennent les clients : les crédits gratuits
+      offerts aux jeunes entreprises, et les frais facturés pour sortir ses données (« egress fees »), selon elle
+      « potentiellement déconnectés des coûts ». Côté souveraineté, un décret de 2026 impose la qualification SecNumCloud de
+      l'ANSSI pour certaines données publiques particulièrement sensibles. À Bruxelles, la Commission a estimé en juin 2026 qu'AWS et Azure devraient être soumis au DMA ; au 27
+      novembre 2026, aucun service de cloud n'est encore désigné.
+    </p>
+    <p slot="mythes">
+      <strong>« Le cloud, c'est immatériel. »</strong> Ce sont des bâtiments, des machines, de l'électricité et de
+      l'eau : voir <a href="/modules/materialite/">La matérialité du numérique</a>.
+    </p>
+  </Etape>
+
+  <!-- Étape 2 -->
+  <Etape numero={2} titre="Une publicité vendue aux enchères en 120 millisecondes" ancre="enchere">
+    <Enchere slot="animation" />
+    <p slot="decouverte">
+      Quand une page s'ouvre, l'emplacement publicitaire est souvent vide. En une fraction de seconde, des programmes
+      se le disputent aux enchères, et le plus offrant affiche sa publicité. Ce qu'ils achètent, c'est ton attention.
+    </p>
+    <p slot="curieux">
+      Cette « enchère en temps réel » suit une norme écrite par l'industrie publicitaire elle-même, OpenRTB. La bourse
+      fixe un délai maximal (<code>tmax</code>) : l'exemple de la norme est de 120 millisecondes, et Google indique des
+      délais allant de 80 à 1 000 millisecondes. Qui répond trop tard est ignoré.
+    </p>
+    <p slot="ingenieur">
+      En Europe, le consentement à ces échanges passe souvent par le « cadre de transparence et de consentement » (TCF)
+      d'IAB Europe, derrière beaucoup de bandeaux de cookies. En 2022, l'autorité belge de protection des données
+      l'a jugé contraire au RGPD ; en 2024, la Cour de justice de l'UE a dit que la chaîne qui code tes choix peut être
+      une donnée personnelle ; en 2025, la Cour des marchés belge a confirmé l'amende de 250 000 € mais annulé la décision
+      pour un vice de procédure. IAB Europe y voit la confirmation de son « rôle limité » ; l'association irlandaise
+      ICCL, à l'origine de la plainte, continue de dénoncer le système.
+    </p>
+    <p slot="verifie">
+      Avec les outils de développement de ton navigateur (F12, onglet Réseau), ouvre un site d'information : tu verras
+      passer des dizaines de requêtes vers des domaines publicitaires pendant le chargement.
+    </p>
+  </Etape>
+
+  <!-- Étape 3 -->
+  <Etape numero={3} titre="D'où vient l'argent ?" ancre="argent">
+    <Argent slot="animation" />
+    <p slot="decouverte">
+      Google et Meta gagnent l'essentiel de leur argent avec la publicité : environ 73 % pour Google, presque tout
+      pour Meta. Amazon, lui, gagne le plus avec… la location d'ordinateurs.
+    </p>
+    <p slot="curieux">
+      Ces chiffres viennent des rapports annuels que les entreprises cotées en Bourse aux États-Unis doivent publier
+      (le « 10-K »). Ils sont publics : c'est une source primaire, même si chaque entreprise choisit comment découper
+      ses activités.
+    </p>
+    <p slot="ingenieur">
+      Les pourcentages sont nos calculs : 294,7 sur 402,8 milliards de dollars pour Alphabet, 196,2 sur 201 milliards
+      pour Meta, et pour Amazon 128,7 milliards de ventes d'AWS (18 % du total) pour 45,6 milliards de résultat
+      d'exploitation (57 % du total). Un « résultat d'exploitation » n'est pas un bénéfice net : il ne compte ni les
+      impôts ni les placements.
+    </p>
+  </Etape>
+
+  <!-- Étape 4 -->
+  <Etape numero={4} titre="Gratuit, vraiment ?" ancre="gratuit">
+    <p slot="decouverte">
+      « Si c'est gratuit, c'est toi le produit » : la formule est célèbre. Elle dit une chose vraie : quand tu ne paies
+      pas, quelqu'un d'autre paie, souvent un annonceur. Mais elle est trop simple, et elle n'a pas un seul auteur.
+    </p>
+    <p slot="curieux">
+      Les économistes parlent de <strong>marchés à deux faces</strong> : une plateforme doit attirer deux publics à la
+      fois, par exemple des utilisateur·rices et des annonceurs, et peut offrir le service aux uns pour faire payer les
+      autres. Jean-Charles Rochet et Jean Tirole l'ont formalisé en 2003 ; le comité Nobel, en couronnant Jean Tirole en
+      2014, prend l'exemple du journal gratuit. S'y ajoutent les <strong>effets de réseau</strong>, étudiés dès 1985 par Michael
+      Katz et Carl Shapiro : un service vaut d'autant plus que d'autres l'utilisent déjà, ce qui avantage ceux qui
+      sont déjà gros.
+    </p>
+    <p slot="ingenieur">
+      Pour la sociologue Shoshana Zuboff, la formule est même « trop faible » : son « capitalisme de surveillance »
+      vend des prédictions de nos comportements. Ses critiques ne sont pas d'accord : pour Evgeny Morozov, son livre
+      parle plus de surveillance que de capitalisme ; pour Cory Doctorow, le vrai problème est le monopole, pas un
+      supposé contrôle des esprits. Et la gratuité peut se financer autrement : par des dons (Wikipédia) ou par l'argent
+      public (le paiement instantané Pix au Brésil).
+    </p>
+    <div slot="histoire">
+      <p>
+        La formule a une longue histoire. En 1973, l'artiste Carlota Fay Schoolman et Richard Serra diffusent une
+        vidéo, <em>Television Delivers People</em> : « You are the product of t.v. » (tu es le produit de la télé).
+        On la retrouve sur des forums dans les années 1990-2000, puis, en 2010, un internaute de MetaFilter, Andrew
+        Lewis, écrit : « Si tu ne paies pas, tu n'es pas le client ; tu es le produit que l'on vend. »
+      </p>
+    </div>
+    <p slot="mythes">
+      <strong>« Si je paie, je ne suis pas pisté·e. »</strong> Pas forcément : on peut payer un service et être suivi
+      quand même. Et l'inverse existe : des services gratuits sans publicité, financés par des dons ou des impôts.
+    </p>
+  </Etape>
+
+  <!-- Étape 5 -->
+  <Etape numero={5} titre="Monopoles et règles" ancre="monopoles">
+    <p slot="decouverte">
+      Quand une entreprise devient incontournable, elle peut imposer ses conditions. Des autorités de la concurrence
+      surveillent : elles peuvent mettre des amendes, imposer des règles, et même demander de vendre une partie de
+      l'entreprise.
+    </p>
+    <div slot="curieux">
+      <p>
+        En Europe, le règlement sur les marchés numériques (DMA) désigne des « contrôleurs d'accès » soumis à des règles
+        spéciales. En France, l'Autorité de la concurrence a infligé 150 millions d'euros à Apple en 2025 : son
+        dispositif de consentement au pistage publicitaire (ATT) imposait aux applications des autres un double
+        consentement, mais un seul à Apple, au détriment surtout des petits éditeurs. Elle a aussi sanctionné Doctolib
+        (4,7 millions d'euros), et obligé Meta, en 2026, à négocier de bonne foi avec la presse la rémunération de ses
+        contenus ; la cour d'appel de Paris a confirmé. Meta répond avoir « toujours négocié de bonne foi ».
+      </p>
+    </div>
+    <div slot="ingenieur">
+      <p>
+        Aux États-Unis, l'autorité de concurrence (FTC) accusait Meta d'avoir racheté Instagram et WhatsApp pour
+        éteindre des concurrents. En novembre 2025, le juge lui a donné tort : avec TikTok et YouTube, Meta n'a pas de
+        monopole. La FTC a fait appel ; au 27 novembre 2026, la cour d'appel n'a pas statué. Contre Amazon, la FTC
+        dénonce des pratiques qui empêchent les vendeurs d'être moins chers ailleurs ; Amazon répond que la plainte est
+        « fausse en fait et en droit ». Le procès doit s'ouvrir fin mars 2027.
+      </p>
+    </div>
+    <div slot="histoire">
+      <p>
+        Deux femmes ont marqué ce combat. En 2017, la juriste Lina Khan publie « Amazon's Antitrust
+        Paradox », qui explique pourquoi les règles anciennes, centrées sur les prix bas, ne voient pas le pouvoir des
+        plateformes ; elle préside ensuite la FTC de 2021 à 2025. En Europe, Margrethe Vestager, chargée de la
+        concurrence à la Commission de 2014 à 2024, a notamment mené les procédures contre Google.
+      </p>
+    </div>
+  </Etape>
+
+  <!-- Étape 6 -->
+  <Etape numero={6} titre="Quand une entreprise écrit la règle" ancre="normes">
+    <p slot="decouverte">
+      Les règles techniques d'internet sont en principe écrites ensemble, à l'IETF ou au W3C. Mais une entreprise qui
+      contrôle à la fois le navigateur le plus utilisé et des sites géants peut tester ses idées en grandeur nature,
+      puis les faire adopter.
+    </p>
+    <p slot="curieux">
+      Chrome représente 68,81 % des pages vues dans le monde en octobre 2026 (mesure StatCounter). Google a commencé
+      en 2012 un nouveau protocole, QUIC, l'a testé entre Chrome et ses serveurs (7 % du trafic d'internet dès 2017,
+      selon Google), puis l'a confié à l'IETF, qui l'a modifié et normalisé en 2021. Résultat : un protocole ouvert et
+      plus rapide, que tout le monde peut utiliser. Mais aussi un exemple de pouvoir.
+    </p>
+    <p slot="ingenieur">
+      Autres exemples : le passage des extensions de Chrome à « Manifest V3 », achevé en 2025-2026, que Google présente
+      comme plus sûr et plus respectueux de la vie privée, et que l'EFF accuse de réduire la capacité des bloqueurs de
+      publicité et de pistage. Ou les cookies tiers : Google avait annoncé leur fin, y a renoncé, puis a abandonné en
+      octobre 2025 la plupart des technologies censées les remplacer.
+    </p>
+    <div slot="decide">
+      <p>
+        Des infrastructures peuvent aussi être publiques. Au Brésil, la banque centrale a lancé en 2020 le paiement
+        instantané Pix : 148 millions de personnes l'utilisent, environ 86 % des adultes. En Inde, le système UPI a
+        traité 25,47 milliards de paiements en octobre 2026. En Chine, à l'inverse, deux entreprises privées, Alipay et
+        WeChat Pay, dominent les paiements.
+      </p>
+    </div>
+  </Etape>
+
+  <section class="final" id="bilan" data-ecran aria-labelledby="titre-final">
+    <h2 id="titre-final">Ce qu'il faut retenir</h2>
+    <ol class="questions">
+      <li><strong>Les tuyaux ont un prix</strong> : transit payant, peering souvent gratuit, et cinq acteurs qui apportent près de la moitié du trafic.</li>
+      <li><strong>Le cloud est concentré</strong> : trois entreprises américaines en détiennent plus de la moitié.</li>
+      <li><strong>Une publicité se vend en une fraction de seconde</strong>, et des données sur toi circulent à chaque enchère.</li>
+      <li><strong>La publicité finance Google et Meta</strong> ; le cloud fait l'essentiel du résultat d'Amazon.</li>
+      <li><strong>« Gratuit » veut dire « payé par quelqu'un d'autre »</strong> : annonceurs, donateur·rices ou argent public.</li>
+      <li><strong>Des autorités surveillent les monopoles</strong>, avec des résultats qui se jouent souvent devant les tribunaux.</li>
+      <li><strong>Une entreprise dominante peut écrire la règle</strong> ; des infrastructures publiques montrent une autre voie.</li>
+    </ol>
+    <p>
+      Pour aller plus loin : <a href="/institutions/">les institutions</a> et la carte des rapports de force,
+      <a href="/modules/pagerank/">PageRank</a> (procès Google), <a href="/modules/etats-regulation/">États et
+      régulation</a> (DSA, DMA, neutralité), <a href="/modules/materialite/">La matérialité du numérique</a>.
+    </p>
+
+  <Sources
+    verifie="2026-11-27"
+    sources={[
+      { auteur: 'Arcep', titre: 'Marché français des télécoms en 2025 (communiqué du 28 mai 2026)', url: 'https://www.arcep.fr/actualites/actualites-et-communiques/detail/n/marche-francais-des-telecoms-280526.html', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'Arcep', titre: 'Baromètre de l’interconnexion de données en France (année 2025)', url: 'https://www.arcep.fr/fileadmin/user_upload/barometre_interconnexion/2025/arcep-barometre-interconnexion-ip-2026.pdf', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'Synergy Research / TechInsights', titre: 'Cloud Infrastructure Services Market, Q3 2026', url: 'https://www.techinsights.com/node/61958', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Synergy Research', titre: 'European cloud providers’ local market share holds steady at 15 %', url: 'https://srgresearch.com/articles/european-cloud-providers-local-market-share-now-holds-steady-at-15', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'Autorité de la concurrence', titre: 'Avis 23-A-08 sur le fonctionnement concurrentiel de l’informatique en nuage', url: 'https://www.autoritedelaconcurrence.fr/sites/default/files/2024-01/23a08.pdf', type: 'primaire', annee: 2023, langue: 'fr' },
+      { auteur: 'Banque des Territoires', titre: 'SecNumCloud : les données sensibles enfin définies', url: 'https://www.banquedesterritoires.fr/secnumcloud-6-gip-assujettis-les-donnees-sensibles-enfin-definies', type: 'presse', annee: 2026, langue: 'fr' },
+      { auteur: 'Commission européenne', titre: 'Position préliminaire : les services cloud d’Amazon et de Microsoft devraient être désignés (DMA)', url: 'https://digital-strategy.ec.europa.eu/en/news/commission-reaches-preliminary-position-amazons-and-microsofts-market-leading-cloud-services-should', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Amazon', titre: 'Form 10-K 2025', url: 'https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Alphabet', titre: 'Form 10-K 2025', url: 'https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Meta', titre: 'Form 10-K 2025', url: 'https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IAB Tech Lab', titre: 'OpenRTB 2.6 (champ tmax)', url: 'https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Google', titre: 'Authorized Buyers : guide RTB (délais de réponse)', url: 'https://developers.google.com/authorized-buyers/rtb/get-started/peer-guide', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Cour de justice de l’UE', titre: 'Communiqué : arrêt C-604/22 IAB Europe (7 mars 2024)', url: 'https://curia.europa.eu/jcms/upload/docs/application/pdf/2024-03/cp240044fr.pdf', type: 'primaire', annee: 2024, langue: 'fr' },
+      { auteur: 'Autorité belge de protection des données', titre: 'The Market Court rules in the IAB Europe case', url: 'https://www.dataprotectionauthority.be/the-market-court-rules-in-the-iab-europe-case', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'IAB Europe', titre: 'Belgian Market Court confirms limited role of IAB Europe in TCF', url: 'https://iabeurope.eu/belgian-market-court-confirms-limited-role-of-iab-europe-in-tcf/', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'ICCL', titre: 'Réaction à l’arrêt de la Cour des marchés', url: 'https://www.iccl.ie/?p=15806', type: 'site', annee: 2025, langue: 'en' },
+      { auteur: 'J.-C. Rochet, J. Tirole', titre: 'Platform Competition in Two-Sided Markets', url: 'https://ideas.repec.org/a/tpr/jeurec/v1y2003i4p990-1029.html', type: 'recherche', annee: 2003, langue: 'en' },
+      { auteur: 'Comité Nobel', titre: 'Prix d’économie 2014 : information grand public', url: 'https://www.nobelprize.org/prizes/economic-sciences/2014/popular-information/', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'M. L. Katz, C. Shapiro', titre: 'Network Externalities, Competition, and Compatibility', url: 'https://ideas.repec.org/a/aea/aecrev/v75y1985i3p424-40.html', type: 'recherche', annee: 1985, langue: 'en' },
+      { auteur: 'Quote Investigator', titre: 'If You Are Not Paying For It, You’re Not the Customer…', url: 'https://quoteinvestigator.com/2017/07/16/product/', type: 'site', annee: 2024, langue: 'en' },
+      { auteur: 'S. Biddle (The Intercept)', titre: 'Entretien avec Shoshana Zuboff', url: 'https://theintercept.com/2019/02/02/shoshana-zuboff-age-of-surveillance-capitalism/', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'E. Morozov (The Baffler)', titre: 'Capitalism’s New Clothes', url: 'https://thebaffler.com/latest/capitalisms-new-clothes-morozov', type: 'presse', annee: 2019, langue: 'en' },
+      { auteur: 'C. Doctorow', titre: 'How to Destroy Surveillance Capitalism', url: 'https://pluralistic.net/2020/08/26/destroy-surveillance-capitalism/', type: 'site', annee: 2020, langue: 'en' },
+      { auteur: 'Autorité de la concurrence', titre: 'Publicité ciblée : 150 millions d’euros d’amende pour Apple', url: 'https://www.autoritedelaconcurrence.fr/en/press-release/targeted-advertising-autorite-de-la-concurrence-imposes-fine-eu150000000-apple', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Autorité de la concurrence', titre: '2025, une année d’action (Doctolib)', url: 'https://www.autoritedelaconcurrence.fr/en/press-release/2025-year-action-autorite-de-la-concurrence', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Cour d’appel de Paris', titre: 'Arrêt RG 26/12580 (Meta, droits voisins), 29 octobre 2026', url: 'https://www.cours-appel.justice.fr/sites/default/files/2026-11/26-12580.pdf', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'Meta', titre: 'Pourquoi nous faisons appel des décisions de l’Autorité de la concurrence (droits voisins)', url: 'https://about.fb.com/fr/news/2026/09/pourquoi-nous-faisons-appel-des-decisions-de-lautorite-de-la-concurrence-concernant-les-droits-voisins-des-editeurs-de-presse/', type: 'site', annee: 2026, langue: 'fr' },
+      { auteur: 'Tech Policy Press', titre: 'Key excerpts: Meta wins bout with FTC (18 novembre 2025)', url: 'https://techpolicy.press/key-excerpts-meta-wins-bout-with-ftc-over-instagram-whatsapp-deals', type: 'presse', annee: 2025, langue: 'en' },
+      { auteur: 'FTC', titre: 'Appel dans l’affaire Meta (janvier 2026)', url: 'https://www.ftc.gov/node/328111', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'FTC', titre: 'FTC Sues Amazon for Illegally Maintaining Monopoly Power (2023)', url: 'https://www.ftc.gov/news-events/news/press-releases/2023/09/ftc-sues-amazon-illegally-maintaining-monopoly-power', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'Amazon', titre: 'Amazon’s response to the FTC’s antitrust lawsuit', url: 'https://www.aboutamazon.com/news/company-news/amazon-response-to-ftc-antitrust-lawsuit', type: 'site', annee: 2023, langue: 'en' },
+      { auteur: 'CPI / PYMNTS', titre: 'Amazon loses bid to delay FTC antitrust trial', url: 'https://pymnts.com/cpi-posts/amazon-loses-bid-to-delay-ftc-antitrust-trial-as-california-case-looms', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'L. Khan (Yale Law Journal)', titre: 'Amazon’s Antitrust Paradox', url: 'https://www.yalelawjournal.org/note/amazons-antitrust-paradox', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'FTC', titre: 'Lina M. Khan', url: 'https://ftc.gov/about-ftc/commissioners-staff/lina-m-khan', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Commission européenne', titre: 'Margrethe Vestager', url: 'https://commissioners.ec.europa.eu/margrethe-vestager_en', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'StatCounter', titre: 'Browser market share worldwide, octobre 2026', url: 'https://gs.statcounter.com/browser-market-share', type: 'site', annee: 2026, langue: 'en' },
+      { auteur: 'Chromium', titre: 'QUIC, a multiplexed transport over UDP', url: 'https://www.chromium.org/quic/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'A. Langley et al. (Google)', titre: 'The QUIC Transport Protocol: Design and Internet-Scale Deployment', url: 'https://research.google/pubs/the-quic-transport-protocol-design-and-internet-scale-deployment/', type: 'recherche', annee: 2017, langue: 'en' },
+      { auteur: 'Google (Chrome for Developers)', titre: 'Manifest V2 support timeline', url: 'https://developer.chrome.com/docs/extensions/develop/migrate/mv2-deprecation-timeline', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'EFF', titre: 'Manifest V3: Open Web Politics in Sheep’s Clothing', url: 'https://www.eff.org/deeplinks/2021/11/manifest-v3-open-web-politics-sheeps-clothing', type: 'site', annee: 2021, langue: 'en' },
+      { auteur: 'Google', titre: 'Update on plans for Privacy Sandbox technologies (octobre 2025)', url: 'https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'Banque centrale du Brésil', titre: 'Relatório de Gestão do Pix 2026', url: 'https://www.bcb.gov.br/content/estabilidadefinanceira/pix/relatorio_de_gestao_pix/relatorio_gestao_pix_2026.pdf', type: 'primaire', annee: 2026, langue: 'pt' },
+      { auteur: 'Free Press Journal (IANS)', titre: 'UPI transactions hit 25.47 billion in October', url: 'https://www.freepressjournal.in/business/upi-transactions-hit-2547-billion-in-october-value-soars-to-3153-lakh-crore', type: 'presse', annee: 2026, langue: 'en' },
+      { auteur: 'Banque des règlements internationaux', titre: 'Annual Economic Report 2019, ch. III (big tech et paiements en Chine)', url: 'https://www.bis.org/publ/arpdf/ar2019e3.htm', type: 'primaire', annee: 2019, langue: 'en' },
+    ]}
+  />
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  .reglages { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 2rem 0 2.5rem; }
+  .reglages .tag { margin: 0; }
+  .final { padding: 3.5rem 0 2rem; border-top: 2px solid var(--fg); scroll-margin-top: 4.5rem; }
+  .final > p, .questions { max-width: var(--mesure); }
+  .questions li { margin-bottom: 0.5rem; }
+</style>

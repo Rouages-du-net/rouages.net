@@ -325,3 +325,19 @@ test('savoirs : couleurs de l’accès ouvert et article 30', async ({ page }) =
   await expect(a.locator('[data-reponse]')).toContainText('ne s’applique pas');
   expect(err).toEqual([]);
 });
+
+test('économie : tuyaux, enchère, argent', async ({ page }) => {
+  const err = erreurs(page);
+  await page.goto('/modules/economie/');
+  const t = page.locator('[data-tuyaux]');
+  await t.locator('[data-chemin="peering"]').click();
+  await expect(t.locator('[data-qui-paie]')).toContainText('poignée de main');
+  const e = page.locator('[data-enchere]');
+  for (let i = 0; i < 4; i++) await e.locator('[data-action="suivant"]').click();
+  await expect(e.locator('[data-ms]')).toHaveText('130');
+  await expect(e.locator('[data-acteur="b"]')).toHaveClass(/gagnant/);
+  const a = page.locator('[data-argent]');
+  await a.locator('[data-entreprise="3"]').click();
+  await expect(a.locator('.anim-legende')).toContainText('57 %');
+  expect(err).toEqual([]);
+});

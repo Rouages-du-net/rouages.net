@@ -1,0 +1,75 @@
+---
+// Animation « Qui paie le tuyau ? » (module Économie, étape 0) : les chemins
+// par lesquels le trafic arrive chez les fournisseurs d'accès en France, qui
+// paie, et leur part. Source : Arcep, baromètre de l'interconnexion (année 2025,
+// publié le 16 juillet 2026). Voir docs/sources/economie.md.
+const CHEMINS = [
+  { id: 'transit', nom: 'Transit', part: 55.2, paie: 'Le client paie un opérateur de transit, qui l’emmène partout sur internet.',
+    texte: 'Un opérateur vend un accès « à tout internet » à un autre : c’est le transit. Le client paie. En France, fin 2025, 55,2 % du trafic qui arrive chez les grands fournisseurs d’accès passe par là ; son prix a baissé de 12 % entre 2022 et 2025.' },
+  { id: 'peering', nom: 'Peering privé', part: 43.2, paie: 'Souvent personne (une poignée de main) ; parfois celui qui envoie le plus.',
+    texte: 'Deux réseaux se branchent directement l’un sur l’autre : c’est le peering. Historiquement gratuit, conclu d’une poignée de main. Mais quand le trafic est très déséquilibré, celui qui envoie le plus paie : fin 2025, 45,5 % du trafic de peering était payant.' },
+  { id: 'public', nom: 'Peering public', part: 1.5, paie: 'Chacun paie sa place au point d’échange, pas l’autre.',
+    texte: 'Le même échange direct, mais dans un point d’échange où se branchent des dizaines de réseaux. Il ne pèse que 1,5 % du trafic arrivant chez les grands fournisseurs d’accès.' },
+];
+---
+<div class="anim tuyaux" data-tuyaux data-chemins={JSON.stringify(CHEMINS)}>
+  <div class="anim-repli">
+    <ul>{CHEMINS.map((c) => <li><strong>{c.nom} ({c.part.toLocaleString('fr-FR')} %)</strong> : {c.texte}</li>)}</ul>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="schema" aria-hidden="true">
+        <div class="bout"><span>🎬</span><small>plateforme vidéo</small></div>
+        <div class="voie"><span class="tuyau" data-tuyau></span><span class="etiquette" data-etiquette></span></div>
+        <div class="bout"><span>🏠</span><small>ton fournisseur d’accès</small></div>
+      </div>
+      <div class="choix" role="group" aria-label="Chemins du trafic">
+        {CHEMINS.map((c) => <button type="button" class="anim-bouton" data-chemin={c.id} aria-pressed="false">{c.nom}</button>)}
+      </div>
+      <div class="parts" aria-hidden="true">
+        {CHEMINS.map((c) => <div class="part" data-part={c.id} style={`flex-grow: ${c.part}`}><span>{c.part.toLocaleString('fr-FR')} %</span></div>)}
+      </div>
+      <p class="anim-note">Part du trafic entrant chez les principaux fournisseurs d’accès en France, second semestre 2025 (Arcep).</p>
+      <p class="qui-paie" data-qui-paie></p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-tuyaux]').forEach((racine) => {
+    activerScene(racine);
+    const chemins: { id: string; nom: string; part: number; paie: string; texte: string }[] = JSON.parse(racine.dataset.chemins!);
+    function choisir(id: string) {
+      const c = chemins.find((x) => x.id === id)!;
+      racine.querySelectorAll('[data-chemin]').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.chemin === id)));
+      racine.querySelectorAll('[data-part]').forEach((p) => p.classList.toggle('actif', (p as HTMLElement).dataset.part === id));
+      racine.querySelector<HTMLElement>('[data-tuyau]')!.dataset.type = id;
+      racine.querySelector('[data-etiquette]')!.textContent = c.nom;
+      racine.querySelector('[data-qui-paie]')!.textContent = `💶 Qui paie ? ${c.paie}`;
+      racine.querySelector('.anim-legende')!.textContent = c.texte;
+    }
+    racine.querySelectorAll<HTMLButtonElement>('[data-chemin]').forEach((b) => b.addEventListener('click', () => choisir(b.dataset.chemin!)));
+    choisir('transit');
+  });
+</script>
+
+<style>
+  .schema { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .bout { display: grid; justify-items: center; padding: 0.4rem 0.6rem; border: 2px solid var(--fg); border-radius: 0.7rem; background: var(--bg); max-width: 8rem; text-align: center; }
+  .bout span { font-size: 1.6rem; }
+  .bout small { color: var(--muted); font-size: 0.8rem; }
+  .voie { display: grid; gap: 0.3rem; justify-items: center; }
+  .tuyau { width: 100%; height: 0.9rem; border: 2px solid var(--fg); border-radius: 999px; background: var(--accent); }
+  .tuyau[data-type='peering'] { background: var(--ill-secret-b); }
+  .tuyau[data-type='public'] { background: var(--ill-serveur); }
+  .etiquette { font-family: var(--police-pixel); font-size: 0.8rem; }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+  .choix [aria-pressed='true'] { background: var(--accent); color: var(--bg); }
+  .parts { display: flex; gap: 2px; border: 2px solid var(--fg); border-radius: 0.5rem; overflow: hidden; height: 2rem; }
+  .part { display: grid; place-items: center; min-width: 2.6rem; background: var(--bg); font-size: 0.8rem; font-weight: 700; }
+  .part:global(.actif) { background: var(--soleil); color: var(--sur-soleil); }
+  .qui-paie { font-weight: 700; margin: 0.6rem 0 0; }
+</style>

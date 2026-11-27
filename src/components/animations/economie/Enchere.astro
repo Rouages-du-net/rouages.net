@@ -1,0 +1,82 @@
+---
+// Animation « Une enchère en 120 millisecondes » (module Économie, étape 2) :
+// pas à pas, ce qui se passe quand une page affiche une publicité ciblée. La
+// norme OpenRTB 2.6 fixe le délai `tmax` en millisecondes (son exemple : 120 ms) ;
+// Google indique des délais « typically 80 to 1000 ms ». Les acheteurs et les
+// prix sont inventés pour l'exemple. Voir docs/sources/economie.md.
+const ETAPES = [
+  { t: 0, texte: 'Tu ouvres un article. La page contient un emplacement publicitaire vide. Le programme publicitaire du site (une « SSP », côté vendeur) envoie à une bourse publicitaire une demande d’enchère.', montre: ['ssp'] },
+  { t: 5, texte: 'La demande décrit l’emplacement et toi : la page, le type d’appareil, la langue, une localisation, et un identifiant publicitaire de l’appareil s’il existe (autant de champs prévus par la norme). Elle fixe un délai : « tmax: 120 », soit 120 millisecondes pour répondre.', montre: ['ssp', 'bourse'] },
+  { t: 15, texte: 'La bourse transmet la demande à des acheteurs automatiques (des « DSP », côté annonceurs). Chacun décide en quelques millisecondes ce que vaut ton regard.', montre: ['ssp', 'bourse', 'a', 'b', 'c'] },
+  { t: 120, texte: 'Trois réponses : A propose 2,10 €, B 2,80 € (pour mille affichages). C répond trop tard, après 120 ms : il est éliminé. Le délai est le même pour tout le monde.', montre: ['ssp', 'bourse', 'a', 'b', 'c', 'offres'] },
+  { t: 130, texte: 'B gagne. Sa publicité s’affiche dans l’emplacement, pendant que la page finit de charger. Tu n’as rien vu passer : tout s’est joué en une fraction de seconde.', montre: ['ssp', 'bourse', 'a', 'b', 'c', 'offres', 'gagnant'] },
+  { t: 130, texte: 'Mais A et C ont reçu, eux aussi, la description de la page et de ton appareil. C’est le cœur des débats en Europe : qui reçoit ces données, et avec quel consentement ?', montre: ['ssp', 'bourse', 'a', 'b', 'c', 'offres', 'gagnant', 'fuite'] },
+];
+---
+<div class="anim enchere" data-enchere data-etapes={JSON.stringify(ETAPES)}>
+  <div class="anim-repli">
+    <ol>{ETAPES.map((e) => <li><strong>{e.t} ms</strong> : {e.texte}</li>)}</ol>
+    <p>(Acheteurs et prix inventés pour l’exemple.)</p>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="chrono" aria-hidden="true"><span data-ms>0</span> ms <span class="limite">/ tmax 120 ms</span><div class="barre"><div data-barre></div></div></div>
+      <div class="acteurs" aria-hidden="true">
+        <div data-acteur="ssp" class="acteur">📰 Site (SSP)</div>
+        <div data-acteur="bourse" class="acteur">🏛️ Bourse publicitaire</div>
+        <div class="acheteurs">
+          <div data-acteur="a" class="acteur">🤖 Acheteur A <b data-offre="a">2,10 €</b></div>
+          <div data-acteur="b" class="acteur">🤖 Acheteur B <b data-offre="b">2,80 €</b></div>
+          <div data-acteur="c" class="acteur">🤖 Acheteur C <b data-offre="c">trop tard</b></div>
+        </div>
+      </div>
+      <p class="anim-note">Acheteurs et prix inventés pour l’exemple ; le délai de 120 ms est celui de l’exemple de la norme OpenRTB.</p>
+      <div class="anim-commandes">
+        <button type="button" data-action="precedent">← Précédent</button>
+        <button type="button" data-action="suivant">Suivant →</button>
+        <button type="button" data-action="recommencer">↺ Recommencer</button>
+        <span class="anim-compteur"></span>
+      </div>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene, pasAPas } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-enchere]').forEach((racine) => {
+    activerScene(racine);
+    const etapes: { t: number; texte: string; montre: string[] }[] = JSON.parse(racine.dataset.etapes!);
+    pasAPas(racine, () => etapes.length, (n) => {
+      const e = etapes[n - 1];
+      racine.querySelector('[data-ms]')!.textContent = String(e.t);
+      racine.querySelector<HTMLElement>('[data-barre]')!.style.width = `${Math.min(100, (e.t / 140) * 100)}%`;
+      racine.querySelector<HTMLElement>('[data-barre]')!.classList.toggle('depasse', e.t >= 120);
+      racine.querySelectorAll<HTMLElement>('[data-acteur]').forEach((a) => a.classList.toggle('visible', e.montre.includes(a.dataset.acteur!)));
+      racine.querySelectorAll<HTMLElement>('[data-offre]').forEach((o) => o.classList.toggle('visible', e.montre.includes('offres')));
+      racine.querySelector('[data-acteur="b"]')!.classList.toggle('gagnant', e.montre.includes('gagnant'));
+      racine.querySelector('[data-acteur="c"]')!.classList.toggle('elimine', e.montre.includes('offres'));
+      racine.querySelectorAll('[data-acteur="a"], [data-acteur="c"]').forEach((a) => a.classList.toggle('fuite', e.montre.includes('fuite')));
+      return e.texte;
+    }).aller(1);
+  });
+</script>
+
+<style>
+  .chrono { font-family: var(--police-mono); font-weight: 700; font-size: 1.3rem; margin-bottom: 0.7rem; }
+  .limite { color: var(--muted); font-size: 0.9rem; font-weight: 400; }
+  .barre { height: 0.7rem; border: 2px solid var(--fg); border-radius: 999px; overflow: hidden; margin-top: 0.3rem; background: var(--bg); }
+  .barre div { height: 100%; width: 0; background: var(--ill-secret-b); transition: width 0.5s ease; }
+  .barre div:global(.depasse) { background: var(--accent-2); }
+  .acteurs { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 0.6rem; align-items: center; }
+  @media (max-width: 40rem) { .acteurs { grid-template-columns: 1fr; } }
+  .acheteurs { display: grid; gap: 0.4rem; }
+  .acteur { padding: 0.45rem 0.6rem; border: 2px dashed var(--border); border-radius: 0.7rem; opacity: 0.35; font-weight: 700; font-size: 0.9rem; transition: opacity 0.3s; }
+  .acteur:global(.visible) { opacity: 1; border-style: solid; border-color: var(--fg); background: var(--card); }
+  .acteur:global(.gagnant) { background: var(--soleil); color: var(--sur-soleil); box-shadow: var(--ombre); }
+  .acteur:global(.elimine) { text-decoration: line-through; }
+  .acteur:global(.fuite) { outline: 3px dashed var(--accent-2); outline-offset: 2px; }
+  [data-offre] { visibility: hidden; margin-left: 0.3rem; font-family: var(--police-mono); }
+  [data-offre]:global(.visible) { visibility: visible; }
+</style>
