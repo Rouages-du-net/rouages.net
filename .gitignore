@@ -5,3 +5,7 @@ dist/
 .DS_Store
 test-results/
 playwright-report/
+
+# Paquets Python téléchargés par erreur (jamais utiles au site)
+*.whl
+__pycache__/

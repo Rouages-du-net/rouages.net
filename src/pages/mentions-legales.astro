@@ -1,0 +1,90 @@
+---
+// Mentions légales (LCEN, art. 6-III et 19) : éditeur, direction de la
+// publication, hébergeur, licences, données personnelles. Informations de
+// l'éditeur reprises de https://www.mayetco.fr/legal/ (relevées le 27/11/2026).
+import Base from '../layouts/Base.astro';
+import { AUDIENCE_ACTIVE } from '../lib/audience';
+---
+<Base title="Mentions légales" description="Éditeur, direction de la publication, hébergeur, licences et données personnelles du site Les rouages du net.">
+  <p class="tag">Informations légales</p>
+  <h1>Mentions légales</h1>
+  <p class="chapo">
+    Conformément aux articles 6-III et 19 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie
+    numérique (LCEN).
+  </p>
+
+  <section aria-labelledby="t-editeur">
+    <h2 id="t-editeur">Éditeur du site</h2>
+    <dl>
+      <dt>Société</dt><dd>MayetCo, société par actions simplifiée au capital de 1 000 €</dd>
+      <dt>Siège</dt><dd>8 Les Parodelles, 03250 Le Mayet-de-Montagne, France</dd>
+      <dt>RCS</dt><dd>920 330 420 R.C.S. Cusset</dd>
+      <dt>SIRET</dt><dd>920 330 420 00018</dd>
+      <dt>TVA intracommunautaire</dt><dd>FR53920330420</dd>
+      <dt>Contact</dt><dd><a href="mailto:contact@rouages.net">contact@rouages.net</a></dd>
+      <dt>Directeur de la publication</dt><dd>François Fournier</dd>
+    </dl>
+  </section>
+
+  <section aria-labelledby="t-hebergeur">
+    <h2 id="t-hebergeur">Hébergeur</h2>
+    <dl>
+      <dt>Société</dt><dd>o2switch SAS</dd>
+      <dt>Adresse</dt><dd>222-224 boulevard Gustave Flaubert, 63000 Clermont-Ferrand, France</dd>
+      <dt>Téléphone</dt><dd>04 44 44 60 40</dd>
+      <dt>Site web</dt><dd><a href="https://www.o2switch.fr/">o2switch.fr</a></dd>
+    </dl>
+  </section>
+
+  <section aria-labelledby="t-pi">
+    <h2 id="t-pi">Propriété intellectuelle et licences</h2>
+    <p>
+      Les contenus du site (textes, illustrations, dossiers de recherche) sont publiés sous licence
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">Creative Commons BY-SA 4.0</a> : tu peux les
+      reprendre et les adapter, y compris en classe, en citant <em>Les rouages du net</em> et en partageant tes
+      modifications sous la même licence. Le <a href="https://github.com/Rouages-du-net/rouages.net">code du site</a>
+      est sous licence <a href="https://opensource.org/license/mit">MIT</a>.
+    </p>
+    <p>
+      Exceptions : les polices Atkinson Hyperlegible, Bricolage Grotesque et Silkscreen sont sous SIL Open Font License
+      1.1 et servies depuis ce site ; le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> a ses propres
+      licences ; les extraits cités et les documents liés appartiennent à leurs auteur·rices ; les noms et marques cités
+      appartiennent à leurs détenteurs.
+    </p>
+  </section>
+
+  <section aria-labelledby="t-donnees">
+    <h2 id="t-donnees">Données personnelles et cookies</h2>
+    <p>
+      Ce site ne dépose aucun cookie et ne comporte aucun formulaire. Tes réglages (niveau de lecture, mode « une étape
+      par écran ») sont gardés dans ton navigateur et ne nous sont jamais envoyés.
+      {AUDIENCE_ACTIVE
+        ? ' Les visites sont comptées de façon anonyme avec Umami, un logiciel libre que nous hébergeons nous-mêmes : pas de cookie, pas de suivi d’un site à l’autre, et rien n’est compté si ton navigateur demande à ne pas être suivi (« Do Not Track »). Voir la page À propos.'
+        : ' Aucune mesure d’audience n’est installée.'}
+    </p>
+    <p>
+      Si tu nous écris, ton message et ton adresse ne servent qu'à te répondre et ne sont transmis à personne.
+      Conformément au RGPD et à la loi Informatique et Libertés, tu disposes d'un droit d'accès, de rectification et
+      d'effacement : <a href="mailto:contact@rouages.net">contact@rouages.net</a>.
+    </p>
+  </section>
+
+  <section aria-labelledby="t-droit">
+    <h2 id="t-droit">Droit applicable</h2>
+    <p>
+      Les présentes mentions légales sont soumises au droit français. En cas de litige, et après tentative de
+      résolution amiable, les tribunaux français sont seuls compétents.
+    </p>
+    <p class="maj">Dernière mise à jour : 27 novembre 2026.</p>
+  </section>
+</Base>
+
+<style>
+  .chapo { font-size: 1.15rem; max-width: var(--mesure); }
+  section { max-width: var(--mesure); margin-top: 2.2rem; }
+  dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.35rem 1rem; margin: 0; }
+  dt { font-weight: 700; }
+  dd { margin: 0; overflow-wrap: anywhere; }
+  @media (max-width: 30rem) { dl { grid-template-columns: 1fr; } dd { margin-bottom: 0.5rem; } }
+  .maj { color: var(--muted); }
+</style>

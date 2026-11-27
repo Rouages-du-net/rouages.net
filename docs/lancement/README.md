@@ -18,5 +18,5 @@ automatiquement). Les passages entre crochets `[…]` sont à compléter.
 
 ## Après
 
-- Noter d'où viennent les retours (sans pistage : en demandant).
+- Noter d'où viennent les retours (en demandant directement).
 - Corriger vite les erreurs signalées et le dire publiquement : c'est la meilleure publicité pour un site sourcé.
