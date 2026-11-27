@@ -18,3 +18,11 @@ npm install
 npm run dev     # http://localhost:4321
 npm run build   # génère dist/ à envoyer sur cPanel
 ```
+
+## Licences
+
+- **Code** (composants, styles, animations, scripts, tests) : [MIT](LICENSE).
+- **Contenus** (textes des pages, illustrations, `docs/`, dossiers de
+  recherche) : [CC BY-SA 4.0](LICENSE-CONTENU.md).
+- Exceptions (polices sous SIL OFL, Quêtes de Sysadmin, extraits cités) :
+  voir [LICENSE-CONTENU.md](LICENSE-CONTENU.md).
