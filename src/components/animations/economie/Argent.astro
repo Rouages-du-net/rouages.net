@@ -1,0 +1,72 @@
+---
+// Animation « D'où vient l'argent ? » (module Économie, étape 3) : la part de
+// la publicité dans le chiffre d'affaires 2025 d'Alphabet (Google) et de Meta,
+// et la place du cloud (AWS) chez Amazon. Sources : rapports annuels 10-K 2025
+// (pourcentages calculés par nos soins). Voir docs/sources/economie.md.
+const ENTREPRISES = [
+  { nom: 'Alphabet (Google)', barres: [{ label: 'Publicité', part: 73, couleur: 'var(--accent-2)' }, { label: 'Le reste (cloud, abonnements, appareils…)', part: 27, couleur: 'var(--border)' }],
+    texte: 'En 2025, Alphabet a tiré 294,7 milliards de dollars de la publicité, sur 402,8 milliards : environ 73 %. Le moteur de recherche, YouTube, les cartes : presque tout est gratuit pour toi, et payé par les annonceurs.' },
+  { nom: 'Meta (Facebook, Instagram, WhatsApp)', barres: [{ label: 'Publicité', part: 97.6, couleur: 'var(--accent-2)' }, { label: 'Le reste', part: 2.4, couleur: 'var(--border)' }],
+    texte: 'Meta a tiré 196,2 milliards de dollars de la publicité en 2025, sur 201 milliards : environ 97,6 %. Ses applications sont gratuites ; ses clients, ce sont les annonceurs.' },
+  { nom: 'Amazon : ventes', barres: [{ label: 'AWS (cloud)', part: 18, couleur: 'var(--accent)' }, { label: 'Commerce et le reste', part: 82, couleur: 'var(--border)' }],
+    texte: 'Chez Amazon, le cloud (AWS) ne représente que 18 % des ventes de 2025…' },
+  { nom: 'Amazon : résultat d’exploitation', barres: [{ label: 'AWS (cloud)', part: 57, couleur: 'var(--accent)' }, { label: 'Commerce et le reste', part: 43, couleur: 'var(--border)' }],
+    texte: '… mais 57 % de son résultat d’exploitation : 45,6 milliards de dollars, soit une marge d’environ 35 %. Chez Amazon, louer des ordinateurs rapporte bien plus que vendre des objets.' },
+];
+---
+<div class="anim argent" data-argent data-entreprises={JSON.stringify(ENTREPRISES)}>
+  <div class="anim-repli">
+    <ul>{ENTREPRISES.map((e) => <li><strong>{e.nom}</strong> : {e.texte}</li>)}</ul>
+  </div>
+  <div class="anim-scene" hidden>
+    <div class="anim-cadre">
+      <div class="choix" role="group" aria-label="Entreprises">
+        {ENTREPRISES.map((e, i) => <button type="button" class="anim-bouton" data-entreprise={i} aria-pressed="false">{e.nom}</button>)}
+      </div>
+      <div class="barre-pile" data-pile aria-hidden="true"></div>
+      <ul class="legende-pile" data-legende-pile aria-hidden="true"></ul>
+      <p class="anim-note">Pourcentages calculés à partir des rapports annuels (10-K) 2025 des entreprises.</p>
+      <p class="anim-legende" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { activerScene } from '../../../lib/pasapas';
+
+  document.querySelectorAll<HTMLElement>('[data-argent]').forEach((racine) => {
+    activerScene(racine);
+    const entreprises: { nom: string; barres: { label: string; part: number; couleur: string }[]; texte: string }[] = JSON.parse(racine.dataset.entreprises!);
+    function choisir(i: number) {
+      const e = entreprises[i];
+      racine.querySelectorAll('[data-entreprise]').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.entreprise === String(i))));
+      racine.querySelector('[data-pile]')!.replaceChildren(...e.barres.map((b) => {
+        const d = document.createElement('div');
+        d.style.flexGrow = String(b.part);
+        d.style.background = b.couleur;
+        d.style.color = b.couleur === 'var(--border)' ? 'var(--fg)' : 'var(--bg)';
+        d.textContent = `${b.part.toLocaleString('fr-FR')} %`;
+        return d;
+      }));
+      racine.querySelector('[data-legende-pile]')!.replaceChildren(...e.barres.map((b) => {
+        const li = document.createElement('li');
+        const carre = Object.assign(document.createElement('span'), { className: 'carre' });
+        carre.style.background = b.couleur;
+        li.append(carre, ` ${b.label}`);
+        return li;
+      }));
+      racine.querySelector('.anim-legende')!.textContent = e.texte;
+    }
+    racine.querySelectorAll<HTMLButtonElement>('[data-entreprise]').forEach((b) => b.addEventListener('click', () => choisir(Number(b.dataset.entreprise))));
+    choisir(0);
+  });
+</script>
+
+<style>
+  .choix { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+  .choix [aria-pressed='true'] { background: var(--accent); color: var(--bg); }
+  .barre-pile { display: flex; height: 2.6rem; border: 2px solid var(--fg); border-radius: 0.6rem; overflow: hidden; }
+  .barre-pile :global(div) { display: grid; place-items: center; min-width: 3rem; font-weight: 700; color: var(--fg); transition: flex-grow 0.6s ease; }
+  .legende-pile { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.85rem; margin: 0.5rem 0; }
+  .legende-pile :global(.carre) { display: inline-block; width: 0.8rem; height: 0.8rem; border: 2px solid var(--fg); border-radius: 0.2rem; vertical-align: -0.1rem; }
+</style>
