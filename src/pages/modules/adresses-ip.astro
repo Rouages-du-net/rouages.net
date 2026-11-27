@@ -27,10 +27,10 @@ const etapes = [
   <h1>Adresses IP et masques</h1>
   <MiseAJour date="2026-11-05" />
   <p class="chapo seulement-debut">
-    Une <Terme id="adresse-ip">adresse IP</Terme> n'est qu'un nombre : 32 bits en IPv4, 128 en IPv6. On
-    l'écrit en décimal ou en hexadécimal pour qu'elle soit lisible. Un masque découpe ce nombre en deux :
-    le réseau, et la machine dans ce réseau. Pour suivre, il vaut mieux connaître le binaire et
-    l'hexadécimal : voir <a href="/modules/bases/">Compter en binaire, octal et hexadécimal</a>.
+    Une <Terme id="adresse-ip">adresse IP</Terme>, sous ses airs compliqués, n'est qu'un nombre : 32 bits en IPv4,
+    128 en IPv6. On l'écrit en décimal ou en hexadécimal pour que des humains puissent la lire. Et un masque coupe ce
+    nombre en deux morceaux : le réseau, et la machine dans ce réseau. Pour suivre, mieux vaut être à l'aise avec le
+    binaire et l'hexadécimal : voir <a href="/modules/bases/">Compter en binaire, octal et hexadécimal</a>.
   </p>
 
   <div class="reglages" data-pagefind-ignore>
@@ -45,15 +45,15 @@ const etapes = [
   <Etape numero={0} titre="Une adresse IPv4, quatre octets" ancre="ipv4">
     <Ipv4 slot="animation" />
     <p slot="decouverte">
-      Une adresse IPv4 comme 192.0.2.17 est faite de quatre nombres de 0 à 255. Chacun tient dans un
-      <Terme id="octet">octet</Terme>, soit 8 bits. L'adresse entière fait donc 4 × 8 = 32 bits : c'est un
-      seul grand nombre, découpé en quatre pour être lisible.
+      Regarde 192.0.2.17 : quatre nombres, chacun entre 0 et 255. Pourquoi 255 ? Parce que chacun tient dans un
+      <Terme id="octet">octet</Terme>, 8 bits. Quatre octets, 4 × 8 = 32 bits : en vrai, c'est un seul grand nombre,
+      qu'on découpe en quatre morceaux pour pouvoir le lire.
     </p>
     <p slot="curieux">
-      Avec 32 bits, on peut écrire 2<sup>32</sup> adresses, soit environ 4,3 milliards : moins qu'il n'y a
-      d'humains, et bien moins qu'il n'y a d'appareils connectés. Certaines plages sont réservées : les
-      adresses privées (10.x.x.x, 172.16 à 172.31.x.x, 192.168.x.x) ne servent qu'à l'intérieur d'un
-      réseau local, derrière une box, et trois plages (dont 192.0.2.x) sont réservées aux exemples.
+      Avec 32 bits, on peut écrire 2<sup>32</sup> adresses, environ 4,3 milliards. Ça paraît beaucoup ? C'est moins
+      que d'humains sur Terre, et bien moins que d'appareils connectés. Certaines plages sont en plus mises de côté :
+      les adresses privées (10.x.x.x, 172.16 à 172.31.x.x, 192.168.x.x) ne servent qu'à l'intérieur d'un réseau
+      local, derrière une box, et trois plages (dont 192.0.2.x) sont réservées aux exemples, comme celui de ce module.
     </p>
     <p slot="ingenieur">
       Les plages privées sont définies par la RFC 1918 ; une box les traduit en une adresse publique (NAT),
@@ -79,15 +79,16 @@ const etapes = [
   <Etape numero={1} titre="IPv6 : huit groupes en hexadécimal" ancre="ipv6">
     <Ipv6 slot="animation" />
     <p slot="decouverte">
-      Une adresse <Terme id="ipv6">IPv6</Terme> fait 128 bits, quatre fois plus qu'en IPv4. Écrite en
-      décimal, elle serait illisible ; on l'écrit donc en <Terme id="hexadecimal">hexadécimal</Terme>, en 8
-      groupes de 4 chiffres séparés par « : ». Comme beaucoup de groupes valent zéro, des règles permettent
-      de l'abréger.
+      Une adresse <Terme id="ipv6">IPv6</Terme> fait 128 bits : quatre fois plus longue qu'en IPv4. Écrite en
+      décimal, ce serait un nombre à rallonge illisible. Alors on l'écrit en <Terme id="hexadecimal">hexadécimal</Terme>,
+      en 8 groupes de 4 chiffres séparés par des « : ». Et comme beaucoup de groupes valent zéro, on a le droit de
+      l'abréger.
     </p>
     <p slot="curieux">
-      Deux règles : on enlève les zéros au début de chaque groupe, et on remplace une seule suite de groupes
-      nuls par « :: ». <code>2001:0db8:0000:0000:0000:0000:0000:0001</code> devient <code>2001:db8::1</code>. Avec 128 bits, il y a
-      2<sup>128</sup> adresses, environ 3,4 × 10<sup>38</sup> : assez pour ne plus en manquer.
+      Deux règles de raccourci : on efface les zéros au début de chaque groupe, et on remplace <em>une seule</em>
+      suite de groupes nuls par « :: ». Ainsi <code>2001:0db8:0000:0000:0000:0000:0000:0001</code> fond en
+      <code>2001:db8::1</code>. Et avec 128 bits, il y a 2<sup>128</sup> adresses, environ 3,4 × 10<sup>38</sup> :
+      de quoi ne plus jamais en manquer.
     </p>
     <p slot="ingenieur">
       La RFC 4291 décrit l'architecture : la plupart des adresses ont un identifiant d'interface de 64 bits,
@@ -106,15 +107,15 @@ const etapes = [
   <Etape numero={2} titre="Le masque : où s'arrête le réseau" ancre="masque">
     <Masque slot="animation" />
     <p slot="decouverte">
-      Une adresse se lit comme une adresse postale : une partie dit dans quelle rue (le réseau), l'autre
-      quel numéro (la machine). Le <Terme id="masque-reseau">masque</Terme> dit où passe la frontière. Il
-      s'écrit de trois façons : /24, 255.255.255.0, ou 24 bits à 1 suivis de 8 bits à 0.
+      Une adresse IP se lit comme une adresse postale : un morceau dit dans quelle rue (le réseau), l'autre à quel
+      numéro (la machine). Mais où passe la frontière entre les deux ? C'est le <Terme id="masque-reseau">masque</Terme>
+      qui le dit. Il a trois façons de s'écrire : /24, 255.255.255.0, ou 24 bits à 1 suivis de 8 bits à 0.
     </p>
     <p slot="curieux">
-      Dans un masque, les 1 sont toujours à gauche et les 0 à droite. Un octet du masque ne peut donc valoir
-      que 0, 128, 192, 224, 240, 248, 252, 254 ou 255 : /17 donne 255.255.128.0. Pour trouver l'adresse
-      du réseau, on garde les bits de l'adresse là où le masque vaut 1, et on met 0 ailleurs : c'est un ET
-      logique.
+      Dans un masque, les 1 sont toujours à gauche et les 0 à droite, jamais mélangés. Du coup, un octet de masque ne
+      peut valoir que 0, 128, 192, 224, 240, 248, 252, 254 ou 255 : /17, par exemple, donne 255.255.128.0. Et pour
+      trouver l'adresse du réseau ? On garde les bits de l'adresse là où le masque vaut 1, on met 0 partout ailleurs :
+      c'est un ET logique.
     </p>
     <p slot="ingenieur">
       Avec un préfixe /n, le réseau compte 2<sup>32−n</sup> adresses. La première (tous les bits machine à
