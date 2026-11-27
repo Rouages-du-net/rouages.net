@@ -6,6 +6,7 @@ const MEDIANE_REQUETES = 71; // ordinateur ; 66 sur mobile
 const MEDIANE_REQUETES_MOBILE = 66;
 const PART_PAGES_TIERS = 92; // % de pages avec au moins un tiers
 const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de sites
+import { AUDIENCE_ACTIVE } from '../../lib/audience';
 ---
 <div class="anim compteur" data-compteur data-mediane={MEDIANE_REQUETES}>
   <div class="anim-repli">
@@ -13,7 +14,7 @@ const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de s
       Une page web médiane fait {MEDIANE_REQUETES} requêtes sur ordinateur
       ({MEDIANE_REQUETES_MOBILE} sur mobile), et {PART_PAGES_TIERS} % des pages font appel à au
       moins un service tiers (Web Almanac 2024). Cette page-ci ne contacte que son propre
-      serveur : aucun service tiers.
+      serveur{AUDIENCE_ACTIVE ? ', plus sa propre mesure d’audience (Umami, sans cookie).' : ' : aucun service tiers.'}
     </p>
   </div>
 
@@ -83,7 +84,8 @@ const MEDIANE_TIERS = 27; // tiers différents, médiane du premier million de s
       parDomaine.forEach((n, hote) => {
         const li = document.createElement('li');
         const tiers = hote !== location.host;
-        li.textContent = `${hote} : ${n} ${n > 1 ? 'requêtes' : 'requête'}${tiers ? ' (tiers)' : ' (ce site)'}`;
+        const audience = hote === import.meta.env.PUBLIC_UMAMI_SRC?.replace(/^https?:\/\/([^/]+).*$/, '$1');
+        li.textContent = `${hote} : ${n} ${n > 1 ? 'requêtes' : 'requête'}${audience ? ' (mesure d’audience de ce site)' : tiers ? ' (tiers)' : ' (ce site)'}`;
         if (tiers) li.classList.add('tiers');
         domaines.append(li);
       });

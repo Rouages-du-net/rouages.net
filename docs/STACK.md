@@ -18,7 +18,7 @@ Un hébergement cPanel mutualisé sert très bien des **fichiers statiques**
 | IA dans le navigateur | **Transformers.js** ou modèle maison minuscule | Démonstrations sans serveur |
 | Recherche | **[Pagefind](https://pagefind.app)** (index fabriqué après `astro build`, servi dans `/pagefind/`) | Recherche plein texte sans serveur ni service tiers ; ce qui est indexé : le `<main>` des pages (`data-pagefind-body`), sauf les sources, réglages, bulles du glossaire (`data-pagefind-ignore`) ; une page s'exclut avec `<Base indexer={false}>` |
 | Langues | i18n d'Astro (FR d'abord, EN ensuite) | Prévu dès le départ, ajouté plus tard |
-| Mesure d'audience | Aucune, ou une solution sans cookie auto-hébergée | Cohérent avec le propos |
+| Mesure d'audience | **Umami** auto-hébergé, sans cookie, `data-do-not-track`, limité aux domaines `rouages.net` (`src/lib/audience.ts`) ; ajouté seulement à la version de production si les variables du dépôt `PUBLIC_UMAMI_SRC` et `PUBLIC_UMAMI_WEBSITE_ID` sont définies (les tests tournent sans) | Cohérent avec le propos : des totaux, pas de suivi des personnes |
 
 ## Arborescence
 

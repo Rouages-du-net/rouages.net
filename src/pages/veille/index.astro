@@ -27,8 +27,8 @@ const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Eur
     signale les modules du site à remettre à jour.
   </p>
   <p class="abonnement">
-    <a class="bouton" href="/veille/revues.xml">📡 S'abonner aux revues (Atom)</a>
-    <a class="bouton" href="/veille/feed.xml">🔗 Tous les liens (Atom)</a>
+    <a class="bouton" href="/veille/revues.xml" data-umami-event="flux-atom" data-umami-event-flux="revues">📡 S'abonner aux revues (Atom)</a>
+    <a class="bouton" href="/veille/feed.xml" data-umami-event="flux-atom" data-umami-event-flux="liens">🔗 Tous les liens (Atom)</a>
   </p>
 
   <section aria-labelledby="t-revues">
@@ -51,7 +51,7 @@ const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Eur
         <ul class="liens">
           {liste.map((a) => (
             <li>
-              <a href={a.lien} lang={a.langue !== 'fr' ? a.langue : undefined}>{a.titre}</a>
+              <a href={a.lien} lang={a.langue !== 'fr' ? a.langue : undefined} data-umami-event="veille-sortant" data-umami-event-source={a.source_id}>{a.titre}</a>
               <span class="source"> · {a.source}{a.langue !== 'fr' && ' (en anglais)'}</span>
               {a.extrait && <span class="extrait" lang={a.langue !== 'fr' ? a.langue : undefined}>{a.extrait}</span>}
               {a.modules.length > 0 && (

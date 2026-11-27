@@ -31,6 +31,17 @@ jobs:
       - name: Tests dans le navigateur
         run: npm run test:navigateur
 
+      # Les tests tournent sur une version sans mesure d'audience (aucun appel à
+      # l'instance Umami). On reconstruit ensuite la version de production avec
+      # les variables du dépôt (Settings → Secrets and variables → Actions →
+      # Variables) : PUBLIC_UMAMI_SRC (adresse du script de l'instance Umami) et
+      # PUBLIC_UMAMI_WEBSITE_ID. Si l'une manque, rien n'est ajouté au site.
+      - name: Version de production (avec mesure d'audience)
+        run: npm run build
+        env:
+          PUBLIC_UMAMI_SRC: ${{ vars.PUBLIC_UMAMI_SRC }}
+          PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.PUBLIC_UMAMI_WEBSITE_ID }}
+
       - name: Envoi FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
