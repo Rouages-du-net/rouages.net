@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 
 // Moyen de contact pour signaler une erreur : à renseigner par l'équipe
 // (adresse ou formulaire). Tant qu'il est vide, le bloc n'est pas affiché.
-const CONTACT: { texte: string; lien: string } | null = null;
+const CONTACT: { texte: string; lien: string } | null = { texte: '✉️ contact@rouages.net', lien: 'mailto:contact@rouages.net' };
 ---
 <Base title="À propos" description="Pourquoi Les rouages du net existe, comment chaque fait est vérifié et daté, ce que le site ne fait pas (pistage, publicité), sa licence et comment signaler une erreur.">
   <p class="tag">À propos</p>

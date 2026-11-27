@@ -50,4 +50,4 @@ commandes.
 
 Il paraît que quelques surprises se cachent dans le site. Indice : ↑ ↑ ↓ ↓.
 
-Les retours sont bienvenus, surtout les erreurs : [moyen de contact].
+Les retours sont bienvenus, surtout les erreurs : contact@rouages.net.
