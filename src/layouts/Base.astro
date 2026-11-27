@@ -18,6 +18,7 @@ const {
   indexer = true,
 } = Astro.props;
 const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net';
+const canonique = new URL(Astro.url.pathname, Astro.site).href;
 ---
 <!doctype html>
 <html lang="fr">
@@ -26,6 +27,18 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Les rouages du net" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title ?? 'Les rouages du net'} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Les rouages du net : un ordinateur, des rouages et un serveur reliés par un fil, sur papier millimétré." />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/atom+xml" title="Les rouages du net · Revues de veille" href="/veille/revues.xml" />
     <script is:inline>
@@ -54,7 +67,7 @@ const fullTitle = title ? `${title} · Les rouages du net` : 'Les rouages du net
     </main>
     <footer class="site">
       <div class="wrap">
-        <p>Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage, sans publicité.</p>
+        <p>Les rouages du net — contenus sous licence CC BY-SA 4.0. Sans pistage, sans publicité. <a href="/a-propos/">À propos</a> · <a href="/veille/">Veille</a> · <a href="/veille/revues.xml">Flux Atom</a></p>
         <p class="clin">Fabriqué avec des rouages, des RFC et beaucoup de curiosité. Il paraît que des secrets se cachent ici et là… ↑ ↑ ↓ ↓</p>
       </div>
     </footer>
