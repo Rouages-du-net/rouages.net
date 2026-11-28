@@ -3,12 +3,15 @@
 // étape 1) : un petit terminal simulé (pwd, cd, ls, ls -a) sur
 // l'arborescence d'exemple. Chaque cd est expliqué pas à pas : chemin absolu
 // ou relatif, ~, . et .. (POSIX, résolution des chemins et développement du
-// tilde). Rien ne s'exécute vraiment : c'est une simulation.
-import { ARBRE } from '../../../data/linux';
+// tilde). Les dossiers fermés (/root en 700, /home/bob en 750, comme sur un
+// Ubuntu récent) répondent « Permission non accordée ». Les messages sont ceux
+// de bash, coreutils et glibc en français, apostrophe droite comprise (voir
+// docs/sources/linux.md). Rien ne s'exécute vraiment : c'est une simulation.
+import { ARBRE, COMPTES } from '../../../data/linux';
 
 const ESSAIS = ['pwd', 'ls', 'cd cours', 'cd ..', 'cd ../bob', 'cd /etc', 'cd ~', 'ls -a', 'cd ../../..'];
 ---
-<div class="anim terminal-linux" data-terminal-linux data-arbre={JSON.stringify(ARBRE.map((n) => n.chemin + (n.fichier ? '' : '/')))}>
+<div class="anim terminal-linux" data-terminal-linux data-arbre={JSON.stringify(ARBRE)} data-compte={JSON.stringify(COMPTES[0])}>
   <div class="anim-repli">
     <p>Exemple de session, en partant du dossier personnel d'alice (<code>/home/alice</code>, noté <code>~</code>) :</p>
     <pre>alice@machine:~$ pwd
@@ -16,12 +19,15 @@ const ESSAIS = ['pwd', 'ls', 'cd cours', 'cd ..', 'cd ../bob', 'cd /etc', 'cd ~'
 alice@machine:~$ cd cours
 alice@machine:~/cours$ cd ..
 alice@machine:~$ cd ../bob
-alice@machine:/home/bob$ cd /etc
+bash: cd: ../bob: Permission non accordée
+alice@machine:~$ cd /etc
 alice@machine:/etc$ cd ~
 alice@machine:~$</pre>
     <p>
       <code>cd cours</code> est relatif (depuis le dossier courant) ; <code>cd /etc</code> est absolu (depuis la
       racine) ; <code>..</code> remonte d'un cran ; <code>~</code> ramène au dossier personnel.
+      <code>cd ../bob</code> vise bien <code>/home/bob</code>, mais ce dossier est fermé aux autres comptes
+      (<code>drwxr-x---</code>, comme sur un Ubuntu récent) : alice reste où elle est.
     </p>
   </div>
   <div class="anim-scene" hidden>
@@ -42,13 +48,20 @@ alice@machine:~$</pre>
 
 <script>
   import { activerScene } from '../../../lib/pasapas';
-  import { abreger, expliquer, resoudre } from '../../../lib/linux';
+  import { abreger, dossierBloquant, enLettres, expliquer, resoudre, type Compte, type Fichier } from '../../../lib/linux';
 
   document.querySelectorAll<HTMLElement>('[data-terminal-linux]').forEach((racine) => {
     activerScene(racine);
-    const tous: string[] = JSON.parse(racine.dataset.arbre!);
-    const dossiers = new Set(tous.filter((c) => c.endsWith('/')).map((c) => (c === '/' ? '/' : c.slice(0, -1))));
-    const fichiers = new Set(tous.filter((c) => !c.endsWith('/')));
+    const noeuds: { chemin: string; lien?: string; fichier?: boolean; proprietaire?: string; groupe?: string; mode?: number }[] = JSON.parse(racine.dataset.arbre!);
+    const compte: Compte = JSON.parse(racine.dataset.compte!);
+    const dossiers = new Set(noeuds.filter((n) => !n.fichier).map((n) => n.chemin));
+    const fichiers = new Set(noeuds.filter((n) => n.fichier).map((n) => n.chemin));
+    const liens = new Map(noeuds.filter((n) => n.lien).map((n) => [n.chemin, n.lien!]));
+    const droits: Fichier[] = noeuds.filter((n) => n.mode !== undefined).map((n) => ({ chemin: n.chemin, proprietaire: n.proprietaire!, groupe: n.groupe!, mode: n.mode! }));
+    const refus = (bloque: string) => {
+      const d = droits.find((x) => x.chemin === bloque)!;
+      return `${bloque} est en d${enLettres(d.mode)} (propriétaire ${d.proprietaire}, groupe ${d.groupe}). alice n’en est pas propriétaire, n’est pas dans le groupe ${d.groupe}, et les autres n’ont pas le droit x. Le noyau refuse d’y entrer (voir l’étape « Qui peut faire quoi ? »).`;
+    };
     const maison = '/home/alice';
     let courant = maison;
     const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
@@ -86,11 +99,14 @@ alice@machine:~$</pre>
         const arrivee = resoudre(courant, cible, maison);
         const etapes = expliquer(courant, cible, maison);
         if (fichiers.has(arrivee)) {
-          ligne(`bash: cd: ${cible}: N’est pas un dossier`, 'erreur');
+          ligne(`bash: cd: ${cible}: N'est pas un dossier`, 'erreur');
           expliquerListe([...etapes, `${arrivee} est un fichier : on ne peut pas y entrer.`]);
         } else if (!dossiers.has(arrivee)) {
-          ligne(`bash: cd: ${cible}: Aucun fichier ou dossier de ce type`, 'erreur');
+          ligne(`bash: cd: ${cible}: Aucun fichier ou dossier de ce nom`, 'erreur');
           expliquerListe([...etapes, `${arrivee} n’existe pas dans cette machine d’exemple.`]);
+        } else if (dossierBloquant(compte, arrivee, droits)) {
+          ligne(`bash: cd: ${cible}: Permission non accordée`, 'erreur');
+          expliquerListe([...etapes, refus(dossierBloquant(compte, arrivee, droits)!)]);
         } else {
           courant = arrivee;
           expliquerListe([...etapes, `Nouveau dossier courant : ${courant}. L’invite l’affiche${courant.startsWith(maison) ? ', avec « ~ » pour le dossier personnel' : ''}.`]);
@@ -98,12 +114,16 @@ alice@machine:~$</pre>
       } else if (nom === 'ls') {
         const caches = args.includes('-a');
         const autre = args.find((a) => !a.startsWith('-'));
-        const d = autre ? resoudre(courant, autre, maison) : courant;
-        if (fichiers.has(d)) { ligne(autre!); expliquerListe([`${d} est un fichier : ls affiche simplement son nom.`]); return; }
-        if (!dossiers.has(d)) { ligne(`ls: impossible d’accéder à '${autre}': Aucun fichier ou dossier de ce type`, 'erreur'); return; }
+        const demande = autre ? resoudre(courant, autre, maison) : courant;
+        if (fichiers.has(demande)) { ligne(autre!); expliquerListe([`${demande} est un fichier : ls affiche simplement son nom.`]); return; }
+        if (!dossiers.has(demande)) { ligne(`ls: impossible d'accéder à '${autre}': Aucun fichier ou dossier de ce nom`, 'erreur'); return; }
+        const bloque = dossierBloquant(compte, demande, droits);
+        if (bloque) { ligne(`ls: impossible d'ouvrir le répertoire '${autre ?? demande}': Permission non accordée`, 'erreur'); expliquerListe([refus(bloque)]); return; }
+        const d = liens.get(demande) ?? demande;
         const liste = enfants(d, caches);
-        ligne((caches ? ['./', '../', ...liste] : liste).join('  ') || '(dossier vide)');
+        ligne((caches ? ['./', '../', ...liste] : liste).join('  ') || '(rien à montrer dans cette machine d’exemple)');
         expliquerListe([
+          ...(liens.has(demande) ? [`${demande} est un lien symbolique vers ${d} : ls montre le contenu de ${d}.`] : []),
           `ls liste le contenu de ${d}. Les noms finis par « / » sont des dossiers (dans un vrai terminal, ils sont en couleur).`,
           caches ? 'Avec -a, ls montre aussi les fichiers cachés, dont le nom commence par un point, et les deux entrées spéciales « . » (ici) et « .. » (le parent).' : 'Les fichiers dont le nom commence par un point sont cachés : essaie ls -a.',
         ]);
@@ -120,7 +140,7 @@ alice@machine:~$</pre>
         expliquerListe(['Tu voulais taper ls ? « sl » est un programme farceur qui fait passer une locomotive (Steam Locomotive) pour punir cette faute de frappe.']);
       } else if (nom === 'rm' || (nom === 'sudo' && args[0] === 'rm')) {
         ligne(`${brut} : refusé par ce terminal d’exemple.`, 'erreur');
-        expliquerListe(['Bien essayé ! rm supprime des fichiers sans corbeille ; avec -rf et /, il tente d’effacer tout le système. Dans un vrai terminal, ne lance jamais une commande rm que tu ne comprends pas.']);
+        expliquerListe(['Bien essayé ! rm supprime des fichiers sans corbeille, et -rf le fait sans rien demander, dossiers compris. Le vrai rm refuse au moins d’effacer la racine « / » tout entière (option --preserve-root, active par défaut), mais pas le reste. Dans un vrai terminal, ne lance jamais une commande rm que tu ne comprends pas.']);
       } else if (nom === 'sudo') {
         ligne('[sudo] Mot de passe de alice : ');
         ligne('Ce terminal est une simulation : même avec sudo, il ne fait rien de dangereux.', 'info');
@@ -128,7 +148,8 @@ alice@machine:~$</pre>
       } else if (nom === 'clear') {
         ecran.replaceChildren();
       } else {
-        ligne(`${nom} : commande introuvable (ce terminal simulé connaît pwd, cd, ls, whoami, clear… et quelques surprises)`, 'erreur');
+        ligne(`bash: ${nom}: commande introuvable`, 'erreur');
+        ligne('Ce terminal simulé connaît pwd, cd, ls, whoami, clear… et quelques surprises.', 'info');
       }
       invite.textContent = prompt();
     }

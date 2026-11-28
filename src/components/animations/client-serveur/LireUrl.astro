@@ -3,8 +3,13 @@
 // choisit ou on tape une URL ; ses parties (RFC 3986) se colorent, et le port
 // implicite apparaît. Le découpage se fait dans le navigateur : rien n'est
 // envoyé. Calculs : src/lib/url.ts.
+// Libellé court d'un bouton d'exemple : « … » seulement si l'URL est coupée.
+const court = (e: string) => {
+  const sans = e.replace(/^\w+:\/\//, '');
+  return sans.length > 26 ? `${sans.slice(0, 26)}…` : sans;
+};
 const EXEMPLES = [
-  'https://info.cern.ch/hypertext/WWW/TheProject.html',
+  'http://info.cern.ch/hypertext/WWW/TheProject.html',
   'https://cours.example/reseau/ports.html#ftp',
   'https://cours.example/recherche?q=port+443&page=2',
   'http://cours.example:8080/test/',
@@ -27,7 +32,7 @@ const EXEMPLES = [
         <input type="url" data-saisie spellcheck="false" autocomplete="off" />
       </label>
       <div class="exemples">
-        {EXEMPLES.map((e) => <button type="button" class="anim-bouton" data-ex={e}>{e.replace(/^\w+:\/\//, '').slice(0, 26)}…</button>)}
+        {EXEMPLES.map((e) => <button type="button" class="anim-bouton" data-ex={e}>{court(e)}</button>)}
       </div>
       <p class="url" data-url aria-hidden="true"></p>
       <dl class="parties" data-parties></dl>

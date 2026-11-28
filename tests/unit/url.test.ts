@@ -18,6 +18,15 @@ describe('decouperUrl', () => {
     expect(decouperUrl('sftp://eleve@cours.example/depot/')!.utilisateur).toBe('eleve');
     expect(decouperUrl('pas une url')).toBeNull();
   });
+  it('garde un port par défaut écrit en toutes lettres', () => {
+    const u = decouperUrl('https://cours.example:443/reseau/')!;
+    expect(u.port).toBe('443');
+    expect(u.portEffectif).toBe(443);
+    expect(u.portParDefaut).toBe(false);
+    expect(decouperUrl('http://eleve@cours.example:080/')!.port).toBe('80');
+    expect(decouperUrl('http://[2001:db8::1]:80/')!.port).toBe('80');
+    expect(decouperUrl('http://cours.example/a:80')!.portParDefaut).toBe(true);
+  });
 });
 
 describe('cheminVersFichier', () => {

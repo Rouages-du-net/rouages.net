@@ -3,7 +3,13 @@
 // par défaut du protocole (registre de l'IANA), et suivre le chemin d'une URL
 // jusqu'à un fichier d'un serveur web statique.
 
-/** Ports par défaut des schémas courants (registre des ports de l'IANA). */
+/**
+ * Ports par défaut des schémas courants (registre des ports de l'IANA).
+ * Registre des schémas d'URI de l'IANA (consulté le 28 novembre 2026) : http,
+ * https, ftp, ws et wss y sont « permanents » ; sftp et ssh seulement
+ * « provisoires » ; ftps n'y figure pas (usage des logiciels, qui y mettent
+ * FTPS « implicite », port 990).
+ */
 export const PORTS_DEFAUT: Record<string, number> = {
   http: 80,
   https: 443,
@@ -27,6 +33,15 @@ export interface UrlDecoupee {
   fragment: string;
 }
 
+/**
+ * Port écrit dans le texte de l'URL (autorité de la RFC 3986), même s'il vaut
+ * le port par défaut : l'analyseur WHATWG le supprime alors de `URL.port`.
+ */
+function portEcrit(texte: string): string {
+  const m = texte.match(/^[a-z][a-z0-9+.-]*:\/\/(?:[^@/?#]*@)?(?:\[[^\]]*\]|[^:/?#]*):(\d+)(?=[/?#]|$)/i);
+  return m ? String(Number(m[1])) : '';
+}
+
 /** Découpe une URL absolue ; renvoie null si elle n'est pas valide. */
 export function decouperUrl(texte: string): UrlDecoupee | null {
   let u: URL;
@@ -37,13 +52,15 @@ export function decouperUrl(texte: string): UrlDecoupee | null {
   }
   const schema = u.protocol.replace(/:$/, '');
   const defaut = PORTS_DEFAUT[schema] ?? null;
+  // « https://cours.example:443/ » : le port a été écrit, il n'est pas sous-entendu.
+  const port = u.port || portEcrit(texte.trim());
   return {
     schema,
     utilisateur: u.username ? decodeURIComponent(u.username) : '',
     hote: u.hostname,
-    port: u.port,
-    portEffectif: u.port ? Number(u.port) : defaut,
-    portParDefaut: !u.port && defaut !== null,
+    port,
+    portEffectif: port ? Number(port) : defaut,
+    portParDefaut: !port && defaut !== null,
     chemin: u.pathname,
     requete: u.search.replace(/^\?/, ''),
     fragment: u.hash.replace(/^#/, ''),

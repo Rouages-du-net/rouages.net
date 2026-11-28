@@ -36,10 +36,10 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Les bases techniques<EnConstruction /></p>
   <h1>Linux : fichiers, droits, comptes et SSH</h1>
-  <MiseAJour date="2026-11-24" />
+  <MiseAJour date="2026-11-28" evolutif="liste TOP500, mise à jour deux fois par an" />
   <p class="chapo seulement-debut">
-    Les 500 plus puissants supercalculateurs du monde tournent tous sous <Terme id="linux">Linux</Terme>, et c'est
-    un système courant sur les serveurs. Pour y travailler, il faut savoir où sont les choses, qui a le droit d'y
+    Les 500 plus puissants supercalculateurs du monde tournent tous sous <Terme id="linux">Linux</Terme> (liste
+    TOP500, état au 28 novembre 2026 ; c'est le cas depuis 2017), et c'est un système courant sur les serveurs. Pour y travailler, il faut savoir où sont les choses, qui a le droit d'y
     toucher, comment devenir administrateur·rice le temps d'une commande, et comment se connecter à distance, de
     machine en machine. Ce module montre tout cela avec les vraies commandes.
   </p>
@@ -80,11 +80,16 @@ const etapes = [
     </p>
     <div slot="histoire">
       <p>
-        Cet arbre unique vient d'Unix, né en 1969 aux Bell Labs (États-Unis). Ken Thompson en a conçu l'essentiel,
-        avec Dennis Ritchie, Rudd Canaday, Doug McIlroy et Joe Ossanna ; le système de fichiers a d'abord été dessiné
-        « sur des tableaux noirs », raconte Ritchie, qui y ajoute l'idée des fichiers de périphériques. Le 25 août
-        1991, Linus Torvalds, étudiant à l'université d'Helsinki, annonce un système libre, « juste un passe-temps » :
-        Linux. Associé aux outils du projet GNU, annoncé en 1983 par Richard Stallman, il donne les systèmes qu'on
+        Cet arbre unique vient d'Unix, né en 1969 aux Bell Labs (États-Unis), autour de Ken Thompson, Dennis
+        Ritchie, Doug McIlroy et Joe Ossanna. Thompson, Rudd Canaday et Ritchie dessinent le système de fichiers « sur
+        des tableaux noirs » ; l'essentiel en revient à Thompson, raconte Ritchie, qui y ajoute l'idée des fichiers de
+        périphériques. Lorinda Cherry rejoint ensuite l'équipe : avec Bob Morris, elle écrit <code>dc</code>, une
+        calculatrice du terminal, puis <code>bc</code>, bâtie sur <code>dc</code>.
+      </p>
+      <p>
+        Le 25 août 1991, Linus Torvalds, à l'université d'Helsinki, annonce un système gratuit (« free »), « juste un
+        passe-temps » : Linux. Sa première licence interdit de le vendre ; il passe à la licence libre GNU GPL début
+        1992. Associé aux outils du projet GNU, annoncé en 1983 par Richard Stallman, il donne les systèmes qu'on
         appelle aujourd'hui « Linux ».
       </p>
       <p>
@@ -95,13 +100,15 @@ const etapes = [
     </div>
     <p slot="verifie">
       Dans un terminal Linux ou macOS : <code>ls /</code> liste les dossiers de la racine, <code>ls -l /bin</code>
-      montre si <code>/bin</code> est un lien. Sous Windows, le sous-système WSL donne un vrai Linux. Le jeu
+      montre si <code>/bin</code> est un lien. Sous Windows, WSL 2 (la version installée par défaut) fait tourner
+      un vrai noyau Linux. Le jeu
       <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> fait explorer une arborescence dans le navigateur.
     </p>
     <p slot="mythes">
       <strong>« Linux, c'est un système complet. »</strong> Au sens strict, Linux est le noyau. Ce qu'on installe
       (Debian, Ubuntu, Fedora…) est une <em>distribution</em> : le noyau, les outils GNU et des milliers de
-      logiciels. Et <strong>« root » a deux sens</strong> : la racine <code>/</code>, et le compte administrateur
+      logiciels. Le projet GNU demande d'ailleurs d'appeler l'ensemble « GNU/Linux » ; l'usage courant dit
+      « Linux ». Et <strong>« root » a deux sens</strong> : la racine <code>/</code>, et le compte administrateur
       root, dont le dossier personnel est <code>/root</code>.
     </p>
   </Etape>
@@ -118,7 +125,9 @@ const etapes = [
     <p slot="curieux">
       Trois raccourcis à connaître par cœur : <code>.</code> veut dire « ici », <code>..</code> « le dossier
       au-dessus », et <code>~</code> « chez moi », ton dossier personnel. Depuis <code>/home/alice</code>,
-      <code>cd ../bob</code> remonte d'un cran puis entre chez bob : te voilà dans <code>/home/bob</code>. Et pour ne
+      <code>cd ../bob</code> remonte d'un cran puis vise le dossier de bob, <code>/home/bob</code>. Encore faut-il en
+      avoir le droit : sur un Ubuntu récent, chaque dossier personnel est fermé aux autres comptes (on le verra à
+      l'étape 4), et le terminal répond « Permission non accordée ». Et pour ne
       jamais te perdre, l'invite du <Terme id="shell">shell</Terme> te rappelle où tu es :
       <code>alice@machine:~/cours$</code> se lit « alice, sur la machine nommée machine, dans
       <code>/home/alice/cours</code> ».
@@ -128,7 +137,8 @@ const etapes = [
       <code>ls -a</code> affiche ; <code>..</code> de la racine est la racine elle-même. Le <code>~</code>, lui,
       n'existe pas sur le disque : c'est le shell qui le remplace par le dossier personnel avant de lancer la
       commande (POSIX appelle cela le « développement du tilde »). Les fichiers dont le nom commence par un point
-      sont seulement masqués par <code>ls</code> : une convention, pas une protection.
+      sont seulement masqués par <code>ls</code> (sauf avec <code>-a</code>) : une convention héritée d'Unix, pas
+      une protection.
     </p>
     <p slot="verifie">
       <code>pwd</code> affiche le dossier courant ; <code>cd -</code> ramène au précédent ; <code>echo ~</code>
@@ -145,15 +155,16 @@ const etapes = [
     <Passwd slot="animation" />
     <p slot="decouverte">
       Sur une même machine Linux, plein de monde peut cohabiter : chaque personne a son compte, son mot de passe, son
-      dossier à elle. Même des programmes ont leur compte. Le serveur web, par exemple, tourne sous le compte
-      <code>www-data</code> : s'il se fait pirater, l'attaquant n'a, en principe, que les droits de ce compte, pas ceux de toute la
+      dossier à elle. Même des programmes ont leur compte. Sous Debian et Ubuntu, le serveur web, par exemple, tourne
+      sous le compte <code>www-data</code> : s'il se fait pirater, l'attaquant n'a, en principe, que les droits de ce compte, pas ceux de toute la
       machine. Et pour ne pas tout régler une personne à la fois, on range les comptes en <strong>groupes</strong> :
       les profs, les élèves…
     </p>
     <p slot="curieux">
       Où est rangée la liste des comptes ? Dans un simple fichier texte, <code>/etc/passwd</code> : une ligne par
       compte, sept champs séparés par des « : ». Surprise : malgré son nom, il ne contient plus aucun mot de passe. Ils
-      ont déménagé, hachés, dans <code>/etc/shadow</code>, que seul root peut lire. Les groupes, eux, sont dans
+      ont déménagé, hachés, dans <code>/etc/shadow</code>, que seul root peut lire (avec, sous Debian et Ubuntu,
+      les membres du groupe <code>shadow</code>). Les groupes, eux, sont dans
       <code>/etc/group</code>.
     </p>
     <p slot="ingenieur">
@@ -201,9 +212,10 @@ const etapes = [
     </p>
     <div slot="histoire">
       <p>
-        Les droits sur les fichiers ont été brevetés : en 1973, Dennis Ritchie dépose pour les Bell Labs le brevet
-        « Protection of data file contents », sur le contrôle de l'accès aux fichiers par des bits de permission.
-        Il est accordé en 1979. Clin d'œil : en 1971, parmi les tout premiers utilisateur·rices d'Unix figuraient trois dactylos… du
+        Un droit sur les fichiers a été breveté : en 1973, Dennis Ritchie dépose pour les Bell Labs le brevet
+        « Protection of data file contents ». Les bits de permission existaient déjà ; le brevet ajoute un bit qui
+        donne au programme lancé l'identité du propriétaire du fichier, le futur bit setuid. Il est accordé en
+        1979. Clin d'œil : en 1971, parmi les tout premiers utilisateur·rices d'Unix figuraient trois dactylos… du
         service des brevets des Bell Labs.
       </p>
     </div>
@@ -264,7 +276,9 @@ const etapes = [
     </p>
     <p slot="ingenieur">
       L'autre outil, <code>su</code>, ouvre un shell sous un autre compte en demandant le mot de passe de ce compte.
-      Ubuntu verrouille par défaut le mot de passe de root : on ne peut administrer qu'avec sudo. On modifie
+      Ubuntu verrouille par défaut le mot de passe de root : le compte existe toujours, mais on administre avec
+      sudo. sudo lui-même est un programme setuid root (<code>-rwsr-xr-x</code>, voir l'étape 3) : il a les droits
+      de root dès son lancement, et ne lance la commande demandée qu'après avoir vérifié la règle. On modifie
       <code>/etc/sudoers</code> avec <code>visudo</code>, qui vérifie la syntaxe avant d'enregistrer : une faute de
       frappe pourrait sinon bloquer tout accès administrateur. Une règle peut aussi n'autoriser qu'une commande
       précise, comme redémarrer le serveur web.
@@ -278,13 +292,15 @@ const etapes = [
     </div>
     <p slot="verifie">
       <code>sudo -l</code> liste ce que tu as le droit de lancer ; <code>sudo whoami</code> répond
-      <code>root</code> ; sous Debian ou Ubuntu, <code>sudo grep sudo /var/log/auth.log</code> (ou
-      <code>journalctl _COMM=sudo</code>) montre le journal.
+      <code>root</code> ; <code>sudo journalctl _COMM=sudo</code> montre le journal. Là où rsyslog est installé, on
+      le trouve aussi dans <code>/var/log/auth.log</code> (Debian ne l'installe plus par défaut depuis la
+      version 12).
     </p>
     <p slot="mythes">
-      <strong>« Se connecter directement en root, c'est plus simple. »</strong> Une erreur de frappe
-      (<code>rm -rf / tmp</code> au lieu de <code>rm -rf /tmp</code>) n'a alors aucun garde-fou, et le journal ne
-      dit pas qui a fait quoi si plusieurs personnes partagent le mot de passe root.
+      <strong>« Se connecter directement en root, c'est plus simple. »</strong> Une espace de trop
+      (<code>rm -rf /var/www /ancien</code> au lieu de <code>rm -rf /var/www/ancien</code>) efface tout le site sans
+      rien demander : en root, aucun droit ne l'arrête. Et le journal ne dit pas qui a fait quoi si plusieurs
+      personnes partagent le mot de passe root.
     </p>
   </Etape>
 
@@ -301,15 +317,17 @@ const etapes = [
       Chacun doit prouver qui il est. D'abord le serveur, avec sa <strong>clé d'hôte</strong> : à la première
       connexion, ssh t'en montre l'empreinte et s'en souvient dans <code>~/.ssh/known_hosts</code>. La fois suivante,
       si l'empreinte a changé, il crie à l'imposteur. Puis c'est ton tour : par mot de passe, ou mieux, par une
-      <strong>paire de clés</strong>. La clé publique est déposée sur le serveur ; la clé privée, elle, ne quitte
-      jamais ton ordinateur.
+      <strong>paire de clés</strong>. La clé publique est déposée sur le serveur ; la clé privée, elle, ne doit
+      jamais quitter ton ordinateur.
     </p>
     <p slot="ingenieur">
       Avec une clé, le serveur ne reçoit jamais de secret : le client signe des données propres à la session, et le
-      serveur vérifie la signature avec la clé publique de <code>authorized_keys</code>. Le serveur SSH refuse une
-      clé si <code>~/.ssh</code> ou <code>authorized_keys</code> peut être modifié par d'autres (droits
-      <code>700</code> et <code>600</code>) : les droits de l'étape 3 servent aussi à ça. Le protocole est décrit
-      par les RFC 4251 à 4254 (2006) ; SFTP et <code>scp</code> passent par la même connexion (voir
+      serveur vérifie la signature avec la clé publique de <code>authorized_keys</code>. Le serveur, lui, s'est
+      identifié plus tôt, pendant l'échange de clés : il en signe le résultat avec sa clé d'hôte, avant que le
+      chiffrement commence. Le serveur SSH refuse une clé si <code>authorized_keys</code>, <code>~/.ssh</code> ou
+      le dossier personnel peuvent être modifiés par d'autres (on recommande <code>600</code> et
+      <code>700</code>) : les droits de l'étape 3 servent aussi à ça. Le protocole est décrit par les RFC 4251 à
+      4254 (2006) ; SFTP et <code>scp</code> passent eux aussi par SSH, chacun avec sa propre connexion (voir
       <a href="/modules/client-serveur/#transferts">Client et serveur</a>).
     </p>
     <div slot="histoire">
@@ -317,7 +335,7 @@ const etapes = [
         En juillet 1995, Tatu Ylönen, de l'Université de technologie d'Helsinki, publie SSH 1.0, qui doit fermer des
         failles comme « l'écoute des mots de passe sur le réseau ». Selon son récit, il réagissait à l'installation
         d'un renifleur qui avait capté des milliers de mots de passe sur le réseau universitaire finlandais. Les
-        versions suivantes devenant moins libres, le Suédois Björn Grönvall reprend début 1999 l'ancienne version
+        versions suivantes devenant moins libres, Björn Grönvall reprend début 1999 l'ancienne version
         libre ; le projet OpenBSD, mené depuis le Canada par Theo de Raadt, en tire OpenSSH en décembre 1999.
       </p>
     </div>
@@ -338,13 +356,13 @@ const etapes = [
   <Etape numero={7} titre="Rebondir de machine en machine" ancre="rebonds">
     <Rebonds slot="animation" />
     <p slot="decouverte">
-      Les serveurs les plus importants ne sont pas joignables directement depuis internet. Pour les atteindre, il
+      Dans un réseau bien tenu, les serveurs les plus importants ne sont pas joignables directement depuis internet. Pour les atteindre, il
       faut passer par une seule porte d'entrée, très surveillée : un <Terme id="bastion">bastion</Terme>. On entre
       par lui, puis on « rebondit » vers le serveur qu'on vise.
     </p>
     <p slot="curieux">
       Première façon : se connecter au bastion, puis, de là, au serveur. Simple… mais le bastion voit tout passer en
-      clair, et il faut lui confier sa clé. Deuxième façon, plus maligne : <code>ssh -J bastion serveur</code>
+      clair, et il faut lui confier sa clé (ou lui prêter son agent, on y revient plus bas). Deuxième façon, plus maligne : <code>ssh -J bastion serveur</code>
       (<em>ProxyJump</em>). Le bastion ne fait plus que relayer : la connexion SSH va directement du portable au
       serveur, emballée dans la première, et la clé privée reste sur le portable.
     </p>
@@ -367,8 +385,9 @@ const etapes = [
       <p>
         Son guide d'administration sécurisée (2021) distingue deux modèles. Avec « rupture protocolaire », le bastion
         termine la session : il peut tout tracer, mais voit tout et concentre des secrets, ce qui en fait une cible.
-        Avec une session « de bout en bout », comme <code>ssh -J</code>, il ne voit que le chiffré. Les deux ont leurs
-        défenseur·ses : traçabilité d'un côté, confidentialité de l'autre.
+        Avec une session « de bout en bout », il ne voit que le chiffré ; un <code>ssh -J</code> relève de ce second
+        modèle. L'ANSSI recommande « d'étudier la mise en œuvre d'une rupture protocolaire » (sa recommandation R25).
+        Le bout en bout garde, lui, l'avantage de ne confier aucun secret au bastion.
       </p>
     </div>
     <p slot="verifie">
@@ -400,27 +419,51 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-24"
+    verifie="2026-11-28"
     sources={[
       { auteur: 'Linux Foundation', titre: 'Filesystem Hierarchy Standard 3.0', url: 'https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html', type: 'primaire', annee: 2015, langue: 'en' },
       { auteur: 'Linux man-pages', titre: 'hier(7) : description de l’arborescence', url: 'https://man7.org/linux/man-pages/man7/hier.7.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Debian', titre: 'Notes de version de Debian 12 : /usr fusionné, rsyslog plus installé par défaut', url: 'https://www.debian.org/releases/bookworm/amd64/release-notes/ch-information.en.html', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'Fedora', titre: 'Features/UsrMove : /bin, /sbin et /lib dans /usr', url: 'https://fedoraproject.org/wiki/Features/UsrMove', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'J. Corbet (LWN)', titre: 'Ubuntu 19.04 : /usr fusionné pour les nouvelles installations', url: 'https://lwn.net/Articles/773342/', type: 'presse', annee: 2018, langue: 'en' },
+      { auteur: 'Linux man-pages', titre: 'proc(5) : le pseudo-système de fichiers /proc', url: 'https://man7.org/linux/man-pages/man5/proc.5.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Apple', titre: 'File System Programming Guide : dossiers standard de macOS (/Users)', url: 'https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html', type: 'primaire', annee: 2018, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'Comparing WSL Versions (WSL 2 et son noyau Linux)', url: 'https://learn.microsoft.com/en-us/windows/wsl/compare-versions', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'The Open Group', titre: 'POSIX.1-2024 : définitions (chemins, droits d’accès)', url: 'https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'The Open Group', titre: 'POSIX.1-2024 : concepts généraux (§ 4.7 droits d’accès, § 4.16 résolution des chemins)', url: 'https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'The Open Group', titre: 'POSIX.1-2024 : langage du shell (§ 2.6.1 développement du tilde)', url: 'https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'The Open Group', titre: 'POSIX.1-2024 : chmod', url: 'https://pubs.opengroup.org/onlinepubs/9799919799/utilities/chmod.html', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'GNU coreutils', titre: 'chmod(1) : modes symboliques et octaux, bit « sticky »', url: 'https://man7.org/linux/man-pages/man1/chmod.1.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'GNU coreutils', titre: 'Manuel : Numeric Modes', url: 'https://www.gnu.org/software/coreutils/manual/html_node/Numeric-Modes.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'GNU coreutils', titre: 'Manuel : Mode Structure (r, w, x sur un dossier)', url: 'https://www.gnu.org/software/coreutils/manual/html_node/Mode-Structure.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'GNU coreutils', titre: 'rm(1) : --preserve-root par défaut', url: 'https://man7.org/linux/man-pages/man1/rm.1.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Linux man-pages', titre: 'chmod(2) et chown(2) : qui peut changer les droits et le propriétaire', url: 'https://man7.org/linux/man-pages/man2/chown.2.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Linux man-pages', titre: 'inode(7) : bits setuid et sticky', url: 'https://man7.org/linux/man-pages/man7/inode.7.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Linux man-pages', titre: 'path_resolution(7) : vérification des droits, cas de root', url: 'https://man7.org/linux/man-pages/man7/path_resolution.7.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Linux man-pages', titre: 'umask(2)', url: 'https://man7.org/linux/man-pages/man2/umask.2.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Linux-PAM', titre: 'pam_umask(8) : masque 002 quand chaque compte a son groupe', url: 'https://man7.org/linux/man-pages/man8/pam_umask.8.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Linux man-pages', titre: 'passwd(5), format de /etc/passwd', url: 'https://man7.org/linux/man-pages/man5/passwd.5.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'shadow-utils', titre: 'shadow(5), group(5) et id(1)', url: 'https://man7.org/linux/man-pages/man5/shadow.5.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Debian', titre: 'base-passwd : Users and groups (www-data, groupe shadow)', url: 'https://sources.debian.org/data/main/b/base-passwd/3.6.7/doc/users-and-groups.sgml', type: 'primaire', annee: 2025, langue: 'en' },
+      { auteur: 'A. Murray (Canonical)', titre: 'Private home directories for Ubuntu 21.04 (dossiers personnels en 750)', url: 'https://ubuntu.com/blog/private-home-directories-for-ubuntu-21-04', type: 'primaire', annee: 2021, langue: 'en' },
       { auteur: 'shadow-utils', titre: 'login.defs(5) : UID_MIN, UMASK', url: 'https://man7.org/linux/man-pages/man5/login.defs.5.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'GNU', titre: 'bash(1) : invite, « \\$ » vaut # pour root', url: 'https://man7.org/linux/man-pages/man1/bash.1.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Projet sudo', titre: 'Histoire de sudo', url: 'https://www.sudo.ws/about/history/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Projet sudo', titre: 'sudoers(5) : authentification, timestamp_timeout, journalisation', url: 'https://www.sudo.ws/docs/man/sudoers.man/', type: 'primaire', annee: 2026, langue: 'en' },
-      { auteur: 'Projet sudo', titre: 'Traduction française des messages de sudo (fr.po)', url: 'https://raw.githubusercontent.com/sudo-project/sudo/main/plugins/sudoers/po/fr.po', type: 'primaire', annee: 2026, langue: 'fr' },
+      { auteur: 'Projet sudo', titre: 'visudo(8) : vérification de la syntaxe', url: 'https://www.sudo.ws/docs/man/visudo.man/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Projet sudo', titre: 'Traduction française des messages de sudo (fr.po, version 1.9.16p2)', url: 'https://raw.githubusercontent.com/sudo-project/sudo/SUDO_1_9_16p2/plugins/sudoers/po/fr.po', type: 'primaire', annee: 2026, langue: 'fr' },
       { auteur: 'Canonical', titre: 'Ubuntu Server : User management (root verrouillé, groupe sudo)', url: 'https://documentation.ubuntu.com/server/how-to/security/user-management/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Debian', titre: 'Wiki Debian : sudo (groupe sudo)', url: 'https://wiki.debian.org/sudo', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Fedora', titre: 'Fichier sudoers du paquet sudo (groupe wheel)', url: 'https://src.fedoraproject.org/rpms/sudo/raw/rawhide/f/sudoers', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Translation Project', titre: 'Traductions françaises de glibc, coreutils et bash (messages d’erreur, date de ls -l)', url: 'https://translationproject.org/latest/coreutils/fr.po', type: 'primaire', annee: 2026, langue: 'fr' },
       { auteur: 'Fedora', titre: 'Performing administration tasks using sudo', url: 'https://docs.fedoraproject.org/en-US/quick-docs/performing-administration-tasks-using-sudo/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'T. Ylonen, C. Lonvick', titre: 'RFC 4251 : The Secure Shell (SSH) Protocol Architecture (et RFC 4252 à 4254)', url: 'https://www.rfc-editor.org/rfc/rfc4251', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'T. Ylonen, C. Lonvick', titre: 'RFC 4253 : SSH Transport Layer Protocol (port 22, signature par la clé d’hôte)', url: 'https://www.rfc-editor.org/rfc/rfc4253', type: 'primaire', annee: 2006, langue: 'en' },
       { auteur: 'OpenBSD', titre: 'ssh(1) : known_hosts, -J, -A', url: 'https://man.openbsd.org/ssh.1', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'OpenBSD', titre: 'ssh_config(5) : ProxyJump, ForwardAgent', url: 'https://man.openbsd.org/ssh_config.5', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'OpenBSD', titre: 'sshd_config(5) : StrictModes, PermitRootLogin', url: 'https://man.openbsd.org/sshd_config.5', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'OpenBSD', titre: 'sshd(8) : droits exigés sur authorized_keys, ~/.ssh et le dossier personnel', url: 'https://man.openbsd.org/sshd.8', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'OpenBSD', titre: 'scp(1) : SFTP sur une connexion ssh', url: 'https://man.openbsd.org/scp.1', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'OpenSSH', titre: 'Notes de version 7.3 (ProxyJump)', url: 'https://www.openssh.com/txt/release-7.3', type: 'primaire', annee: 2016, langue: 'en' },
       { auteur: 'OpenSSH', titre: 'Notes de version 9.5 (Ed25519 par défaut)', url: 'https://www.openssh.com/txt/release-9.5', type: 'primaire', annee: 2023, langue: 'en' },
       { auteur: 'OpenSSH', titre: 'Histoire du projet OpenSSH', url: 'https://www.openssh.com/history.html', type: 'primaire', annee: 2026, langue: 'en' },
@@ -428,10 +471,14 @@ const etapes = [
       { auteur: 'SSH Communications Security', titre: 'SSH (Secure Shell) : récit des origines', url: 'https://www.ssh.com/academy/ssh', type: 'site', annee: 2026, langue: 'en' },
       { auteur: 'ANSSI', titre: 'Recommandations pour un usage sécurisé d’(Open)SSH', url: 'https://messervices.cyber.gouv.fr/guides/usage-securise-dopenssh', type: 'primaire', annee: 2015, langue: 'fr' },
       { auteur: 'ANSSI', titre: 'Recommandations relatives à l’administration sécurisée des SI (v3.0)', url: 'https://messervices.cyber.gouv.fr/guides/recommandations-relatives-ladministration-securisee-des-si', type: 'primaire', annee: 2021, langue: 'fr' },
-      { auteur: 'D. M. Ritchie', titre: 'The Evolution of the Unix Time-sharing System', url: 'https://www.read.seas.harvard.edu/~kohler/class/aosref/ritchie84evolution.pdf', type: 'primaire', annee: 1984, langue: 'en' },
+      { auteur: 'D. M. Ritchie', titre: 'The Evolution of the Unix Time-sharing System', url: 'https://www.read.seas.harvard.edu/~kohler/class/aosref/ritchie84evolution.pdf', type: 'primaire', annee: 1984, langue: 'en', archive: 'https://web.archive.org/web/20261103234958/https://www.read.seas.harvard.edu/~kohler/class/aosref/ritchie84evolution.pdf' },
+      { auteur: 'M. D. McIlroy', titre: 'Hommage à Lorinda Cherry (liste TUHS)', url: 'https://www.tuhs.org/pipermail/tuhs/2022-February/025390.html', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'NCWIT', titre: 'Lorinda Cherry, Pioneer in Tech Award', url: 'https://ncwit.org/profile/lorinda-cherry/', type: 'site', annee: 2018, langue: 'en' },
       { auteur: 'D. M. Ritchie (Bell Labs)', titre: 'Brevet US 4,135,240 : Protection of data file contents', url: 'https://patents.google.com/patent/US4135240A/en', type: 'primaire', annee: 1979, langue: 'en' },
-      { auteur: 'L. Torvalds', titre: 'Message du 25 août 1991 sur comp.os.minix', url: 'https://www.cs.cmu.edu/~awb/linux.history.html', type: 'primaire', annee: 1991, langue: 'en' },
+      { auteur: 'L. Torvalds', titre: 'Message du 25 août 1991 sur comp.os.minix', url: 'https://www.cs.cmu.edu/~awb/linux.history.html', type: 'primaire', annee: 1991, langue: 'en', archive: 'https://web.archive.org/web/20261117080826/https://www.cs.cmu.edu/~awb/linux.history.html' },
+      { auteur: 'L. Torvalds', titre: 'Notes de version de Linux 0.12 (passage à la GPL)', url: 'https://www.kernel.org/pub/linux/kernel/Historic/old-versions/RELNOTES-0.12', type: 'primaire', annee: 1992, langue: 'en' },
       { auteur: 'R. Stallman', titre: 'Initial Announcement of the GNU Project', url: 'https://www.gnu.org/gnu/initial-announcement.en.html', type: 'primaire', annee: 1983, langue: 'en' },
+      { auteur: 'R. Stallman', titre: 'Linux and the GNU System (« GNU/Linux »)', url: 'https://www.gnu.org/gnu/linux-and-gnu.en.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Canonical', titre: 'About Ubuntu', url: 'https://ubuntu.com/about', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Pardus', titre: 'Pardus History', url: 'https://pardus.org.tr/en/pardus-history/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'TOP500', titre: 'Statistiques par famille de systèmes : Linux', url: 'https://www.top500.org/statistics/details/osfam/1/', type: 'primaire', annee: 2026, langue: 'en' },

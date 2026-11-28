@@ -198,6 +198,22 @@ export function acces(compte: Compte, f: Fichier, op: Operation): Decision {
   return { permis, classe, raisons };
 }
 
+/**
+ * Pour atteindre `chemin`, il faut le droit x sur chaque dossier du chemin, y
+ * compris le dernier (path_resolution(7)). Renvoie le premier dossier qui
+ * bloque `compte`, ou null si rien ne bloque. Seuls les dossiers dont les
+ * droits sont donnés dans `dossiers` sont vérifiés.
+ */
+export function dossierBloquant(compte: Compte, chemin: string, dossiers: Fichier[]): string | null {
+  const parties = chemin.split('/').filter(Boolean);
+  for (let i = 1; i <= parties.length; i++) {
+    const c = '/' + parties.slice(0, i).join('/');
+    const d = dossiers.find((x) => x.chemin === c);
+    if (d && !acces(compte, { ...d, dossier: true }, 'x').permis) return c;
+  }
+  return null;
+}
+
 /** Découpe une ligne de /etc/passwd en ses 7 champs ; null si elle n'en a pas 7. */
 export function lignePasswd(ligne: string): string[] | null {
   const champs = ligne.split(':');

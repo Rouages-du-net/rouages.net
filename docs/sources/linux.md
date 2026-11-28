@@ -763,3 +763,190 @@ novembre 2017 ; Torvalds le 25 août 1991 ; Ubuntu en 2004 (Shuttleworth).
 Les messages du terminal simulé (« Aucun fichier ou dossier de ce type », « N'est pas un dossier »,
 « Permission non accordée », « commande introuvable ») reprennent ceux d’un système Debian ou Ubuntu en français :
 **[non vérifié ici]** (locale française absente du conteneur) : à contrôler lors de la relecture humaine.
+→ Mise à jour du 28 novembre 2026 : vérifiés dans les traductions officielles, voir § G13
+(« de ce type » devient « de ce nom » depuis glibc 2.39).
+
+---
+
+## G. Première passe de correction (28 novembre 2026)
+
+Sources ouvertes le 28 novembre 2026 pour traiter la grille `docs/relecture/linux.md`.
+« Vérifié dans un shell » : Ubuntu 24.04.5 LTS, coreutils 9.4, glibc 2.39, OpenSSH 9.6p1
+(installé pour l'occasion), adduser 3.137ubuntu1.
+
+### G1. Brevet US 4,135,240 : c'est bien le bit setuid — [lu]
+https://patents.google.com/patent/US4135240A/en (résumé et revendication 1) :
+« An additional access control bit is added to each executable file. » ; « When this bit is
+set to one, the identification of the current user is changed to that of the owner of the
+executable file. » ; « This change is temporary, the proper identification being restored when
+the program is terminated. » Revendication 1 : « changing temporarily the identification of said
+current user of the computer system to that of said file owner ». Le résumé dit aussi
+« Access permission bits are used in the prior art ». → **confirmé** : le brevet porte sur le
+futur bit setuid, pas sur les bits de permission eux-mêmes (une seule source, primaire).
+
+### G2. Linux : « free » en 1991, GPL en 1992 — [lu]
+- Notes de version de Linux 0.12 :
+  https://www.kernel.org/pub/linux/kernel/Historic/old-versions/RELNOTES-0.12 : « The GNU
+  copyleft takes effect as of the first of February » ; il s'agit de retirer la condition
+  « you may not distribute it for money ».
+- Page de cs.cmu.edu (déjà citée en F20) : message du 19 déc. 1991 « It's free (copyright by me,
+  but freely distributable under a very lenient copyright) » ; note de l'éditeur : « The early
+  copyright was in fact much more restrictive than the GNU copyleft ».
+  https://www.cs.cmu.edu/~awb/linux.history.html
+- Statut d'étudiant : la page ne contient qu'une allusion de 1992 (« your studies suffer »).
+  → page : « à l'université d'Helsinki », sans « étudiant ».
+
+### G3. OpenSSH : Björn Grönvall — [lu]
+https://www.openssh.org/history.html (openssh.com y redirige) : « Early in 1999, Björn Grönvall
+re-discovered the old free release and started fixing bugs. » ; « Word of mouth has it that OSSH
+was integrated at the time into some commercial products in Sweden. » La page ne donne **pas** sa
+nationalité. → « le Suédois » retiré.
+
+### G4. SSH : la clé d'hôte signe l'échange, avant le chiffrement — [lu]
+RFC 4253, https://www.rfc-editor.org/rfc/rfc4253 :
+- § 8 : le serveur calcule H « and signature s on H with its private host key » ; le client
+  « verifies that K_S really is the host key for S (e.g., using certificates or a local
+  database) » et « verifies the signature s on H ».
+- § 7.3 : « All messages sent after this message [SSH_MSG_NEWKEYS] MUST use the new keys and
+  algorithms. »
+- § 4.1 : « When used over TCP/IP, the server normally listens for connections on port 22. »
+- Vérifié dans les chaînes du binaire `ssh` (OpenSSH 9.6p1) : « The authenticity of host
+  '%.200s (%s)' can't be established », « Are you sure you want to continue connecting
+  (yes/no/[fingerprint])? », « Warning: Permanently added '%.200s' (%s) to the list of known
+  hosts. », « WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! », « IT IS POSSIBLE THAT SOMEONE IS
+  DOING SOMETHING NASTY! », « Host key verification failed. » ; `ssh-copy-id` : « Number of key(s)
+  added: ». `ssh-keygen -t ed25519` affiche « Your identification has been saved in … » et
+  « Your public key has been saved in … ».
+- Vérifié dans un shell : `ssh -G web1 | grep -i proxyjump` affiche `proxyjump
+  alice@bastion.example` avec la configuration de l'animation ; `ssh-keygen -lf fichier.pub`
+  affiche `256 SHA256:… (ED25519)`. `ssh -v` affiche la négociation (lignes `debug1:`).
+  `ssh -v -J` n'a pas été essayé (pas de bastion).
+
+### G5. sshd(8), scp(1) — [lu]
+- https://man.openbsd.org/sshd.8 (FILES, authorized_keys) : « If this file, the ~/.ssh directory,
+  or the user's home directory are writable by other users, then the file could be modified or
+  replaced by unauthorized users. In this case, sshd will not allow it to be used unless the
+  StrictModes option has been set to "no". » Droits recommandés pour le fichier : « read/write for
+  the user, and not accessible by others ».
+- https://man.openbsd.org/scp.1 : « scp uses the SFTP protocol over an ssh(1) connection for data
+  transfer, and uses the same authentication and provides the same security as a login
+  session. » → chaque commande a sa connexion (sauf multiplexage `ControlMaster`, ssh_config(5)).
+
+### G6. Debian 12 : rsyslog n'est plus installé par défaut — [lu]
+https://www.debian.org/releases/bookworm/amd64/release-notes/ch-information.en.html, § 5.1.7
+« Changes to system logging » : « From bookworm, rsyslog is no longer installed by default. » ; on
+lit alors le journal avec journalctl (fichiers binaires dans /var/log/journal). La page ne parle
+pas de `auth.log` en particulier : sans rsyslog, aucun fichier texte de ce nom n'est écrit
+(**[déduction]**). Ubuntu : non vérifié (le conteneur n'a ni rsyslog ni auth.log).
+
+### G7. Ubuntu : /usr fusionné — [lu], presse
+https://lwn.net/Articles/773342/ (4 déc. 2018) : Dimitri John Ledkov annonce que dans Ubuntu 19.04
+« new installations will use merged /usr », « existing ones will not have their /usr merged on
+upgrade ». Observation locale : `/bin -> usr/bin`, `/sbin -> usr/sbin`, `/lib -> usr/lib`.
+
+### G8. Ubuntu : dossiers personnels en 750 — [lu] + shell
+- https://ubuntu.com/blog/private-home-directories-for-ubuntu-21-04 (A. Murray, 1er févr. 2021) :
+  « sudo sed -i s/DIR_MODE=0755/DIR_MODE=0750/ /etc/adduser.conf » ; « ensure any users created by
+  either the adduser(8) or useradd(8) commands have their home directories private by default ».
+- Vérifié dans un shell : `HOME_MODE 0750` (`/etc/login.defs`), `dir_mode => "0750"`
+  (`/usr/share/perl5/Debian/AdduserCommon.pm`) ; `adduser` et `useradd -m` créent
+  `drwxr-x---` ; `cd /home/autre` → `Permission denied` ; `ls /root` → `ls: cannot open directory
+  '/root': Permission denied` ; `/root` est en `drwx------`.
+- Attention : la page de manuel adduser.conf(5) d'Ubuntu noble
+  (https://manpages.ubuntu.com/manpages/noble/man5/adduser.conf.5.html) dit encore « Defaults to
+  0700 » (texte de Debian), alors que le programme utilise 0750.
+
+### G9. Comptes et droits — [lu]
+- Debian base-passwd, « Users and groups » :
+  https://sources.debian.org/data/main/b/base-passwd/3.6.7/doc/users-and-groups.sgml
+  - www-data : « Some web servers run as www-data. Web content should not be owned by this user,
+    or a compromised web server would be able to rewrite a web site. »
+  - shadow : « /etc/shadow is readable by this group. Some programs that need to be able to access
+    the file are setgid shadow. »
+  - `/usr/share/base-passwd/passwd.master` (Ubuntu 24.04) :
+    `www-data:*:33:33:www-data:/var/www:/usr/sbin/nologin` (dossier personnel /var/www).
+- chown(2), https://man7.org/linux/man-pages/man2/chown.2.html : « Only a privileged process
+  (Linux: one with the CAP_CHOWN capability) may change the owner of a file. » ; « The owner of a
+  file may change the group of the file to any group of which that owner is a member. »
+- chmod(2), https://man7.org/linux/man-pages/man2/chmod.2.html : « The effective UID of the calling
+  process must match the owner of the file, or the process must be privileged (Linux: it must have
+  the CAP_FOWNER capability). »
+- Vérifié dans un shell : un fichier dont l'UID n'existe pas (`chown 4242:4242`) s'affiche
+  `-rw-r--r-- 1 4242 4242 …` dans `ls -l`.
+
+### G10. visudo(8), proc(5), rm(1) — [lu]
+- https://www.sudo.ws/docs/man/visudo.man/ : « visudo locks the sudoers file against multiple
+  simultaneous edits » ; « checks for syntax errors before installing the edited file » ;
+  « visudo parses the sudoers file after editing and will not save the changes if there is a
+  syntax error ».
+- https://man7.org/linux/man-pages/man5/proc.5.html : « The proc filesystem is a pseudo-filesystem
+  which provides an interface to kernel data structures. » ; sous /proc/<pid> : « Each one of these
+  subdirectories contains files and subdirectories exposing information about the process ».
+- https://man7.org/linux/man-pages/man1/rm.1.html : « --preserve-root[=all] do not remove '/'
+  (default) » ; « --no-preserve-root do not treat '/' specially ». Vérifié avec `rm --help`.
+  La page du manuel coreutils « Treating / specially » a répondu 429 : non lue.
+
+### G11. macOS, WSL, GNU/Linux — [lu]
+- Apple, File System Programming Guide :
+  https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html
+  - /Users : « This directory contains one or more user home directories. »
+  - « Any file or directory whose name starts with a period (.) character is hidden
+    automatically. This convention is taken from UNIX » ; « The directories in this category are
+    inherited from traditional UNIX installations » (/etc, /tmp, /usr, /var, /bin, /dev, /sbin).
+- Microsoft, https://learn.microsoft.com/en-us/windows/wsl/compare-versions : « WSL 2 is the
+  current default version when installing a Linux distribution » ; WSL 2 utilise « an actual Linux
+  kernel inside a managed VM » ; WSL 1 « used a translation layer ».
+- R. Stallman, « Linux and the GNU System », https://www.gnu.org/gnu/linux-and-gnu.en.html :
+  « When you're talking about this combination, please call it “GNU/Linux.” »
+
+### G12. Lorinda Cherry — [lu]
+https://www.tuhs.org/pipermail/tuhs/2022-February/025390.html (McIlroy) : « She then joined the
+(self-organized) Unix team, collaborating on several applications with Bob Morris. First came
+"dc" » ; « Building on dc, she would later make "bc" ». (NCWIT, déjà cité en F21, non rouvert.)
+
+### G13. Messages français : vérifiés dans les traductions officielles — [lu]
+Fichiers téléchargés depuis le Translation Project (https://translationproject.org/latest/libc/fr.po,
+…/coreutils/fr.po, …/bash/fr.po) et le dépôt de glibc
+(https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=po/fr.po, étiquettes glibc-2.38 et
+glibc-2.39) :
+- glibc : « Permission denied » → « Permission non accordée » ; « Not a directory » → « N'est pas
+  un dossier » ; « No such file or directory » → « Aucun fichier ou dossier de ce type » jusqu'à
+  glibc 2.38, **« Aucun fichier ou dossier de ce nom » depuis glibc 2.39** (Ubuntu 24.04 :
+  glibc 2.39 ; Debian 13 : plus récent). Le terminal simulé suit la version récente.
+- coreutils : « cannot access %s » → « impossible d'accéder à %s » ; « cannot open directory %s »
+  → « impossible d'ouvrir le répertoire %s » ; format de date de `ls -l` : « %b %e %H:%M » →
+  « %e %b %H:%M » (le jour avant le mois : « 24 nov. 10:00 », abréviation « nov. » de la locale
+  fr_FR de glibc). Les noms de fichiers des messages d'erreur gardent les apostrophes droites
+  (style de citation « shell »).
+- bash : « command not found » → « commande introuvable ».
+- Tous ces messages utilisent l'apostrophe droite ('). Les traductions installées par une
+  distribution peuvent différer légèrement (paquets de langue d'Ubuntu) : non vérifié sur une
+  machine en français.
+- sudo : la traduction est identique dans l'étiquette `SUDO_1_9_16p2`
+  (https://raw.githubusercontent.com/sudo-project/sudo/SUDO_1_9_16p2/plugins/sudoers/po/fr.po),
+  lien stable qui remplace le lien vers `main`.
+
+### G14. TOP500 — [lu] de nouveau
+https://www.top500.org/statistics/details/osfam/1/ : `new Date(2026, 10, 1),500`,
+`new Date(2026, 5, 1),500`, `new Date(2017, 10, 1),500`, `new Date(2017, 5, 1),498`.
+→ 500 sur 500 en novembre 2026, et depuis novembre 2017.
+
+### G15. Liens d'archive
+L'API de la Wayback Machine (https://archive.org/wayback/available) signale des copies :
+- Ritchie : https://web.archive.org/web/20261103234958/https://www.read.seas.harvard.edu/~kohler/class/aosref/ritchie84evolution.pdf
+- Torvalds : https://web.archive.org/web/20261117080826/https://www.cs.cmu.edu/~awb/linux.history.html
+Ces deux copies n'ont **pas pu être ouvertes** (connexion coupée par web.archive.org) : à
+contrôler. Pas de copie signalée pour le fr.po de sudo (remplacé par un lien vers une étiquette).
+
+### G16. Compléments — [lu]
+- RFC 4252 § 7, https://www.rfc-editor.org/rfc/rfc4252 : « The value of 'signature' is a signature
+  by the corresponding private key over the following data » (en premier : « string session
+  identifier ») ; « it MUST check whether the supplied key is acceptable for authentication, and
+  if so, it MUST check whether the signature is correct. »
+- credentials(7), https://man7.org/linux/man-pages/man7/credentials.7.html : « These IDs are
+  integers, respectively represented using the types uid_t and gid_t ». La page ne dit pas en
+  toutes lettres que le noyau ignore les noms (c'est passwd(5) qui fait le lien nom ↔ UID).
+- su(1), https://man7.org/linux/man-pages/man1/su.1.html : « su allows commands to be run with a
+  substitute user and group ID. » ; « When called with no user specified, su defaults to running
+  an interactive shell as root. » Le mot de passe demandé dépend de PAM : la page ne le précise
+  pas ; sudoers(5) (« Unlike su(1) … not the target user's ») reste la seule source indirecte.

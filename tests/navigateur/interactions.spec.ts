@@ -240,7 +240,10 @@ test('linux : arborescence, terminal, droits, accès et rebonds', async ({ page 
   await expect(arbo.locator('[data-fiche-chemin]')).toHaveText('Fichier /etc/passwd');
   const term = page.locator('[data-terminal-linux]');
   await term.locator('[data-essai="cd ../bob"]').click();
-  await expect(term.locator('[data-invite]')).toHaveText('alice@machine:/home/bob$');
+  await expect(term.locator('[data-ecran]')).toContainText('Permission non accordée');
+  await expect(term.locator('[data-invite]')).toHaveText('alice@machine:~$');
+  await term.locator('[data-essai="cd /etc"]').click();
+  await expect(term.locator('[data-invite]')).toHaveText('alice@machine:/etc$');
   await term.locator('[data-commande]').fill('cd ~/cours');
   await term.locator('[data-commande]').press('Enter');
   await expect(term.locator('[data-invite]')).toHaveText('alice@machine:~/cours$');
@@ -260,7 +263,7 @@ test('linux : arborescence, terminal, droits, accès et rebonds', async ({ page 
   await expect(qui.locator('[data-reponse]')).toContainText('Non');
   const sudo = page.locator('[data-sudo]');
   await jusquAuBout(sudo);
-  await expect(sudo.locator('[data-ecran]')).toContainText('n’est pas dans le fichier sudoers');
+  await expect(sudo.locator('[data-ecran]')).toContainText("n'est pas dans le fichier sudoers");
   const rebonds = page.locator('[data-rebonds]');
   await rebonds.locator('[data-mode="saut"]').click();
   await jusquAuBout(rebonds);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  abreger, acces, expliquer, appliquerChmod, depuisLettres, depuisOctal, enBinaire, enLettres, enOctal, enSymbolique,
+  abreger, acces, dossierBloquant, expliquer, appliquerChmod, depuisLettres, depuisOctal, enBinaire, enLettres, enOctal, enSymbolique,
   lignePasswd, resoudre, type Compte, type Fichier,
 } from '../../src/lib/linux';
 
@@ -93,6 +93,26 @@ describe('acces', () => {
     expect(acces(root, notes, 'w').permis).toBe(true);
     expect(acces(root, notes, 'x').permis).toBe(false);
     expect(acces(root, { ...notes, mode: 0o700 }, 'x').permis).toBe(true);
+  });
+});
+
+describe('dossierBloquant', () => {
+  const alice: Compte = { nom: 'alice', uid: 1000, groupes: ['alice', 'sudo', 'profs'] };
+  const root: Compte = { nom: 'root', uid: 0, groupes: ['root'] };
+  const dossiers: Fichier[] = [
+    { chemin: '/root', proprietaire: 'root', groupe: 'root', mode: 0o700 },
+    { chemin: '/home/alice', proprietaire: 'alice', groupe: 'alice', mode: 0o750 },
+    { chemin: '/home/bob', proprietaire: 'bob', groupe: 'bob', mode: 0o750 },
+  ];
+  it('trouve le dossier sans x qui bloque (Ubuntu : dossiers personnels en 750, /root en 700)', () => {
+    expect(dossierBloquant(alice, '/home/bob', dossiers)).toBe('/home/bob');
+    expect(dossierBloquant(alice, '/home/bob/notes', dossiers)).toBe('/home/bob');
+    expect(dossierBloquant(alice, '/root', dossiers)).toBe('/root');
+    expect(dossierBloquant(alice, '/home/alice/cours', dossiers)).toBeNull();
+    expect(dossierBloquant(alice, '/etc', dossiers)).toBeNull();
+  });
+  it('laisse passer root', () => {
+    expect(dossierBloquant(root, '/home/bob', dossiers)).toBeNull();
   });
 });
 

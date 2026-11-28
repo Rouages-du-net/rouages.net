@@ -5,10 +5,10 @@
 // prefers-reduced-motion : ils apparaissent directement).
 const ETAPES = [
   { actif: [], msg: [], texte: 'Le serveur est un programme qui attend : il « écoute » sur un port (ici 443, celui de HTTPS). Tant que personne ne demande rien, il ne fait rien.' },
-  { actif: ['a'], msg: [['a', 'aller', 'GET /reseau/']], texte: 'Le téléphone, un client, envoie une demande (une requête) : « donne-moi la page /reseau/ ». C’est toujours le client qui commence.' },
+  { actif: ['a'], msg: [['a', 'aller', 'GET /reseau/']], texte: 'Le téléphone, un client, envoie une demande (une requête) : « donne-moi la page /reseau/ ». C’est le client qui commence : c’est même ce qui fait de lui le client.' },
   { actif: ['a'], msg: [['a', 'retour', '200 OK + page']], texte: 'Le serveur cherche la page et renvoie une réponse : un code (200, « OK ») et le contenu. Puis il se remet à attendre.' },
   { actif: ['b', 'c'], msg: [['b', 'aller', 'GET /docs/tp.pdf'], ['c', 'aller', 'GET /']], texte: 'Deux autres clients demandent en même temps, chacun sa page. Le serveur ne sait rien d’eux à l’avance : il répond à qui le demande.' },
-  { actif: ['b', 'c'], msg: [['b', 'retour', '200 OK + PDF'], ['c', 'retour', '200 OK + page']], texte: 'Il répond à chacun séparément, des milliers de fois par seconde pour un gros site. Chaque client ne voit que ses propres réponses.' },
+  { actif: ['b', 'c'], msg: [['b', 'retour', '200 OK + PDF'], ['c', 'retour', '200 OK + page']], texte: 'Il répond à chacun séparément, autant de fois qu’on le lui demande. Chaque client ne voit que ses propres réponses.' },
   { actif: ['b'], msg: [['b', 'refus', 'connexion refusée']], texte: 'Si le programme serveur est arrêté, plus rien n’écoute sur le port : le client reçoit « connexion refusée ». La machine peut être allumée, c’est le programme qui compte.' },
 ];
 ---

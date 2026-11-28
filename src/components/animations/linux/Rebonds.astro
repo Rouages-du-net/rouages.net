@@ -44,7 +44,7 @@ const SAUT: Etape[] = [
   {
     lignes: [["Warning: Permanently added 'web1' (ED25519) to the list of known hosts.", ''], ['alice@web1:~$ ', 'tapee']],
     lien1: '🔒 SSH n° 1 ⊃ 🔒 SSH n° 2', lien2: '🔒 SSH n° 2', voit: 'Des octets chiffrés : il sait qui se connecte, vers où, quand et combien, mais pas ce qui passe.', cle: 'Sur le portable : la signature est faite par le portable.',
-    texte: 'Dans ce tuyau, le portable ouvre une deuxième connexion SSH directement avec web1 : il vérifie lui-même la clé de web1 (son known_hosts) et signe avec sa propre clé. Le bastion ne transporte que du chiffré : c’est une connexion dans une connexion.',
+    texte: 'Dans ce tuyau, le portable ouvre une deuxième connexion SSH directement avec web1 : il vérifie lui-même la clé de web1 (son known_hosts ; à la première connexion, il demande d’abord de confirmer l’empreinte, comme dans l’animation SSH plus haut) et signe avec sa propre clé. Le bastion ne transporte que du chiffré : c’est une connexion dans une connexion.',
   },
   {
     lignes: [['alice@portable:~$ cat ~/.ssh/config', 'tapee'], ['Host web1', ''], ['    HostName 10.0.0.12', ''], ['    User alice', ''], ['    ProxyJump alice@bastion.example', ''], ['alice@portable:~$ ssh web1', 'tapee']],

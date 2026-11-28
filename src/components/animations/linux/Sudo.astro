@@ -3,43 +3,45 @@
 // lit un fichier réservé à root grâce à sudo, bob essaie et échoue. Les
 // messages sont ceux de sudo en français (traductions du projet sudo :
 // « [sudo] Mot de passe de %p : », « %s n'est pas dans le fichier
-// sudoers. ») ; la règle %sudo ALL=(ALL:ALL) ALL est celle de Debian et
-// Ubuntu. Sources : docs/sources/linux.md.
+// sudoers. », apostrophe droite comprise) ; la règle %sudo ALL=(ALL:ALL) ALL
+// est celle de Debian et Ubuntu ; le journal est lu avec journalctl, car
+// Debian n'installe plus rsyslog (donc /var/log/auth.log) depuis la
+// version 12. Sources : docs/sources/linux.md.
 const ETAPES = [
   {
     lignes: [['alice@machine:~$ cat /etc/shadow', 'tapee'], ['cat: /etc/shadow: Permission non accordée', 'erreur']],
-    qui: 'alice', uid: 1000,
+    bandeau: 'cat tourne en tant que alice (UID 1000)', root: false,
     texte: 'alice veut lire /etc/shadow (-rw-r----- root shadow). Elle n’est ni root ni dans le groupe shadow : le noyau refuse.',
   },
   {
     lignes: [['alice@machine:~$ sudo cat /etc/shadow', 'tapee'], ['[sudo] Mot de passe de alice : ', '']],
-    qui: 'alice', uid: 1000,
-    texte: 'Elle recommence en ajoutant sudo devant. sudo demande le mot de passe d’alice, pas celui de root : il vérifie que c’est bien elle devant le clavier.',
+    bandeau: 'sudo tourne en root (programme setuid), pour le compte d’alice', root: true,
+    texte: 'Elle recommence en ajoutant sudo devant. sudo est un programme setuid root : il a les droits de root dès son lancement, mais il ne lancera cat que si alice y a droit. Il demande le mot de passe d’alice, pas celui de root : il vérifie que c’est bien elle devant le clavier.',
   },
   {
     lignes: [['# /etc/sudoers : %sudo   ALL=(ALL:ALL) ALL', 'info']],
-    qui: 'sudo', uid: 0,
+    bandeau: 'sudo tourne en root (programme setuid), pour le compte d’alice', root: true,
     texte: 'sudo lit /etc/sudoers. La règle « %sudo ALL=(ALL:ALL) ALL » dit : les membres du groupe sudo peuvent tout lancer, en tant que n’importe qui. alice est dans ce groupe : accordé.',
   },
   {
-    lignes: [['root:*:20000:0:99999:7:::', ''], ['alice:$y$j9T$Lr…(empreinte du mot de passe)…:20000:0:99999:7:::', ''], ['…', '']],
-    qui: 'root', uid: 0,
+    lignes: [['root:*:20000:0:99999:7:::', ''], ['alice:$y$j9T$Lr…(mot de passe haché)…:20000:0:99999:7:::', ''], ['…', '']],
+    bandeau: 'cat tourne en tant que root (UID 0)', root: true,
     texte: 'La commande cat tourne maintenant en tant que root (UID 0) : le fichier s’affiche. On y voit les mots de passe hachés, jamais en clair.',
   },
   {
-    lignes: [['# /var/log/auth.log : sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow', 'info']],
-    qui: 'alice', uid: 1000,
-    texte: 'sudo a tout noté dans le journal : qui, depuis où, en tant que qui, quelle commande. C’est un avantage sur un mot de passe root partagé : on sait qui a fait quoi.',
+    lignes: [['alice@machine:~$ sudo whoami', 'tapee'], ['root', '']],
+    bandeau: 'whoami tourne en tant que root (UID 0)', root: true,
+    texte: 'Pendant quelques minutes (5 par défaut, réglable), sudo ne redemande pas le mot de passe : la commande suivante passe directement en root. whoami le confirme.',
   },
   {
-    lignes: [['alice@machine:~$ sudo apt update', 'tapee'], ['Atteint :1 http://deb.debian.org/debian trixie InRelease', '']],
-    qui: 'root', uid: 0,
-    texte: 'Pendant quelques minutes (5 par défaut, réglable), sudo ne redemande pas le mot de passe : la commande suivante passe directement en root.',
+    lignes: [['alice@machine:~$ sudo journalctl _COMM=sudo', 'tapee'], ['… sudo[2481]:    alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow', '']],
+    bandeau: 'journalctl tourne en tant que root (UID 0)', root: true,
+    texte: 'sudo a tout noté dans le journal du système : qui, depuis où, en tant que qui, quelle commande. C’est un avantage sur un mot de passe root partagé : on sait qui a fait quoi.',
   },
   {
-    lignes: [['bob@machine:~$ sudo cat /etc/shadow', 'tapee'], ['[sudo] Mot de passe de bob : ', ''], ['bob n’est pas dans le fichier sudoers.', 'erreur']],
-    qui: 'bob', uid: 1001,
-    texte: 'bob essaie à son tour. Son mot de passe est juste, mais il n’est pas dans le groupe sudo : refusé, et la tentative est notée dans le journal.',
+    lignes: [['bob@machine:~$ sudo cat /etc/shadow', 'tapee'], ['[sudo] Mot de passe de bob : ', ''], ["bob n'est pas dans le fichier sudoers.", 'erreur']],
+    bandeau: 'sudo tourne en root (programme setuid), pour le compte de bob', root: true,
+    texte: 'bob essaie à son tour. Son mot de passe est juste, mais il n’est pas dans le groupe sudo : refusé, et la tentative est notée dans le journal. cat n’a jamais été lancé.',
   },
 ];
 ---
@@ -67,7 +69,7 @@ const ETAPES = [
 
   document.querySelectorAll<HTMLElement>('[data-sudo]').forEach((racine) => {
     activerScene(racine);
-    const etapes: { lignes: [string, string][]; qui: string; uid: number; texte: string }[] = JSON.parse(racine.dataset.etapes!);
+    const etapes: { lignes: [string, string][]; bandeau: string; root: boolean; texte: string }[] = JSON.parse(racine.dataset.etapes!);
     const ecran = racine.querySelector<HTMLElement>('[data-ecran]')!;
     const identite = racine.querySelector<HTMLElement>('[data-identite]')!;
     pasAPas(racine, () => etapes.length, (n) => {
@@ -80,8 +82,8 @@ const ETAPES = [
       }));
       ecran.scrollTop = ecran.scrollHeight;
       const e = etapes[n - 1];
-      identite.textContent = e.uid === 0 ? `Le programme tourne en tant que root (UID 0)` : `Le programme tourne en tant que ${e.qui} (UID ${e.uid})`;
-      identite.classList.toggle('root', e.uid === 0);
+      identite.textContent = e.bandeau;
+      identite.classList.toggle('root', e.root);
       return e.texte;
     }).aller(1);
   });

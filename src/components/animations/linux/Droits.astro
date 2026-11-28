@@ -91,7 +91,7 @@ const MODELES = [
 
     function rendre() {
       cases.forEach((c, i) => { c.checked = ((mode >> (8 - i)) & 1) === 1; });
-      ecrire('[data-ls]', `-${enLettres(mode)} 1 alice profs 2048 nov. 24 10:00 rapport.txt`);
+      ecrire('[data-ls]', `-${enLettres(mode)} 1 alice profs 2048 24 nov. 10:00 rapport.txt`);
       ecrire('[data-octal]', enOctal(mode));
       ecrire('[data-calcul]', '= ' + [6, 3, 0].map((d) => {
         const t = (mode >> d) & 7;

@@ -34,7 +34,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Les bases techniques<EnConstruction /></p>
   <h1>Client et serveur : protocoles, ports, URL</h1>
-  <MiseAJour date="2026-11-10" />
+  <MiseAJour date="2026-11-28" />
   <p class="chapo seulement-debut">
     Tu ouvres une page, tu envoies un courriel, tu déposes un fichier : à chaque fois, deux programmes se parlent.
     Un <Terme id="client">client</Terme> qui demande, un <Terme id="serveur">serveur</Terme> qui répond. Pour se
@@ -55,8 +55,8 @@ const etapes = [
     <Dialogue slot="animation" />
     <p slot="decouverte">
       Le client demande, le serveur répond. Le navigateur de ton téléphone est un client ; le programme qui envoie les
-      pages d'un site est un serveur. Une règle ne bouge jamais : c'est toujours le client qui commence la
-      conversation. Et le serveur répond à chacun séparément, même s'ils sont des milliers à demander en même temps.
+      pages d'un site est un serveur. C'est le client qui ouvre la conversation : c'est même ce qui fait de lui le
+      client. Et le serveur répond à chacun séparément, même s'ils sont nombreux à demander en même temps.
     </p>
     <p slot="curieux">
       Un serveur, c'est d'abord un <em>programme</em> qui attend qu'on lui demande quelque chose. Par extension, on
@@ -65,18 +65,21 @@ const etapes = [
       machines faites pour ça, allumées jour et nuit.
     </p>
     <p slot="ingenieur">
-      Un même gros site répond avec des centaines de serveurs derrière une seule adresse, grâce à des répartiteurs
-      de charge ; à l'inverse, un seul serveur peut héberger des milliers de petits sites (on le verra avec HTTP).
+      Un gros site répond souvent avec de nombreux serveurs derrière une seule adresse, grâce à des répartiteurs
+      de charge ; à l'inverse, un seul serveur peut héberger de nombreux sites (on le verra avec HTTP).
       Il existe aussi des réseaux sans serveur central, dits « pair à pair », où chaque machine est à la fois client
       et serveur.
     </p>
     <div slot="histoire">
       <p>
-        Le 16 avril 1971, Abhay Bhushan, du MIT, publie la RFC 114 : le premier protocole de transfert de fichiers
-        de l'ARPANET. Il y distingue l'usage « direct » d'une machine distante (se connecter dessus) et l'usage
-        « indirect », où un programme demande des fichiers à un autre : déjà l'idée du client et du serveur. Le
-        premier serveur web, lui, tourne au CERN, sur l'ordinateur NeXT de Tim Berners-Lee : le premier site,
-        info.cern.ch, est toujours en ligne.
+        Le 16 avril 1971, Abhay Bhushan, du MIT, publie la RFC 114, « A File Transfer Protocol », l'une des toutes
+        premières propositions de transfert de fichiers sur l'ARPANET. Il y distingue l'usage « direct » d'une
+        machine distante (s'y connecter et l'utiliser) et l'usage « indirect », où un programme intermédiaire fait
+        le travail pour toi. Les deux bouts de l'échange y portent déjà leurs noms : « l'utilisateur envoie la
+        demande, le serveur répond ». Le premier serveur web, lui, tourne fin 1990 au CERN, sur l'ordinateur NeXT
+        de Tim Berners-Lee, sous le nom nxoc01.cern.ch, plus tard appelé info.cern.ch. Au même moment, Nicola Pellow,
+        étudiante au CERN, commence à écrire le navigateur « en mode ligne », pour les simples terminaux texte. En
+        2013, le CERN a remis à cette adresse une copie de 1992 du premier site : <code>http://info.cern.ch/</code>.
       </p>
     </div>
     <p slot="mythes">
@@ -91,26 +94,30 @@ const etapes = [
     <Ports slot="animation" />
     <p slot="decouverte">
       L'<Terme id="adresse-ip">adresse IP</Terme> désigne une machine, comme l'adresse d'un immeuble. Le
-      <Terme id="port">port</Terme> désigne le programme à qui l'on parle, comme le numéro de l'appartement. Ainsi,
-      dans le même immeuble, un site web (port 443), un accès SSH (port 22) et un serveur de fichiers peuvent vivre
-      côte à côte.
+      <Terme id="port">port</Terme> désigne le programme à qui l'on parle, comme le numéro de l'appartement. Dans le
+      même immeuble, un site web (port 443), un accès SSH (port 22) et un serveur de fichiers peuvent vivre côte à
+      côte.
     </p>
     <p slot="curieux">
       Qui attribue les numéros ? L'IANA tient le registre des services courants : 80 pour HTTP, 443 pour HTTPS, 21
-      pour FTP, 22 pour SSH et SFTP, 25 pour le courriel entre serveurs, 53 pour le DNS. Ce sont des conventions, pas
-      des lois de la physique : on peut faire tourner un site sur le port 8080, il faut juste l'écrire dans l'URL.
+      pour FTP, 22 pour SSH (et donc pour SFTP, qui voyage dans SSH), 25 pour le courriel entre serveurs, 53 pour le
+      DNS. Le nom « sftp », lui, est pris dans le registre par un tout autre protocole de 1984, sur le port 115. Ce
+      sont des conventions, pas des lois de la physique : on peut faire tourner un site sur le port 8080, il faut
+      juste l'écrire dans l'URL.
     </p>
     <p slot="ingenieur">
       Un port est un nombre sur 16 bits, de 0 à 65 535. L'IANA distingue trois plages : les ports « système » (0 à
       1 023), les ports « utilisateur » (1 024 à 49 151), enregistrés pour des applications, et les ports
-      « dynamiques » (49 152 à 65 535), jamais attribués, que ton ordinateur choisit au hasard pour son côté de chaque
-      connexion. Une connexion est identifiée par quatre nombres : adresse et port du client, adresse et port du
-      serveur.
+      « dynamiques » (49 152 à 65 535), jamais attribués. Pour son côté de chaque connexion, ton ordinateur prend un
+      port libre, de façon difficile à prévoir (RFC 6056) : Windows le prend dans cette plage dynamique ; Linux, par
+      défaut, entre 32 768 et 60 999. Une connexion TCP est identifiée par quatre nombres : adresse et port du
+      client, adresse et port du serveur.
     </p>
     <p slot="verifie">
-      Sous Linux ou macOS, la commande <code>ss -tln</code> (ou <code>netstat -an</code> sous Windows) affiche les
-      ports sur lesquels ta machine écoute. Le jeu <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> fait
-      ouvrir et fermer des ports sur un pare-feu.
+      Sous Linux, la commande <code>ss -tln</code> affiche les ports TCP sur lesquels ta machine écoute ; sous
+      Windows, c'est <code>netstat -an</code>. Le jeu
+      <a href="/jeux/quetes-de-sysadmin/">Quêtes de Sysadmin</a> fait ouvrir et fermer des ports sur un pare-feu
+      (<code>ufw</code>).
     </p>
   </Etape>
 
@@ -132,12 +139,14 @@ const etapes = [
       La syntaxe est fixée par la RFC 3986 (2005), écrite par Tim Berners-Lee, Roy Fielding et Larry Masinter. Son
       exemple : <code>foo://example.com:8042/over/there?name=ferret#nose</code> se découpe en schéma, autorité,
       chemin, requête et fragment. Le nom du serveur est ensuite traduit en adresse IP par le
-      <Terme id="dns">DNS</Terme>.
+      <Terme id="dns">DNS</Terme>. Les schémas ont eux aussi leur registre à l'IANA : <code>http</code>,
+      <code>https</code> et <code>ftp</code> y sont définitifs, <code>sftp</code> seulement provisoire, et
+      <code>ftps</code> n'y figure pas : c'est un usage des logiciels.
     </p>
     <p slot="mythes">
       <strong>« Une adresse web commence par www. »</strong> « www » n'est qu'un nom choisi par le propriétaire du
-      domaine pour son serveur web, comme « mail » ou « cours ». <code>https://info.cern.ch/</code>, le premier site
-      web, n'en a pas.
+      domaine pour son serveur web, comme « mail » ou « cours ». <code>http://info.cern.ch/</code>, l'adresse du
+      premier site web, n'en a pas.
     </p>
   </Etape>
 
@@ -152,7 +161,8 @@ const etapes = [
     <p slot="curieux">
       Et si l'URL désigne un dossier (elle finit par <code>/</code>) ? Le serveur envoie le fichier
       <code>index.html</code> de ce dossier. S'il manque la barre finale, il répond souvent « c'est ailleurs »
-      (code 301), vers l'adresse avec la barre. Et si rien ne correspond : la fameuse 404.
+      (code 301), vers l'adresse avec la barre : c'est le réglage par défaut du serveur Apache. Et si rien ne
+      correspond : la fameuse 404.
     </p>
     <p slot="ingenieur">
       Ce n'est pas toujours un fichier : un chemin peut aussi déclencher un programme (PHP, Python, Node…) qui
@@ -162,9 +172,10 @@ const etapes = [
     </p>
     <div slot="histoire">
       <p>
-        L'adresse <code>https://info.cern.ch/hypertext/WWW/TheProject.html</code>, l'une des toutes premières pages du web,
-        qui présentait le projet World Wide Web au CERN, garde la trace de cette correspondance : un dossier <code>hypertext</code>,
-        un sous-dossier <code>WWW</code>, un fichier <code>TheProject.html</code>.
+        L'adresse <code>http://info.cern.ch/hypertext/WWW/TheProject.html</code>, la première page du web (servie fin
+        1990 sous le nom nxoc01.cern.ch), présentait le projet World Wide Web au CERN. Elle a la forme d'un chemin de
+        fichier : un dossier <code>hypertext</code>, un sous-dossier <code>WWW</code>, un fichier
+        <code>TheProject.html</code>. Celle qu'on lit aujourd'hui est une copie de 1992, remise en ligne en 2013.
       </p>
     </div>
   </Etape>
@@ -174,14 +185,14 @@ const etapes = [
     <Acces slot="animation" />
     <p slot="decouverte">
       Sur le serveur, le site est un dossier. Sur un hébergement comme celui de ce site, il s'appelle
-      <code>public_html</code> (ou <code>www</code>) : c'est la <strong>racine du site</strong>. La règle est simple :
+      <code>public_html</code> (aussi appelé <code>www</code>) : c'est la <strong>racine du site</strong>. La règle est simple :
       tout fichier rangé dedans a une adresse web ; tout fichier rangé ailleurs n'en a pas.
     </p>
     <p slot="curieux">
       HTTPS, FTPS et SFTP ? Trois portes différentes vers <strong>les mêmes fichiers</strong>, sur le même disque. Le
       navigateur passe par le serveur web (port 443) et ne voit que la racine du site ; FTPS et SFTP servent à déposer
-      et modifier ces fichiers. Tu corriges une page par SFTP ? Recharge le navigateur : la nouvelle version est déjà
-      là. Il n'y a qu'un fichier.
+      et modifier ces fichiers. Tu corriges une page par SFTP ? Recharge le navigateur : la nouvelle version est là
+      (sauf si une ancienne copie traîne encore dans un cache). Il n'y a qu'un fichier.
     </p>
     <p slot="ingenieur">
       Le serveur web Apache appelle ce dossier la <code>DocumentRoot</code> : il « ajoute le chemin de l'URL demandée
@@ -203,26 +214,33 @@ const etapes = [
     <p slot="decouverte">
       Pour déposer les fichiers d'un site sur un serveur, on utilise un protocole de transfert. Le plus ancien, FTP,
       envoie tout en clair : n'importe qui sur le chemin peut lire ton mot de passe. FTPS et SFTP, eux, chiffrent
-      tout. Ce sont eux qu'il faut utiliser.
+      l'échange, mot de passe et fichiers compris. Ce sont eux qu'il faut utiliser.
     </p>
     <p slot="curieux">
-      <strong>FTPS</strong>, c'est le bon vieux FTP glissé dans TLS, le même chiffrement que HTTPS : soit dès la
-      connexion (port 990), soit en le demandant sur le port 21 avec la commande <code>AUTH TLS</code>.
+      <strong>FTPS</strong>, c'est le bon vieux FTP glissé dans TLS, le même chiffrement que HTTPS. La norme
+      (RFC 4217) le fait demander sur le port 21, avec la commande <code>AUTH TLS</code>. Il existe aussi une
+      variante chiffrée dès la connexion, sur le port 990 : enregistrée à l'IANA, mais que cette RFC ne décrit pas.
       <strong><Terme id="sftp">SFTP</Terme></strong>, malgré son nom, n'a rien à voir avec FTP : c'est un autre
       protocole, qui voyage à l'intérieur d'une connexion SSH (port 22).
     </p>
     <p slot="ingenieur">
       FTP utilise deux connexions : une pour les commandes (port 21), une autre pour chaque transfert de données.
-      SFTP passe tout dans une seule
-      connexion SSH, et le client vérifie l'empreinte de la clé du serveur pour être sûr de ne pas parler à un
-      imposteur.
+      Dans le mode d'origine, dit « actif », c'est le serveur qui ouvre cette connexion de données vers le client,
+      depuis le port 20 : une exception à la règle de l'étape 0. En mode « passif » (commande <code>PASV</code>),
+      c'est le client qui l'ouvre, ce qui passe mieux les pare-feu. En FTPS, le chiffrement des données n'est pas
+      automatique : le client doit le demander (<code>PROT P</code>). SFTP passe tout dans une seule connexion SSH,
+      et le client vérifie l'empreinte de la clé du serveur pour être sûr de ne pas parler à un imposteur
+      (RFC 4251).
     </p>
     <div slot="histoire">
       <p>
         Le protocole FTP actuel est décrit dans la RFC 959, publiée en octobre 1985 par Jon Postel et
-        <strong>Joyce K. Reynolds</strong>, de l'ISI. Il prolonge la RFC 114 d'Abhay Bhushan (1971). Sa version
-        chiffrée par TLS est normalisée en 2005 (RFC 4217). SFTP, lui, n'est jamais devenu une norme officielle :
-        il est resté un brouillon de l'IETF (le dernier date de 2006), tout en étant utilisé partout.
+        <strong>Joyce K. Reynolds</strong>, de l'ISI. Il prolonge la RFC 114 d'Abhay Bhushan (1971), que la RFC 959
+        cite dans son historique. Sa version chiffrée par TLS est normalisée en 2005 (RFC 4217). SFTP, lui, n'est
+        jamais devenu une norme officielle : il est resté un brouillon de l'IETF, tout en étant utilisé partout. Le
+        dernier brouillon date de 2006, mais la version que parle OpenSSH, la 3, vient d'un brouillon de 2001.
+        État au 28 novembre 2026 : un groupe de travail de l'IETF s'est donné pour but de documenter SFTP tel
+        qu'il est utilisé.
       </p>
     </div>
     <p slot="verifie">
@@ -240,20 +258,23 @@ const etapes = [
       exactement la même conversation, glissée dans un canal chiffré, sur le port 443.
     </p>
     <p slot="curieux">
-      Les <Terme id="code-http">codes de réponse</Terme> se lisent par famille, comme des chiffres de dizaines :
-      2xx, tout va bien (200) ; 3xx, c'est ailleurs (301) ; 4xx, le client s'est trompé (404, page introuvable) ;
-      5xx, le serveur a un problème (500). Et la ligne <code>Host</code> dit quel site on veut : c'est grâce à elle
-      qu'un seul serveur, à une seule adresse IP, peut héberger des milliers de sites, comme sur un hébergement
-      mutualisé.
+      Les <Terme id="code-http">codes de réponse</Terme> se lisent par leur premier chiffre : 2xx, tout va bien
+      (200) ; 3xx, redirection (301, « c'est ailleurs ») ; 4xx, le client s'est trompé (404, page introuvable) ;
+      5xx, le serveur a un problème (500). Il existe aussi des 1xx, de simples messages d'information. Et la ligne
+      <code>Host</code> dit quel site on veut : c'est grâce à elle qu'un seul serveur, à une seule adresse IP, peut
+      héberger de nombreux sites, comme sur un hébergement mutualisé.
     </p>
     <p slot="ingenieur">
-      HTTP est décrit par la RFC 9110 (2022). La première ligne contient la méthode (GET pour lire, POST pour
-      envoyer un formulaire…), le chemin et la version. HTTP/2 et HTTP/3 transportent les mêmes informations sous
-      une forme binaire, plus rapide. Le module <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a> suit
+      Le sens de HTTP (méthodes, codes, en-têtes) est décrit par la RFC 9110 (2022), sa forme texte, HTTP/1.1, par
+      la RFC 9112. La première ligne de la requête contient la méthode (GET pour lire, POST pour envoyer un
+      formulaire…), le chemin et la version. HTTP/2 (RFC 9113) et HTTP/3 (RFC 9114, au-dessus de QUIC) transportent
+      les mêmes informations sous une forme binaire, plus efficace à traiter. En HTTPS, le serveur doit choisir
+      son certificat avant de lire la ligne <code>Host</code> : le client lui annonce le nom du site dès le début
+      de la poignée de main TLS (extension SNI, RFC 6066). Le module <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a> suit
       tout le voyage d'une requête, du DNS au chiffrement TLS.
     </p>
     <p slot="verifie">
-      Dans ton navigateur, ouvre les outils de développement (touche F12), onglet « Réseau », puis recharge la
+      Dans ton navigateur, ouvre les outils de développement (souvent la touche F12), onglet « Réseau », puis recharge la
       page : chaque ligne est une requête du client, avec son code de réponse.
     </p>
   </Etape>
@@ -262,7 +283,7 @@ const etapes = [
     <h2 id="titre-final">Ce qu'il faut retenir</h2>
     <ol class="questions">
       <li><strong>Le client demande, le serveur répond</strong> ; un serveur est d'abord un programme qui écoute.</li>
-      <li><strong>L'adresse IP désigne la machine, le port le programme</strong> : 443 pour HTTPS, 22 pour SSH et SFTP, 21 pour FTP.</li>
+      <li><strong>L'adresse IP désigne la machine, le port le programme</strong> : 443 pour HTTPS, 22 pour SSH (et SFTP, qui passe par SSH), 21 pour FTP.</li>
       <li><strong>Une URL dit comment, à qui et quoi</strong> : schéma, serveur (et port), chemin ; le fragment reste dans le navigateur.</li>
       <li><strong>Sur un serveur simple, le chemin de l'URL est un chemin de fichier</strong>, sous la racine du site ; un dossier sert son index.html.</li>
       <li><strong>La racine du site (public_html, www) est un dossier</strong> : web, FTPS et SFTP ne sont que trois chemins vers les mêmes fichiers.</li>
@@ -275,25 +296,44 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-10"
+    verifie="2026-11-28"
     sources={[
       { auteur: 'A. Bhushan (MIT)', titre: 'RFC 114 : A File Transfer Protocol', url: 'https://www.rfc-editor.org/rfc/rfc114', type: 'primaire', annee: 1971, langue: 'en' },
-      { auteur: 'J. Postel, J. Reynolds', titre: 'RFC 959 : File Transfer Protocol (FTP)', url: 'https://www.rfc-editor.org/rfc/rfc959', type: 'primaire', annee: 1985, langue: 'en' },
-      { auteur: 'P. Ford-Hutchinson', titre: 'RFC 4217 : Securing FTP with TLS', url: 'https://www.rfc-editor.org/rfc/rfc4217', type: 'primaire', annee: 2005, langue: 'en' },
-      { auteur: 'J. Galbraith, O. Saarenmaa (IETF)', titre: 'SSH File Transfer Protocol (draft-ietf-secsh-filexfer-13)', url: 'https://www.ietf.org/archive/id/draft-ietf-secsh-filexfer-13.txt', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'J. Postel, J. Reynolds', titre: 'RFC 959 : File Transfer Protocol (FTP) (historique, modes actif et passif)', url: 'https://www.rfc-editor.org/rfc/rfc959', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'P. Ford-Hutchinson', titre: 'RFC 4217 : Securing FTP with TLS (AUTH TLS sur le port 21, PROT P)', url: 'https://www.rfc-editor.org/rfc/rfc4217', type: 'primaire', annee: 2005, langue: 'en' },
+      { auteur: 'J. Galbraith, O. Saarenmaa (IETF)', titre: 'SSH File Transfer Protocol (draft-ietf-secsh-filexfer-13, dernier brouillon)', url: 'https://www.ietf.org/archive/id/draft-ietf-secsh-filexfer-13.txt', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'T. Ylonen, S. Lehtinen (IETF)', titre: 'SSH File Transfer Protocol, version 3 (draft-ietf-secsh-filexfer-02)', url: 'https://www.ietf.org/archive/id/draft-ietf-secsh-filexfer-02.txt', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'OpenBSD', titre: 'sftp-server(8) : le serveur SFTP d’OpenSSH (renvoie au brouillon -02)', url: 'https://man.openbsd.org/sftp-server.8', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'IETF', titre: 'Groupe de travail Secure Shell Maintenance (sshm) : charte (documenter SFTP tel qu’il est utilisé)', url: 'https://datatracker.ietf.org/wg/sshm/about/', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'T. Ylonen, C. Lonvick', titre: 'RFC 4251 : The Secure Shell (SSH) Protocol Architecture (clé d’hôte, § 4.1)', url: 'https://www.rfc-editor.org/rfc/rfc4251', type: 'primaire', annee: 2006, langue: 'en' },
       { auteur: 'T. Ylonen, C. Lonvick', titre: 'RFC 4253 : The Secure Shell (SSH) Transport Layer Protocol', url: 'https://www.rfc-editor.org/rfc/rfc4253', type: 'primaire', annee: 2006, langue: 'en' },
+      { auteur: 'M. Lottor', titre: 'RFC 913 : Simple File Transfer Protocol (l’autre « sftp », port 115)', url: 'https://www.rfc-editor.org/rfc/rfc913', type: 'primaire', annee: 1984, langue: 'en' },
       { auteur: 'T. Berners-Lee, R. Fielding, L. Masinter', titre: 'RFC 3986 : Uniform Resource Identifier (URI): Generic Syntax', url: 'https://www.rfc-editor.org/rfc/rfc3986', type: 'primaire', annee: 2005, langue: 'en' },
       { auteur: 'WHATWG', titre: 'URL Standard (analyse des chemins, « .. »)', url: 'https://url.spec.whatwg.org/', type: 'primaire', annee: 2026, langue: 'en' },
-      { auteur: 'R. Fielding, M. Nottingham, J. Reschke', titre: 'RFC 9110 : HTTP Semantics (codes de réponse, en-tête Host)', url: 'https://www.rfc-editor.org/rfc/rfc9110', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'IANA', titre: 'Uniform Resource Identifier (URI) Schemes (http, https, ftp permanents ; sftp provisoire)', url: 'https://www.iana.org/assignments/uri-schemes', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'R. Fielding, M. Nottingham, J. Reschke', titre: 'RFC 9110 : HTTP Semantics (codes de réponse, en-tête Host, fragment non envoyé)', url: 'https://www.rfc-editor.org/rfc/rfc9110', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'R. Fielding, M. Nottingham, J. Reschke', titre: 'RFC 9112 : HTTP/1.1 (ligne de requête)', url: 'https://www.rfc-editor.org/rfc/rfc9112', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'M. Thomson, C. Benfield', titre: 'RFC 9113 : HTTP/2 (format binaire)', url: 'https://www.rfc-editor.org/rfc/rfc9113', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'M. Bishop', titre: 'RFC 9114 : HTTP/3 (HTTP au-dessus de QUIC)', url: 'https://www.rfc-editor.org/rfc/rfc9114', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'D. Eastlake 3rd', titre: 'RFC 6066 : extensions TLS, dont l’indication du nom du serveur (SNI, § 3)', url: 'https://www.rfc-editor.org/rfc/rfc6066', type: 'primaire', annee: 2011, langue: 'en' },
       { auteur: 'M. Cotton et al.', titre: 'RFC 6335 : procédures de l’IANA pour les ports (plages 0-1023, 1024-49151, 49152-65535)', url: 'https://www.rfc-editor.org/rfc/rfc6335', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'M. Larsen, F. Gont', titre: 'RFC 6056 : choisir au hasard le port local (recommandations)', url: 'https://www.rfc-editor.org/rfc/rfc6056', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'Noyau Linux', titre: 'IP Sysctl : ip_local_port_range (32768 à 60999 par défaut)', url: 'https://docs.kernel.org/networking/ip-sysctl.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'The default dynamic port range for TCP/IP has changed (49152 à 65535 depuis Windows Vista)', url: 'https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/default-dynamic-port-range-tcpip-chang', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'iproute2 (man7.org)', titre: 'ss(8) : afficher les sockets sous Linux', url: 'https://man7.org/linux/man-pages/man8/ss.8.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Microsoft', titre: 'netstat (commande Windows)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/netstat', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'IANA', titre: 'Service Name and Transport Protocol Port Number Registry', url: 'https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Apache', titre: 'Directive DocumentRoot (module core)', url: 'https://httpd.apache.org/docs/2.4/mod/core.html#documentroot', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'Apache', titre: 'Module mod_dir : DirectoryIndex (index.html) et DirectorySlash (redirection vers la barre finale)', url: 'https://httpd.apache.org/docs/2.4/mod/mod_dir.html', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'cPanel', titre: 'File Manager (« Web Root (public_html or www) »)', url: 'https://docs.cpanel.net/cpanel/files/file-manager/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'cPanel', titre: 'FTP Accounts (dossier accessible par un compte FTP)', url: 'https://docs.cpanel.net/cpanel/files/ftp-accounts/', type: 'primaire', annee: 2026, langue: 'en' },
       { auteur: 'Ubuntu', titre: 'Configure Apache2 settings (DocumentRoot par défaut : /var/www/html)', url: 'https://documentation.ubuntu.com/server/how-to/web-services/configure-apache2-settings/', type: 'primaire', annee: 2026, langue: 'en' },
-      { auteur: 'CERN', titre: 'info.cern.ch : le premier site web', url: 'https://info.cern.ch/', type: 'primaire', langue: 'en' },
-      { auteur: 'CERN', titre: 'The World Wide Web project (une des premières pages du web)', url: 'https://info.cern.ch/hypertext/WWW/TheProject.html', type: 'primaire', langue: 'en' },
-      { auteur: 'W. Eddy (dir.)', titre: 'RFC 9293 : Transmission Control Protocol (une connexion = une paire de sockets)', url: 'https://www.rfc-editor.org/rfc/rfc9293', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'CERN', titre: 'info.cern.ch : « home of the first website »', url: 'http://info.cern.ch/', type: 'primaire', langue: 'en' },
+      { auteur: 'CERN', titre: 'The World Wide Web project (la première page du web, copie de 1992)', url: 'http://info.cern.ch/hypertext/WWW/TheProject.html', type: 'primaire', langue: 'en' },
+      { auteur: 'CERN', titre: 'Restoring the first website (remise en ligne de 2013, NeXT de Tim Berners-Lee « world’s first web server »)', url: 'https://first-website.web.cern.ch/', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'T. Berners-Lee (W3C)', titre: 'Frequently asked questions (« the first browser as well as the first server », fin 1990)', url: 'https://www.w3.org/People/Berners-Lee/FAQ.html', type: 'primaire', langue: 'en' },
+      { auteur: 'R. Cailliau, D. Connolly (W3C)', titre: 'A Little History of the World Wide Web (nxoc01.cern.ch, Nicola Pellow)', url: 'https://www.w3.org/History.html', type: 'primaire', langue: 'en' },
+      { auteur: 'W. Eddy (dir.)', titre: 'RFC 9293 : Transmission Control Protocol (port sur 16 bits ; une connexion = une paire de sockets)', url: 'https://www.rfc-editor.org/rfc/rfc9293', type: 'primaire', annee: 2022, langue: 'en' },
     ]}
   />
   </section>

@@ -1,16 +1,16 @@
 ---
 // Animation « FTP, FTPS, SFTP : ce que voit l'espion » (module « Client et
-// serveur », étape 4) : on choisit un protocole, on avance pas à pas, et on
+// serveur », étape 5) : on choisit un protocole, on avance pas à pas, et on
 // voit ce qu'une personne qui écoute le réseau peut lire. Sources : RFC 959
 // (FTP), RFC 4217 (FTPS), brouillon IETF draft-ietf-secsh-filexfer (SFTP),
-// RFC 4253 (SSH). Données : src/data/client-serveur.ts.
+// RFC 4253 et RFC 4251 (SSH). Données : src/data/client-serveur.ts.
 import { TRANSFERTS } from '../../../data/client-serveur';
 ---
 <div class="anim transfert" data-transfert data-protocoles={JSON.stringify(TRANSFERTS)}>
   <div class="anim-repli">
     {TRANSFERTS.map((t) => (
       <div>
-        <h4>{t.nom} (port {t.ports})</h4>
+        <h4>{t.nom} — ports : {t.ports}</h4>
         <ol>{t.etapes.map((e) => <li>{e.quoi} Ce que voit l'espion : <code>{e.espion}</code></li>)}</ol>
         <p>{t.bilan}</p>
       </div>

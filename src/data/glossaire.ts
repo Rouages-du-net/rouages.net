@@ -17,7 +17,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   ipv6: {
     terme: 'IPv6',
     definition:
-      "Version plus récente des adresses IP, assez nombreuses pour donner une adresse à chaque appareil. Elle remplace progressivement IPv4, dont les adresses sont épuisées.",
+      "Version plus récente des adresses IP, assez nombreuses pour donner une adresse à chaque appareil. Elle remplace progressivement IPv4, dont les réserves d'adresses libres sont épuisées.",
   },
   'nom-de-domaine': {
     terme: 'Nom de domaine',
@@ -70,7 +70,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   tcp: {
     terme: 'TCP',
     definition:
-      "Transmission Control Protocol : il numérote les données envoyées, vérifie leur arrivée et renvoie ceux qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
+      "Transmission Control Protocol : il numérote les données envoyées, vérifie leur arrivée et renvoie celles qui se perdent, pour que les données arrivent complètes et dans l'ordre.",
   },
   udp: {
     terme: 'UDP',
@@ -116,7 +116,7 @@ export const GLOSSAIRE: Record<string, Entree> = {
   http: {
     terme: 'HTTP',
     definition:
-      "HyperText Transfer Protocol : la langue dans laquelle le navigateur demande une page (« GET / ») et le serveur répond (« 200 OK »).",
+      "HyperText Transfer Protocol : la langue dans laquelle le navigateur demande une page (en substance « GET / ») et le serveur répond (« 200 OK »).",
   },
   'code-http': {
     terme: 'Code HTTP',
@@ -634,13 +634,13 @@ export const GLOSSAIRE: Record<string, Entree> = {
   cidr: {
     terme: 'Notation CIDR',
     definition:
-      "Façon d'écrire un réseau avec une barre oblique et le nombre de bits du réseau : 192.0.2.0/24 veut dire « les 24 premiers bits désignent le réseau ». Adoptée en 1993 à la place des classes A, B et C.",
+      "Façon d'écrire un réseau avec une barre oblique et le nombre de bits du réseau : 192.0.2.0/24 veut dire « les 24 premiers bits désignent le réseau ». Elle vient du routage sans classes (CIDR), qui remplace en 1993 les classes A, B et C.",
     voirAussi: ['masque-reseau', 'adresse-ip'],
   },
   linux: {
     terme: 'Linux',
     definition:
-      "Noyau de système d'exploitation libre, lancé en 1991 par Linus Torvalds. Par extension, les systèmes complets bâtis autour (Debian, Ubuntu, Fedora…), appelés distributions. Les 500 plus puissants supercalculateurs du monde l'utilisent.",
+      "Noyau de système d'exploitation lancé en 1991 par Linus Torvalds, sous licence libre (GNU GPL) depuis 1992. Par extension, les systèmes complets bâtis autour (Debian, Ubuntu, Fedora…), appelés distributions. Sur la liste TOP500 de novembre 2026, les 500 plus puissants supercalculateurs du monde l'utilisent.",
     voirAussi: ['noyau', 'logiciel-libre'],
   },
   shell: {
@@ -651,13 +651,13 @@ export const GLOSSAIRE: Record<string, Entree> = {
   root: {
     terme: 'root',
     definition:
-      "Le compte administrateur d'un système Unix ou Linux, de numéro (UID) 0 : il passe outre les droits des fichiers. À ne pas confondre avec la racine « / » de l'arborescence.",
+      "Le compte administrateur d'un système Unix ou Linux, de numéro (UID) 0 : il passe outre presque tous les droits des fichiers (pour exécuter un fichier, il lui faut tout de même au moins un x). À ne pas confondre avec la racine « / » de l'arborescence.",
     voirAussi: ['sudo'],
   },
   sudo: {
     terme: 'sudo',
     definition:
-      "Commande qui exécute une autre commande en tant que root (ou un autre compte), après avoir demandé le mot de passe de la personne et vérifié qu'elle y a droit. Chaque utilisation est journalisée.",
+      "Commande qui exécute une autre commande en tant que root (ou un autre compte), après avoir vérifié dans /etc/sudoers que la personne y a droit ; en général, elle lui demande aussi son propre mot de passe, pas celui de root. Par défaut, chaque utilisation est journalisée.",
     voirAussi: ['root'],
   },
   ssh: {

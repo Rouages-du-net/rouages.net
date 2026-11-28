@@ -1,7 +1,7 @@
 ---
 // Animation « Un fichier, trois chemins » (module « Client et serveur »,
-// étape 4) : sur un hébergement de type cPanel, le dossier public_html (ou
-// www) est la racine du site. Un même fichier se lit par le web (HTTPS), par
+// étape 4) : sur un hébergement de type cPanel, le dossier public_html
+// (« public_html or www » dans la documentation de cPanel) est la racine du site. Un même fichier se lit par le web (HTTPS), par
 // SFTP ou SSH, et par FTPS ; on le modifie par SFTP et le navigateur voit le
 // changement. Sources : Apache, directive DocumentRoot ; cPanel, gestionnaire
 // de fichiers (« Web Root (public_html or www) ») et comptes FTP.
@@ -28,10 +28,10 @@ const FICHIERS = [
     <ul>
       <li>par le web : <code>https://cours.example/reseau/ports.html</code> (port 443) ;</li>
       <li>par SFTP ou SSH : <code>sftp://eleve@cours.example{RACINE}/reseau/ports.html</code> (port 22) ;</li>
-      <li>par FTPS, avec un compte FTP limité au dossier du site : <code>ftps://eleve@cours.example/reseau/ports.html</code>.</li>
+      <li>par FTPS (port 21 avec <code>AUTH TLS</code>, ou 990), avec un compte FTP limité au dossier du site : <code>ftps://eleve@cours.example/reseau/ports.html</code>.</li>
     </ul>
     <p>
-      Si on le modifie par SFTP, la page web change aussitôt : c'est le même fichier. Un fichier rangé hors de
+      Si on le modifie par SFTP, la page web change aussitôt (sauf si une ancienne copie reste en cache) : c'est le même fichier. Un fichier rangé hors de
       <code>public_html</code>, comme <code>notes-perso.txt</code>, n'a pas d'adresse web ; on ne l'atteint que par
       SFTP ou SSH.
     </p>
@@ -55,7 +55,7 @@ const FICHIERS = [
             <p class="vu" data-vu></p>
           </div>
           <div class="chemin ftps" data-voie="ftps">
-            <p class="voie">📂 Par FTPS <span class="det">compte FTP limité à public_html</span></p>
+            <p class="voie">📂 Par FTPS <span class="det">port 21 (AUTH TLS) ou 990, compte FTP limité à public_html</span></p>
             <p class="adresse" data-adresse></p>
             <p class="vu" data-vu></p>
           </div>
@@ -106,7 +106,7 @@ const FICHIERS = [
         li.textContent = `📁 ${l.nom}/`;
         if (l.chemin === 'public_html') {
           li.classList.add('racine-web');
-          const badge = Object.assign(document.createElement('span'), { className: 'badge', textContent: 'racine du site (www)' });
+          const badge = Object.assign(document.createElement('span'), { className: 'badge', textContent: 'racine du site' });
           li.append(' ', badge);
         }
         if (l.chemin.startsWith('public_html')) li.classList.add('dans-web');
@@ -149,7 +149,7 @@ const FICHIERS = [
       modifs.add(choisi);
       rendre(false);
       legende.textContent = choisi.startsWith(web)
-        ? 'Fichier modifié par SFTP. Recharge la page web : le navigateur affiche aussitôt la nouvelle version, et FTPS voit la même. Il n’y a qu’un fichier sur le disque.'
+        ? 'Fichier modifié par SFTP. Recharge la page web : le navigateur affiche la nouvelle version (sauf si une ancienne copie reste en cache), et FTPS voit la même. Il n’y a qu’un fichier sur le disque.'
         : 'Fichier modifié par SFTP. Il n’a toujours pas d’adresse web : il est hors de la racine du site.';
     });
     racineEl.querySelector('[data-action="annuler"]')!.addEventListener('click', () => { modifs.clear(); rendre(true); });

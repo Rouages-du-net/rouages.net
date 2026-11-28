@@ -4,6 +4,7 @@
 // port ; le client choisit un protocole et frappe à la porte correspondante.
 // Ports : registre de l'IANA. Données : src/data/client-serveur.ts.
 import { PORTS, SERVEUR_ECOUTE } from '../../../data/client-serveur';
+const ecoutent = PORTS.filter((p) => SERVEUR_ECOUTE.includes(p.port)).map((p) => `${p.port} (${p.protocole})`).join(', ');
 ---
 <div class="anim ports" data-ports data-ecoute={JSON.stringify(SERVEUR_ECOUTE)} data-liste={JSON.stringify(PORTS)}>
   <div class="anim-repli">
@@ -12,6 +13,11 @@ import { PORTS, SERVEUR_ECOUTE } from '../../../data/client-serveur';
       <thead><tr><th scope="col">Port</th><th scope="col">Protocole</th><th scope="col">Usage</th></tr></thead>
       <tbody>{PORTS.map((p) => <tr><td>{p.port}</td><td>{p.protocole}</td><td>{p.usage}</td></tr>)}</tbody>
     </table>
+    <p>
+      Sur le serveur de l'exemple, <code>cours.example</code> (adresse IP 203.0.113.10), un programme écoute
+      seulement sur les ports {ecoutent}. Une demande sur un autre port reçoit « connexion refusée ». Même machine,
+      même adresse : c'est le port qui désigne le service.
+    </p>
   </div>
   <div class="anim-scene" hidden>
     <div class="anim-cadre">

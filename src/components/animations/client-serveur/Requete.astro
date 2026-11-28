@@ -1,6 +1,7 @@
 ---
 // Animation « Une conversation HTTP » (module « Client et serveur »,
-// étape 5) : cinq échanges réels dans leur forme texte (HTTP/1.1, RFC 9110) :
+// étape 6) : cinq échanges d'exemple (construits, domaines .example) dans leur
+// forme texte (HTTP/1.1 : RFC 9110 pour le sens, RFC 9112 pour la forme) :
 // 200, 404, 301, 500, et la ligne « Host » qui permet à un serveur
 // d'héberger plusieurs sites. Données : src/data/client-serveur.ts.
 import { ECHANGES } from '../../../data/client-serveur';
@@ -25,7 +26,7 @@ import { ECHANGES } from '../../../data/client-serveur';
         <div class="bulle req"><p class="qui">💻 Le client envoie</p><pre data-req></pre></div>
         <div class="bulle rep"><p class="qui">🗄️ Le serveur répond <span class="code" data-code></span></p><pre data-rep></pre></div>
       </div>
-      <p class="anim-note">En HTTPS, c’est exactement la même conversation, mais à l’intérieur d’un canal chiffré (TLS), sur le port 443 : sur le réseau, on ne lit plus ces lignes. HTTP/2 et HTTP/3 transportent les mêmes informations sous une forme binaire.</p>
+      <p class="anim-note">En HTTPS, c’est exactement la même conversation, mais à l’intérieur d’un canal chiffré (TLS), sur le port 443 : sur le réseau, on ne lit plus ces lignes. HTTP/2 et HTTP/3 transportent les mêmes informations sous une forme binaire (RFC 9113 et RFC 9114).</p>
       <p class="anim-legende" aria-live="polite"></p>
     </div>
   </div>
