@@ -15,11 +15,22 @@ export interface Exercice {
 const fr = (n: number) => n.toLocaleString('fr-FR');
 const DOC = ['192.0.2.0', '198.51.100.0', '203.0.113.0'];
 
+/** Vrai si ip est une adresse de machine du réseau /p (ni l'adresse du réseau, ni celle de diffusion). */
+const machine = (ip: number, p: number) => {
+  const r = reseau(ip, p);
+  return ip !== r.reseau && ip !== r.diffusion;
+};
+
+/** Tire une adresse de machine (jamais celle du réseau ni celle de diffusion du /p). */
 function adresse(alea: () => number, p: number): number {
   const entier = (n: number) => Math.floor(alea() * n);
-  if (p >= 24) return lireIPv4(DOC[entier(3)])! + 1 + entier(254);
-  // Grands réseaux : plage privée 10.0.0.0/8 (RFC 1918).
-  return lireIPv4('10.0.0.0')! + entier(2 ** 24 - 2) + 1;
+  let ip: number;
+  do {
+    if (p >= 24) ip = lireIPv4(DOC[entier(3)])! + 1 + entier(254);
+    // Grands réseaux : plage privée 10.0.0.0/8 (RFC 1918).
+    else ip = lireIPv4('10.0.0.0')! + entier(2 ** 24 - 2) + 1;
+  } while (!machine(ip, p));
+  return ip;
 }
 
 const octetsMasque = (p: number) => ecrireIPv4(masque(p));
@@ -29,7 +40,10 @@ const TYPES = ['reseau', 'diffusion', 'machines', 'masque', 'prefixe', 'meme'] a
 
 export function exercice(graine: number, type?: (typeof TYPES)[number]): Exercice {
   const alea = hasard(graine);
-  const t = type ?? TYPES[Math.floor(alea() * TYPES.length)];
+  // Le type est toujours tiré, même quand il est imposé : ainsi, le n° 42 en
+  // « tous les types » est le même exercice que le n° 42 du type qu'il a tiré.
+  const tire = TYPES[Math.floor(alea() * TYPES.length)];
+  const t = type ?? tire;
   const p = 16 + Math.floor(alea() * 15); // /16 à /30
   const ip = adresse(alea, p);
   const r = reseau(ip, p);
@@ -84,7 +98,7 @@ export function exercice(graine: number, type?: (typeof TYPES)[number]): Exercic
         type: 'Préfixe pour N machines', aide: 'un préfixe, par exemple /24',
         enonce: `Quel est le plus petit sous-réseau (le plus long préfixe) qui peut accueillir ${fr(n)} machines ?`, reponse: `/${q}`,
         correction: [
-          `Il faut 2^k − 2 ≥ ${fr(n)} : on cherche la plus petite puissance de 2 qui convient.`,
+          `Avec h bits de machine, il faut 2^h − 2 ≥ ${fr(n)} : on cherche la plus petite puissance de 2 qui convient.`,
           `2^${32 - q} − 2 = ${fr(rq.hotes)} suffit${q < 30 ? `, alors que 2^${31 - q} − 2 = ${fr(2 ** (31 - q) - 2)} ne suffit pas` : ''}.`,
           `${32 - q} bits pour les machines, donc 32 − ${32 - q} = ${q} bits de réseau : /${q}.`,
         ],
@@ -94,11 +108,12 @@ export function exercice(graine: number, type?: (typeof TYPES)[number]): Exercic
       // Deux adresses : même réseau ou pas ? On choisit une fois sur deux une adresse dans le même réseau.
       const meme = alea() < 0.5;
       let autre: number;
-      if (meme) autre = r.reseau + 1 + Math.floor(alea() * Math.max(1, r.hotes));
+      // Jamais la même adresse que la première, ni une adresse de réseau ou de diffusion.
+      if (meme) do autre = r.reseau + 1 + Math.floor(alea() * r.hotes); while (autre === ip);
       else if (p > 24) {
         // Un autre sous-réseau du même bloc de documentation /24.
         const bloc = reseau(ip, 24).reseau;
-        do autre = bloc + 1 + Math.floor(alea() * 254); while (reseau(autre, p).reseau === r.reseau);
+        do autre = bloc + 1 + Math.floor(alea() * 254); while (reseau(autre, p).reseau === r.reseau || !machine(autre, p));
       } else if (p === 24) {
         autre = lireIPv4(DOC.find((d) => lireIPv4(d)! !== r.reseau)!)! + 1 + Math.floor(alea() * 254);
       } else {

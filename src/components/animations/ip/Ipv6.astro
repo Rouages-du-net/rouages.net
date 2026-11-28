@@ -85,7 +85,9 @@
       parties.textContent = '';
       if (!g) {
         zone.replaceChildren();
-        return 'Cette adresse n’est pas valide : 8 groupes de 1 à 4 chiffres hexadécimaux (0-9, a-f), séparés par « : », avec au plus un « :: ».';
+        return champ.value.includes('.')
+          ? 'Une adresse IPv6 peut finir par une adresse IPv4 (par exemple ::ffff:192.0.2.1) : c’est valide (RFC 4291), mais cette animation ne lit que les 8 groupes hexadécimaux.'
+          : 'Cette adresse n’est pas valide : 8 groupes de 1 à 4 chiffres hexadécimaux (0-9, a-f), séparés par « : », avec au plus un « :: ».';
       }
       const z = suiteNulle(g);
       if (etape === 1) {

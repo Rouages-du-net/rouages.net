@@ -3,6 +3,8 @@
 // masques », étape 0). On écrit une adresse en décimal pointé et l'on voit
 // ses 32 bits, octet par octet ; on peut aussi basculer les bits.
 // Exemples : adresses de documentation (RFC 5737) et privées (RFC 1918).
+// La nature de l'adresse (privée, documentation, plages spéciales RFC 6890)
+// vient de nature() dans src/lib/ip.ts.
 ---
 <div class="anim ipv4" data-ipv4>
   <div class="anim-repli">
@@ -52,7 +54,7 @@
     const sortie = (nom: string) => racine.querySelector<HTMLElement>(`[data-${nom}]`)!;
     let ip = lireIPv4('192.0.2.17')!;
 
-    function rendre(depuisChamps = false) {
+    function rendre(depuisChamps = false, remarque = '') {
       const o = octets(ip);
       if (!depuisChamps) champs.forEach((c, i) => (c.value = String(o[i])));
       zone.replaceChildren();
@@ -86,14 +88,15 @@
       sortie('tout').textContent = b.match(/.{8}/g)!.join(' ');
       sortie('hex').textContent = o.map((v) => versBase(v, 16, 2)).join(' ');
       sortie('nombre').textContent = fr(ip);
-      sortie('nature').textContent = nature(ip) ?? `${ecrireIPv4(ip)} : une adresse publique possible. Sur ce site, on n’utilise que des adresses d’exemple.`;
+      sortie('nature').textContent = remarque + (nature(ip) ?? `${ecrireIPv4(ip)} n’est ni privée, ni réservée aux exemples, ni dans une plage spéciale : elle peut servir sur internet. Sur ce site, on n’utilise que des adresses d’exemple.`);
     }
 
     champs.forEach((c) =>
       c.addEventListener('input', () => {
         const valeurs = champs.map((x) => Math.max(0, Math.min(255, Math.round(Number(x.value) || 0))));
         ip = lireIPv4(valeurs.join('.'))!;
-        rendre(true);
+        const hors = champs.some((x) => x.value !== '' && Number(x.value) !== Math.max(0, Math.min(255, Math.round(Number(x.value)))));
+        rendre(true, hors ? 'Un octet va de 0 à 255 : la valeur tapée a été ramenée dans cet intervalle. ' : '');
       }),
     );
     champs.forEach((c) => c.addEventListener('change', () => rendre()));

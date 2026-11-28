@@ -50,13 +50,26 @@ export function reseau(ip: number, p: number): Reseau {
   return { reseau: res, diffusion: diff, premiere: res + 1, derniere: diff - 1, adresses, hotes: adresses - 2 };
 }
 
-/** Nature d'une adresse IPv4 (plages privées RFC 1918, documentation RFC 5737). */
+/**
+ * Nature d'une adresse IPv4 : plages privées (RFC 1918), de documentation
+ * (RFC 5737) et principales plages à usage spécial du registre de l'IANA
+ * (RFC 6890, multidiffusion RFC 5771). Renvoie null pour une adresse qui
+ * n'est dans aucune de ces plages (ce qui ne garantit pas qu'elle soit
+ * attribuée à quelqu'un).
+ */
 export function nature(ip: number): string | null {
   const dans = (base: string, p: number) => (ip & masque(p)) >>> 0 === lireIPv4(base)!;
   if (dans('10.0.0.0', 8) || dans('172.16.0.0', 12) || dans('192.168.0.0', 16))
     return 'Adresse privée (RFC 1918) : utilisable seulement à l’intérieur d’un réseau local.';
   if (dans('192.0.2.0', 24) || dans('198.51.100.0', 24) || dans('203.0.113.0', 24))
     return 'Adresse réservée aux exemples et à la documentation (RFC 5737) : elle ne désigne aucune machine réelle.';
+  if (dans('127.0.0.0', 8)) return 'Adresse de bouclage (RFC 6890) : elle désigne la machine elle-même, et ne sort jamais sur le réseau.';
+  if (dans('169.254.0.0', 16)) return 'Adresse de lien local (RFC 6890) : elle ne sert que sur le réseau local et ne passe jamais un routeur.';
+  if (dans('100.64.0.0', 10)) return 'Espace d’adresses partagé (RFC 6598) : réservé au NAT des opérateurs, entre ta box et leur réseau.';
+  if (dans('0.0.0.0', 8)) return 'Plage « ce réseau » (RFC 6890) : elle ne désigne aucune machine joignable.';
+  if (ip === 0xffffffff) return 'Adresse de diffusion limitée (RFC 6890) : un message envoyé là va à toutes les machines du réseau local.';
+  if (dans('224.0.0.0', 4)) return 'Adresse de multidiffusion (RFC 5771) : elle désigne un groupe de machines, pas une seule.';
+  if (dans('240.0.0.0', 4)) return 'Plage réservée (RFC 6890) : elle n’est pas attribuée sur internet.';
   return null;
 }
 

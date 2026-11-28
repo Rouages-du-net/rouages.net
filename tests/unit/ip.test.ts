@@ -30,6 +30,18 @@ describe('IPv4 et masques', () => {
     expect(nature(ip('172.32.0.1'))).toBeNull();
     expect(nature(ip('203.0.113.5'))).toMatch(/documentation/);
   });
+  it('ne présente pas les plages spéciales comme publiques (RFC 6890, 6598, 5771)', () => {
+    expect(nature(ip('127.0.0.1'))).toMatch(/bouclage/);
+    expect(nature(ip('169.254.10.1'))).toMatch(/lien local/);
+    expect(nature(ip('100.64.0.1'))).toMatch(/partagé/);
+    expect(nature(ip('100.128.0.1'))).toBeNull();
+    expect(nature(ip('0.1.2.3'))).toMatch(/ce réseau/);
+    expect(nature(ip('224.0.0.251'))).toMatch(/multidiffusion/);
+    expect(nature(ip('239.255.255.255'))).toMatch(/multidiffusion/);
+    expect(nature(ip('240.0.0.1'))).toMatch(/réservée/);
+    expect(nature(ip('255.255.255.255'))).toMatch(/diffusion limitée/);
+    expect(nature(ip('8.8.8.8'))).toBeNull();
+  });
 });
 
 describe('IPv6 (exemples de la RFC 5952)', () => {
@@ -85,6 +97,28 @@ describe('exercices corrigés', () => {
         expect(doc.some((d) => (a & masque(24)) >>> 0 === d) || a >>> 24 === 10).toBe(true);
       }
       expect(juste(e.reponse, e.reponse)).toBe(true);
+    }
+  });
+  it('donnent le même exercice pour un numéro, que le type soit imposé ou tiré', () => {
+    for (let g = 1; g <= 500; g++) {
+      const e = exercice(g);
+      const type = ({ 'Adresse du réseau': 'reseau', 'Adresse de diffusion': 'diffusion', 'Nombre de machines': 'machines',
+        'Masque en décimal': 'masque', 'Préfixe pour N machines': 'prefixe', 'Même réseau ?': 'meme' } as const)[e.type as 'Adresse du réseau'];
+      expect(exercice(g, type)).toEqual(e);
+    }
+  });
+  it('évitent les cas déroutants (adresse comparée à elle-même, adresse de réseau ou de diffusion)', () => {
+    for (let g = 1; g <= 3000; g++) {
+      for (const t of ['reseau', 'diffusion', 'meme'] as const) {
+        const e = exercice(g, t);
+        const p = Number(e.enonce.match(/\/(\d+)/)![1]);
+        const adresses = [...e.enonce.matchAll(/\d+\.\d+\.\d+\.\d+/g)].map((m) => ip(m[0]));
+        for (const a of adresses) {
+          const r = reseau(a, p);
+          expect(a === r.reseau || a === r.diffusion).toBe(false);
+        }
+        if (t === 'meme') expect(adresses[0]).not.toBe(adresses[1]);
+      }
     }
   });
   it('acceptent les variantes d’écriture', () => {

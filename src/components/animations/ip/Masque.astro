@@ -97,7 +97,7 @@
       ajouter('Adresses pour les machines', fr(r.hotes));
       const explication =
         p === 32 ? 'Un /32 désigne une seule adresse, une seule machine.'
-        : p === 31 ? 'Un /31 n’a que 2 adresses : on l’utilise pour relier deux routeurs, sans adresse de réseau ni de diffusion (RFC 3021).'
+        : p === 31 ? 'Un /31 n’a que 2 adresses : on l’utilise sur une liaison point à point, le plus souvent entre deux routeurs, sans adresse de réseau ni de diffusion (RFC 3021).'
         : `Les ${p} premiers bits (à 1 dans le masque) désignent le réseau ; les ${32 - p} derniers numérotent les machines. Sur ${fr(r.adresses)} adresses, la première est celle du réseau et la dernière sert à la diffusion : il en reste ${fr(r.hotes)}.`;
       legende.textContent = (message ? message + ' ' : '') + explication;
     }

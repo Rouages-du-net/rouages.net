@@ -25,7 +25,7 @@
         </label>
       </div>
       <div class="bits-decoupe" data-bits aria-hidden="true"></div>
-      <p class="anim-note">Vert : bits du réseau de départ. Violet : bits empruntés, qui numérotent les sous-réseaux. Jaune : bits des machines.</p>
+      <p class="anim-note">Vert : bits du réseau de départ. Violet (lettre n) : bits empruntés, qui numérotent les sous-réseaux. Jaune (lettre m) : bits des machines.</p>
       <div class="barre" data-barre aria-hidden="true"></div>
       <ol class="liste-sr" data-liste></ol>
       <p class="anim-legende" aria-live="polite"></p>
@@ -48,6 +48,7 @@
     const liste = racine.querySelector<HTMLOListElement>('[data-liste]')!;
     const legende = racine.querySelector<HTMLElement>('.anim-legende')!;
     let ip = lireIPv4('192.0.2.0')!, p = 24;
+    let avertissement = '';
 
     function lireBase(): boolean {
       const m = champ.value.trim().match(/^([\d.]+)\/(\d{1,2})$/);
@@ -58,6 +59,11 @@
         return false;
       }
       ip = v; p = pp;
+      // Une base non alignée désigne une machine, pas un réseau : on le dit.
+      const debut = decouper(v, pp, pp, 1).liste[0].reseau;
+      avertissement = debut !== v
+        ? `${ecrireIPv4(v)}/${pp} n’est pas un réseau : c’est la machine ${ecrireIPv4(v)}, dans le réseau ${ecrireIPv4(debut)}/${pp}. On découpe donc ${ecrireIPv4(debut)}/${pp}. `
+        : '';
       curseur.min = String(p + 1);
       curseur.max = String(Math.min(30, p + 10));
       if (Number(curseur.value) <= p || Number(curseur.value) > Number(curseur.max)) curseur.value = String(Math.min(30, p + 2));
@@ -87,7 +93,7 @@
       });
       if (total > 16) liste.append(Object.assign(document.createElement('li'), { className: 'suite', textContent: `… et ${fr(total - 16)} autres sous-réseaux, jusqu’à ${ecrireIPv4(decouper(ip, p, q, total).liste[total - 1]?.reseau ?? 0)}/${q}.` }));
       const k = q - p;
-      legende.textContent = `On emprunte ${k} bit${k > 1 ? 's' : ''} à la partie machine : 2${exposant(k)} = ${fr(total)} sous-réseaux /${q}, de 2${exposant(32 - q)} = ${fr(2 ** (32 - q))} adresses chacun, soit ${fr(2 ** (32 - q) - 2)} machines par sous-réseau. Chaque sous-réseau commence à un multiple de ${fr(2 ** (32 - q))}.`;
+      legende.textContent = `${avertissement}On emprunte ${k} bit${k > 1 ? 's' : ''} à la partie machine : 2${exposant(k)} = ${fr(total)} sous-réseaux /${q}, de 2${exposant(32 - q)} = ${fr(2 ** (32 - q))} adresses chacun, soit ${fr(2 ** (32 - q) - 2)} machines par sous-réseau. Chaque sous-réseau commence à un multiple de ${fr(2 ** (32 - q))}.`;
     }
 
     champ.addEventListener('change', () => { if (lireBase()) rendre(); });

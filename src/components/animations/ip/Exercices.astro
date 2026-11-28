@@ -1,7 +1,9 @@
 ---
 // Exercices corrigés (module « Découper un réseau en sous-réseaux », étape 2).
 // Chaque exercice a un numéro (sa graine) : le même numéro donne toujours le
-// même exercice, pour qu'un·e enseignant·e puisse le donner en classe.
+// même exercice, pour qu'un·e enseignant·e puisse le donner en classe. Avec un
+// type imposé, le numéro garde le même tirage (voir exercice() dans
+// src/lib/exercices-ip.ts). Le numérotage change si le code du tirage change.
 // Sans JavaScript : six exercices fixes, avec leur correction dépliable.
 import { exercice } from '../../../lib/exercices-ip';
 
@@ -12,7 +14,7 @@ const fixes = (['reseau', 'diffusion', 'machines', 'masque', 'prefixe', 'meme'] 
     <ol class="fixes">
       {fixes.map((e) => (
         <li>
-          <p><strong>{e.type}.</strong> {e.enonce}</p>
+          <p><strong>{e.type}</strong><br />{e.enonce}</p>
           <details>
             <summary>Correction</summary>
             <ol>{e.correction.map((c) => <li>{c}</li>)}</ol>

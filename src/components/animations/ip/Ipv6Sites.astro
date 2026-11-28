@@ -1,7 +1,7 @@
 ---
 // Animation « IPv6 : des /64 à volonté » (module « Découper un réseau en
-// sous-réseaux », étape 3). Un site reçoit un préfixe /48, /56 ou /60 ; chaque
-// réseau local est un /64 (RFC 4291, RFC 7421). Le numéro de sous-réseau
+// sous-réseaux », étape 3). Un site reçoit un préfixe /48, /56 ou /60 (/48 et
+// /56 : RFC 6177 ; /60 : RIPE-690, qui le déconseille) ; chaque réseau local est un /64 (RFC 4291, RFC 7421). Le numéro de sous-réseau
 // s'écrit dans le 4e groupe hexadécimal. Exemples dans 2001:db8::/32 (RFC 3849).
 const SITES = [
   { p: 48, base: 0x0000, texte: '2001:db8:abcd::/48' },
@@ -13,8 +13,8 @@ const SITES = [
   <div class="anim-repli">
     <p>
       Un site qui reçoit 2001:db8:abcd::/48 dispose de 16 bits (entre /48 et /64) pour numéroter ses réseaux
-      locaux : 2¹⁶ = 65 536 réseaux /64, de 2001:db8:abcd:0::/64 à 2001:db8:abcd:ffff::/64. Avec un /56, il
-      en reste 2⁸ = 256.
+      locaux : 2¹⁶ = 65 536 réseaux /64, de 2001:db8:abcd::/64 (le réseau n° 0) à 2001:db8:abcd:ffff::/64. Avec
+      un /56, il en reste 2⁸ = 256 ; avec un /60, 2⁴ = 16.
     </p>
   </div>
 
@@ -24,11 +24,11 @@ const SITES = [
         <legend>Le fournisseur d’accès attribue</legend>
         {SITES.map((s, i) => <label><input type="radio" name="site-v6" value={i} checked={i === 0} /> <code>{s.texte}</code></label>)}
       </fieldset>
-      <label class="curseur-v6">Numéro du réseau local <output data-n-sortie>0</output>
+      <label class="curseur-v6">Numéro du réseau local <output data-n-sortie>1 (1 en hexadécimal)</output>
         <input type="range" min="0" max="65535" value="1" data-n />
       </label>
       <p class="adresse-v6" data-adresse aria-hidden="true"></p>
-      <p class="anim-note">Vert : préfixe du site. Violet : numéro du réseau local (bits entre le préfixe et /64). Jaune : identifiant d’interface (64 bits, choisi par chaque machine).</p>
+      <p class="anim-note">Vert : préfixe du site. Violet : numéro du réseau local (bits entre le préfixe et /64). Jaune : identifiant d’interface (64 bits, le plus souvent choisi par la machine elle-même).</p>
       <p class="anim-legende" aria-live="polite"></p>
     </div>
   </div>
@@ -37,6 +37,7 @@ const SITES = [
 <script>
   import { activerScene } from '../../../lib/pasapas';
   import { exposant, fr } from '../../../lib/bases';
+  import { ecrireCourt } from '../../../lib/ip';
 
   document.querySelectorAll<HTMLElement>('[data-ipv6-sites]').forEach((racine) => {
     activerScene(racine);
@@ -67,7 +68,7 @@ const SITES = [
       );
       legende.textContent =
         `Avec ${s.texte}, il reste ${bits} bits (de /${s.p} à /64) pour numéroter les réseaux locaux : 2${exposant(bits)} = ${fr(2 ** bits)} réseaux /64. ` +
-        `Le réseau n° ${n} est 2001:db8:abcd:${groupe.replace(/^0+(?=.)/, '')}::/64 ; chacun peut contenir 2${exposant(64)} adresses, bien plus qu’il n’y aura jamais de machines.`;
+        `Le réseau n° ${n} s’écrit ${ecrireCourt([0x2001, 0xdb8, 0xabcd, s.base | n, 0, 0, 0, 0])}/64 ; chacun peut contenir 2${exposant(64)} adresses, bien plus qu’il n’y aura jamais de machines.`;
     }
 
     racine.querySelectorAll('input[name="site-v6"]').forEach((r) => r.addEventListener('change', rendre));

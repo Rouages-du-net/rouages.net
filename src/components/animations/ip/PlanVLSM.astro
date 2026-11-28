@@ -35,7 +35,7 @@ const BESOINS = [
               <td><input type="text" value={b.nom} aria-label="Nom du réseau" data-nom /></td>
               <td><input type="number" min="1" max="100000" value={b.machines} aria-label="Nombre de machines" data-machines /></td>
               <td><input type="checkbox" checked={b.liaison} aria-label="Liaison entre deux routeurs (/31 possible)" data-liaison /></td>
-              <td><button type="button" class="retirer" aria-label="Retirer ce réseau" data-retirer>✕</button></td>
+              <td><button type="button" class="retirer" aria-label={`Retirer le réseau « ${b.nom} »`} data-retirer>✕</button></td>
             </tr>
           ))}
         </tbody>
@@ -125,11 +125,16 @@ const BESOINS = [
       const q = prefixePour(a.besoin.machines, a.besoin.liaison)!;
       const explication = a.besoin.liaison && q === 31
         ? 'une liaison entre deux routeurs n’a besoin que de 2 adresses : un /31 suffit (RFC 3021).'
-        : `il faut 2^k − 2 ≥ ${fr(a.besoin.machines)}, soit ${32 - q} bits de machine : /${q} (${fr(a.hotes)} machines).`;
+        : `avec h bits de machine, il faut 2^h − 2 ≥ ${fr(a.besoin.machines)}, soit h = ${32 - q} : /${q} (${fr(a.hotes)} machines).`;
       return `« ${a.besoin.nom} » : ${explication} Premier bloc libre et aligné : ${ecrireIPv4(a.reseau)}/${a.prefixe}.`;
     });
 
     function lier(tr: HTMLTableRowElement) {
+      const nom = tr.querySelector<HTMLInputElement>('[data-nom]')!;
+      const retirer = tr.querySelector<HTMLButtonElement>('[data-retirer]')!;
+      const etiqueter = () => retirer.setAttribute('aria-label', `Retirer le réseau « ${nom.value.trim() || 'sans nom'} »`);
+      nom.addEventListener('input', etiqueter);
+      etiqueter();
       tr.querySelectorAll('input').forEach((i) => i.addEventListener('input', () => anim.aller(1)));
       tr.querySelector('[data-retirer]')!.addEventListener('click', () => {
         if (corps.querySelectorAll('tr').length > 1) { tr.remove(); anim.aller(1); }

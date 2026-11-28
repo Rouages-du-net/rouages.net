@@ -26,7 +26,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Comment ça marche<EnConstruction /></p>
   <h1>Adresses IP et masques</h1>
-  <MiseAJour date="2026-11-05" />
+  <MiseAJour date="2026-11-28" evolutif="épuisement des adresses IPv4, adoption d’IPv6" />
   <p class="chapo seulement-debut">
     Une <Terme id="adresse-ip">adresse IP</Terme>, sous ses airs compliqués, n'est qu'un nombre : 32 bits en IPv4,
     128 en IPv6. On l'écrit en décimal ou en hexadécimal pour que des humains puissent la lire. Et un masque coupe ce
@@ -51,28 +51,44 @@ const etapes = [
       qu'on découpe en quatre morceaux pour pouvoir le lire.
     </p>
     <p slot="curieux">
-      Avec 32 bits, on peut écrire 2<sup>32</sup> adresses, environ 4,3 milliards. Ça paraît beaucoup ? C'est moins
-      que d'humains sur Terre, et bien moins que d'appareils connectés. Certaines plages sont en plus mises de côté :
-      les adresses privées (10.x.x.x, 172.16 à 172.31.x.x, 192.168.x.x) ne servent qu'à l'intérieur d'un réseau
-      local, derrière une box, et trois plages (dont 192.0.2.x) sont réservées aux exemples, comme celui de ce module.
+      Avec 32 bits, on peut écrire 2<sup>32</sup> adresses, environ 4,3 milliards. Ça paraît beaucoup ? C'est à
+      peine plus d'une adresse pour deux humains : nous étions 8,2 milliards en 2024, selon l'ONU. Et beaucoup
+      d'entre nous ont plusieurs appareils connectés. Certaines plages sont en plus mises de côté : les adresses
+      privées (10.x.x.x, 172.16 à 172.31.x.x, 192.168.x.x) ne servent qu'à l'intérieur d'un réseau local, à la
+      maison derrière une box comme dans une entreprise. Et trois plages (dont 192.0.2.x) sont réservées aux
+      exemples, comme celui de ce module.
     </p>
     <p slot="ingenieur">
-      Les plages privées sont définies par la RFC 1918 ; une box les traduit en une adresse publique (NAT),
-      comme le montre le module <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a>. Les plages
-      de documentation (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) viennent de la RFC 5737 : on peut
-      les écrire dans un cours sans risquer de désigner une vraie machine.
+      Les plages privées sont définies par la RFC 1918 ; une box les traduit en une adresse publique (NAT,
+      RFC 3022), comme le montre le module <a href="/modules/entree-a-la-page/">De l'Entrée à la page</a>.
+      Chez certains opérateurs, un second NAT partage même cette adresse publique entre plusieurs clients,
+      avec une plage dédiée, 100.64.0.0/10 (RFC 6598). Les plages de documentation (192.0.2.0/24,
+      198.51.100.0/24, 203.0.113.0/24) viennent de la RFC 5737 : on peut les écrire dans un cours sans
+      risquer de désigner une vraie machine. D'autres plages ont un usage spécial, recensées par l'IANA
+      (RFC 6890) : le bouclage 127.0.0.0/8, le lien local 169.254.0.0/16… et 224.0.0.0 à 239.255.255.255
+      servent à la multidiffusion (RFC 5771). Plus exactement, une adresse désigne une interface réseau, pas
+      une machine : ton ordinateur en a souvent plusieurs (Wi-Fi, câble, IPv4 et IPv6).
     </p>
     <div slot="histoire">
       <p>
         IPv4 est décrit en septembre 1981 dans la RFC 791. Le 3 février 2011, l'IANA, qui gère la réserve
-        mondiale, distribue ses derniers blocs aux cinq registres régionaux. Le 25 novembre 2019, le registre
-        européen (RIPE NCC) annonce à son tour avoir épuisé sa réserve.
+        mondiale, distribue ses derniers blocs : un /8 (environ 16,8 millions d'adresses) à chacun des cinq
+        registres régionaux. Chaque registre s'épuise ensuite à son rythme.
+      </p>
+      <p>
+        <strong>État au 28 novembre 2026.</strong> ARIN (Amérique du Nord) a distribué ses dernières
+        adresses libres le 24 septembre 2015. Le RIPE NCC (Europe, Moyen-Orient, Asie centrale) annonce avoir
+        épuisé sa réserve le 25 novembre 2019, et LACNIC (Amérique latine et Caraïbes) réserve son dernier
+        bloc en août 2020 ; tous deux redistribuent depuis, sur liste d'attente, les adresses récupérées.
+        APNIC (Asie-Pacifique) ne donne plus que 512 adresses au plus à chaque membre. AFRINIC (Afrique)
+        applique depuis le 13 janvier 2020 la phase 2 de son plan d'épuisement, aux règles plus strictes.
       </p>
     </div>
     <p slot="mythes">
-      <strong>« Il n'y a plus d'adresses IPv4. »</strong> Les réserves libres des registres sont épuisées,
-      mais les adresses déjà distribuées continuent de servir, se revendent ou se partagent (une box partage
-      une adresse publique entre tous les appareils de la maison).
+      <strong>« Il n'y a plus d'adresses IPv4. »</strong> Les registres n'ont plus de grandes réserves libres
+      (état au 28 novembre 2026), mais les adresses déjà distribuées continuent de servir. Elles se récupèrent
+      quand une organisation ferme, elles se revendent (ARIN parle d'un « marché des transferts »), et elles se
+      partagent : une box partage une adresse publique entre tous les appareils de la maison.
     </p>
   </Etape>
 
@@ -87,17 +103,28 @@ const etapes = [
     </p>
     <p slot="curieux">
       Deux règles de raccourci : on efface les zéros au début de chaque groupe, et on remplace <em>une seule</em>
-      suite de groupes nuls par « :: ». Ainsi <code>2001:0db8:0000:0000:0000:0000:0000:0001</code> fond en
-      <code>2001:db8::1</code>. Et avec 128 bits, il y a 2<sup>128</sup> adresses, environ 3,4 × 10<sup>38</sup> :
-      de quoi ne plus jamais en manquer.
+      suite de groupes nuls par « :: ». Par exemple, <code>2001:0db8:0000:0000:0000:0000:0000:0001</code> fond
+      en <code>2001:db8::1</code>. Une fois abrégé, un groupe s'écrit avec 1 à 4 chiffres, mais vaut toujours
+      16 bits. Et avec 128 bits, il y a 2<sup>128</sup> adresses, environ 3,4 × 10<sup>38</sup> : de quoi voir
+      venir très longtemps, même si on les distribue par grands blocs (un /64 par réseau local).
     </p>
     <p slot="ingenieur">
       La RFC 4291 décrit l'architecture : la plupart des adresses ont un identifiant d'interface de 64 bits,
       donc un réseau local est en général un /64. La RFC 5952 fixe une écriture unique pour que les outils
       et les humains comparent facilement les adresses : zéros en tête supprimés, « :: » le plus long
       possible (le premier en cas d'égalité), jamais pour un seul groupe, lettres en minuscules. Le préfixe
-      2001:db8::/32 est réservé à la documentation (RFC 3849).
+      2001:db8::/32 est réservé à la documentation (RFC 3849). Le protocole lui-même est décrit par la
+      RFC 8200 (2017). Une adresse peut aussi finir par une IPv4 en décimal (<code>::ffff:192.0.2.1</code>,
+      RFC 4291) ; l'animation ne lit pas cette écriture.
     </p>
+    <div slot="histoire">
+      <p>
+        <strong>État au 28 novembre 2026.</strong> IPv4 et IPv6 cohabitent, et un peu moins de la moitié des
+        internautes utilisent IPv6. Fin novembre 2026, selon les jours, entre 46 et 51 % des utilisateur·ices
+        de Google y accèdent en IPv6 ; les mesures d'APNIC Labs comptent environ 43 % d'utilisateur·ices capables
+        d'IPv6 dans le monde (moyenne sur 30 jours).
+      </p>
+    </div>
     <p slot="mythes">
       <strong>« On peut mettre plusieurs :: pour aller plus vite. »</strong> Non : avec deux « :: », on ne
       saurait pas combien de groupes nuls chacun remplace. Un seul par adresse.
@@ -113,30 +140,35 @@ const etapes = [
       qui le dit. Il a trois façons de s'écrire : /24, 255.255.255.0, ou 24 bits à 1 suivis de 8 bits à 0.
     </p>
     <p slot="curieux">
-      Dans un masque, les 1 sont toujours à gauche et les 0 à droite, jamais mélangés. Du coup, un octet de masque ne
-      peut valoir que 0, 128, 192, 224, 240, 248, 252, 254 ou 255 : /17, par exemple, donne 255.255.128.0. Et pour
+      Aujourd'hui, dans un masque, les 1 sont toujours à gauche et les 0 à droite, jamais mélangés. Du coup, un octet
+      de masque ne peut valoir que 0, 128, 192, 224, 240, 248, 252, 254 ou 255 : /17, par exemple, donne 255.255.128.0. Et pour
       trouver l'adresse du réseau ? On garde les bits de l'adresse là où le masque vaut 1, on met 0 partout ailleurs :
       c'est un ET logique.
     </p>
     <p slot="ingenieur">
       Avec un préfixe /n, le réseau compte 2<sup>32−n</sup> adresses. La première (tous les bits machine à
       0) désigne le réseau, la dernière (tous à 1) sert à la diffusion : il reste 2<sup>32−n</sup> − 2
-      machines. Exceptions : un /31 relie deux routeurs avec ses 2 adresses (RFC 3021), un /32 désigne une
-      seule machine. L'ET logique est celui des <a href="/modules/ordinateur/#portes">portes logiques</a>.
+      machines. Exceptions : un /31 sert aux liaisons point à point, le plus souvent entre deux routeurs, avec
+      ses 2 adresses (RFC 3021) ; un /32 désigne une seule adresse. L'ET logique est celui des <a href="/modules/ordinateur/#portes">portes logiques</a>.
     </p>
     <div slot="histoire">
       <p>
-        En 1981, la RFC 791 découpait les adresses en classes fixes : A (réseau sur le premier octet), B (deux octets), C (trois
-        octets).
-        Les masques de sous-réseau arrivent en août 1985 (RFC 950). En 1993, pour freiner l'épuisement des
-        classes B, le CIDR permet n'importe quelle longueur de préfixe, que la notation « /n » indique
-        (RFC 1519, remplacée en 2006 par la RFC 4632).
+        En 1981, la RFC 791 découpait les adresses en classes fixes : A (réseau sur le premier octet), B (deux
+        octets), C (trois octets). La classe se lisait sur les premiers bits de l'adresse.
+        En octobre 1984, Jeffrey Mogul décrit les sous-réseaux (RFC 917), que des organisations pratiquaient
+        déjà ; ils sont normalisés en août 1985 (RFC 950). Cette norme admettait même des masques aux bits
+        dispersés, comme 255.255.255.88, tout en recommandant des bits contigus. En 1993, pour freiner
+        l'épuisement des classes B et la croissance des tables de routage, le CIDR (RFC 1519) permet n'importe
+        quelle longueur de préfixe. En 1995, la RFC 1812 n'autorise plus sur les routeurs que des masques
+        contigus. On note aujourd'hui la longueur du préfixe « /n », comme dans la RFC 4632, qui a remplacé la
+        RFC 1519 en 2006.
       </p>
     </div>
     <p slot="mythes">
-      <strong>« 255.0.255.0 est un masque. »</strong> Non : en binaire, ses 1 ne sont pas tous à gauche.
-      Essaie-le dans l'animation. Et une adresse en 192.168 n'est pas forcément un /24 : c'est la box qui
-      choisit le masque.
+      <strong>« 255.0.255.0 est un masque. »</strong> Plus aujourd'hui : en binaire, ses 1 ne sont pas tous à
+      gauche. Tape-le dans le champ « Masque » de l'animation, puis valide avec Entrée. Et une adresse en
+      192.168 n'est pas forcément un /24 : c'est la configuration du réseau qui fixe le masque (à la maison,
+      celle de ta box, qu'on peut changer).
     </p>
   </Etape>
 
@@ -157,20 +189,34 @@ const etapes = [
     </p>
 
   <Sources
-    verifie="2026-11-05"
+    verifie="2026-11-28"
     sources={[
-      { auteur: 'IETF', titre: 'RFC 791, Internet Protocol', url: 'https://www.rfc-editor.org/rfc/rfc791', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'J. Postel (éd.), USC/Information Sciences Institute, pour la DARPA', titre: 'RFC 791, Internet Protocol', url: 'https://www.rfc-editor.org/rfc/rfc791', type: 'primaire', annee: 1981, langue: 'en' },
+      { auteur: 'J. Mogul', titre: 'RFC 917, Internet Subnets', url: 'https://www.rfc-editor.org/rfc/rfc917', type: 'primaire', annee: 1984, langue: 'en' },
       { auteur: 'J. Mogul, J. Postel', titre: 'RFC 950, Internet Standard Subnetting Procedure', url: 'https://www.rfc-editor.org/rfc/rfc950', type: 'primaire', annee: 1985, langue: 'en' },
+      { auteur: 'V. Fuller, T. Li, J. Yu, K. Varadhan', titre: 'RFC 1519, Classless Inter-Domain Routing (CIDR): an Address Assignment and Aggregation Strategy', url: 'https://www.rfc-editor.org/rfc/rfc1519', type: 'primaire', annee: 1993, langue: 'en' },
+      { auteur: 'F. Baker', titre: 'RFC 1812, Requirements for IP Version 4 Routers', url: 'https://www.rfc-editor.org/rfc/rfc1812', type: 'primaire', annee: 1995, langue: 'en' },
       { auteur: 'V. Fuller, T. Li', titre: 'RFC 4632, Classless Inter-domain Routing (CIDR)', url: 'https://www.rfc-editor.org/rfc/rfc4632', type: 'primaire', annee: 2006, langue: 'en' },
-      { auteur: 'IETF', titre: 'RFC 1918, Address Allocation for Private Internets', url: 'https://www.rfc-editor.org/rfc/rfc1918', type: 'primaire', annee: 1996, langue: 'en' },
-      { auteur: 'IETF', titre: 'RFC 5737, IPv4 Address Blocks Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc5737', type: 'primaire', annee: 2010, langue: 'en' },
-      { auteur: 'A. Retana et al.', titre: 'RFC 3021, Using 31-Bit Prefixes on IPv4 Point-to-Point Links', url: 'https://www.rfc-editor.org/rfc/rfc3021', type: 'primaire', annee: 2000, langue: 'en' },
+      { auteur: 'Y. Rekhter, B. Moskowitz, D. Karrenberg, G. J. de Groot, E. Lear', titre: 'RFC 1918, Address Allocation for Private Internets', url: 'https://www.rfc-editor.org/rfc/rfc1918', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'P. Srisuresh, K. Egevang', titre: 'RFC 3022, Traditional IP Network Address Translator (Traditional NAT)', url: 'https://www.rfc-editor.org/rfc/rfc3022', type: 'primaire', annee: 2001, langue: 'en' },
+      { auteur: 'J. Weil, V. Kuarsingh, C. Donley, C. Liljenstolpe, M. Azinger', titre: 'RFC 6598, IANA-Reserved IPv4 Prefix for Shared Address Space', url: 'https://www.rfc-editor.org/rfc/rfc6598', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'J. Arkko, M. Cotton, L. Vegoda', titre: 'RFC 5737, IPv4 Address Blocks Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc5737', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'M. Cotton, L. Vegoda, R. Bonica (éd.), B. Haberman', titre: 'RFC 6890, Special-Purpose IP Address Registries', url: 'https://www.rfc-editor.org/rfc/rfc6890', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'M. Cotton, L. Vegoda, D. Meyer', titre: 'RFC 5771, IANA Guidelines for IPv4 Multicast Address Assignments', url: 'https://www.rfc-editor.org/rfc/rfc5771', type: 'primaire', annee: 2010, langue: 'en' },
+      { auteur: 'A. Retana, R. White, V. Fuller, D. McPherson', titre: 'RFC 3021, Using 31-Bit Prefixes on IPv4 Point-to-Point Links', url: 'https://www.rfc-editor.org/rfc/rfc3021', type: 'primaire', annee: 2000, langue: 'en' },
       { auteur: 'R. Hinden, S. Deering', titre: 'RFC 4291, IP Version 6 Addressing Architecture', url: 'https://www.rfc-editor.org/rfc/rfc4291', type: 'primaire', annee: 2006, langue: 'en' },
       { auteur: 'S. Kawamura, M. Kawashima', titre: 'RFC 5952, A Recommendation for IPv6 Address Text Representation', url: 'https://www.rfc-editor.org/rfc/rfc5952', type: 'primaire', annee: 2010, langue: 'en' },
-      { auteur: 'IETF', titre: 'RFC 3849, IPv6 Address Prefix Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc3849', type: 'primaire', annee: 2004, langue: 'en' },
-      { auteur: 'IETF', titre: 'RFC 8200, Internet Protocol, Version 6 (IPv6) Specification', url: 'https://www.rfc-editor.org/rfc/rfc8200', type: 'primaire', annee: 2017, langue: 'en' },
-      { auteur: 'Number Resource Organization', titre: 'Free Pool of IPv4 Address Space Depleted', url: 'https://www.nro.net/ipv4-free-pool-depleted/', type: 'site', annee: 2011, langue: 'en' },
-      { auteur: 'RIPE NCC', titre: 'The RIPE NCC has run out of IPv4 Addresses', url: 'https://www.ripe.net/publications/news/the-ripe-ncc-has-run-out-of-ipv4-addresses/', type: 'site', annee: 2019, langue: 'en' },
+      { auteur: 'G. Huston, A. Lord, P. Smith', titre: 'RFC 3849, IPv6 Address Prefix Reserved for Documentation', url: 'https://www.rfc-editor.org/rfc/rfc3849', type: 'primaire', annee: 2004, langue: 'en' },
+      { auteur: 'S. Deering, R. Hinden', titre: 'RFC 8200, Internet Protocol, Version 6 (IPv6) Specification', url: 'https://www.rfc-editor.org/rfc/rfc8200', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'Number Resource Organization', titre: 'Free Pool of IPv4 Address Space Depleted', url: 'https://www.nro.net/ipv4-free-pool-depleted/', type: 'site', annee: 2011, langue: 'en', archive: 'http://web.archive.org/web/20261111005112/https://www.nro.net/ipv4-free-pool-depleted/' },
+      { auteur: 'ARIN', titre: 'ARIN IPv4 Free Pool Reaches Zero (annonce du 24 septembre 2015)', url: 'https://www.arin.net/vault/announcements/20150924/', type: 'site', annee: 2015, langue: 'en', archive: 'http://web.archive.org/web/20261112215433/https://www.arin.net/vault/announcements/20150924/' },
+      { auteur: 'RIPE NCC', titre: 'The RIPE NCC has run out of IPv4 Addresses', url: 'https://www.ripe.net/publications/news/the-ripe-ncc-has-run-out-of-ipv4-addresses/', type: 'site', annee: 2019, langue: 'en', archive: 'http://web.archive.org/web/20240620130825/https://www.ripe.net/publications/news/the-ripe-ncc-has-run-out-of-ipv4-addresses/' },
+      { auteur: 'LACNIC', titre: 'IPv4 Exhaustion: LACNIC Has Assigned the Last Remaining Address Block', url: 'https://blog.lacnic.net/en?p=13745', type: 'site', annee: 2020, langue: 'en' },
+      { auteur: 'APNIC', titre: 'IPv4 exhaustion', url: 'https://www.apnic.net/manage-ip/ipv4-exhaustion/', type: 'site', annee: 'consulté en 2026', langue: 'en', archive: 'http://web.archive.org/web/20261116070258/https://www.apnic.net/manage-ip/ipv4-exhaustion/' },
+      { auteur: 'AFRINIC', titre: 'AFRINIC IPv4 Exhaustion', url: 'https://afrinic.net/exhaustion', type: 'site', annee: 'consulté en 2026', langue: 'en', archive: 'http://web.archive.org/web/20261113132032/https://afrinic.net/exhaustion' },
+      { auteur: 'Google', titre: 'IPv6 Statistics (part des utilisateur·ices qui joignent Google en IPv6)', url: 'https://www.google.com/intl/en/ipv6/statistics.html', type: 'site', annee: 'consulté en 2026', langue: 'en', archive: 'http://web.archive.org/web/20261115103919/http://www.google.com/intl/en/ipv6/statistics.html' },
+      { auteur: 'APNIC Labs', titre: 'IPv6 Capability Metrics, World (XA)', url: 'https://stats.labs.apnic.net/ipv6/XA', type: 'site', annee: 'consulté en 2026', langue: 'en', archive: 'http://web.archive.org/web/20260517123740/https://stats.labs.apnic.net/ipv6/XA' },
+      { auteur: 'Nations unies, DESA, Division de la population', titre: 'World Population Prospects 2024: Summary of Results', url: 'https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf', type: 'primaire', annee: 2024, langue: 'en' },
     ]}
   />
   </section>
