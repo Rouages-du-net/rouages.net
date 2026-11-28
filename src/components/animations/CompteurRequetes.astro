@@ -65,6 +65,9 @@ import { AUDIENCE_ACTIVE } from '../../lib/audience';
         ...performance.getEntriesByType('resource'),
       ] as PerformanceResourceTiming[];
       const parDomaine = new Map<string, number>();
+      // Hôte de la mesure d'audience (Umami auto-hébergé) : un autre domaine, mais
+      // celui du site lui-même, pas un service tiers.
+      const hoteAudience = import.meta.env.PUBLIC_UMAMI_SRC ? new URL(import.meta.env.PUBLIC_UMAMI_SRC).host : '';
       entrees.forEach((e) => {
         const hote = new URL(e.name, location.href).host;
         parDomaine.set(hote, (parDomaine.get(hote) ?? 0) + 1);
@@ -76,23 +79,26 @@ import { AUDIENCE_ACTIVE } from '../../lib/audience';
       for (let i = 0; i < entrees.length; i++) {
         const c = document.createElement('span');
         c.className = 'carre';
-        if (new URL(entrees[i].name, location.href).host !== location.host) c.classList.add('tiers');
+        const h = new URL(entrees[i].name, location.href).host;
+        if (h !== location.host && h !== hoteAudience) c.classList.add('tiers');
         carres.append(c);
         nombre.textContent = String(i + 1);
         await pause(60);
       }
       parDomaine.forEach((n, hote) => {
         const li = document.createElement('li');
-        const tiers = hote !== location.host;
-        const audience = hote === import.meta.env.PUBLIC_UMAMI_SRC?.replace(/^https?:\/\/([^/]+).*$/, '$1');
+        const audience = hote === hoteAudience;
+        const tiers = hote !== location.host && !audience;
         li.textContent = `${hote} : ${n} ${n > 1 ? 'requêtes' : 'requête'}${audience ? ' (mesure d’audience de ce site)' : tiers ? ' (tiers)' : ' (ce site)'}`;
         if (tiers) li.classList.add('tiers');
         domaines.append(li);
       });
-      const nbTiers = [...parDomaine.keys()].filter((h) => h !== location.host).length;
+      const nbTiers = [...parDomaine.keys()].filter((h) => h !== location.host && h !== hoteAudience).length;
+      const avecAudience = parDomaine.has(hoteAudience);
       legende.textContent =
         `Mesuré à l'instant : ${entrees.length} requêtes, vers ${parDomaine.size} ${parDomaine.size > 1 ? 'domaines' : 'domaine'}` +
-        (nbTiers ? `, dont ${nbTiers} tiers.` : ', aucun service tiers : ni publicité, ni statistiques, ni réseau social.') +
+        (avecAudience ? ' (dont celui de la mesure d’audience de ce site)' : '') +
+        (nbTiers ? `, dont ${nbTiers} tiers.` : ', aucun service tiers : ni publicité, ni pisteur, ni réseau social.') +
         ' Recharge la page et mesure à nouveau : les fichiers repris du cache restent comptés, mais ils ne sont pas retéléchargés.';
       bouton.disabled = false;
       bouton.textContent = '↺ Mesurer à nouveau';

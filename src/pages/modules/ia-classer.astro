@@ -1,4 +1,5 @@
 ---
+import EnConstruction from '../../components/EnConstruction.astro';
 import Base from '../../layouts/Base.astro';
 import Etape from '../../components/Etape.astro';
 import Terme from '../../components/Terme.astro';
@@ -27,7 +28,7 @@ const etapes = [
   title="Les IA qui classent"
   description="Filtre anti-spam, diagnostic, tri de CV : comment une machine range des cas dans des cases. Un filtre bayésien qu'on entraîne soi-même, le seuil, un arbre qui s'explique, et des classements qui touchent des personnes."
 >
-  <p class="tag" data-pagefind-ignore>Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <p class="tag" data-pagefind-ignore>Comment ça marche · <a href="/ia/">L'IA</a><EnConstruction /></p>
   <h1>Les IA qui classent</h1>
   <MiseAJour date="2026-10-16" evolutif="calendrier du règlement européen sur l’IA" />
   <p class="chapo seulement-debut">

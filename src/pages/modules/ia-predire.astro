@@ -1,4 +1,5 @@
 ---
+import EnConstruction from '../../components/EnConstruction.astro';
 import Base from '../../layouts/Base.astro';
 import Etape from '../../components/Etape.astro';
 import SelecteurNiveau from '../../components/SelecteurNiveau.astro';
@@ -23,7 +24,7 @@ const etapes = [
   title="Les IA qui prédisent"
   description="Météo, consommation d’électricité, police prédictive : prévois une semaine de consommation, découvre qu’une corrélation prédit sans expliquer, et regarde une patrouille s’enfermer dans un quartier."
 >
-  <p class="tag" data-pagefind-ignore>Comment ça marche · <a href="/ia/">L'IA</a> · module en construction</p>
+  <p class="tag" data-pagefind-ignore>Comment ça marche · <a href="/ia/">L'IA</a><EnConstruction /></p>
   <h1>Les IA qui prédisent</h1>
   <MiseAJour date="2026-11-01" evolutif />
   <p class="chapo seulement-debut">

@@ -128,9 +128,9 @@ export function appliquerChmod(mode: number, commande: string): number | null {
       if (op === '+') m |= bits;
       else if (op === '-') m &= ~bits;
       else {
-        // « = » remplace le trio ; sans classe, les bits du masque restent tels quels.
-        const touche = (7 << decalage) & (qui === '' ? ~0o022 : 0o777);
-        m = (m & ~touche) | bits;
+        // « = » efface tout le trio, puis remet les bits demandés ; sans classe,
+        // ceux du masque ne sont pas remis (umask 022 : « =rw » donne 644).
+        m = (m & ~(7 << decalage)) | bits;
       }
     }
   }

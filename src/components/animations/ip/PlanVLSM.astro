@@ -57,7 +57,7 @@ const BESOINS = [
 
 <script>
   import { activerScene, pasAPas } from '../../../lib/pasapas';
-  import { ecrireIPv4, lireIPv4, planVLSM, prefixePour, reseau, type Besoin } from '../../../lib/ip';
+  import { ecrireIPv4, lireIPv4, planVLSM, prefixePour, trierBesoins, reseau, type Besoin } from '../../../lib/ip';
   import { fr } from '../../../lib/bases';
 
   document.querySelectorAll<HTMLElement>('[data-plan-vlsm]').forEach((racine) => {
@@ -80,7 +80,7 @@ const BESOINS = [
         liaison: tr.querySelector<HTMLInputElement>('[data-liaison]')!.checked,
       }));
     const echapper = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
-    const tries = () => [...besoins()].sort((a, b) => b.machines - a.machines);
+    const tries = () => trierBesoins(besoins());
 
     function dessiner(n: number) {
       const base = lireBase()!;
@@ -110,7 +110,7 @@ const BESOINS = [
       const t = tries();
       if (etape === 1) {
         dessiner(0);
-        return `On range les besoins du plus grand au plus petit : ${t.map((b) => `${b.nom} (${fr(b.machines)})`).join(', ')}. Les grands blocs d’abord : ils sont plus difficiles à caser et restent bien alignés.`;
+        return `On range les besoins du plus grand bloc au plus petit : ${t.map((b) => `${b.nom} (${fr(b.machines)})`).join(', ')}. Les grands blocs d’abord : ils sont plus difficiles à caser et restent bien alignés.`;
       }
       const n = etape - 1;
       const plan = dessiner(n);
