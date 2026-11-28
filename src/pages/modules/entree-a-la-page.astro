@@ -38,7 +38,7 @@ const etapes = [
 >
   <p class="tag" data-pagefind-ignore>Comment ça marche<EnConstruction /></p>
   <h1>De l'Entrée à la page</h1>
-  <MiseAJour date="2026-10-11" />
+  <MiseAJour date="2026-11-28" evolutif="blocages de sites, cookies, chiffres" />
   <p class="chapo seulement-debut">
     Tu tapes <code>rouages.net</code> et tu appuies sur <kbd>Entrée</kbd>. Environ une seconde plus tard, la
     page est là. Entre les deux ? Des dizaines de machines, d'organisations et de règles. Suivons la page d'accueil
@@ -64,20 +64,21 @@ const etapes = [
       La barre d'adresse fait aussi barre de recherche. Alors comment le navigateur sait-il que tu veux aller sur un
       site, et pas chercher les mots « rouages.net » ? <code>rouages.net</code> a la tête d'un
       <Terme id="nom-de-domaine">nom de domaine</Terme> : il y va. Et il frappe d'abord à la porte chiffrée,
-      <code>https://</code> (on y revient à l'étape 4). Les navigateurs récents (Chrome, par exemple) ne retentent
+      <code>https://</code> (on y revient à l'étape 4). Certains navigateurs, comme Chrome, ne retentent
       <code>http://</code> qu'en cas d'échec, sauf si le site impose HTTPS.
     </p>
     <p slot="ingenieur">
       Analyse de l'URL (schéma, hôte, chemin). Si le domaine figure dans la liste HSTS
       préchargée, ou a déjà envoyé un en-tête <code>Strict-Transport-Security</code>
-      (RFC 6797), le navigateur force HTTPS sans jamais tenter HTTP. Certains navigateurs
+      (RFC 6797), le navigateur force HTTPS sans jamais tenter HTTP (état au 28 novembre 2026 :
+      <code>rouages.net</code> n'envoie pas encore cet en-tête et ne figure pas dans la liste). Certains navigateurs
       résolvent le nom, ouvrent une connexion, voire préaffichent la page avant l'appui
       sur Entrée (prédiction, <i>prerender</i>).
     </p>
     <p slot="mythes">
       <strong>« Le navigateur, c'est internet. »</strong> Non : le web n'est qu'un des
-      services d'internet. Le courriel lu dans un logiciel de messagerie ou les jeux en
-      ligne passent par internet sans passer par le web.
+      services d'internet. Ton logiciel de messagerie, par exemple, envoie et relève ton
+      courriel avec ses propres protocoles (SMTP, IMAP), sans passer par le web.
     </p>
   </Etape>
 
@@ -97,7 +98,8 @@ const etapes = [
       <p>
         D'abord, ton navigateur fouille sa mémoire : « Je ne l'aurais pas déjà demandé tout à l'heure ? » (c'est le
         <Terme id="cache">cache</Terme>, le sien et celui du système). Raté ? Il pose la question à un
-        <Terme id="resolveur">résolveur DNS</Terme>, en général celui de ton {' '}<Terme id="fai">fournisseur d'accès</Terme>.
+        <Terme id="resolveur">résolveur DNS</Terme> : celui que ta box a indiqué à ton appareil, souvent celui de ton
+        {' '}<Terme id="fai">fournisseur d'accès</Terme>.
         Et si le résolveur ne sait pas non plus, il part enquêter, en trois questions :
       </p>
       <ol>
@@ -115,8 +117,8 @@ const etapes = [
       sur le port 53, ou chiffrées : DNS over TLS (port 853), DNS over HTTPS. Résolution
       itérative par le résolveur ; avec la minimisation de la question (RFC 9156), la racine
       ne voit que <code>net.</code>. 13 identités racine (<code>a</code> à
-      <code>m.root-servers.net</code>), 12 organisations, plus de 2 000 instances en
-      <i>anycast</i>. DNSSEC authentifie les réponses (signature) mais ne les chiffre pas.
+      <code>m.root-servers.net</code>), 12 organisations, 2 046 instances en
+      <i>anycast</i> (état au 28 novembre 2026). DNSSEC authentifie les réponses (signature) mais ne les chiffre pas.
     </p>
     <div slot="decide">
       <p>
@@ -125,15 +127,24 @@ const etapes = [
         l'hébergeur ou le service DNS du domaine ; ton fournisseur d'accès.
       </p>
       <p>
-        En France, les blocages de sites passent surtout par les résolveurs des fournisseurs
-        d'accès, sur décision d'un juge, de l'administration ou de
-        l'<Terme id="arcom">Arcom</Terme>. L'<Terme id="arcep">Arcep</Terme>, elle, ne bloque rien.
+        <strong>État au 28 novembre 2026.</strong> En France, les fournisseurs d'accès appliquent le plus souvent
+        les blocages de sites sur leurs résolveurs DNS. Qui les ordonne ? Un juge, par exemple contre le piratage
+        sportif ; l'<Terme id="arcom">Arcom</Terme> fait ensuite étendre la décision aux sites miroirs. La police,
+        pour les contenus terroristes ou pédocriminels, sous le contrôle d'une personnalité qualifiée de l'Arcom.
+        Et, depuis la loi SREN de 2024, l'Arcom elle-même, pour les sites pornographiques sans vérification d'âge.
+      </p>
+      <p>
+        Les résolveurs publics (Google, Cloudflare…) sont visés eux aussi : en 2024, Cisco a préféré retirer son
+        résolveur OpenDNS de France. L'<Terme id="arcep">Arcep</Terme>, elle, ne bloque rien : elle veille à la
+        neutralité du net.
       </p>
     </div>
     <p slot="histoire">
-      Avant le DNS, tout internet tenait dans une seule liste de noms, tenue à la main par l'équipe
-      d'<strong>Elizabeth Feinler</strong>. Chaque nouvel ordinateur devait y être ajouté. Quand le réseau a grandi,
-      c'est devenu intenable : en 1983, Paul Mockapetris invente le DNS.
+      Avant le DNS, tout le réseau tenait dans une seule liste de noms d'ordinateurs, le fichier
+      <code>HOSTS.TXT</code>, tenue par l'équipe d'<strong>Elizabeth Feinler</strong> au SRI, en Californie. Chaque
+      nouvel ordinateur devait y être ajouté. Quand le réseau a grandi, la liste est devenue ingérable : en 1983,
+      Paul Mockapetris publie la première description du DNS (RFC 882), qui répartit l'annuaire entre de
+      nombreux serveurs.
     </p>
     <p slot="verifie">
       <code>dig rouages.net</code> ou <code>dig +trace rouages.net</code> (Linux, macOS) ;
@@ -141,7 +152,7 @@ const etapes = [
     </p>
     <ul slot="mythes">
       <li><strong>« Changer de DNS rend anonyme. »</strong> Non : ton fournisseur d'accès voit toujours l'adresse contactée, et souvent le nom du site.</li>
-      <li><strong>« Un site bloqué a disparu. »</strong> Non : il existe toujours, certains résolveurs refusent seulement de donner son adresse.</li>
+      <li><strong>« Un site bloqué a disparu. »</strong> Non : il existe toujours. Certains résolveurs refusent seulement de donner son adresse, ou en donnent une fausse (parfois celle d'une page d'avertissement).</li>
     </ul>
   </Etape>
 
@@ -166,9 +177,9 @@ const etapes = [
       d'adresse par l'opérateur (CGNAT, souvent dans <code>100.64.0.0/10</code>, RFC 6598),
       sur mobile comme, de plus en plus, sur le fixe.
     </p>
-    <p slot="decide">L'IEEE (normes Wi-Fi et Ethernet) ; ton fournisseur d'accès ; l'Arcep, qui régule les opérateurs.</p>
+    <p slot="decide">L'IEEE (normes Wi-Fi, IEEE 802.11, et Ethernet, IEEE 802.3) ; ton fournisseur d'accès ; l'Arcep, qui régule les opérateurs.</p>
     <p slot="histoire">
-      <strong>Radia Perlman</strong> a inventé en 1985 l'algorithme de l'arbre couvrant, qui
+      <strong>Radia Perlman</strong> publie en 1985 l'algorithme de l'arbre couvrant, qui
       permet de relier de nombreux segments Ethernet par des ponts sans que les messages tournent en rond.
     </p>
     <p slot="verifie">
@@ -189,8 +200,8 @@ const etapes = [
       peuvent se perdre en route ou arriver dans le désordre. <Terme id="tcp">TCP</Terme> remet de l'ordre : il
       numérote chaque paquet, accuse réception, renvoie ce qui manque. Tout commence par cette poignée de main en
       trois temps. Quand le serveur le propose, les navigateurs préfèrent <Terme id="quic">QUIC</Terme> (HTTP/3), qui
-      économise un aller-retour. Selon son hébergeur, ce site peut t'arriver par TCP (HTTP/2) ou par QUIC (HTTP/3) :
-      regarde la colonne « Protocole » ci-dessous.
+      économise un aller-retour. Ce site-ci ne propose pas HTTP/3 (état au 28 novembre 2026) : il t'arrive par TCP,
+      en HTTP/2. Vérifie-le avec la colonne « Protocole » ci-dessous.
     </p>
     <p slot="ingenieur">
       TCP (RFC 9293) : <code>SYN</code> → <code>SYN-ACK</code> → <code>ACK</code> vers le port 443,
@@ -204,7 +215,8 @@ const etapes = [
       {' '}<Terme id="rfc">RFC</Terme>.
     </p>
     <p slot="histoire">
-      Le datagramme de <strong>Louis Pouzin</strong> (réseau CYCLADES, 1973), puis TCP de
+      Le réseau CYCLADES de <strong>Louis Pouzin</strong> (première démonstration en 1973), fondé sur
+      le datagramme : ce sont les ordinateurs, et non le réseau, qui garantissent la livraison. Puis TCP de
       <strong>Vint Cerf et Bob Kahn</strong> (1974), dont l'article cite CYCLADES.
     </p>
     <p slot="verifie">
@@ -218,15 +230,16 @@ const etapes = [
     <PotsDePeinture slot="animation" />
     <p slot="decouverte">
       Avant d'envoyer quoi que ce soit, deux questions. Est-ce que je parle au <strong>bon</strong> serveur, et pas à
-      un imposteur ? Et est-ce que quelqu'un peut écouter ? On vérifie donc l'identité du serveur, puis on chiffre la
-      conversation : on la brouille avec une clé secrète, pour que personne en chemin ne puisse la lire.
+      un imposteur ? Et est-ce que quelqu'un peut écouter ? Il faut donc chiffrer la conversation : la brouiller avec
+      une clé secrète, pour que personne en chemin ne puisse la lire. Et il faut vérifier l'identité du serveur.
     </p>
     <p slot="curieux">
       Le tour de magie : les deux machines fabriquent ensemble une clé secrète… sans jamais l'envoyer sur le réseau
       (<Terme id="diffie-hellman">Diffie-Hellman</Terme> ; l'animation le montre avec des pots de peinture). Puis le
       serveur présente, déjà chiffré, son <Terme id="certificat">certificat</Terme> : une sorte de carte d'identité qui
-      dit qu'il a le droit de parler au nom de <code>rouages.net</code>. Il signe l'échange avec la clé secrète qui va
-      avec : un imposteur pourrait copier le certificat, pas cette signature. Attention, le certificat garantit le nom
+      dit qu'il a le droit de parler au nom de <code>rouages.net</code>. Il signe l'échange avec sa clé privée, celle qui
+      va avec le certificat et qu'il ne montre jamais : un imposteur pourrait copier le certificat, pas cette
+      signature. Attention, le certificat garantit le nom
       du site, pas l'honnêteté de son propriétaire.
     </p>
     <p slot="ingenieur">
@@ -235,7 +248,8 @@ const etapes = [
       <code>Certificate</code>, <code>CertificateVerify</code>, <code>Finished</code>. Échange de
       clés souvent X25519, de plus en plus hybride post-quantique (X25519MLKEM768).
       Certificats journalisés (<i>Certificate Transparency</i>, RFC 6962), consultables sur
-      crt.sh. Sur cPanel, AutoSSL délivre par défaut des certificats Let's Encrypt de courte durée (90 jours aujourd'hui), renouvelés automatiquement.
+      crt.sh. Sur cPanel, Let's Encrypt est le fournisseur AutoSSL par défaut des nouvelles installations :
+      certificats de courte durée (90 jours, état au 28 novembre 2026), renouvelés automatiquement.
     </p>
     <p slot="decide">
       Les autorités de certification ; les navigateurs, qui choisissent quelles autorités
@@ -243,7 +257,8 @@ const etapes = [
     </p>
     <p slot="histoire">
       Whitfield Diffie et Martin Hellman publient en 1976 l'échange de clés ; Ralph Merkle
-      avait eu indépendamment une idée voisine.
+      avait eu indépendamment une idée voisine. Au Royaume-Uni, des mathématiciens du GCHQ, dont
+      Malcolm Williamson, avaient trouvé une méthode semblable, restée secrète jusqu'en 1997.
     </p>
     <p slot="verifie">
       Clic sur l'icône à gauche de l'adresse (un cadenas, ou une icône de réglages dans
@@ -271,8 +286,8 @@ const etapes = [
       <Terme id="cable-sous-marin">câble sous-marin</Terme>. Mais comment chaque réseau sait-il par où passer ? Les
       réseaux s'annoncent les uns aux autres les adresses qu'ils savent atteindre : c'est
       {' '}<Terme id="bgp">BGP</Terme>, le protocole qui tient internet ensemble. Et ce voyage n'a pas lieu une seule
-      fois : chaque aller-retour des étapes 1, 3, 4 et 6 le refait. Voilà pourquoi la distance du serveur compte
-      autant.
+      fois : chaque aller-retour des étapes 3, 4, 6 et 7 le refait (et le DNS, à l'étape 1, fait les siens vers
+      d'autres serveurs). Voilà pourquoi la distance du serveur compte autant.
     </p>
     <p slot="ingenieur">
       Routage IP saut par saut ; TTL (IPv4) ou <i>Hop Limit</i> (IPv6) décrémenté à chaque
@@ -287,7 +302,8 @@ const etapes = [
       (coupures, censure).
     </p>
     <p slot="histoire">
-      Les câbles sous-marins (le premier câble transatlantique date de 1858) ; <strong>Kilnam Chon</strong> et le premier réseau
+      Les câbles sous-marins (le premier câble transatlantique, en 1858, ne fonctionne qu'environ trois semaines ; le
+      premier lien durable date de 1866) ; <strong>Kilnam Chon</strong> et le premier réseau
       TCP/IP d'Asie (1982) ; <strong>Nii Quaynor</strong> et la connexion du Ghana (1993-1995).
     </p>
     <p slot="verifie"><code>traceroute rouages.net</code> (<code>tracert</code> sous Windows).</p>
@@ -307,19 +323,22 @@ const etapes = [
     <p slot="curieux">
       Ton navigateur envoie une requête <Terme id="http">HTTP</Terme>, qui dit en substance : « Donne-moi la page
       d'accueil de <code>rouages.net</code>. » Chez l'<Terme id="hebergeur">hébergeur</Terme>, un même serveur loge
-      de nombreux sites : il regarde le nom demandé pour savoir lequel servir. Le logiciel Apache applique les règles
-      du site (forcer HTTPS, compresser), trouve <code>index.html</code> et le renvoie avec le
+      de nombreux sites : il regarde le nom demandé pour savoir lequel servir. Le logiciel serveur applique les règles
+      du site, écrites dans un fichier <code>.htaccess</code> (forcer HTTPS, compresser), trouve
+      <code>index.html</code> et le renvoie avec le
       <Terme id="code-http">code</Terme> 200 : « tout va bien ». Rien n'est calculé à la volée : ce site est statique,
       la page a été fabriquée à l'avance.
     </p>
     <p slot="ingenieur">
       En HTTP/2, pas de ligne <code>GET / HTTP/1.1</code> mais des pseudo-en-têtes
       <code>:method</code>, <code>:path</code>, <code>:scheme</code>, <code>:authority</code>. Hôtes
-      virtuels Apache choisis selon le SNI et l'hôte demandé. Réponse <code>200</code> avec
+      virtuels choisis selon le SNI et l'hôte demandé ; règles du site au format Apache
+      (<code>.htaccess</code>). Réponse <code>200</code> avec
       <code>content-type</code>, <code>content-encoding: gzip</code>, <code>cache-control</code>.
     </p>
     <p slot="decide">
-      L'hébergeur ; le droit (RGPD, statut d'hébergeur) ; le WHATWG, qui rédige
+      L'hébergeur ; le droit, dont le <Terme id="rgpd">RGPD</Terme> (même ton adresse IP compte comme
+      donnée personnelle) ; le WHATWG, qui rédige
       {' '}<Terme id="html">HTML</Terme> ; l'IETF pour HTTP.
     </p>
     <p slot="histoire">
@@ -328,8 +347,9 @@ const etapes = [
       terminal. <a href="/une-page-qui-n-existe-pas">Essaie une page qui n'existe pas</a> : erreur 404.
     </p>
     <p slot="verifie">
-      <code>curl -I https://rouages.net</code> affiche les en-têtes de la réponse (parfois
-      <code>server: nginx</code> : beaucoup d'hébergeurs placent nginx devant Apache).
+      <code>curl -I https://rouages.net</code> affiche les en-têtes de la réponse. La ligne
+      <code>server:</code> donne le nom que l'hébergeur choisit d'afficher : pour ce site,
+      <code>o2switch-PowerBoost-v3</code> (état au 28 novembre 2026).
     </p>
   </Etape>
 
@@ -342,7 +362,8 @@ const etapes = [
     </p>
     <p slot="curieux">
       En lisant le HTML, le navigateur découvre sa liste de courses : feuilles de style
-      (<Terme id="css">CSS</Terme>), images, polices, scripts. Il les demande en parallèle, sur la même connexion, et
+      (<Terme id="css">CSS</Terme>), images, polices, scripts. En HTTP/2 ou HTTP/3, il les demande en parallèle, sur la
+      même connexion, et
       ne redemande pas ce qu'il a déjà en cache. Sur beaucoup de sites, une partie de ces fichiers vient d'autres
       serveurs : publicité, statistiques, réseaux sociaux. {AUDIENCE_ACTIVE
         ? 'Celui-ci n’en appelle qu’un : sa propre mesure d’audience, sans cookie. Compte toi-même avec l’animation.'
@@ -374,21 +395,23 @@ const etapes = [
     </p>
     <p slot="ingenieur">
       HTML → DOM ; CSS → CSSOM ; arbre de rendu ; <i>layout</i> ; <i>paint</i> ; composition
-      (souvent sur la carte graphique). Mesures : First Contentful Paint, Largest Contentful
-      Paint (Google recommande un LCP de 2,5 s au plus pour 75 % des visites).
+      (souvent sur la carte graphique). Mesures (brouillons de travail du W3C) : First Contentful
+      Paint, Largest Contentful Paint (Google recommande un LCP de 2,5 s au plus, mesuré sur
+      75 % des chargements de page).
     </p>
   </Etape>
 
   <section class="pannes" id="bilan" data-ecran aria-labelledby="titre-pannes">
     <h2 id="titre-pannes">Et si ça ne marche pas ?</h2>
-    <p>Chaque message d'erreur correspond à une étape que tu connais maintenant.</p>
+    <p>Chaque message d'erreur correspond à une étape que tu connais maintenant. Les messages ci-dessous sont ceux
+      de Chrome : les autres navigateurs ont leurs propres mots.</p>
     <table>
       <thead><tr><th scope="col">Message</th><th scope="col">Étape en cause</th></tr></thead>
       <tbody>
         <tr><td>« Ce site est inaccessible », <code>DNS_PROBE_FINISHED_NXDOMAIN</code></td><td><a href="#nom">1 — Le nom</a></td></tr>
         <tr><td>Pas de Wi-Fi, pas d'internet</td><td><a href="#box">2 — La box</a></td></tr>
-        <tr><td>« La connexion a expiré »</td><td><a href="#liaison">3 — La liaison</a> ou <a href="#voyage">5 — Le voyage</a></td></tr>
-        <tr><td>« Votre connexion n'est pas privée »</td><td><a href="#cadenas">4 — Le cadenas</a></td></tr>
+        <tr><td>« … a mis trop de temps à répondre », <code>ERR_CONNECTION_TIMED_OUT</code></td><td><a href="#liaison">3 — La liaison</a> ou <a href="#voyage">5 — Le voyage</a></td></tr>
+        <tr><td>« Votre connexion n'est pas privée »</td><td><a href="#cadenas">4 — Le cadenas</a> (certificat refusé, ou horloge de ton appareil mal réglée)</td></tr>
         <tr><td>Erreur 404</td><td><a href="#serveur">6 — Le serveur ne trouve pas la page</a></td></tr>
         <tr><td>Erreur 500</td><td><a href="#serveur">6 — Erreur interne du serveur</a></td></tr>
         <tr><td>Erreur 503</td><td><a href="#serveur">6 — Service indisponible (surcharge ou maintenance)</a></td></tr>
@@ -397,18 +420,92 @@ const etapes = [
     <p class="tag" data-pagefind-ignore>Les durées indiquées sont des ordres de grandeur, qui varient selon ta connexion et la distance du serveur.</p>
 
   <Sources
-    verifie="2026-10-11"
+    verifie="2026-11-28"
     sources={[
-      { auteur: 'RFC Editor', titre: 'RFC 8446 — TLS 1.3', url: 'https://www.rfc-editor.org/rfc/rfc8446', type: 'primaire', langue: 'en' },
+      { auteur: 'Chromium Blog', titre: 'A safer default for navigation: HTTPS (étape 0)', url: 'https://blog.chromium.org/2021/03/a-safer-default-for-navigation-https.html', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6797 — HTTP Strict Transport Security (HSTS)', url: 'https://www.rfc-editor.org/rfc/rfc6797.html', type: 'primaire', annee: 2012, langue: 'en', archive: 'http://web.archive.org/web/20261002203737/https://www.rfc-editor.org/rfc/rfc6797.html' },
+      { auteur: 'Chromium', titre: 'HSTS Preload List Submission', url: 'https://hstspreload.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 5321 — SMTP (envoi du courriel)', url: 'https://www.rfc-editor.org/rfc/rfc5321.html', type: 'primaire', annee: 2008, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9051 — IMAP (relève du courriel)', url: 'https://www.rfc-editor.org/rfc/rfc9051.html', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 2132 — option DHCP « Domain Name Server » (résolveur indiqué par la box)', url: 'https://www.rfc-editor.org/rfc/rfc2132.html', type: 'primaire', annee: 1997, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 1034 — Domain Names, Concepts and Facilities', url: 'https://www.rfc-editor.org/rfc/rfc1034.html', type: 'primaire', annee: 1987, langue: 'en', archive: 'http://web.archive.org/web/20261009220506/https://www.rfc-editor.org/rfc/rfc1034.html' },
+      { auteur: 'RFC Editor', titre: 'RFC 9460 — enregistrements SVCB et HTTPS', url: 'https://www.rfc-editor.org/rfc/rfc9460.html', type: 'primaire', annee: 2023, langue: 'en', archive: 'http://web.archive.org/web/20261010082031/https://www.rfc-editor.org/rfc/rfc9460.html' },
+      { auteur: 'RFC Editor', titre: 'RFC 9156 — minimisation de la question DNS', url: 'https://www.rfc-editor.org/rfc/rfc9156.html', type: 'primaire', annee: 2021, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9364 — DNSSEC', url: 'https://www.rfc-editor.org/rfc/rfc9364.html', type: 'primaire', annee: 2023, langue: 'en', archive: 'http://web.archive.org/web/20261009164341/https://www.rfc-editor.org/rfc/rfc9364.html' },
+      { auteur: 'RFC Editor', titre: 'RFC 7858 — DNS over TLS', url: 'https://www.rfc-editor.org/rfc/rfc7858.html', type: 'primaire', annee: 2016, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 8484 — DNS over HTTPS', url: 'https://www.rfc-editor.org/rfc/rfc8484.html', type: 'primaire', annee: 2018, langue: 'en' },
+      { titre: 'Root Server Technical Operations (2 046 instances au 28 novembre 2026)', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'IANA', titre: 'Root Zone Management', url: 'https://www.iana.org/domains/root', type: 'primaire', langue: 'en' },
+      { auteur: 'IANA', titre: 'Fichier de la zone racine (serveurs de .net gardés 2 jours)', url: 'https://www.internic.net/domain/root.zone', type: 'primaire', langue: 'en' },
+      { auteur: 'ICANN', titre: '.net Registry Agreement (Verisign)', url: 'https://www.icann.org/en/registry-agreements/details/net', type: 'primaire', langue: 'en', archive: 'http://web.archive.org/web/20261003050320/https://www.icann.org/en/registry-agreements/details/net' },
+      { auteur: 'Arcom', titre: 'Lutte contre le piratage des retransmissions sportives', url: 'https://www.arcom.fr/nous-connaitre-nos-missions/promouvoir-et-proteger-la-creation/lutte-contre-le-piratage-des-retransmissions-sportives', type: 'primaire' },
+      { auteur: 'Arcom', titre: "Rapport d'activité 2022 de la personnalité qualifiée (blocage administratif)", url: 'https://www.arcom.fr/sites/default/files/2023-04/Rapport%20activit%C3%A9%202022%20de%20la%20personnalite%20qualifiee%20-%20Arcom.pdf', type: 'primaire', annee: 2023 },
+      { auteur: 'Légifrance', titre: 'Décret n° 2015-125 du 5 février 2015 relatif au blocage des sites', url: 'https://www.legifrance.gouv.fr/loda/id/JORFTEXT000030195477', type: 'primaire', annee: 2015, archive: 'http://web.archive.org/web/20250821115047/https://www.legifrance.gouv.fr/loda/id/JORFTEXT000030195477' },
+      { auteur: 'Arcom', titre: 'Pornographie en ligne : de nouvelles étapes franchies pour la protection des mineurs (loi SREN)', url: 'https://www.arcom.fr/presse/pornographie-en-ligne-de-nouvelles-etapes-franchies-pour-la-protection-des-mineurs', type: 'primaire', annee: 2025, archive: 'http://web.archive.org/web/20260716140935/https://www.arcom.fr/presse/pornographie-en-ligne-de-nouvelles-etapes-franchies-pour-la-protection-des-mineurs' },
+      { auteur: 'A. Maxwell, TorrentFreak', titre: 'OpenDNS Suspends Service in France Due to Canal+ Piracy Blocking Order', url: 'https://torrentfreak.com/opendns-suspends-service-in-france-due-to-canal-piracy-blocking-order-240629/', type: 'presse', annee: 2024, langue: 'en', archive: 'http://web.archive.org/web/20261005100238/https://torrentfreak.com/opendns-suspends-service-in-france-due-to-canal-piracy-blocking-order-240629/' },
+      { auteur: 'Clubic', titre: 'Piratage : Canal+ attaque Cisco, Cloudflare et Google pour qu’ils bloquent plusieurs sites', url: 'https://www.clubic.com/actualite-513589-piratage-canal-attaque-cisco-cloudflare-et-google-pour-qu-ils-bloquent-plusieurs-sites-de-streaming-illegaux.html', type: 'presse', annee: 2023, archive: 'http://web.archive.org/web/20260517235728/https://www.clubic.com/actualite-513589-piratage-canal-attaque-cisco-cloudflare-et-google-pour-qu-ils-bloquent-plusieurs-sites-de-streaming-illegaux.html' },
+      { auteur: 'RFC Editor', titre: 'RFC 1918 — adresses privées', url: 'https://www.rfc-editor.org/rfc/rfc1918.html', type: 'primaire', annee: 1996, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6598 — espace partagé du CGNAT (100.64.0.0/10)', url: 'https://www.rfc-editor.org/rfc/rfc6598.html', type: 'primaire', annee: 2012, langue: 'en' },
+      { auteur: 'Arcep', titre: 'Baromètre annuel de la transition vers IPv6 en France', url: 'https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/transition-ipv6/barometre-annuel-de-la-transition-vers-ipv6-en-france.html', type: 'primaire', archive: 'http://web.archive.org/web/20260825190226/https://www.arcep.fr/cartes-et-donnees/nos-publications-chiffrees/transition-ipv6/barometre-annuel-de-la-transition-vers-ipv6-en-france.html' },
+      { auteur: 'IEEE', titre: '802.11 Working Group (Wi-Fi)', url: 'https://www.ieee802.org/11/', type: 'primaire', langue: 'en' },
+      { auteur: 'IEEE', titre: '802.3 Ethernet Working Group', url: 'https://www.ieee802.org/3/', type: 'primaire', langue: 'en' },
       { auteur: 'RFC Editor', titre: 'RFC 9293 — TCP', url: 'https://www.rfc-editor.org/rfc/rfc9293', type: 'primaire', langue: 'en' },
       { auteur: 'RFC Editor', titre: 'RFC 9000 — QUIC', url: 'https://www.rfc-editor.org/rfc/rfc9000', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9114 — HTTP/3', url: 'https://www.rfc-editor.org/rfc/rfc9114.html', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 7282 — le consensus approximatif à l’IETF', url: 'https://www.rfc-editor.org/rfc/rfc7282.html', type: 'primaire', annee: 2014, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 8446 — TLS 1.3', url: 'https://www.rfc-editor.org/rfc/rfc8446', type: 'primaire', langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6066 — extension SNI', url: 'https://www.rfc-editor.org/rfc/rfc6066.html', type: 'primaire', annee: 2011, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9849 — TLS Encrypted Client Hello', url: 'https://www.rfc-editor.org/rfc/rfc9849.html', type: 'primaire', annee: 2026, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6962 — Certificate Transparency', url: 'https://www.rfc-editor.org/rfc/rfc6962.html', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'Google Security Blog', titre: 'A new path for Kyber on the web (X25519MLKEM768)', url: 'https://security.googleblog.com/2024/09/a-new-path-for-kyber-on-web.html', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'cPanel', titre: 'Manage AutoSSL', url: 'https://docs.cpanel.net/whm/ssl-tls/manage-autossl/', type: 'primaire', langue: 'en', archive: 'http://web.archive.org/web/20260622203903/https://docs.cpanel.net/whm/ssl-tls/manage-autossl/' },
+      { auteur: "Let's Encrypt", titre: 'FAQ (certificats de 90 jours, validation du domaine)', url: 'https://letsencrypt.org/docs/faq/', type: 'primaire', langue: 'en' },
+      { auteur: 'CA/Browser Forum', titre: 'Page d’accueil', url: 'https://cabforum.org/', type: 'primaire', langue: 'en' },
+      { auteur: 'W. Diffie et M. Hellman', titre: 'New Directions in Cryptography', url: 'https://ee.stanford.edu/~hellman/publications/24.pdf', type: 'primaire', annee: 1976, langue: 'en' },
+      { auteur: 'GCHQ', titre: 'James Ellis (cryptographie à clé publique au GCHQ)', url: 'https://www.gchq.gov.uk/person/james-ellis', type: 'primaire', langue: 'en' },
+      { auteur: 'B. Schneier', titre: 'The Secret Story of Nonsecret Encryption', url: 'https://www.schneier.com/essays/archives/1998/04/the_secret_story_of.html', type: 'presse', annee: 1998, langue: 'en' },
+      { auteur: 'Chromium Blog', titre: 'An Update on the Lock Icon', url: 'https://blog.chromium.org/2023/05/an-update-on-lock-icon.html', type: 'primaire', annee: 2023, langue: 'en' },
       { auteur: 'RFC Editor', titre: 'RFC 4271 — BGP-4', url: 'https://www.rfc-editor.org/rfc/rfc4271', type: 'primaire', langue: 'en' },
-      { titre: 'Root Server Technical Operations', url: 'https://root-servers.org/', type: 'primaire', langue: 'en' },
-      { auteur: 'A. J. Han Vinck (schéma original), Wikimedia Commons', titre: "Diffie-Hellman Key Exchange (l'analogie des pots de peinture)", url: 'https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg', type: 'site', langue: 'en' },
-      { auteur: 'M. Antesberger et al.', titre: 'Distribution of Telecom Entangled Photons through a 7.7 km Antiresonant Hollow-Core Fiber (indice de la fibre standard ≈ 1,47)', url: 'https://arxiv.org/abs/2308.01337', type: 'recherche', annee: 2023, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 1812 — routeurs IPv4 (TTL et ICMP Time Exceeded)', url: 'https://www.rfc-editor.org/rfc/rfc1812.html', type: 'primaire', annee: 1995, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 6811 — validation de l’origine des annonces BGP (RPKI)', url: 'https://www.rfc-editor.org/rfc/rfc6811.html', type: 'primaire', annee: 2013, langue: 'en' },
+      { auteur: 'NRO', titre: 'Regional Internet Registries', url: 'https://www.nro.net/about/rirs/', type: 'primaire', langue: 'en' },
+      { auteur: 'France-IX', titre: 'Site officiel', url: 'https://www.franceix.net/en/', type: 'primaire', langue: 'en' },
+      { auteur: 'Union européenne', titre: 'Règlement (UE) 2015/2120 (neutralité du net)', url: 'https://publications.europa.eu/resource/cellar/8fdf5d08-93fc-11e5-983e-01aa75ed71a1.0009.01/DOC_1', type: 'primaire', annee: 2015 },
+      { auteur: 'Arcep', titre: 'La neutralité du net', url: 'https://www.arcep.fr/nos-sujets/la-neutralite-du-net.html', type: 'primaire' },
+      { auteur: 'TeleGeography', titre: 'Do Submarine Cables Account For Over 99% of Intercontinental Data Traffic?', url: 'https://resources.telegeography.com/2023-mythbusting-part-3', type: 'primaire', annee: 2023, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9110 — HTTP Semantics (codes 200, 404, 500, 503)', url: 'https://www.rfc-editor.org/rfc/rfc9110.html', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 9113 — HTTP/2', url: 'https://www.rfc-editor.org/rfc/rfc9113.html', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Apache Software Foundation', titre: 'Name-based Virtual Host Support', url: 'https://httpd.apache.org/docs/2.4/vhosts/name-based.html', type: 'primaire', langue: 'en' },
+      { auteur: 'WHATWG', titre: 'HTML Living Standard', url: 'https://html.spec.whatwg.org/multipage/', type: 'primaire', langue: 'en' },
+      { auteur: 'CNIL', titre: 'Le règlement général sur la protection des données (considérant 30 : adresses IP)', url: 'https://www.cnil.fr/fr/reglement-europeen-protection-donnees', type: 'primaire', annee: 2016 },
+      { auteur: 'RFC Editor', titre: 'RFC 8246 — HTTP Immutable Responses', url: 'https://www.rfc-editor.org/rfc/rfc8246.html', type: 'primaire', annee: 2017, langue: 'en' },
+      { auteur: 'CNIL', titre: 'Cookies et autres traceurs : que dit la loi ?', url: 'https://www.cnil.fr/fr/cookies-et-autres-traceurs/que-dit-la-loi', type: 'primaire' },
+      { auteur: 'WebKit', titre: 'Full Third-Party Cookie Blocking and More', url: 'https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/', type: 'primaire', annee: 2020, langue: 'en' },
+      { auteur: 'Mozilla', titre: 'Firefox rolls out Total Cookie Protection by default', url: 'https://blog.mozilla.org/en/mozilla/firefox-rolls-out-total-cookie-protection-by-default-to-all-users-worldwide/', type: 'primaire', annee: 2022, langue: 'en' },
+      { auteur: 'Google', titre: 'Next steps for Privacy Sandbox and tracking protections in Chrome', url: 'https://privacysandbox.com/news/privacy-sandbox-next-steps/', type: 'primaire', annee: 2025, langue: 'en' },
       { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Page Weight (nombre médian de requêtes)', url: 'https://almanac.httparchive.org/en/2024/page-weight', type: 'primaire', annee: 2024, langue: 'en' },
       { auteur: 'HTTP Archive', titre: 'Web Almanac 2024 — Third Parties (services tiers)', url: 'https://almanac.httparchive.org/en/2024/third-parties', type: 'primaire', annee: 2024, langue: 'en' },
+      { auteur: 'W3C', titre: 'CSS Object Model (CSSOM)', url: 'https://www.w3.org/TR/cssom-1/', type: 'primaire', langue: 'en' },
+      { auteur: 'W3C', titre: 'Paint Timing', url: 'https://www.w3.org/TR/paint-timing/', type: 'primaire', langue: 'en' },
+      { auteur: 'W3C', titre: 'Largest Contentful Paint', url: 'https://www.w3.org/TR/largest-contentful-paint/', type: 'primaire', langue: 'en' },
+      { auteur: 'Google, web.dev', titre: 'Largest Contentful Paint (seuil de 2,5 s, 75e centile)', url: 'https://web.dev/articles/lcp', type: 'site', langue: 'en' },
+      { auteur: 'MDN', titre: 'How browsers work', url: 'https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/How_browsers_work', type: 'site', langue: 'en' },
+      { auteur: 'Chromium', titre: 'Traductions françaises des pages d’erreur (components_strings_fr.xtb)', url: 'https://raw.githubusercontent.com/chromium/chromium/main/components/strings/components_strings_fr.xtb', type: 'primaire' },
+      { auteur: 'RFC Editor', titre: 'RFC 5280 — certificats X.509 (période de validité)', url: 'https://www.rfc-editor.org/rfc/rfc5280.html', type: 'primaire', annee: 2008, langue: 'en' },
+      { auteur: 'RFC Editor', titre: 'RFC 882 — Domain Names, Concepts and Facilities (Mockapetris)', url: 'https://www.rfc-editor.org/rfc/rfc882.html', type: 'primaire', annee: 1983, langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Elizabeth Feinler', url: 'https://www.internethalloffame.org/inductee/elizabeth-feinler/', type: 'site', langue: 'en' },
+      { auteur: 'R. Perlman', titre: 'An Algorithm for Distributed Computation of a Spanning Tree in an Extended LAN', url: 'https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf', type: 'primaire', annee: 1985, langue: 'en', archive: 'http://web.archive.org/web/20250328115152/https://prl.khoury.northeastern.edu/img/p-sigcomm-1985.pdf' },
+      { auteur: 'C. Marinica et M. Shapiro', titre: 'Du datagramme à la gouvernance de l’Internet. Entretien avec Louis Pouzin', url: 'https://1024.socinfo.fr/2015/07/1024_6_2015_59.pdf', type: 'primaire', annee: 2015, archive: 'http://web.archive.org/web/20251119033909/https://1024.socinfo.fr/2015/07/1024_6_2015_59.pdf' },
+      { auteur: 'V. Cerf et R. Kahn', titre: 'A Protocol for Packet Network Intercommunication', url: 'https://www.cs.princeton.edu/courses/archive/fall06/cos561/papers/cerf74.pdf', type: 'primaire', annee: 1974, langue: 'en' },
+      { auteur: 'atlantic-cable.com', titre: 'Cable Timeline: Atlantic (1858, 1866)', url: 'https://atlantic-cable.com/Cables/CableTimeLine/atlantic.htm', type: 'site', langue: 'en', archive: 'http://web.archive.org/web/20261006195808/https://atlantic-cable.com/Cables/CableTimeLine/atlantic.htm' },
+      { auteur: 'IEEE / ETHW', titre: 'Milestones: Landing of the Transatlantic Cable, 1866', url: 'https://ethw.org/Milestones:Landing_of_the_Transatlantic_Cable,_1866', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Kilnam Chon', url: 'https://www.internethalloffame.org/inductee/kilnam-chon/', type: 'site', langue: 'en' },
+      { auteur: 'Internet Hall of Fame', titre: 'Nii Quaynor', url: 'https://www.internethalloffame.org/inductee/nii-quaynor/', type: 'site', langue: 'en' },
+      { auteur: 'W3C', titre: 'A Little History of the World Wide Web', url: 'https://www.w3.org/History.html', type: 'site', langue: 'en' },
+      { auteur: 'Projet WWW (CERN)', titre: 'Nicola Pellow', url: 'https://www.w3.org/History/19921103-hypertext/hypertext/WWW/People/Pellow.html', type: 'primaire', annee: 1992, langue: 'en' },
+      { auteur: 'A. J. Han Vinck (schéma attribué), Wikimedia Commons', titre: "Diffie-Hellman Key Exchange (l'analogie des pots de peinture)", url: 'https://commons.wikimedia.org/wiki/File:Diffie-Hellman_Key_Exchange.svg', type: 'site', langue: 'en' },
       { auteur: 'Art of the Problem', titre: 'Diffie-Hellman Key Exchange (vidéo)', url: 'https://www.youtube.com/watch?v=3QnD2c4Xovk', type: 'site', langue: 'en' },
+      { auteur: 'M. Antesberger et al.', titre: 'Distribution of Telecom Entangled Photons through a 7.7 km Antiresonant Hollow-Core Fiber (indice de la fibre standard ≈ 1,47)', url: 'https://arxiv.org/abs/2308.01337', type: 'recherche', annee: 2023, langue: 'en' },
     ]}
   />
   </section>

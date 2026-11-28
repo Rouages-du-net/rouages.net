@@ -672,6 +672,12 @@ Uniquement des plages privées (RFC 1918 : `192.168.0.0/16`), réservées à la
 documentation (RFC 5737 : `203.0.113.0/24`, `198.51.100.0/24` ; RFC 3849 :
 `2001:db8::/32`) ou des domaines réservés (RFC 2606 : `.example`).
 
+Exception depuis le 28 novembre 2026 : l'animation « La question qui rebondit »
+(`QuestionDns`, étape 1) affiche l'adresse réelle de `rouages.net`,
+`109.234.166.10`, et son TTL de 300 s (« valable cinq minutes »), relevés le
+28 novembre 2026 (voir ci-dessous), pour rester cohérente avec le texte. À
+mettre à jour si l'hébergement ou le TTL change.
+
 ## Variante « serveur lointain » (étape 5)
 
 Délai minimal affiché : distance orthodromique Paris – New York (≈ 5 837 km,
@@ -747,3 +753,59 @@ fois Cloudflare retiré) :
 
 **Exemple dans le texte (27 novembre 2026)** : les niveaux « découverte » et « curieux » de l'étape DNS citent
 l'adresse `109.234.166.10`, relevée le 25-26 novembre 2026 (ci-dessus). À mettre à jour si l'hébergement change.
+
+## Relecture du 28 novembre 2026 (première passe de correction)
+
+Mesures et lectures faites le 28 novembre 2026 pour traiter la grille
+`docs/relecture/entree-a-la-page.md`. Toutes les URL ci-dessous ont été
+ouvertes ce jour-là, sauf mention contraire.
+
+### Relevé sur le site en ligne (28 novembre 2026, vers 12 h 30 UTC)
+
+Depuis un conteneur de développement aux États-Unis, à travers un proxy de
+sortie (le protocole et les durées mesurés sont donc ceux de la liaison avec le
+proxy, pas forcément avec le serveur).
+
+| Mesure | Commande ou source | Résultat |
+|---|---|---|
+| Adresse IPv4 | `https://dns.google/resolve?name=rouages.net&type=A` | `109.234.166.10`, **TTL 300 s** (« valable cinq minutes » est donc juste) |
+| IPv6, enregistrement `HTTPS` | idem, `type=AAAA` et `type=HTTPS` | aucun |
+| En-têtes | `curl -sI https://rouages.net/` | `HTTP/2 200`, `server: o2switch-PowerBoost-v3`, `cache-control: no-cache`, `x-content-type-options: nosniff`, `referrer-policy: strict-origin-when-cross-origin` ; **ni `alt-svc` (pas de HTTP/3 annoncé) ni `strict-transport-security`** |
+| Compression | idem avec `Accept-Encoding: gzip` | `content-encoding: gzip` |
+| Redirection | `curl -sI http://rouages.net/` | `301` vers `https://rouages.net/` |
+| Fichiers versionnés | `curl -sI https://rouages.net/_astro/….css` | `cache-control: public, max-age=31536000, immutable` |
+| Page absente | `curl -sI https://rouages.net/une-page-qui-n-existe-pas` | `404` |
+| HSTS préchargé | `https://hstspreload.org/api/v2/status?domain=rouages.net` | `unknown` (non préchargé) |
+| Requêtes de la page du module | Chromium sans interface (Playwright), `https://rouages.net/modules/entree-a-la-page/` | 19 requêtes, **toutes vers `rouages.net`** (aucun autre domaine, pas de mesure d'audience chargée ce jour-là) ; `nextHopProtocol` = `h2` ; événement `load` à environ 1 s (mesure unique, depuis les États-Unis : pas représentative) |
+
+Conséquences : les règles du `public/.htaccess` (cache, compression,
+redirection, en-têtes) s'appliquent bien. En revanche, l'en-tête `server:`
+n'annonce ni Apache ni nginx mais le serveur maison de l'hébergeur ; sa nature
+exacte n'est pas établie (la presse le décrit tantôt comme fondé sur
+OpenLiteSpeed, tantôt sur nginx/OpenResty : non vérifié, aucune documentation
+de l'hébergeur lue). Le module dit donc « le logiciel serveur » et « règles au
+format Apache (`.htaccess`) », sans nommer le logiciel.
+
+### Nouvelles sources lues
+
+- R-1. Google, « Largest Contentful Paint (LCP) », web.dev — https://web.dev/articles/lcp — S — en : « sites should strive to have Largest Contentful Paint of 2.5 seconds or less » ; « a good threshold to measure is the 75th percentile of page loads ». Confirme « 75 % des chargements de page » (et non « des visites »).
+- R-2. Root Server Technical Operations Association, root-servers.org — https://root-servers.org/ — P — en : « As of 2026-11-28T12:30:51Z, the root server system consists of 2046 operational instances », 12 opérateurs.
+- R-3. Chromium, traductions françaises des chaînes (`components/strings/components_strings_fr.xtb`, branche `main`) — https://raw.githubusercontent.com/chromium/chromium/main/components/strings/components_strings_fr.xtb — P — fr : « Ce site est inaccessible » ; « Votre connexion n'est pas privée » ; « <nom de l'hôte> a mis trop de temps à répondre. » ; « Afin d'établir une connexion sécurisée, votre horloge doit être réglée correctement. […] Si l'horloge de votre appareil est incorrecte, Chrome n'est pas en mesure de vérifier la validité des certificats. » Le libellé « La connexion a expiré » n'est **pas** celui de Chrome : remplacé dans le bilan.
+- R-4. Chromium, `net/base/net_error_list.h` — https://raw.githubusercontent.com/chromium/chromium/main/net/base/net_error_list.h — P — en : `NAME_NOT_RESOLVED` (-105), `CONNECTION_TIMED_OUT` (-118), `CERT_DATE_INVALID` (-201) ; et `components/error_page/common/localized_error.cc` — https://raw.githubusercontent.com/chromium/chromium/main/components/error_page/common/localized_error.cc — P — en : `DNS_PROBE_FINISHED_NXDOMAIN`, et `ERR_CONNECTION_TIMED_OUT` associé au message « a mis trop de temps à répondre ». Vérification complémentaire dans Chromium sans interface : `expired.badssl.com` affiche « Your connection is not private » et `NET::ERR_CERT_DATE_INVALID` (version anglaise).
+- R-5. D. Cooper *et al.*, « Internet X.509 Public Key Infrastructure Certificate and CRL Profile », RFC 5280, IETF, 2008 — https://www.rfc-editor.org/rfc/rfc5280.html — P — en : § 4.1.2.5, « The validity period for a certificate is the period of time from notBefore through notAfter » (d'où l'erreur quand l'horloge de l'appareil est fausse).
+- R-6. S. Alexander, R. Droms, « DHCP Options and BOOTP Vendor Extensions », RFC 2132, IETF, 1997 — https://www.rfc-editor.org/rfc/rfc2132.html — P — en : § 3.8 « Domain Name Server Option » (la box indique le résolveur à l'appareil). En IPv6 : option RDNSS, RFC 8106 — https://www.rfc-editor.org/rfc/rfc8106.html — P — en. *Non sourcé* : que ce résolveur soit « souvent celui du fournisseur d'accès ».
+- R-7. J. Klensin, « Simple Mail Transfer Protocol », RFC 5321, IETF, 2008 — https://www.rfc-editor.org/rfc/rfc5321.html — P — en ; A. Melnikov, B. Leiba, « Internet Message Access Protocol (IMAP) - Version 4rev2 », RFC 9051, IETF, 2021 — https://www.rfc-editor.org/rfc/rfc9051.html — P — en. Sourcent le mythe de l'étape 0 (le courriel a ses propres protocoles). L'exemple des jeux en ligne, non sourcé, a été retiré.
+- R-8. IEEE, « IEEE 802.3 Ethernet Working Group » — https://www.ieee802.org/3/ — P — en.
+- R-9. IANA, « Delegation Record for .FR » — https://www.iana.org/domains/root/db/fr.html — P — en : gestionnaire « Association Française pour le Nommage Internet en Coopération (A.F.N.I.C.) » (glossaire `registre`).
+- R-10. RIPE NCC, « The RIPE NCC has run out of IPv4 Addresses », 25/11/2019 — https://www.ripe.net/about-us/news/the-ripe-ncc-has-run-out-of-ipv4-addresses/ — P — en (glossaire `ipv6`, « adresses épuisées » ; le RIPE NCC précise qu'il continue de récupérer des adresses).
+- R-11. CNIL, « Le règlement général sur la protection des données - RGPD » (texte du règlement (UE) 2016/679) — https://www.cnil.fr/fr/reglement-europeen-protection-donnees — P — fr : considérant 30, « des identifiants en ligne tels que des adresses IP et des témoins de connexion ». Source de « même ton adresse IP compte comme donnée personnelle » (étape 6, Qui décide ?).
+- R-12. GCHQ, « James Ellis » — https://www.gchq.gov.uk/person/james-ellis — P (institution) — en : Ellis conçoit le « non-secret encryption » ; Malcolm Williamson « pioneering a process of key exchanges » ; « The discovery in 1973 remained classified for a long time » ; Ellis meurt le 25/11/1997, « just a month before the public announcement ».
+- R-13. B. Schneier, « The Secret Story of Nonsecret Encryption », 1998 — https://www.schneier.com/essays/archives/1998/04/the_secret_story_of.html — Pr (essai d'un cryptographe) — en : « In 1974, M. J. Williamson invented another classified algorithm, remarkably similar to Diffie-Hellman » ; GCHQ « released a document on December 1 1997 ». Seconde source indépendante pour l'encart histoire de l'étape 4 (la date exacte de 1997 varie selon les sources : seule l'année est reprise).
+- R-14. Corning, fiches produit de la fibre SMF-28 (indice de groupe effectif ≈ 1,468 à 1 550 nm) : **non lues** (HTTP 403 sur corning.com, hôte csmedia.corning.com bloqué depuis le conteneur) ; valeurs vues seulement dans des résumés de moteur de recherche. Seconde source de l'indice de la fibre toujours à trouver.
+
+### Recherches sans résultat
+
+- Statut d'hébergeur (LCEN, art. 6 ; règlement (UE) 2022/2065, art. 6) : Légifrance et EUR-Lex refusent les requêtes automatisées (EUR-Lex : HTTP 202 sans contenu) ; la page de la Commission sur le DSA ne traite pas du régime des hébergeurs. La mention « statut d'hébergeur » a été retirée du module.
+- Libellés exacts des messages d'erreur de Firefox et Safari : non vérifiés ; le bilan précise « messages de Chrome ».
+- Comportement « HTTPS d'abord » de Firefox et Safari pour une adresse tapée : toujours non vérifié ; le texte dit « Certains navigateurs, comme Chrome ».
+

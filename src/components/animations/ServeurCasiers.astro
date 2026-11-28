@@ -15,7 +15,7 @@ const chemins = ['/', '/glossaire/', '/horaires/', '/tournois/', '/page-inexista
   <div class="anim-repli">
     <p>
       Un même serveur héberge plusieurs sites, chacun dans son dossier. Quand la requête
-      demande <code>:authority: rouages.net</code> et <code>:path: /</code>, Apache ouvre le
+      demande <code>:authority: rouages.net</code> et <code>:path: /</code>, le serveur ouvre le
       dossier de rouages.net, trouve <code>index.html</code> et répond <code>200</code>. Si la
       page n'existe pas dans ce dossier, il répond <code>404</code>.
     </p>
@@ -34,7 +34,7 @@ const chemins = ['/', '/glossaire/', '/horaires/', '/tournois/', '/page-inexista
     </form>
 
     <div class="serveur anim-cadre">
-      <p class="titre">Le serveur (Apache, hébergement mutualisé)</p>
+      <p class="titre">Le serveur (hébergement mutualisé)</p>
       <div class="rangee">
         {sites.map((s) => (
           <section class="casier" data-hote={s.hote}>

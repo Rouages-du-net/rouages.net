@@ -2,18 +2,23 @@
 // Animation « Le voyage des paquets » (étape 5 du module « De l'Entrée à
 // la page »).
 //
-// Un petit réseau avec des routes de secours. Le paquet suit le plus court
-// chemin, saut par saut ; son TTL baisse à chaque routeur (c'est ce
-// qu'exploite traceroute). On peut couper des liens : la route se
-// recalcule, comme le font les routeurs avec BGP et les protocoles internes.
+// Un petit réseau avec des routes de secours. Le paquet suit ici le plus
+// court chemin en nombre de sauts, saut par saut ; son TTL baisse à chaque
+// routeur (c'est ce qu'exploite traceroute). On peut couper des liens : la
+// route se recalcule. Simplification : les vrais réseaux choisissent leurs
+// routes selon des politiques (BGP entre réseaux, protocoles internes à
+// l'intérieur), pas seulement selon le nombre de sauts ; le texte affiché ne
+// parle donc pas de « meilleur chemin ».
 // Le réseau est un exemple simplifié : les noms de villes sont illustratifs.
 //
 // Variante « serveur lointain » : le serveur est à New York ; le paquet
 // traverse l'Atlantique par l'un de deux câbles sous-marins. Délai minimal
 // calculé à la construction : distance orthodromique Paris – New York
 // (≈ 5 837 km) divisée par la vitesse de la lumière dans une fibre standard,
-// c / 1,47 (indice de groupe de la fibre SMF-28 : Antesberger et al., 2023,
-// voir docs/sources/entree-a-la-page.md). Les vrais câbles sont plus longs.
+// c / 1,47 (indice de réfraction de la fibre standard SMF-28 à 1 550 nm,
+// « n ≈ 1,47 » : Antesberger et al., 2023, voir docs/sources/entree-a-la-page.md ;
+// pour le délai, c'est l'indice de groupe qui compte, du même ordre).
+// Les vrais câbles sont plus longs.
 
 const C_VIDE = 299792.458; // km/s, valeur exacte (définition du mètre, SI)
 const INDICE_FIBRE = 1.47;
@@ -227,7 +232,7 @@ const etiquetteLien = ([a, b]: [string, string]) => `${nom(a)} – ${nom(b)}`;
       });
       route.textContent = c
         ? `Route actuelle : ${c.map(nom).join(' → ')}.`
-        : "Plus aucune route : le serveur est injoignable. Ton navigateur finira par afficher « La connexion a expiré ».";
+        : "Plus aucune route : le serveur est injoignable. Ton navigateur finira par abandonner (Chrome affiche « … a mis trop de temps à répondre »).";
       envoyer.disabled = !c || enCours;
     }
 

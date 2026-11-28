@@ -13,8 +13,9 @@ interface Message {
   note?: string;
 }
 
-// Adresse réservée à la documentation (RFC 5737), pas l'adresse réelle.
-const IP = '203.0.113.42';
+// Adresse réelle de rouages.net et TTL de 300 s, relevés le 28 novembre 2026
+// (voir docs/sources/entree-a-la-page.md) : à mettre à jour si l'hébergement change.
+const IP = '109.234.166.10';
 
 const scenarios: Record<string, { nom: string; messages: Message[] }> = {
   vide: {
@@ -27,7 +28,7 @@ const scenarios: Record<string, { nom: string; messages: Message[] }> = {
       { de: 'tld', a: 'res', texte: '« Voici les serveurs DNS de rouages.net. »', note: 'Le registre de .net (Verisign) sait quels serveurs font autorité pour le domaine.' },
       { de: 'res', a: 'dom', texte: "« Quelle est l'adresse de rouages.net ? »" },
       { de: 'dom', a: 'res', texte: `« ${IP}, valable cinq minutes. »`, note: 'La réponse porte une durée de vie (TTL), choisie par le gestionnaire du domaine (de quelques minutes à plusieurs jours) : le résolveur la garde en mémoire jusque-là.' },
-      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Ton navigateur peut maintenant contacter le serveur. Tout cela a pris de quelques dizaines à quelques centaines de millisecondes ; quand la réponse est déjà en mémoire, c\u2019est presque instantané.' },
+      { de: 'res', a: 'nav', texte: `« ${IP} »`, note: 'Ton navigateur peut maintenant contacter le serveur. Tout cela prend en général une fraction de seconde ; quand la réponse est déjà en mémoire, c\u2019est presque instantané.' },
     ],
   },
   courant: {
