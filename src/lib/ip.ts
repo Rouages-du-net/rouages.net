@@ -143,10 +143,20 @@ export interface Attribution extends SousReseau {
  * petit bloc aligné qui lui suffit. Renvoie les attributions, ou l'indice du
  * besoin qui ne rentre plus.
  */
+/** Besoins rangés du plus grand bloc au plus petit (préfixe le plus court d'abord). */
+export function trierBesoins(besoins: Besoin[]): Besoin[] {
+  const q = (b: Besoin) => prefixePour(b.machines, b.liaison) ?? -1;
+  return [...besoins].sort((a, b) => q(a) - q(b) || b.machines - a.machines);
+}
+
 export function planVLSM(ip: number, p: number, besoins: Besoin[]): { attributions: Attribution[]; manque?: Besoin; reste: number } {
   const base = reseau(ip, p);
   const fin = base.reseau + base.adresses; // première adresse hors du réseau
-  const tries = [...besoins].sort((a, b) => b.machines - a.machines);
+  // Les plus grands blocs d'abord (préfixe le plus court) : chaque bloc tombe
+  // alors aligné juste après le précédent, sans trou. Trier par nombre de
+  // machines ne suffit pas : une liaison (/31) passe avant un réseau d'une
+  // machine (/30), qui laisse alors deux adresses inutilisées.
+  const tries = trierBesoins(besoins);
   const attributions: Attribution[] = [];
   let curseur = base.reseau;
   for (const b of tries) {

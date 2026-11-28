@@ -54,13 +54,17 @@ describe('écritures des droits', () => {
   it('applique chmod', () => {
     expect(appliquerChmod(0o644, '600')).toBe(0o600);
     expect(appliquerChmod(0o644, 'g+w')).toBe(0o664);
+    // « = » sans classe, umask 022 : vérifié avec le vrai chmod (GNU coreutils).
+    expect(appliquerChmod(0o777, '=r')).toBe(0o444);
+    expect(appliquerChmod(0o777, '=rw')).toBe(0o644);
+    expect(appliquerChmod(0o777, '=w')).toBe(0o200);
     expect(appliquerChmod(0o777, 'o-rwx')).toBe(0o770);
     expect(appliquerChmod(0o000, 'u=rw,go=r')).toBe(0o644);
     expect(appliquerChmod(0o644, 'a+x')).toBe(0o755);
     expect(appliquerChmod(0o644, '+x')).toBe(0o755);
     // Sans classe, le masque 022 protège l'écriture du groupe et des autres.
     expect(appliquerChmod(0o444, '+w')).toBe(0o644);
-    expect(appliquerChmod(0o666, '=r')).toBe(0o466);
+    expect(appliquerChmod(0o666, '=r')).toBe(0o444);
     expect(appliquerChmod(0o644, 'u+q')).toBeNull();
   });
 });

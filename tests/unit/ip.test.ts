@@ -67,6 +67,10 @@ describe('sous-réseaux', () => {
     expect(plan.attributions.map((a) => `${ecrireIPv4(a.reseau)}/${a.prefixe}`)).toEqual(['192.0.2.0/25', '192.0.2.128/26', '192.0.2.192/27', '192.0.2.224/31']);
     for (const a of plan.attributions) expect(a.reseau % a.adresses).toBe(0);
     expect(planVLSM(ip('192.0.2.0'), 24, [{ nom: 'A', machines: 200 }, { nom: 'B', machines: 100 }]).manque?.nom).toBe('B');
+    // Une liaison (/31) et un réseau d'une machine (/30) : le /30 d'abord, sans trou.
+    const sansTrou = planVLSM(ip('192.0.2.0'), 29, [{ nom: 'L', machines: 2, liaison: true }, { nom: 'M', machines: 1 }]);
+    expect(sansTrou.attributions.map((a) => `${a.besoin.nom}/${a.prefixe}`)).toEqual(['M/30', 'L/31']);
+    expect(sansTrou.reste).toBe(2);
   });
 });
 
