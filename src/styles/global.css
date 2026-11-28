@@ -32,6 +32,14 @@
   --terminal-erreur: #ffb4c4;
   --terminal-bord: #2c3470;
 
+  /* Illustrations « photo agrafée » : tirage papier clair dans les deux
+     thèmes (une photo reste une photo), agrafe métallique. */
+  --photo-cadre: #fffdf5;
+  --sur-photo: #2a2730;       /* texte posé sur --photo-cadre, dans les deux thèmes */
+  --sur-photo-lien: #2b4fd8;
+  --agrafe: #8d93a3;
+  --agrafe-reflet: #e3e6ee;
+
   /* Typographie */
   --police: 'Atkinson Hyperlegible Next Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --police-mono: 'Atkinson Hyperlegible Mono Variable', ui-monospace, Menlo, Consolas, monospace;
@@ -63,6 +71,11 @@
     --ill-secret-a: #c39bff;
     --ill-secret-b: #6fe0a0;
     --ill-commun: #ffd84d;
+
+    --photo-cadre: #e8e3d6;
+    --sur-photo-lien: #1f3db0;
+    --agrafe: #b8bdca;
+    --agrafe-reflet: #f2f4f8;
   }
 }
 @media (prefers-reduced-motion: reduce) {

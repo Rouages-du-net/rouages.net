@@ -36,6 +36,10 @@ est sous licence MIT : voir `LICENSE`.
   (`@fontsource…`) avec leur licence.
 - **Quêtes de Sysadmin** : projet frère, dans son propre dépôt
   (`Rouages-du-net/quetes-de-sysadmin`), sous ses propres licences.
+- **Illustrations** (`src/assets/illustrations/`) : images de Wikimedia
+  Commons, chacune sous sa propre licence (domaine public, CC0, CC BY ou
+  CC BY-SA), indiquée sous l'image avec son auteur·e et sa source, et dans
+  `src/data/illustrations.json`.
 - **Citations et sources** : les extraits cités et les documents liés
   appartiennent à leurs auteur·rices.
 - **Liens de veille** (`data/veille.json`) : titres et résumés repris des

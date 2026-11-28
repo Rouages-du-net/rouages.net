@@ -77,6 +77,11 @@ Consignes à donner à tout agent de recherche web :
   `src/data/relecture.ts`, ce qui exige une grille `docs/relecture/<slug>.md`
   entièrement cochée (voir `docs/relecture/README.md`). Tout nouveau module
   commence « en construction » ; seul un humain le valide.
+- Illustrations : documents libres de Wikimedia Commons (domaine public, CC0,
+  CC BY, CC BY-SA ; jamais NC ni ND), copiés dans `src/assets/illustrations/`
+  avec `scripts/illustrations/importer.mjs` et affichés par `<Illustration
+  id=…>` (cadre « photo agrafée », attribution complète). Voir
+  `docs/ILLUSTRATIONS.md`.
 - Aérer : texte limité à `--mesure`, voir « Mise en page » dans `docs/CHARTE.md`.
 - Couleurs et typographie : uniquement via les variables de
   `src/styles/global.css` (voir `docs/CHARTE.md`) ; mode sombre obligatoire.
