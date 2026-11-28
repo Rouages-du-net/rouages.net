@@ -1,0 +1,7 @@
+---
+// Fin du bandeau d'un module : « · module en construction » tant que le module
+// n'a pas eu sa relecture humaine complète (src/data/relecture.ts).
+import { estRelu } from '../data/relecture';
+const relu = estRelu(Astro.url.pathname);
+---
+{!relu && <> · module en construction</>}
